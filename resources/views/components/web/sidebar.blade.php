@@ -99,7 +99,7 @@
 
                 <li class="sidebar-item has-sub {{ $isActive ? 'active' : '' }} ">
                   <a href="#" class='sidebar-link'>
-                    {{-- <i class="bi bi-caret-right-fill"></i> --}}
+                    <i class="bi {{ $menu->icon }}"></i>
                     <span>{{ $menu->name }}</span>
                   </a>
 

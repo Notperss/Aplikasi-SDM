@@ -12,14 +12,13 @@ return new class extends Migration {
     public function up() : void
     {
         Schema::create('menu_items', function (Blueprint $table) {
-            // $table->uuid('id')->primary();
             $table->id();
+            $table->foreignIdFor(MenuGroup::class);
             $table->string('name');
             $table->string('icon')->nullable();
             $table->string('route');
             $table->boolean('status')->default(true);
             $table->string('permission_name');
-            $table->foreignIdFor(MenuGroup::class);
             $table->integer('position');
             $table->timestamps();
         });

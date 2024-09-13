@@ -25,7 +25,7 @@ class UpdateMenuGroupRequest extends FormRequest
             'name' => ['required', 'string'],
             'permission_name' => ['required', 'string'],
             'status' => ['nullable', 'boolean'],
-            'icon' => ['sometimes', 'required', 'string', 'starts_with:bx-,bxs-'],
+            'icon' => ['sometimes', 'required', 'string', 'starts_with:bi'],
             'position' => ['nullable', 'numeric'],
         ];
     }

@@ -14,6 +14,13 @@
   <!-- Style -->
   @stack('before-style')
   {{-- @include('components.includes.style') --}}
+  {{-- <link rel="stylesheet" href="{{ asset('dist/assets/extensions/flatpickr/flatpickr.min.css') }}"> --}}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/monthSelect/index.js"></script>
+
+
+  <link rel="stylesheet" href="{{ asset('dist/assets/extensions/choices.js/public/assets/styles/choices.css') }}">
 
   <link rel="stylesheet" href="{{ asset('dist/assets/extensions/sweetalert2/sweetalert2.min.css') }}">
   <link rel="stylesheet"
@@ -92,6 +99,13 @@
   <script src="{{ asset('dist/assets/static/js/pages/datatables.js') }}"></script>
 
   <script src="{{ asset('dist/assets/extensions/sweetalert2/sweetalert2.min.js') }}"></script>
+
+  <script src="{{ asset('dist/assets/extensions/choices.js/public/assets/scripts/choices.js') }}"></script>
+  <script src="{{ asset('dist/assets/static/js/pages/form-element-select.js') }}"></script>
+
+  {{-- <script src="{{ asset('dist/assets/extensions/flatpickr/flatpickr.min.js') }}"></script> --}}
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="{{ asset('dist/assets/static/js/pages/date-picker-news.js') }}"></script>
 
   @stack('after-script')
   <!-- /Script -->

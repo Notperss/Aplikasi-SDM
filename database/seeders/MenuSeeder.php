@@ -16,7 +16,7 @@ class MenuSeeder extends Seeder
     {
         $menuMain = MenuGroup::create([
             'name' => 'Main Menu',
-            'icon' => 'bxs-dashboard',
+            'icon' => 'bi-house-door',
             'permission_name' => 'menu.main-menu',
             'position' => 1,
         ]);
@@ -32,7 +32,7 @@ class MenuSeeder extends Seeder
 
         $menuRolePermission = MenuGroup::create([
             'name' => 'Roles & Permissions',
-            'icon' => 'bx-shield-quarter',
+            'icon' => 'bi-shield-lock',
             'permission_name' => 'menu.role-permission',
             'position' => 2,
         ]);
@@ -57,7 +57,7 @@ class MenuSeeder extends Seeder
 
         $menuAccess = MenuGroup::create([
             'name' => 'Access Management',
-            'icon' => 'bx-cog',
+            'icon' => 'bi-gear',
             'permission_name' => 'menu.access-management',
             'position' => 3,
         ]);

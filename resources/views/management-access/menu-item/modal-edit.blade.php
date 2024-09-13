@@ -36,8 +36,8 @@
 
           <div class="mb-3">
             <label for="route" class="form-label">Route</label>
-            <select class="form-control @error('route') is-invalid @enderror" id="route" name="route" data-choices
-              data-choices-removeItem required>
+            <select class="form-control choices  @error('route') is-invalid @enderror" id="route" name="route"
+              data-choices required>
               <option value="" disabled selected>Choose</option>
               @foreach ($routes as $route)
                 @if (!blank($route->getName()))
@@ -57,8 +57,8 @@
 
           <div class="mb-3">
             <label for="permission_name" class="form-label">Permission Name</label>
-            <select class="form-control @error('permission_name') is-invalid @enderror" id="permission_name"
-              name="permission_name" data-choices data-choices-removeItem required>
+            <select class="form-control choices @error('permission_name') is-invalid @enderror" id="permission_name"
+              name="permission_name" data-choices required>
               @foreach ($permissions as $permission)
                 <option @selected($menuItem->permission_name == $permission->name) value="{{ $permission->name }}">{{ $permission->name }}</option>
               @endforeach
