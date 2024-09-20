@@ -1,9 +1,9 @@
 @extends('layouts.app')
-@section('title', 'Candidate')
+@section('title', 'Pelamar')
 @section('content')
 
 @section('breadcrumb')
-  <x-breadcrumb title="Candidate" page="Recruitment" active="Candidate" route="{{ route('candidate.index') }}" />
+  <x-breadcrumb title="Pelamar" page="Recruitment" active="Pelamar" route="{{ route('candidate.index') }}" />
 @endsection
 
 <section class="section">
@@ -11,7 +11,7 @@
     <div class="card">
       <div class="card-header">
         <div class="d-flex justify-content-between align-items-center ">
-          <h5 class="fw-normal mb-0 text-body">All Candidates</h5>
+          <h5 class="fw-normal mb-0 text-body">Daftar Pelamar</h5>
           @can('route.store')
             {{-- <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
               data-bs-target="#modal-form-add-candidate">
@@ -20,16 +20,16 @@
             </button> --}}
             <a href="{{ route('candidate.create') }}" class="btn btn-primary btn-md">
               <i class="bi bi-plus-lg"></i>
-              Add Candidate</a>
+              Pelamar</a>
           @endcan
         </div>
       </div>
       <div class="card-body">
-        <table class="table table-striped" id="table1">
+        <table class="table table-striped" id="table1" style="font-size: 85%">
           <thead>
             <tr>
               <th></th>
-              <th>Candidate</th>
+              <th>Pelamar</th>
               <th>Email</th>
               <th>Phone</th>
               <th>Date Applied</th>
@@ -50,7 +50,7 @@
                 <td>{{ $candidate->name }}</td>
                 <td>{{ $candidate->email }}</td>
                 <td>{{ $candidate->phone_number }}</td>
-                <td>{{ $candidate->date_applied ?? 'N/A' }}</td>
+                <td>{{ Carbon\Carbon::parse($candidate->created_at)->translatedFormat('d F Y') }}</td>
                 {{-- <td>
                   <span class="badge bg-success">Hire</span>
                 </td> --}}
@@ -64,7 +64,7 @@
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="{{ route('additional-details', $candidate) }}">Kelengkapan
                           Data</a>
-                        <a class="dropdown-item" href="#">Lihat</a>
+                        <a class="dropdown-item" href="{{ route('candidate.show', $candidate) }}">Lihat</a>
                         <a class="dropdown-item" href="{{ route('candidate.edit', $candidate) }}">Edit</a>
                         <a class="dropdown-item" href="#"
                           onclick="showSweetAlert('{{ $candidate->id }}')">Hapus</a>

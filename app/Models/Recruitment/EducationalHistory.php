@@ -18,6 +18,7 @@ class EducationalHistory extends Model
         'year_from',
         'year_to',
         'gpa',
+        'file_ijazah',
     ];
 
     public function candidate()

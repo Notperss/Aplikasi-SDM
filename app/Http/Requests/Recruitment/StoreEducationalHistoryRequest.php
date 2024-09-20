@@ -11,7 +11,7 @@ class StoreEducationalHistoryRequest extends FormRequest
      */
     public function authorize() : bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -28,6 +28,8 @@ class StoreEducationalHistoryRequest extends FormRequest
             'year_from' => 'required|integer|min:1900|max:' . date('Y'),
             'year_to' => 'nullable|integer|min:1900|max:' . date('Y'),
             'gpa' => 'nullable|numeric|min:0',
+            'file_ijazah' => 'mimes:pdf|max:512',
+
         ];
     }
 
@@ -55,6 +57,9 @@ class StoreEducationalHistoryRequest extends FormRequest
             'gpa.numeric' => 'GPA harus berupa angka.',
             'gpa.min' => 'GPA minimal adalah 0.',
             'gpa.max' => 'GPA tidak boleh lebih dari 4.0.',
+
+            'file_ijazah.mimes' => 'Ekstensi file ijazah harus berupa pdf.',
+            'file_ijazah.max' => 'Ukuran file ijazah maksimal adalah 500KB.',
         ];
     }
 

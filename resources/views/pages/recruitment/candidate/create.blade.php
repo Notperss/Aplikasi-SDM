@@ -1,9 +1,9 @@
 @extends('layouts.app')
-@section('title', 'Candidate')
+@section('title', 'Pelamar')
 @section('content')
 
 @section('breadcrumb')
-  <x-breadcrumb title="Data Diri Pelamar" page="Recruitment" active="Candidate" route="{{ route('candidate.index') }}" />
+  <x-breadcrumb title="Data Diri Pelamar" page="Recruitment" active="Pelamar" route="{{ route('candidate.index') }}" />
 @endsection
 
 <!-- // Basic multiple Column Form section start -->
@@ -495,6 +495,7 @@
   <form action="{{ route('candidate.store') }}" method="post" enctype="multipart/form-data">
     @csrf
     <div class="row">
+
       <div class="col-12 col-lg-4">
         <div class="card-body mb-2">
           <div class="d-flex justify-content-center align-items-center flex-column">
@@ -524,9 +525,38 @@
             <p class="mb-0" style="font-size: 70%"> * Ukuran File Maks. 500KB</p>
             <p class="mb-0" style="font-size: 70%"> * Pastikan foto wajah terlihat jelas</p>
           </div>
-        </div>
 
+          <div class="card mt-3">
+            <div class="card-content">
+              <div class="card-body">
+
+                <div class="mb-3">
+                  <label for="file_cv" class="form-label">CV</label>
+                  <input class="form-control" accept=".pdf" type="file" id="file_cv" name="file_cv">
+                </div>
+                <div class="mb-3">
+                  <label for="file_ktp" class="form-label">KTP & NPWP</label>
+                  <input class="form-control" accept=".pdf" type="file" id="file_ktp" name="file_ktp">
+                </div>
+                <div class="mb-3">
+                  <label for="file_skck" class="form-label">SKCK AKTIF</label>
+                  <input class="form-control" accept=".pdf" type="file" id="file_skck" name="file_skck">
+                </div>
+                <div class="mb-3">
+                  <label for="file_kk" class="form-label">KARTU KELUARGA</label>
+                  <input class="form-control" accept=".pdf" type="file" id="file_kk" name="file_kk">
+                </div>
+                <p class="card-text text-sm">
+                  * Ekstensi File : pdf <br>
+                  * Ukuran File Maks. 500KB
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
+
       <div class="col-12 col-lg-8">
         <div class="card">
           <div class="card-body">
@@ -558,7 +588,7 @@
                 </div>
                 <div class="form-group">
                   <label for="phone_number">No. Telpon</label>
-                  <input type="text" id="phone_number" value="{{ old('phone_number') }}" maxlength="13"
+                  <input type="text" id="phone_number" value="{{ old('phone_number') }}" maxlength="14"
                     oninput="this.value = this.value.replace(/\D+/g, '')"
                     class="form-control @error('phone_number') is-invalid @enderror" name="phone_number">
                   @error('phone_number')
@@ -596,11 +626,23 @@
                   @enderror
                 </div>
                 <div class="form-group">
-                  <label for="npwp_number">No. NPWP</label>
-                  <input type="text" inputmode="numeric" value="{{ old('npwp_number') }}" maxlength="16"
-                    oninput="this.value = this.value.replace(/\D+/g, '')" id="npwp_number"
-                    class="form-control @error('npwp_number') is-invalid @enderror" name="npwp_number">
-                  @error('npwp_number')
+                  <label for="applied_position">Jabatan Yang Dilamar</label>
+                  <input type="text" value="{{ old('applied_position') }}" id="applied_position"
+                    class="form-control @error('applied_position') is-invalid @enderror" name="applied_position">
+                  @error('applied_position')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
+                </div>
+                <div class="form-group">
+                  <label for="recommended_position">Rekomendasi Penempatan</label>
+                  <input type="text" value="{{ old('recommended_position') }}" id="recommended_position"
+                    class="form-control @error('recommended_position') is-invalid @enderror"
+                    name="recommended_position">
+                  @error('recommended_position')
                     <a style="color: red">
                       <small>
                         {{ $message }}
@@ -693,6 +735,58 @@
                 </div>
                 <div class="row">
                   <div class="form-group col-md-6">
+                    <label for="ethnic">Suku Bangsa</label>
+                    <input type="text" value="{{ old('ethnic') }}" id="ethnic"
+                      class="form-control @error('ethnic') is-invalid @enderror" name="ethnic">
+                    @error('ethnic')
+                      <a style="color: red">
+                        <small>
+                          {{ $message }}
+                        </small>
+                      </a>
+                    @enderror
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="blood_type">Gol. Darah</label>
+                    <select type="text" value="{{ old('blood_type') }}" id="blood_type" maxlength="2"
+                      class="form-control @error('blood_type') is-invalid @enderror" name="blood_type">
+                      <option value="" disabled selected>Choose</option>
+                      <option value="A-">A-</option>
+                      <option value="A+">A+</option>
+                      <option value="B-">B-</option>
+                      <option value="B+">B+</option>
+                      <option value="AB-">BA-</option>
+                      <option value="AB+">AB+</option>
+                      <option value="O+">O+</option>
+                      <option value="O-">O-</option>
+                    </select>
+                    @error('blood_type')
+                      <a style="color: red">
+                        <small>
+                          {{ $message }}
+                        </small>
+                      </a>
+                    @enderror
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="candidate_from">Pelamar Dari</label>
+                  <select type="text" value="{{ old('candidate_from') }}" id="candidate_from"
+                    class="form-control @error('candidate_from') is-invalid @enderror" name="candidate_from">
+                    <option value="" disabled selected>Choose</option>
+                    <option value="MANAJEMEN">Manajemen</option>
+                    <option value="UMUM">Umum</option>
+                  </select>
+                  @error('candidate_from')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
+                </div>
+                {{-- <div class="row">
+                  <div class="form-group col-md-6">
                     <label for="height">Tinggi (cm)</label>
                     <input type="text" value="{{ old('height') }}" id="height"
                       class="form-control @error('height') is-invalid @enderror" maxlength="3"
@@ -718,9 +812,9 @@
                       </a>
                     @enderror
                   </div>
-                </div>
+                </div> --}}
                 <div class="form-group">
-                  <label for="current_address">Alamat Sekarang</label>
+                  <label for="current_address">Alamat Domisili</label>
                   <textarea type="text" id="current_address" class="form-control @error('current_address') is-invalid @enderror"
                     name="current_address" rows="5"> {{ old('current_address') }}</textarea>
                   @error('current_address')
@@ -742,6 +836,8 @@
           </div>
         </div>
       </div>
+
+    </div>
   </form>
 </section>
 

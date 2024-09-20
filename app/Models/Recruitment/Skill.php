@@ -4,22 +4,17 @@ namespace App\Models\Recruitment;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class FamilyDetail extends Model
+class Skill extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+
     protected $fillable = [
         'candidate_id',
-        'relation',
-        'gender',
         'name',
-        'education',
-        'job',
-        'phone_number',
-        'address',
-        'dob',
+        'mastery',
     ];
+
     public function candidate()
     {
         return $this->belongsTo(Candidate::class);

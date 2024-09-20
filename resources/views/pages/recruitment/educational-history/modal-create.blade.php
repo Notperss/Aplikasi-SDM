@@ -3,7 +3,7 @@
   aria-labelledby="modal-form-add-educational-history-label" aria-hidden="true" style="display: none;">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form action="{{ route('educationalHistory.store') }}" method="post">
+      <form action="{{ route('educationalHistory.store') }}" method="post" enctype="multipart/form-data">
         @csrf
 
         <div class="modal-header">
@@ -15,6 +15,7 @@
           <div class="row justify-content-center">
             <div class="col-md-12"> <!-- Make form smaller with col-md-6 and center it -->
               <input type="hidden" name="candidate_id" value="{{ $candidate->id }}">
+              <input type="hidden" name="name" value="{{ $candidate->name }}">
 
               <div class="mb-2">
                 <label class="form-label" for="school_level">Jenjang</label>
@@ -87,6 +88,11 @@
                     <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror
                 </div>
+              </div>
+
+              <div class="mb-2">
+                <label for="file_ijazah" class="form-label">File Ijazah</label>
+                <input class="form-control" accept=".pdf" type="file" id="file_ijazah" name="file_ijazah">
               </div>
 
             </div>

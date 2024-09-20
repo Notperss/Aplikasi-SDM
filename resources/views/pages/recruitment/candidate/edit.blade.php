@@ -1,9 +1,9 @@
 @extends('layouts.app')
-@section('title', 'Candidate')
+@section('title', 'Pelamar')
 @section('content')
 
 @section('breadcrumb')
-  <x-breadcrumb title="Edit Data Diri Pelamar" page="Recruitment" active="Candidate" route="{{ route('candidate.index') }}" />
+  <x-breadcrumb title="Edit Data Diri Pelamar" page="Recruitment" active="Pelamar" route="{{ route('candidate.index') }}" />
 @endsection
 
 <!-- // Basic multiple Column Form section start -->
@@ -271,6 +271,46 @@
             <p class="mb-0" style="font-size: 70%"> * Ukuran File Maks. 500KB</p>
             <p class="mb-0" style="font-size: 70%"> * Pastikan foto wajah terlihat jelas</p>
           </div>
+
+          <div class="card mt-3">
+            <div class="card-content">
+              <div class="card-body">
+
+                <div class="mb-3">
+                  <label for="file_cv" class="form-label">CV</label>
+                  <input class="form-control" accept=".pdf" type="file" id="file_cv" name="file_cv">
+                  <a href="{{ Storage::url($candidate->file_cv) }}" target="_blank" class="text-sm">
+                    {{ pathinfo($candidate->file_cv, PATHINFO_FILENAME) }}
+                  </a>
+                </div>
+                <div class="mb-3">
+                  <label for="file_ktp" class="form-label">KTP & NPWP</label>
+                  <input class="form-control" accept=".pdf" type="file" id="file_ktp" name="file_ktp">
+                  <a href="{{ Storage::url($candidate->file_ktp) }}" target="_blank" class="text-sm">
+                    {{ pathinfo($candidate->file_ktp, PATHINFO_FILENAME) }}
+                  </a>
+                </div>
+                <div class="mb-3">
+                  <label for="file_skck" class="form-label">SKCK AKTIF</label>
+                  <input class="form-control" accept=".pdf" type="file" id="file_skck" name="file_skck">
+                  <a href="{{ Storage::url($candidate->file_skck) }}" target="_blank" class="text-sm">
+                    {{ pathinfo($candidate->file_skck, PATHINFO_FILENAME) }}
+                  </a>
+                </div>
+                <div class="mb-3">
+                  <label for="file_kk" class="form-label">KARTU KELUARGA</label>
+                  <input class="form-control" accept=".pdf" type="file" id="file_kk" name="file_kk">
+                  <a href="{{ Storage::url($candidate->file_kk) }}" target="_blank" class="text-sm">
+                    {{ pathinfo($candidate->file_kk, PATHINFO_FILENAME) }}
+                  </a>
+                </div>
+                <p class="card-text text-sm">
+                  * Ekstensi File : pdf <br>
+                  * Ukuran File Maks. 500KB
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -280,6 +320,7 @@
             <div class="row">
 
               <div class="col-md-6 col-12">
+
                 <div class="form-group">
                   <label for="name">Nama Lengkap</label>
                   <input type="text" id="name" value="{{ old('name', $candidate->name) }}"
@@ -292,6 +333,7 @@
                     </a>
                   @enderror
                 </div>
+
                 <div class="form-group">
                   <label for="email">Email</label>
                   <input type="email" id="email" value="{{ old('email', $candidate->email) }}"
@@ -304,10 +346,12 @@
                     </a>
                   @enderror
                 </div>
+
                 <div class="form-group">
                   <label for="phone_number">No. Telp</label>
-                  <input type="text" id="phone_number" value="{{ old('phone_number', $candidate->phone_number) }}"
-                    maxlength="13" oninput="this.value = this.value.replace(/\D+/g, '')"
+                  <input type="text" id="phone_number"
+                    value="{{ old('phone_number', $candidate->phone_number) }}" maxlength="13"
+                    oninput="this.value = this.value.replace(/\D+/g, '')"
                     class="form-control @error('phone_number') is-invalid @enderror" name="phone_number">
                   @error('phone_number')
                     <a style="color: red">
@@ -317,6 +361,7 @@
                     </a>
                   @enderror
                 </div>
+
                 <div class="form-group">
                   <label for="ktp_number">No. KTP</label>
                   <input type="text" id="ktp_number" value="{{ old('ktp_number', $candidate->ktp_number) }}"
@@ -330,6 +375,7 @@
                     </a>
                   @enderror
                 </div>
+
                 <div class="form-group">
                   <label for="kk_number">No. Kartu Keluarga</label>
                   <input type="text" id="kk_number" value="{{ old('kk_number', $candidate->kk_number) }}"
@@ -343,12 +389,13 @@
                     </a>
                   @enderror
                 </div>
+
                 <div class="form-group">
-                  <label for="npwp_number">No. NPWP</label>
-                  <input type="text" inputmode="numeric" value="{{ old('npwp_number', $candidate->npwp_number) }}"
-                    maxlength="16" oninput="this.value = this.value.replace(/\D+/g, '')" id="npwp_number"
-                    class="form-control @error('npwp_number') is-invalid @enderror" name="npwp_number">
-                  @error('npwp_number')
+                  <label for="applied_position">Jabatan Yang Dilamar</label>
+                  <input type="text" value="{{ old('applied_position', $candidate->applied_position) }}"
+                    id="applied_position" class="form-control @error('applied_position') is-invalid @enderror"
+                    name="applied_position">
+                  @error('applied_position')
                     <a style="color: red">
                       <small>
                         {{ $message }}
@@ -356,6 +403,21 @@
                     </a>
                   @enderror
                 </div>
+
+                <div class="form-group">
+                  <label for="recommended_position">Rekomendasi Penempatan</label>
+                  <input type="text" value="{{ old('recommended_position', $candidate->recommended_position) }}"
+                    id="recommended_position" class="form-control @error('recommended_position') is-invalid @enderror"
+                    name="recommended_position">
+                  @error('recommended_position')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
+                </div>
+
                 <div class="form-group">
                   <label for="ktp_address">Alamat Sesuai KTP</label>
                   <textarea type="text" id="ktp_address" class="form-control  @error('ktp_address') is-invalid @enderror"
@@ -443,11 +505,10 @@
                 </div>
                 <div class="row">
                   <div class="form-group col-md-6">
-                    <label for="height">Tinggi (cm)</label>
-                    <input type="text" value="{{ old('height', $candidate->height) }}" id="height"
-                      class="form-control @error('height') is-invalid @enderror" maxlength="3"
-                      oninput="this.value = this.value.replace(/\D+/g, '')" name="height">
-                    @error('height')
+                    <label for="ethnic">Suku Bangsa</label>
+                    <input type="text" value="{{ old('ethnic', $candidate->ethnic) }}" id="ethnic"
+                      class="form-control @error('ethnic') is-invalid @enderror" name="ethnic">
+                    @error('ethnic')
                       <a style="color: red">
                         <small>
                           {{ $message }}
@@ -456,11 +517,20 @@
                     @enderror
                   </div>
                   <div class="form-group col-md-6">
-                    <label for="weight">Berat (kg)</label>
-                    <input type="text" value="{{ old('weight', $candidate->weight) }}" id="weight"
-                      class="form-control  @error('weight') is-invalid @enderror" maxlength="3"
-                      oninput="this.value = this.value.replace(/\D+/g, '')" name="weight">
-                    @error('weight')
+                    <label for="blood_type">Gol. Darah</label>
+                    <select type="text" value="{{ old('blood_type') }}" id="blood_type" maxlength="2"
+                      class="form-control @error('blood_type') is-invalid @enderror" name="blood_type">
+                      <option value="" disabled selected>Choose</option>
+                      <option value="A-"{{ $candidate->blood_type == 'A-' ? '' : 'selected' }}>A-</option>
+                      <option value="A+"{{ $candidate->blood_type == 'A+' ? '' : 'selected' }}>A+</option>
+                      <option value="B-"{{ $candidate->blood_type == 'B-' ? '' : 'selected' }}>B-</option>
+                      <option value="B+"{{ $candidate->blood_type == 'B+' ? '' : 'selected' }}>B+</option>
+                      <option value="AB-"{{ $candidate->blood_type == 'AB-' ? '' : 'selected' }}>AB-</option>
+                      <option value="AB+"{{ $candidate->blood_type == 'AB+' ? '' : 'selected' }}>AB+</option>
+                      <option value="O-"{{ $candidate->blood_type == 'O-' ? '' : 'selected' }}>O-</option>
+                      <option value="O+"{{ $candidate->blood_type == 'O+' ? '' : 'selected' }}>O+</option>
+                    </select>
+                    @error('blood_type')
                       <a style="color: red">
                         <small>
                           {{ $message }}
@@ -468,6 +538,24 @@
                       </a>
                     @enderror
                   </div>
+                </div>
+                <div class="form-group">
+                  <label for="candidate_from">Pelamar Dari</label>
+                  <select type="text" value="{{ old('candidate_from') }}" id="candidate_from"
+                    class="form-control @error('candidate_from') is-invalid @enderror" name="candidate_from">
+                    <option value="" disabled selected>Choose</option>
+                    <option value="MANAJEMEN" {{ $candidate->candidate_from == 'MANAJEMEN' ? '' : 'selected' }}>
+                      Manajemen
+                    </option>
+                    <option value="UMUM"{{ $candidate->candidate_from == 'UMUM' ? '' : 'selected' }}>Umum</option>
+                  </select>
+                  @error('candidate_from')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
                 </div>
                 <div class="form-group">
                   <label for="current_address">Alamat Sekarang</label>
@@ -491,6 +579,7 @@
           </div>
         </div>
       </div>
+    </div>
   </form>
 </section>
 

@@ -14,6 +14,8 @@ use App\Http\Controllers\Recruitment\EducationalHistoryController;
 use App\Http\Controllers\Recruitment\EmploymentHistoryController;
 use App\Http\Controllers\Recruitment\FamilyDetailController;
 use App\Http\Controllers\Recruitment\LanguageProficiencyController;
+use App\Http\Controllers\Recruitment\SkillController;
+use App\Http\Controllers\Recruitment\TrainingAttendedController;
 
 Route::permanentRedirect('/', '/login');
 
@@ -43,6 +45,8 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::resource('employmentHistory', EmploymentHistoryController::class);
     Route::resource('educationalHistory', EducationalHistoryController::class);
     Route::resource('languageProficiency', LanguageProficiencyController::class);
+    Route::resource('trainingAttended', TrainingAttendedController::class);
+    Route::resource('skill', SkillController::class);
 
 
 });

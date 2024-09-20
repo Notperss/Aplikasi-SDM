@@ -16,8 +16,9 @@ return new class extends Migration {
             $table->foreignIdFor(Candidate::class)->constrained()->onDelete('cascade');
             $table->string('training_name');
             $table->string('organizer_name');
-            $table->year('year');
-            $table->string('training_duration');
+            $table->year('year')->nullable();
+            $table->string('city')->nullable();
+            $table->string('file_sertifikat')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

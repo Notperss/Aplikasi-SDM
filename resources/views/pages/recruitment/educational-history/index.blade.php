@@ -39,6 +39,15 @@
             <p class="card-subtitle mb-1 text-body-secondary">
               GPA / NEM : {{ $educationalHistory->gpa }}
             </p>
+            <p class="card-subtitle mb-1 text-body-secondary">
+              @if ($educationalHistory->file_ijazah)
+                <a href="{{ Storage::url($educationalHistory->file_ijazah) }}" target="_blank">
+                  Lihat Ijazah
+                </a>
+              @else
+                <span>-</span>
+              @endif
+            </p>
             <hr>
             <div class="d-flex justify-content-end">
               <a data-bs-toggle="modal"

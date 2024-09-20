@@ -24,25 +24,30 @@ class StoreCandidateRequest extends FormRequest
         return [
             'name' => ['required', 'string'],
             'email' => ['required', 'string', 'email', 'unique:candidates,email'],
-            'phone_number' => ['required', 'integer'],
+            'phone_number' => ['required',],
             'ktp_address' => ['required', 'string'],
             'current_address' => ['required', 'string'],
             'ktp_number' => ['required', 'digits:16', 'unique:candidates,ktp_number'],
             'kk_number' => ['required', 'digits:16', 'unique:candidates,kk_number'],
-            'npwp_number' => [
-                'required', 'digits:16',
-                // 'regex:/^\d{2}\.\d{3}\.\d{3}\.\d{1}-\d{3}\.\d{3}$/',
-                'unique:candidates,npwp_number',
-            ],
-            'photo' => 'required|image|mimes:jpg,jpeg,png|max:512',
+            // 'npwp_number' => [
+            //     'required', 'digits:16',
+            //     // 'regex:/^\d{2}\.\d{3}\.\d{3}\.\d{1}-\d{3}\.\d{3}$/',
+            //     'unique:candidates,npwp_number',
+            // ],
+            'photo' => 'image|mimes:jpg,jpeg,png|max:512',
             'religion' => ['required', 'string'],
             'nationality' => ['required', 'string'],
-            'height' => ['required', 'integer'],
-            'weight' => ['required', 'integer'],
+            // 'height' => ['required', 'integer'],
+            // 'weight' => ['required', 'integer'],
             'pob' => ['required', 'string'],
             'dob' => ['required', 'date'],
             'gender' => ['required', 'string', 'in:LAKI-LAKI,PEREMPUAN'],
             'date_applied' => ['nullable', 'date'],
+
+            'file_kk' => 'mimes:pdf|max:512',
+            'file_ktp' => 'mimes:pdf|max:512',
+            'file_cv' => 'mimes:pdf|max:512',
+            'file_skck' => 'mimes:pdf|max:512',
         ];
     }
 
@@ -110,6 +115,18 @@ class StoreCandidateRequest extends FormRequest
             'photo.image' => 'File harus berupa gambar.',
             'photo.mimes' => 'Ekstensi file harus berupa jpg, jpeg, atau png.',
             'photo.max' => 'Ukuran file maksimal adalah 500KB.',
+
+            'file_kk.mimes' => 'Ekstensi file KK harus berupa pdf.',
+            'file_kk.max' => 'Ukuran file KK maksimal adalah 500KB.',
+
+            'file_ktp.mimes' => 'Ekstensi file KTP harus berupa pdf.',
+            'file_ktp.max' => 'Ukuran file KTP maksimal adalah 500KB.',
+
+            'file_skck.mimes' => 'Ekstensi file SKCK harus berupa pdf.',
+            'file_skck.max' => 'Ukuran file SKCK maksimal adalah 500KB.',
+
+            'file_cv.mimes' => 'Ekstensi file CV harus berupa pdf.',
+            'file_cv.max' => 'Ukuran file CV maksimal adalah 500KB.',
         ];
     }
 }

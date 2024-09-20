@@ -11,19 +11,12 @@ return new class extends Migration {
      */
     public function up() : void
     {
-        Schema::create('family_details', function (Blueprint $table) {
+        Schema::create('skills', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Candidate::class)->constrained()->onDelete('cascade');
-            $table->string('relation');
-            $table->enum('gender', ['LAKI-LAKI', 'PEREMPUAN']);
-            $table->string('name');
-            $table->date('dob');
-            $table->string('education');
-            $table->string('job')->nullable();
-            $table->string('phone_number')->nullable();
-            $table->text('address');
+            $table->string('name')->nullable();
+            $table->string('mastery')->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -32,6 +25,6 @@ return new class extends Migration {
      */
     public function down() : void
     {
-        Schema::dropIfExists('family_details');
+        Schema::dropIfExists('skills');
     }
 };

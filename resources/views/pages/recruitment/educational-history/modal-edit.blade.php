@@ -4,7 +4,8 @@
   style="display: none;">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form action="{{ route('educationalHistory.update', $educationalHistory) }}" method="post">
+      <form action="{{ route('educationalHistory.update', $educationalHistory) }}" method="post"
+        enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -19,6 +20,7 @@
           <div class="row justify-content-center">
             <div class="col-md-12"> <!-- Make form smaller with col-md-6 and center it -->
               <input type="hidden" name="candidate_id" value="{{ $candidate->id }}">
+              <input type="hidden" name="name" value="{{ $candidate->name }}">
 
               <div class="mb-2">
                 <label class="form-label" for="school_level">Jenjang</label>
@@ -117,6 +119,18 @@
                   @error('year_to')
                     <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror
+                </div>
+
+                <div class="mb-2">
+                  <label for="file_ijazah" class="form-label">File Ijazah</label>
+                  <input class="form-control" accept=".pdf" type="file" id="file_ijazah" name="file_ijazah">
+
+                  <div class="text-center my-3" style="height: 30px;">
+                    <a href="{{ Storage::url($educationalHistory->file_ijazah) }}" target="_blank">
+                      {{ pathinfo($educationalHistory->file_ijazah, PATHINFO_FILENAME) }}
+                    </a>
+                  </div>
+
                 </div>
               </div>
 

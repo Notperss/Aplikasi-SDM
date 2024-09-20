@@ -52,7 +52,7 @@
                   @endif
                   </spans>
               </h5>
-              <span class="badge bg-light-secondary">{{ $familyDetail->relationship }}</span>
+              <span class="badge bg-light-secondary">{{ $familyDetail->relation }}</span>
             </div>
             <hr>
             <div class="table-responsive" style="font-size: 85%">

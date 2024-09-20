@@ -23,7 +23,7 @@ class StoreFamilyDetailRequest extends FormRequest
     {
         return [
             'candidate_id' => ['required', 'integer', 'exists:candidates,id'],
-            'relationship' => ['required', 'string', 'max:255'],
+            'relation' => ['required', 'string', 'max:255'],
             'gender' => ['required', 'in:LAKI-LAKI,PEREMPUAN'], // Enum for gender validation
             'name' => ['required', 'string', 'max:255'],
             'education' => ['nullable', 'string', 'max:255'], // Can be nullable if it's optional
@@ -41,9 +41,9 @@ class StoreFamilyDetailRequest extends FormRequest
             'candidate_id.integer' => 'ID kandidat harus berupa angka.',
             'candidate_id.exists' => 'ID kandidat tidak ditemukan di database.',
 
-            'relationship.required' => 'Hubungan keluarga wajib diisi.',
-            'relationship.string' => 'Hubungan keluarga harus berupa teks.',
-            'relationship.max' => 'Hubungan keluarga maksimal 255 karakter.',
+            'relation.required' => 'Hubungan keluarga wajib diisi.',
+            'relation.string' => 'Hubungan keluarga harus berupa teks.',
+            'relation.max' => 'Hubungan keluarga maksimal 255 karakter.',
 
             'gender.required' => 'Jenis kelamin wajib diisi.',
             'gender.in' => 'Jenis kelamin harus diisi dengan "laki-laki" atau "perempuan".',

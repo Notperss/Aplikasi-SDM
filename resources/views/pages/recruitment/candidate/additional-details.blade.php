@@ -30,13 +30,21 @@
                 role="tab" aria-controls="educational-history" aria-selected="false">Pendidikan</a>
             </li>
             <li class="nav-item" role="presentation">
-              <a class="nav-link" id="language-proficiency-tab" data-bs-toggle="tab" href="#language-proficiency"
-                role="tab" aria-controls="language-proficiency" aria-selected="false">Bahasa Asing</a>
+              <a class="nav-link" id="training-attended-tab" data-bs-toggle="tab" href="#training-attended"
+                role="tab" aria-controls="training-attended" aria-selected="false">Seminar/Pelatihan</a>
             </li>
             <li class="nav-item" role="presentation">
+              <a class="nav-link" id="skill-tab" data-bs-toggle="tab" href="#skill" role="tab"
+                aria-controls="skill" aria-selected="false">Keterampilan/Kompetensi</a>
+            </li>
+            {{-- <li class="nav-item" role="presentation">
+              <a class="nav-link" id="language-proficiency-tab" data-bs-toggle="tab" href="#language-proficiency"
+                role="tab" aria-controls="language-proficiency" aria-selected="false">Bahasa Asing</a>
+            </li> --}}
+            {{-- <li class="nav-item" role="presentation">
               <a class="nav-link" id="candidate-document-tab" data-bs-toggle="tab" href="#candidate-document"
                 role="tab" aria-controls="candidate-document" aria-selected="false">Dokumen-dokumen</a>
-            </li>
+            </li> --}}
           </ul>
 
           <div class="tab-content" id="myTabContent">
@@ -51,13 +59,20 @@
               aria-labelledby="educational-history-tab">
               @include('pages.recruitment.educational-history.index')
             </div>
-            <div class="tab-pane fade" id="language-proficiency" role="tabpanel"
+            <div class="tab-pane fade" id="training-attended" role="tabpanel" aria-labelledby="training-attended-tab">
+              @include('pages.recruitment.training-attended.index')
+            </div>
+            <div class="tab-pane fade" id="skill" role="tabpanel" aria-labelledby="skill-tab">
+              @include('pages.recruitment.skill.index')
+            </div>
+            {{-- <div class="tab-pane fade" id="language-proficiency" role="tabpanel"
               aria-labelledby="language-proficiency-tab">
               @include('pages.recruitment.language-proficiency.index')
-            </div>
-            <div class="tab-pane fade" id="candidate-document" role="tabpanel" aria-labelledby="candidate-document-tab">
+            </div> --}}
+            {{-- <div class="tab-pane fade" id="candidate-document" role="tabpanel" aria-labelledby="candidate-document-tab">
               @include('pages.recruitment.candidate-document.index')
-            </div>
+            </div> --}}
+
           </div>
         </div>
       </div>

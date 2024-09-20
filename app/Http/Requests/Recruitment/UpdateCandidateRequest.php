@@ -30,22 +30,26 @@ class UpdateCandidateRequest extends FormRequest
             'current_address' => ['required', 'string'],
             'ktp_number' => ['required', 'digits:16', Rule::unique('candidates')->ignore($this->candidate)],
             'kk_number' => ['required', 'digits:16', Rule::unique('candidates')->ignore($this->candidate)],
-            'npwp_number' => [
-                'required',
-                // 'digits:16',
-                // 'regex:/^\d{2}\.\d{3}\.\d{3}\.\d{1}-\d{3}\.\d{3}$/',
-                Rule::unique('candidates')->ignore($this->candidate),
-            ],
+            // 'npwp_number' => [
+            //     'required',
+            //     // 'digits:16',
+            //     // 'regex:/^\d{2}\.\d{3}\.\d{3}\.\d{1}-\d{3}\.\d{3}$/',
+            //     Rule::unique('candidates')->ignore($this->candidate),
+            // ],
             'religion' => ['required', 'string'],
             'nationality' => ['required', 'string'],
-            'height' => ['required', 'integer'],
-            'weight' => ['required', 'integer'],
+            // 'height' => ['required', 'integer'],
+            // 'weight' => ['required', 'integer'],
             'pob' => ['required', 'string'],
             'dob' => ['required', 'date'],
             'gender' => ['required', 'string', 'in:LAKI-LAKI,PEREMPUAN'],
             'date_applied' => ['nullable', 'date'],
-            'photo' => 'required|image|mimes:jpg,jpeg,png|max:512',
+            'photo' => 'image|mimes:jpg,jpeg,png|max:512',
 
+            'file_kk' => 'mimes:pdf|max:512',
+            'file_ktp' => 'mimes:pdf|max:512',
+            'file_cv' => 'mimes:pdf|max:512',
+            'file_skck' => 'mimes:pdf|max:512',
         ];
     }
 
@@ -112,8 +116,20 @@ class UpdateCandidateRequest extends FormRequest
 
             'photo.required' => 'File gambar wajib diunggah.',
             'photo.image' => 'File harus berupa gambar.',
-            'photo.mimes' => 'Ekstensi file harus berupa jpg, jpeg, atau png.',
-            'photo.max' => 'Ukuran file maksimal adalah 500KB.',
+            'photo.mimes' => 'Ekstensi foto harus berupa jpg, jpeg, atau png.',
+            'photo.max' => 'Ukuran foto maksimal adalah 500KB.',
+
+            'file_kk.mimes' => 'Ekstensi file KK harus berupa pdf.',
+            'file_kk.max' => 'Ukuran file KK maksimal adalah 500KB.',
+
+            'file_ktp.mimes' => 'Ekstensi file KTP harus berupa pdf.',
+            'file_ktp.max' => 'Ukuran file KTP maksimal adalah 500KB.',
+
+            'file_skck.mimes' => 'Ekstensi file SKCK harus berupa pdf.',
+            'file_skck.max' => 'Ukuran file SKCK maksimal adalah 500KB.',
+
+            'file_cv.mimes' => 'Ekstensi file CV harus berupa pdf.',
+            'file_cv.max' => 'Ukuran file CV maksimal adalah 500KB.',
         ];
     }
 }

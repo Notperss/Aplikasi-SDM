@@ -20,31 +20,30 @@
               <input type="hidden" name="candidate_id" value="{{ $candidate->id }}">
 
               <div class="col-6 mb-1">
-                <label class="form-label" for="relationship">Hubungan Keluarga</label>
-                <select type="text" id="relationship" name="relationship"
-                  class="form-control @error('relationship') is-invalid @enderror" required>
+                <label class="form-label" for="relation">Hubungan Keluarga</label>
+                <select type="text" id="relation" name="relation"
+                  class="form-control @error('relation') is-invalid @enderror" required>
                   <option value="" disabled selected>Choose</option>
-                  <option value="BAPAK"{{ $familyDetail->relationship == 'BAPAK' ? 'selected' : '' }}>
+                  <option value="BAPAK"{{ $familyDetail->relation == 'BAPAK' ? 'selected' : '' }}>
                     Bapak
                   </option>
-                  <option value="IBU"{{ $familyDetail->relationship == 'IBU' ? 'selected' : '' }}>
+                  <option value="IBU"{{ $familyDetail->relation == 'IBU' ? 'selected' : '' }}>
                     Ibu
                   </option>
-                  <option value="SUAMI"{{ $familyDetail->relationship == 'SUAMI' ? 'selected' : '' }}>
+                  <option value="SUAMI"{{ $familyDetail->relation == 'SUAMI' ? 'selected' : '' }}>
                     Suami
                   </option>
-                  <option value="ISTRI"{{ $familyDetail->relationship == 'ISTRI' ? 'selected' : '' }}>
+                  <option value="ISTRI"{{ $familyDetail->relation == 'ISTRI' ? 'selected' : '' }}>
                     Istri
                   </option>
-                  <option value="ANAK"{{ $familyDetail->relationship == 'ANAK' ? 'selected' : '' }}>
+                  <option value="ANAK"{{ $familyDetail->relation == 'ANAK' ? 'selected' : '' }}>
                     Anak
                   </option>
-                  <option
-                    value="SAUDARA KANDUNG"{{ $familyDetail->relationship == 'SAUDARA KANDUNG' ? 'selected' : '' }}>
+                  <option value="SAUDARA KANDUNG"{{ $familyDetail->relation == 'SAUDARA KANDUNG' ? 'selected' : '' }}>
                     Saudara Kandung
                   </option>
                 </select>
-                @error('relationship')
+                @error('relation')
                   <a style="color: red">
                     <small>
                       {{ $message }}

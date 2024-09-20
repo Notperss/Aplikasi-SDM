@@ -16,17 +16,30 @@ class Candidate extends Model
         'phone_number',
         'ktp_address',
         'current_address',
-        'npwp_number',
+        // 'npwp_number',
         'ktp_number',
         'kk_number',
         'religion',
         'nationality',
-        'height',
-        'weight',
+        // 'height',
+        // 'weight',
         'pob',
         'dob',
         'gender',
         'date_applied',
+
+        'is_qualify',
+        'is_hire',
+        'ethnic', //
+        'blood_type',
+        'candidate_from', //
+        'applied_position', //
+        'recommended_position', //
+
+        'file_cv', //
+        'file_kk', //
+        'file_ktp', //
+        'file_skck', //
     ];
 
     public function familyDetails()
@@ -48,5 +61,9 @@ class Candidate extends Model
     public function CandidateDocuments()
     {
         return $this->hasMany(CandidateDocument::class);
+    }
+    public function TrainingAttendeds()
+    {
+        return $this->hasMany(TrainingAttended::class);
     }
 }

@@ -17,8 +17,8 @@ return new class extends Migration {
             $table->string('school_level');
             $table->string('school_name');
             $table->string('study');
-            $table->date('year_from');
-            $table->date('year_to');
+            $table->year('year_from');
+            $table->year('year_to');
             $table->string('gpa');
             $table->timestamps();
             $table->softDeletes();

@@ -17,9 +17,9 @@
               <input type="hidden" name="candidate_id" value="{{ $candidate->id }}">
 
               <div class="col-6 mb-1">
-                <label class="form-label" for="relationship">Hubungan Keluarga</label>
-                <select type="text" id="relationship" name="relationship"
-                  class="form-control @error('relationship') is-invalid @enderror" required>
+                <label class="form-label" for="relation">Hubungan Keluarga</label>
+                <select type="text" id="relation" name="relation"
+                  class="form-control @error('relation') is-invalid @enderror" required>
                   <option value="" disabled selected>Choose</option>
                   <option value="BAPAK">Bapak</option>
                   <option value="IBU">Ibu</option>
@@ -28,7 +28,7 @@
                   <option value="ANAK">Anak</option>
                   <option value="SAUDARA KANDUNG">Saudara Kandung</option>
                 </select>
-                @error('relationship')
+                @error('relation')
                   <a style="color: red">
                     <small>
                       {{ $message }}
