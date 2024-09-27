@@ -37,6 +37,7 @@ return new class extends Migration {
             $table->string('candidate_from')->nullable(); //
             $table->string('applied_position')->nullable(); //
             $table->string('recommended_position')->nullable(); //
+            $table->string('marital_status')->nullable(); //
 
             $table->string('file_cv')->nullable(); //
             $table->string('file_kk')->nullable(); //

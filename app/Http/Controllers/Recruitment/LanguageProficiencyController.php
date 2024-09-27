@@ -15,7 +15,7 @@ class LanguageProficiencyController extends Controller
      */
     public function index()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -23,7 +23,7 @@ class LanguageProficiencyController extends Controller
      */
     public function create()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -40,7 +40,7 @@ class LanguageProficiencyController extends Controller
      */
     public function show(LanguageProficiency $languageProficiency)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -48,7 +48,7 @@ class LanguageProficiencyController extends Controller
      */
     public function edit(LanguageProficiency $languageProficiency)
     {
-        //
+        abort(404);
     }
 
     /**

@@ -3,12 +3,15 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\ManagementAccess\CompanyController;
 use App\Http\Controllers\ManagementAccess\RoleController;
 use App\Http\Controllers\ManagementAccess\UserController;
 use App\Http\Controllers\ManagementAccess\RouteController;
 use App\Http\Controllers\ManagementAccess\MenuItemController;
 use App\Http\Controllers\ManagementAccess\MenuGroupController;
 use App\Http\Controllers\ManagementAccess\PermissionController;
+use App\Http\Controllers\Position\AllowanceController;
+use App\Http\Controllers\Position\LevelController;
 use App\Http\Controllers\Recruitment\CandidateController;
 use App\Http\Controllers\Recruitment\EducationalHistoryController;
 use App\Http\Controllers\Recruitment\EmploymentHistoryController;
@@ -16,6 +19,9 @@ use App\Http\Controllers\Recruitment\FamilyDetailController;
 use App\Http\Controllers\Recruitment\LanguageProficiencyController;
 use App\Http\Controllers\Recruitment\SkillController;
 use App\Http\Controllers\Recruitment\TrainingAttendedController;
+use App\Http\Controllers\WorkUnit\DepartmentController;
+use App\Http\Controllers\WorkUnit\DirectorateController;
+use App\Http\Controllers\WorkUnit\DivisionController;
 
 Route::permanentRedirect('/', '/login');
 
@@ -32,6 +38,7 @@ Route::group(['middleware' => ['web', 'auth', 'role:super-admin', 'verified',]],
     Route::resource('role', RoleController::class)->only('index', 'store', 'update', 'destroy');
     Route::resource('menu', MenuGroupController::class)->only('index', 'store', 'update', 'destroy');
     Route::resource('menu.item', MenuItemController::class)->only('index', 'store', 'update', 'destroy');
+    Route::resource('company', CompanyController::class)->only('index', 'store', 'update', 'destroy');
 });
 
 Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
@@ -47,6 +54,18 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::resource('languageProficiency', LanguageProficiencyController::class);
     Route::resource('trainingAttended', TrainingAttendedController::class);
     Route::resource('skill', SkillController::class);
+
+    //workUnit
+    Route::resource('directorate', DirectorateController::class)->only('index', 'store', 'update', 'destroy');
+    Route::resource('division', DivisionController::class)->only('index', 'store', 'update', 'destroy');
+    Route::resource('department', DepartmentController::class)->only('index', 'store', 'update', 'destroy', 'getDivisions');
+    Route::get('get-divisions', [DepartmentController::class, 'getDivisions'])->name('getDivisions');
+
+    //position
+    Route::resource('level', LevelController::class)->only('index', 'store', 'update', 'destroy', );
+    Route::resource('allowance', AllowanceController::class)->only('index', 'store', 'update', 'destroy', );
+
+
 
 
 });

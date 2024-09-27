@@ -45,7 +45,7 @@ class PermissionController extends Controller
      */
     public function create()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -65,7 +65,7 @@ class PermissionController extends Controller
      */
     public function show(Permission $permission)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -73,7 +73,7 @@ class PermissionController extends Controller
      */
     public function edit(Permission $permission)
     {
-        //
+        abort(404);
     }
 
     /**

@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->string('name')->nullable();
             $table->string('mastery')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

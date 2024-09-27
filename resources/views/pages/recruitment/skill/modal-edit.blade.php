@@ -32,10 +32,11 @@
                 <label class="form-label" for="mastery">Kemahiran</label>
                 <select id="mastery" name="mastery" class="form-control @error('mastery') is-invalid @enderror"
                   required>
-                  <option value="" disabled selected>Choose</option>
-                  <option value="Cukup"{{ $skill->name == 'Cukup' ? '' : 'selected' }}>Cukup</option>
-                  <option value="Baik"{{ $skill->name == 'Baik' ? '' : 'selected' }}>Baik</option>
-                  <option value="Sangat Baik"{{ $skill->name == 'Sangat Baik' ? '' : 'selected' }}>Sangat Baik</option>
+                  <option value="" disabled>Choose</option>
+                  <option value="Cukup"{{ $skill->mastery == 'Cukup' ? 'selected' : '' }}>Cukup</option>
+                  <option value="Baik"{{ $skill->mastery == 'Baik' ? 'selected' : '' }}>Baik</option>
+                  <option value="Sangat Baik"{{ $skill->mastery == 'Sangat Baik' ? 'selected' : '' }}>Sangat Baik
+                  </option>
                 </select>
                 @error('mastery')
                   <a style="color: red"><small>{{ $message }}</small></a>

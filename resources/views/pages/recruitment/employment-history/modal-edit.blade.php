@@ -4,7 +4,8 @@
   style="display: none;">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form action="{{ route('employmentHistory.update', $employmentHistory) }}" method="post">
+      <form action="{{ route('employmentHistory.update', $employmentHistory) }}" method="post"
+        enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -18,16 +19,7 @@
         <div class="card-body">
           <div class="row justify-content-center">
             <div class="col-md-12"> <!-- Make form smaller with col-md-6 and center it -->
-              {{-- <input type="hidden" name="candidate_id" value="{{ $candidate->id }}"> --}}
-
-              <div class="mb-2">
-                <label class="form-label" for="position">Posisi / Jabatan</label>
-                <input id="position" value="{{ $employmentHistory->position }}" name="position"
-                  class="form-control @error('position') is-invalid @enderror" required>
-                @error('position')
-                  <a style="color: red"><small>{{ $message }}</small></a>
-                @enderror
-              </div>
+              <input type="hidden" name="name" value="{{ $candidate->name }}">
 
               <div class="mb-2">
                 <label class="form-label" for="company_name">Nama Perusahaan</label>
@@ -39,13 +31,24 @@
               </div>
 
               <div class="mb-2">
+                <label class="form-label" for="position">Posisi / Jabatan</label>
+                <input id="position" value="{{ $employmentHistory->position }}" name="position"
+                  class="form-control @error('position') is-invalid @enderror" required>
+                @error('position')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div>
+
+
+
+              {{-- <div class="mb-2">
                 <label class="form-label" for="company_type">Jenis Perusahaan</label>
                 <input type="text" value="{{ $employmentHistory->company_type }}" id="company_type"
                   name="company_type" class="form-control @error('company_type') is-invalid @enderror" required />
                 @error('company_type')
                   <a style="color: red"><small>{{ $message }}</small></a>
                 @enderror
-              </div>
+              </div> --}}
 
               <div class="mb-2">
                 <label class="form-label" for="direct_supervisor">Nama Atasan Langsung</label>
@@ -79,14 +82,7 @@
               </div>
 
 
-              <div class="mb-2">
-                <label class="form-label" for="reason">Alasan Keluar/Resign</label>
-                <textarea id="reason" name="reason" class="form-control @error('reason') is-invalid @enderror" rows="2"
-                  required>{{ $employmentHistory->reason }}</textarea>
-                @error('reason')
-                  <a style="color: red"><small>{{ $message }}</small></a>
-                @enderror
-              </div>
+
 
               <div class="mb-2">
                 <label for="salary">Gaji Terakhir</label>
@@ -102,13 +98,34 @@
               </div>
 
               <div class="mb-2">
+                <label class="form-label" for="reason">Alasan Keluar/Resign</label>
+                <textarea id="reason" name="reason" class="form-control @error('reason') is-invalid @enderror" rows="2"
+                  required>{{ $employmentHistory->reason }}</textarea>
+                @error('reason')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div>
+
+              <div class="mb-2">
+                <label for="file" class="form-label">File</label>
+                <input class="form-control" accept=".pdf" type="file" id="file" name="file">
+
+                <div class="text-center my-3" style="height: 30px;">
+                  <a href="{{ Storage::url($employmentHistory->file) }}" target="_blank">
+                    {{ pathinfo($employmentHistory->file, PATHINFO_FILENAME) }}
+                  </a>
+                </div>
+
+              </div>
+
+              {{-- <div class="mb-2">
                 <label class="form-label" for="job_description">Deskripsi Pekerjaan / Tanggung Jawab</label>
                 <textarea id="job_description" name="job_description"
                   class="form-control @error('job_description') is-invalid @enderror" rows="3" required>{{ $employmentHistory->job_description }}</textarea>
                 @error('job_description')
                   <a style="color: red"><small>{{ $message }}</small></a>
                 @enderror
-              </div>
+              </div> --}}
             </div>
           </div>
         </div>

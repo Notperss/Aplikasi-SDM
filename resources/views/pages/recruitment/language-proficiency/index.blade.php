@@ -4,7 +4,7 @@
     <div class="card-content">
       <div class="card-body">
         <div class="d-flex justify-content-between align-items-center ">
-          <h4 class="card-title">Data Bahasa Asing</h4>
+          <h4 class="card-title">Kemampuan Bahasa Asing</h4>
           <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
             data-bs-target="#modal-form-add-language-proficiency">
             <i class="bi bi-plus-lg"></i>

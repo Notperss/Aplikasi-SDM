@@ -137,6 +137,12 @@
                     class="form-control @error('npwp_number') is-invalid @enderror" name="npwp_number" readonly>
                 </div>
                 <div class="form-group">
+                  <label for="npwp_number">Status Perkawinan </label>
+                  <input type="text" inputmode="numeric"
+                    value="{{ old('npwp_number', $candidate->marital_status) }}" maxlength="16" id="npwp_number"
+                    class="form-control @error('npwp_number') is-invalid @enderror" name="npwp_number" readonly>
+                </div>
+                <div class="form-group">
                   <label for="ktp_address">Alamat Sesuai KTP</label>
                   <textarea type="text" id="ktp_address" class="form-control  @error('ktp_address') is-invalid @enderror"
                     name="ktp_address" rows="5" readonly> {{ old('ktp_address', $candidate->ktp_address) }}</textarea>
@@ -150,7 +156,8 @@
                     class="form-control @error('pob') is-invalid @enderror" name="pob" readonly>
                 </div>
                 <div class="form-group">
-                  <label for="dob">Tanggal Lahir</label>
+                  <label for="dob">Tanggal Lahir </label>
+                  {{-- <label for="dob">Tanggal Lahir {{ $ageInYears }} tahun {{ $ageInMonths }} bulan</label> --}}
                   <input type="date" id="dob" name="dob" value="{{ old('dob', $candidate->dob) }}"
                     class="form-control @error('dob') is-invalid @enderror" placeholder="Select date.." readonly>
                 </div>

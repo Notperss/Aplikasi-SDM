@@ -14,7 +14,7 @@ class FamilyDetailController extends Controller
      */
     public function index()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -22,7 +22,7 @@ class FamilyDetailController extends Controller
      */
     public function create()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -40,7 +40,7 @@ class FamilyDetailController extends Controller
      */
     public function show(FamilyDetail $familyDetail)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -48,7 +48,7 @@ class FamilyDetailController extends Controller
      */
     public function edit(FamilyDetail $familyDetail)
     {
-        //
+        abort(404);
     }
 
     /**

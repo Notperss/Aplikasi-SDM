@@ -24,17 +24,36 @@
         <tr>
           <th>Nama Keterampilan/Kompetensi</th>
           <th>Kemahiran</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
         @foreach ($skills as $skill)
           <tr>
-            <td class="text-bold-500">{{ $skill->skill }}</td>
+            <td class="text-bold-500">{{ $skill->name }}</td>
             <td class="text-bold-500">
               <span
                 style="color: {{ $skill->mastery == 'Cukup' ? 'orange' : ($skill->mastery == 'Baik' ? 'rgba(0, 128, 255, 0.974)' : 'green') }}">
                 {{ $skill->mastery }}
               </span>
+            </td>
+            <td>
+              <div class="demo-inline-spacing">
+                <a data-bs-toggle="modal" data-bs-target="#modal-form-edit-skill-{{ $skill->id }}"
+                  class="btn btn-icon btn-secondary text-white">
+                  <i class="bi bi-pencil-square"></i>
+                </a>
+                @include('pages.recruitment.skill.modal-edit')
+
+                <a onclick="deleteskill('{{ $skill->id }}')" title="Delete" class="btn btn-light-danger">
+                  <i class="bi bi-trash"></i>
+                </a>
+                <form id="deleteskillForm_{{ $skill->id }}" action="{{ route('skill.destroy', $skill->id) }}"
+                  method="POST">
+                  @method('DELETE')
+                  @csrf
+                </form>
+              </div>
             </td>
           </tr>
         @endforeach

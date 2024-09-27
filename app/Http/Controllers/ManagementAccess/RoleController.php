@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use App\Models\ManagementAccess\Company;
 use Spatie\Permission\Models\Permission;
 use App\Http\Requests\ManagementAccess\StoreRoleRequest;
 use App\Http\Requests\ManagementAccess\UpdateRoleRequest;
@@ -58,10 +59,11 @@ class RoleController extends Controller
             }
 
         }
+        $companies = Company::orderBy('name')->get();
 
         // dd($permission);
 
-        return view('management-access.role.index', compact('roles', 'users', 'permissions'));
+        return view('management-access.role.index', compact('roles', 'users', 'permissions', 'companies'));
     }
 
     /**
@@ -69,7 +71,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -89,7 +91,7 @@ class RoleController extends Controller
      */
     public function show(string $id)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -97,7 +99,7 @@ class RoleController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        abort(404);
     }
 
     /**

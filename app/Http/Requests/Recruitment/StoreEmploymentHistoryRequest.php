@@ -24,8 +24,8 @@ class StoreEmploymentHistoryRequest extends FormRequest
         return [
             'candidate_id' => 'required|integer|exists:candidates,id',
             'company_name' => 'required|string|max:255',
-            'company_type' => 'required|string|max:100',
-            'direct_supervisor' => 'required|string|max:255',
+            'company_type' => 'string|max:100',
+            'direct_supervisor' => 'string|max:255',
             // 'address' => 'required|string|max:255',
             // 'phone_number' => 'required|string|max:15',
             'year_from' => 'required|integer|min:1900|max:' . date('Y'),
@@ -33,7 +33,8 @@ class StoreEmploymentHistoryRequest extends FormRequest
             'position' => 'required|string|max:255',
             'salary' => 'required|numeric|min:0',
             'reason' => 'required|string|max:255',
-            'job_description' => 'required|string|max:1000',
+            'job_description' => 'string|max:1000',
+            'file' => 'mimes:pdf|max:512',
         ];
     }
 
@@ -73,6 +74,9 @@ class StoreEmploymentHistoryRequest extends FormRequest
             // Reason for Leaving & Job Description
             'reason.required' => 'Alasan keluar wajib diisi.',
             'job_description.required' => 'Deskripsi pekerjaan wajib diisi.',
+
+            'file.mimes' => 'Ekstensi file harus berupa pdf.',
+            'file.max' => 'Ukuran file maksimal adalah 500KB.',
         ];
     }
 

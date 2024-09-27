@@ -39,7 +39,7 @@ class RouteController extends Controller
      */
     public function create()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -61,7 +61,7 @@ class RouteController extends Controller
      */
     public function show(Route $route)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -69,7 +69,7 @@ class RouteController extends Controller
      */
     public function edit(Route $route)
     {
-        //
+        abort(404);
     }
 
     /**

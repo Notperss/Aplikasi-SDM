@@ -651,6 +651,22 @@
                   @enderror
                 </div>
                 <div class="form-group">
+                  <label for="marital_status">Status Perkawinan</label>
+                  <select type="text" value="{{ old('marital_status') }}" id="marital_status"
+                    class="form-control @error('marital_status') is-invalid @enderror" name="marital_status">
+                    <option value="" disabled selected>Choose</option>
+                    <option value="Kawin">Kawin</option>
+                    <option value="Belum Kawin">Belum Kawin</option>
+                  </select>
+                  @error('marital_status')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
+                </div>
+                <div class="form-group">
                   <label for="ktp_address">Alamat Sesuai KTP</label>
                   <textarea type="text" id="ktp_address" class="form-control  @error('ktp_address') is-invalid @enderror"
                     name="ktp_address" rows="5">{{ old('ktp_address') }}</textarea>

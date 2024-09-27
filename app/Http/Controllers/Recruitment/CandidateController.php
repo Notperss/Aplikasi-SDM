@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers\Recruitment;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\Recruitment\Skill;
 use App\Http\Controllers\Controller;
 use App\Models\Recruitment\Candidate;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Recruitment\FamilyDetail;
+use App\Models\Recruitment\TrainingAttended;
+use App\Models\Recruitment\CandidateDocument;
 use App\Models\Recruitment\EmploymentHistory;
 use App\Models\Recruitment\EducationalHistory;
 use App\Models\Recruitment\LanguageProficiency;
 use App\Http\Requests\Recruitment\StoreCandidateRequest;
 use App\Http\Requests\Recruitment\UpdateCandidateRequest;
-use App\Models\Recruitment\CandidateDocument;
-use App\Models\Recruitment\Skill;
-use App\Models\Recruitment\TrainingAttended;
 
 class CandidateController extends Controller
 {
@@ -73,7 +74,11 @@ class CandidateController extends Controller
      */
     public function show(Candidate $candidate)
     {
-        return view('pages.recruitment.candidate.show', compact('candidate'));
+        return view('pages.recruitment.candidate.show', compact('candidate', ));
+        // $dob = Carbon::parse($candidate->dob);
+        // $ageInYears = $dob->age;
+        // $ageInMonths = $dob->diffInMonths(Carbon::now()) % 12; // Modulo to get remaining months
+        // return view('pages.recruitment.candidate.show', compact('candidate', 'ageInYears', 'ageInMonths'));
     }
 
     /**

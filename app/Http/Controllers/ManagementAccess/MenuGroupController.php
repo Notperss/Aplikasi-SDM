@@ -34,7 +34,7 @@ class MenuGroupController extends Controller
      */
     public function create()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -58,7 +58,7 @@ class MenuGroupController extends Controller
      */
     public function show(MenuGroup $menuGroup)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -66,7 +66,7 @@ class MenuGroupController extends Controller
      */
     public function edit(MenuGroup $menuGroup)
     {
-        //
+        abort(404);
     }
 
     /**

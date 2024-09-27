@@ -16,7 +16,7 @@ class TrainingAttendedController extends Controller
      */
     public function index()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -24,7 +24,7 @@ class TrainingAttendedController extends Controller
      */
     public function create()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -51,7 +51,7 @@ class TrainingAttendedController extends Controller
      */
     public function show(TrainingAttended $trainingAttended)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -59,7 +59,7 @@ class TrainingAttendedController extends Controller
      */
     public function edit(TrainingAttended $trainingAttended)
     {
-        //
+        abort(404);
     }
 
     /**

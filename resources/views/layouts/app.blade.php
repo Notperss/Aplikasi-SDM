@@ -30,6 +30,8 @@
   <link rel="stylesheet" href="{{ asset('dist/assets/compiled/css/app.css') }}" />
   <link rel="stylesheet" href="{{ asset('dist/assets/compiled/css/app-dark.css') }}" />
   <link rel="stylesheet" href="{{ asset('dist/assets/compiled/css/iconly.css') }}" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   @stack('after-style')
   <!-- /Style -->
 

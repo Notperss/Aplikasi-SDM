@@ -35,6 +35,7 @@ class Candidate extends Model
         'candidate_from', //
         'applied_position', //
         'recommended_position', //
+        'marital_status', //
 
         'file_cv', //
         'file_kk', //

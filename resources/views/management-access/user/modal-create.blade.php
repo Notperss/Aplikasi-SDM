@@ -39,7 +39,7 @@
             {{-- <x-form.validation.error name="email" /> --}}
           </div>
 
-          {{-- <div class="mb-3">
+          <div class="mb-3">
             <label for="company_id" class="form-label">Perusahaan</label>
             <select class="form-control choices" id="company_id" placeholder="Guard Name" name="company_id">
               <option value="" selected disabled>Choose</option>
@@ -47,10 +47,16 @@
                 <option value="{{ $company->id }}">{{ $company->name }}</option>
               @endforeach
             </select>
-            <x-form.validation.error name="company_id" />
+            @error('company_id')
+              <a style="color: red">
+                <small>
+                  {{ $message }}
+                </small>
+              </a>
+            @enderror
           </div>
 
-          <div class="mb-3">
+          {{-- <div class="mb-3">
             <label for="division" class="form-label">Divisi</label>
             <select class="form-control" id="division" style="width:100%" placeholder="Guard Name" name="division_id">
               <option value="" selected disabled>Choose</option>

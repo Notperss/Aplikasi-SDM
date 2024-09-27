@@ -8,6 +8,7 @@ use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ManagementAccess\StoreUserRequest;
 use App\Http\Requests\ManagementAccess\UpdateUserRequest;
+use App\Models\ManagementAccess\Company;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -29,8 +30,9 @@ class UserController extends Controller
             ->latest()
             ->paginate(10);
         $roles = Role::orderBy('name')->get();
+        $companies = Company::orderBy('name')->get();
 
-        return view('management-access.user.index', compact('users', 'roles'));
+        return view('management-access.user.index', compact('users', 'roles', 'companies'));
     }
 
     /**
@@ -38,7 +40,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -64,7 +66,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -72,7 +74,7 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        abort(404);
     }
 
     /**

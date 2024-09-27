@@ -13,7 +13,7 @@ class SkillController extends Controller
      */
     public function index()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -21,7 +21,7 @@ class SkillController extends Controller
      */
     public function create()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -29,7 +29,6 @@ class SkillController extends Controller
      */
     public function store(Request $request)
     {
-        // Define validation rules
         $request->validate([
             'name' => 'required|string|max:255',
         ], [
@@ -38,7 +37,6 @@ class SkillController extends Controller
             'name.max' => 'Nama keterampilan tidak boleh lebih dari 255 karakter.',
         ]);
 
-        // Create the new skill record
         Skill::create($request->all());
 
         // Redirect back with success message
@@ -51,7 +49,7 @@ class SkillController extends Controller
      */
     public function show(Skill $skill)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -59,7 +57,7 @@ class SkillController extends Controller
      */
     public function edit(Skill $skill)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -67,7 +65,6 @@ class SkillController extends Controller
      */
     public function update(Request $request, Skill $skill)
     {
-        // Define validation rules
         $request->validate([
             'name' => 'required|string|max:255',
         ], [

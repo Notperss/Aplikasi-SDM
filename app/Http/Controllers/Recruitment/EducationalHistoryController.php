@@ -16,7 +16,7 @@ class EducationalHistoryController extends Controller
      */
     public function index()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -24,7 +24,7 @@ class EducationalHistoryController extends Controller
      */
     public function create()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -51,7 +51,7 @@ class EducationalHistoryController extends Controller
      */
     public function show(EducationalHistory $educationalHistory)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -59,7 +59,7 @@ class EducationalHistoryController extends Controller
      */
     public function edit(EducationalHistory $educationalHistory)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -80,7 +80,7 @@ class EducationalHistoryController extends Controller
                 Storage::disk('public_local')->delete($path_ijazah);
             }
         } else {
-            $data['ijazah'] = $path_ijazah;
+            $data['file_ijazah'] = $path_ijazah;
         }
         $educationalHistory->update($data);
         return redirect()->back()->with('success', 'Data has been updated successfully!');

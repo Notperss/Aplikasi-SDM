@@ -20,6 +20,7 @@ class EmploymentHistory extends Model
         'salary',
         'reason',
         'job_description',
+        'file',
 
     ];
 
