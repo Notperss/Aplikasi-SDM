@@ -16,10 +16,12 @@ return new class extends Migration {
             $table->foreignIdFor(Candidate::class)->constrained()->onDelete('cascade');
             $table->string('school_level');
             $table->string('school_name');
-            $table->string('study');
+            $table->string('study')->nullable();
             $table->year('year_from');
-            $table->year('year_to');
-            $table->string('gpa');
+            $table->year('year_to')->nullable();
+            $table->string('gpa')->nullable();
+            $table->string('graduate')->nullable();
+            $table->string('file_ijazah')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\ManagementAccess\Company;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration {
     /**
@@ -12,6 +13,7 @@ return new class extends Migration {
     {
         Schema::create('candidates', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(Company::class)->nullable()->constrained()->onDelete('cascade');
             $table->string('name');
             $table->date('dob');
             $table->string('pob');
@@ -21,8 +23,8 @@ return new class extends Migration {
             $table->text('ktp_address');
             $table->text('current_address');
             // $table->string('npwp_number');
-            $table->string('ktp_number');
-            $table->string('kk_number');
+            $table->string('ktp_number')->nullable();
+            $table->string('kk_number')->nullable();
             $table->string('religion');
             $table->string('nationality');
             // $table->integer('height');
@@ -39,10 +41,19 @@ return new class extends Migration {
             $table->string('recommended_position')->nullable(); //
             $table->string('marital_status')->nullable(); //
 
+            $table->string('paspor_number')->nullable(); //
+
             $table->string('file_cv')->nullable(); //
             $table->string('file_kk')->nullable(); //
             $table->string('file_ktp')->nullable(); //
             $table->string('file_skck')->nullable(); //
+            $table->string('file_vaksin')->nullable(); //
+            $table->string('file_surat_sehat')->nullable(); //
+
+            $table->string('longitude_ktp')->nullable();
+            $table->string('longitude_domisili')->nullable();
+            $table->string('latitude_ktp')->nullable();
+            $table->string('latitude_domisili')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

@@ -26,6 +26,7 @@
           <thead>
             <tr>
               <th>#</th>
+              <th>Kode</th>
               <th>Direktorat</th>
               <th></th>
             </tr>
@@ -34,6 +35,7 @@
             @foreach ($directorates as $directorate)
               <tr>
                 <td class="text-center">{{ $loop->iteration }}</td>
+                <td>{{ $directorate->code }}</td>
                 <td>{{ $directorate->name }}</td>
                 <td>
 

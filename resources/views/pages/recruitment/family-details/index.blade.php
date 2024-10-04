@@ -16,26 +16,7 @@
   </div>
 </div>
 
-<div class="row">
-  {{-- <div class="col-xl-6 col-md-6 col-sm-12">
-    <div class="card" style="background-color:  #0536c93d;">
-      <div class="card-content">
-        <div class="card-body">
-          <h5 class="card-title">jon doe</h5>
-          <p class="card-text">
-            Introducing our beautifully designed cards, thoughtfully crafted to enhance your
-            browsing experience. These versatile elements are the perfect way to present
-            information, products, or services on our website.
-          </p>
-        </div>
-        <img class="img-fluid w-100" src="./assets/compiled/jpg/banana.jpg" alt="Card image cap">
-      </div>
-      <div class="card-footer d-flex justify-content-between">
-        <span>Card Footer</span>
-        <button class="btn btn-light-primary">Read More</button>
-      </div>
-    </div>
-  </div> --}}
+{{-- <div class="row">
   @foreach ($familyDetails as $familyDetail)
     <div class="col-xl-6 col-md-6 col-sm-12">
       <div class="card" style="background-color:  #a3b3e626;">
@@ -103,9 +84,80 @@
       </div>
     </div>
   @endforeach
+</div> --}}
 
-  @include('pages.recruitment.family-details.modal-create')
+<div class="row">
+  <!-- Table with outer spacing -->
+  <div class="table-responsive">
+    <table class="table table-sm" style="margin: 0; font-size: 70%">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Hub.</th>
+          <th>Nama</th>
+          <th>Jenis Kelamin</th> <!-- Updated: Combine year_from and year_to -->
+          <th>Tgl Lahir</th>
+          <th>No. Telp</th>
+          <th>Pendidikan Terakhir</th>
+          <th>Pekerjaan Terakhir</th>
+          <th>Alamat</th>
+          <th style="width: 13%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @forelse ($familyDetails as $familyDetail)
+          <tr>
+            <td class="text-bold-500">{{ $loop->iteration }}</td>
+            <td class="text-bold-500">{{ $familyDetail->relation }}</td>
+            <td class="text-bold-500">{{ $familyDetail->name }}</td>
+            <td class="text-bold-500">
+              @if ($familyDetail->gender == 'LAKI-LAKI')
+                L
+              @elseif ($familyDetail->gender == 'PEREMPUAN')
+                P
+              @else
+                N/A
+              @endif
+            </td>
+            <td class="text-bold-500">
+              {{ Carbon\Carbon::parse($familyDetail->dob)->translatedFormat('d F Y') }}
+            </td>
+            <td class="text-bold-500">{{ $familyDetail->phone_number }}</td>
+            <td class="text-bold-500">{{ $familyDetail->education }}</td>
+            <td class="text-bold-500">{{ $familyDetail->job }}</td>
+            <td class="text-bold-500">{{ $familyDetail->address }}</td>
+
+            <td>
+              <div class="demo-inline-spacing">
+
+                <a data-bs-toggle="modal" data-bs-target="#modal-form-edit-family-details-{{ $familyDetail->id }}"
+                  class="btn btn-sm btn-icon btn-secondary text-white">
+                  <i class="bi bi-pencil-square"></i>
+                </a>
+                @include('pages.recruitment.family-details.modal-edit')
+
+                <button class="btn btn-sm btn-light-danger mx-2"
+                  onclick="deleteFamilyDetail('{{ $familyDetail->id }}')"><i class="bi bi-trash"></i></button>
+
+                <form id="deleteFamilyDetailForm_{{ $familyDetail->id }}"
+                  action="{{ route('familyDetails.destroy', $familyDetail->id) }}" method="POST">
+                  @method('DELETE')
+                  @csrf
+                </form>
+              </div>
+            </td>
+          </tr>
+        @empty
+          <td class="text-bold-500 text-center" colspan="10">No data available in table</td>
+        @endforelse
+      </tbody>
+    </table>
+
+  </div>
+
 </div>
+
+@include('pages.recruitment.family-details.modal-create')
 
 <style>
   .biodata-item {

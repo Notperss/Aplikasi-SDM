@@ -69,6 +69,7 @@
           <th>#</th>
           <th>Nama Perusahaan</th>
           <th>Posisi</th>
+          <th>Atasan</th>
           <th>Periode</th> <!-- Updated: Combine year_from and year_to -->
           <th>Gaji Terakhir</th>
           <th>Alasan Keluar</th>
@@ -77,11 +78,12 @@
         </tr>
       </thead>
       <tbody>
-        @foreach ($employmentHistories as $employmentHistory)
+        @forelse ($employmentHistories as $employmentHistory)
           <tr>
             <td class="text-bold-500">{{ $loop->iteration }}</td>
             <td class="text-bold-500">{{ $employmentHistory->company_name }}</td>
             <td class="text-bold-500">{{ $employmentHistory->position }}</td>
+            <td class="text-bold-500">{{ $employmentHistory->direct_supervisor }}</td>
             <td class="text-bold-500">
               {{ $employmentHistory->year_from }} - {{ $employmentHistory->year_to }}
             </td> <!-- Combine year_from and year_to -->
@@ -116,7 +118,9 @@
               </div>
             </td>
           </tr>
-        @endforeach
+        @empty
+          <td class="text-bold-500 text-center" colspan="9">No data available in table</td>
+        @endforelse
       </tbody>
     </table>
 

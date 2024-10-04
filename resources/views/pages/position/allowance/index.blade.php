@@ -1,9 +1,9 @@
 @extends('layouts.app')
-@section('title', 'Division')
+@section('title', 'Tunjangan')
 @section('content')
 
 @section('breadcrumb')
-  <x-breadcrumb title="Division" page="Unit Kerja" active="Division" route="{{ route('division.index') }}" />
+  <x-breadcrumb title="Tunjangan" page="Unit Kerja" active="Tunjangan" route="{{ route('allowance.index') }}" />
 @endsection
 
 <section class="section">
@@ -11,12 +11,12 @@
     <div class="card">
       <div class="card-header">
         <div class="d-flex justify-content-between align-items-center ">
-          <h5 class="fw-normal mb-0 text-body">Daftar Division</h5>
+          <h5 class="fw-normal mb-0 text-body">Daftar Tunjangan</h5>
 
           <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
-            data-bs-target="#modal-form-add-division">
+            data-bs-target="#modal-form-add-allowance">
             <i class="bi bi-plus-lg"></i>
-            Division
+            Tunjangan
           </button>
 
         </div>
@@ -26,32 +26,39 @@
           <thead>
             <tr>
               <th>#</th>
-              <th>Direktorat</th>
-              <th>Division</th>
+              <th>Tunjangan</th>
+              <th>Tipe</th>
+              <th>Tipe Tunj. Perusahaan</th>
+              <th>Level</th>
+              <th>Jumlah</th>
+              <th>Deskripsi</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            @foreach ($divisions as $division)
+            @foreach ($allowances as $allowance)
               <tr>
                 <td class="text-center">{{ $loop->iteration }}</td>
-                <td>{{ $division->directorate->name }}</td>
-                <td>{{ $division->name }}</td>
+                <td>{{ $allowance->name }}</td>
+                <td>{{ $allowance->type }}</td>
+                <td>{{ $allowance->natura ?? '-' }}</td>
+                <td>{{ $allowance->level->name }}</td>
+                <td>Rp. {{ number_format($allowance->amount, 0, ',', '.') }}</td>
+                <td>{{ $allowance->description }}</td>
                 <td>
-
                   <div class="d-flex justify-content-end mt-2">
-                    <a data-bs-toggle="modal" data-bs-target="#modal-form-edit-division-{{ $division->id }}"
+                    <a data-bs-toggle="modal" data-bs-target="#modal-form-edit-allowance-{{ $allowance->id }}"
                       class="btn btn-icon btn-secondary text-white">
                       <i class="bi bi-pencil-square"></i>
                     </a>
-                    @include('pages.work-unit.division.modal-edit')
+                    @include('pages.position.allowance.modal-edit')
 
-                    <button class="btn btn-light-danger mx-2" onclick="showSweetAlert('{{ $division->id }}')">
+                    <button class="btn btn-light-danger mx-2" onclick="showSweetAlert('{{ $allowance->id }}')">
                       <i class="bi bi-trash"></i>
                     </button>
 
-                    <form id="deleteForm_{{ $division->id }}" action="{{ route('division.destroy', $division->id) }}"
-                      method="POST">
+                    <form id="deleteForm_{{ $allowance->id }}"
+                      action="{{ route('allowance.destroy', $allowance->id) }}" method="POST">
                       @method('DELETE')
                       @csrf
                     </form>
@@ -82,6 +89,6 @@
     }
   </script>
 
-  @include('pages.work-unit.division.modal-create')
+  @include('pages.position.allowance.modal-create')
 
 @endsection

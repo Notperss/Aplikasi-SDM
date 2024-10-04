@@ -27,8 +27,8 @@ class StoreCandidateRequest extends FormRequest
             'phone_number' => ['required',],
             'ktp_address' => ['required', 'string'],
             'current_address' => ['required', 'string'],
-            'ktp_number' => ['required', 'digits:16', 'unique:candidates,ktp_number'],
-            'kk_number' => ['required', 'digits:16', 'unique:candidates,kk_number'],
+            'ktp_number' => ['nullable', 'digits:16', 'unique:candidates,ktp_number'],
+            'kk_number' => ['nullable', 'digits:16', 'unique:candidates,kk_number'],
             // 'npwp_number' => [
             //     'required', 'digits:16',
             //     // 'regex:/^\d{2}\.\d{3}\.\d{3}\.\d{1}-\d{3}\.\d{3}$/',
@@ -43,6 +43,8 @@ class StoreCandidateRequest extends FormRequest
             'dob' => ['required', 'date'],
             'gender' => ['required', 'string', 'in:LAKI-LAKI,PEREMPUAN'],
             'date_applied' => ['nullable', 'date'],
+
+            'paspor_number' => ['nullable', 'unique:candidates,paspor_number'],
 
             'file_kk' => 'mimes:pdf|max:512',
             'file_ktp' => 'mimes:pdf|max:512',
@@ -127,6 +129,10 @@ class StoreCandidateRequest extends FormRequest
 
             'file_cv.mimes' => 'Ekstensi file CV harus berupa pdf.',
             'file_cv.max' => 'Ukuran file CV maksimal adalah 500KB.',
+
+            'paspor_number.unique' => 'Nomor paspor sudah terdaftar.',
+            'paspor_number.max_digits' => 'Nomor paspor tidak boleh lebih dari 10 digit.',
+            'paspor_number.min_digits' => 'Nomor paspor tidak boleh kurang dari 6 digit.',
         ];
     }
 }

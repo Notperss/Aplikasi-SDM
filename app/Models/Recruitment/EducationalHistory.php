@@ -18,6 +18,7 @@ class EducationalHistory extends Model
         'year_from',
         'year_to',
         'gpa',
+        'graduate',
         'file_ijazah',
     ];
 

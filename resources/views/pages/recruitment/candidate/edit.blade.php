@@ -251,8 +251,8 @@
               alt="user-avatar" class="d-block rounded" width="150px" id="uploadedAvatar" />
 
             <!-- Upload Icon and Input -->
-            <label for="uploadImage" class="mt-2" style="cursor: pointer;">
-              <i class="bi bi-upload" style="font-size: 24px; color: rgba(0, 128, 255, 0.974);"></i>
+            <label for="uploadImage" class="mt-2 btn btn-sm btn-primary" style="cursor: pointer;">
+              {{-- <i class="bi bi-upload" style="font-size: 24px; color: rgba(0, 128, 255, 0.974);"></i> --}}
               <span> Upload</span>
               <input type="file" id="uploadImage" value="{{ old('photo') }}" name="photo"
                 accept=".jpg, .jpeg, .png" style="display: none;" onchange="previewImage(event)" />
@@ -302,6 +302,21 @@
                   <input class="form-control" accept=".pdf" type="file" id="file_kk" name="file_kk">
                   <a href="{{ Storage::url($candidate->file_kk) }}" target="_blank" class="text-sm">
                     {{ pathinfo($candidate->file_kk, PATHINFO_FILENAME) }}
+                  </a>
+                </div>
+                <div class="mb-3">
+                  <label for="file_surat_sehat" class="form-label">SURAT KETERANGAN SEHAT</label>
+                  <input class="form-control" accept=".pdf" type="file" id="file_surat_sehat"
+                    name="file_surat_sehat">
+                  <a href="{{ Storage::url($candidate->file_surat_sehat) }}" target="_blank" class="text-sm">
+                    {{ pathinfo($candidate->file_surat_sehat, PATHINFO_FILENAME) }}
+                  </a>
+                </div>
+                <div class="mb-3">
+                  <label for="file_vaksin" class="form-label">SERTIFIKAT VAKSIN</label>
+                  <input class="form-control" accept=".pdf" type="file" id="file_vaksin" name="file_vaksin">
+                  <a href="{{ Storage::url($candidate->file_vaksin) }}" target="_blank" class="text-sm">
+                    {{ pathinfo($candidate->file_vaksin, PATHINFO_FILENAME) }}
                   </a>
                 </div>
                 <p class="card-text text-sm">
@@ -354,6 +369,20 @@
                     oninput="this.value = this.value.replace(/\D+/g, '')"
                     class="form-control @error('phone_number') is-invalid @enderror" name="phone_number">
                   @error('phone_number')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
+                </div>
+
+                <div class="form-group">
+                  <label for="paspor_number">No. Paspor</label>
+                  <input type="text" id="paspor_number" maxlength="9"
+                    value="{{ old('paspor_number', $candidate->paspor_number) }}" maxlength="16"
+                    class="form-control @error('paspor_number') is-invalid @enderror" name="paspor_number">
+                  @error('paspor_number')
                     <a style="color: red">
                       <small>
                         {{ $message }}
@@ -418,37 +447,6 @@
                   @enderror
                 </div>
 
-                <div class="form-group">
-                  <label for="marital_status">Status Perkawinan</label>
-                  <select type="text" value="{{ old('marital_status') }}" id="marital_status"
-                    class="form-control @error('marital_status') is-invalid @enderror" name="marital_status">
-                    <option value="" disabled selected>Choose</option>
-                    <option value="Kawin" {{ $candidate->marital_status == 'Kawin' ? 'selected' : '' }}>Kawin
-                    </option>
-                    <option value="Belum Kawin" {{ $candidate->marital_status == 'Belum Kawin' ? 'selected' : '' }}>
-                      Belum Kawin</option>
-                  </select>
-                  @error('marital_status')
-                    <a style="color: red">
-                      <small>
-                        {{ $message }}
-                      </small>
-                    </a>
-                  @enderror
-                </div>
-
-                <div class="form-group">
-                  <label for="ktp_address">Alamat Sesuai KTP</label>
-                  <textarea type="text" id="ktp_address" class="form-control  @error('ktp_address') is-invalid @enderror"
-                    name="ktp_address" rows="5"> {{ old('ktp_address', $candidate->ktp_address) }}</textarea>
-                  @error('ktp_address')
-                    <a style="color: red">
-                      <small>
-                        {{ $message }}
-                      </small>
-                    </a>
-                  @enderror
-                </div>
               </div>
 
               <div class="col-md-6 col-12">
@@ -477,37 +475,104 @@
                     </a>
                   @enderror
                 </div>
-                <div class="form-group">
-                  <label for="gender">Jenis Kelamin</label>
-                  <select name="gender" id="gender" class="form-control  @error('gender') is-invalid @enderror">
-                    <option value="" disabled selected>Choose</option>
-                    <option value="LAKI-LAKI"
-                      {{ old('gender', $candidate->gender) == 'LAKI-LAKI' ? 'selected' : '' }}>
-                      Laki-laki
-                    </option>
-                    <option value="PEREMPUAN"
-                      {{ old('gender', $candidate->gender) == 'PEREMPUAN' ? 'selected' : '' }}>
-                      Perempuan
-                    </option>
-                  </select>
-                  @error('gender')
-                    <a style="color: red">
-                      <small>
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <label for="gender">Jenis Kelamin</label>
+                    <select name="gender" id="gender"
+                      class="form-control  @error('gender') is-invalid @enderror">
+                      <option value="" disabled selected>Choose</option>
+                      <option value="LAKI-LAKI"
+                        {{ old('gender', $candidate->gender) == 'LAKI-LAKI' ? 'selected' : '' }}>
+                        Laki-laki
+                      </option>
+                      <option value="PEREMPUAN"
+                        {{ old('gender', $candidate->gender) == 'PEREMPUAN' ? 'selected' : '' }}>
+                        Perempuan
+                      </option>
+                    </select>
+                    @error('gender')
+                      <a style="color: red">
+                        <small>
+                          {{ $message }}
+                        </small>
+                      </a>
+                    @enderror
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="blood_type">Gol. Darah</label>
+                    <select id="blood_type" class="form-control @error('blood_type') is-invalid @enderror"
+                      name="blood_type">
+                      <option value="" disabled selected>Choose</option>
+                      <option value="A-" {{ $candidate->blood_type == 'A-' ? 'selected' : '' }}>A-</option>
+                      <option value="A+" {{ $candidate->blood_type == 'A+' ? 'selected' : '' }}>A+</option>
+                      <option value="B-" {{ $candidate->blood_type == 'B-' ? 'selected' : '' }}>B-</option>
+                      <option value="B+" {{ $candidate->blood_type == 'B+' ? 'selected' : '' }}>B+</option>
+                      <option value="AB-" {{ $candidate->blood_type == 'AB-' ? 'selected' : '' }}>AB-</option>
+                      <option value="AB+" {{ $candidate->blood_type == 'AB+' ? 'selected' : '' }}>AB+</option>
+                      <option value="O-" {{ $candidate->blood_type == 'O-' ? 'selected' : '' }}>O-</option>
+                      <option value="O+" {{ $candidate->blood_type == 'O+' ? 'selected' : '' }}>O+</option>
+                    </select>
+                    @error('blood_type')
+                      <small class="text-danger">
                         {{ $message }}
                       </small>
-                    </a>
+                    @enderror
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="marital_status">Status Perkawinan</label>
+                  <select id="marital_status" name="marital_status"
+                    class="form-control @error('marital_status') is-invalid @enderror">
+                    <option value="" disabled selected>Choose</option>
+                    <option value="Kawin"
+                      {{ old('marital_status', $candidate->marital_status) == 'Kawin' ? 'selected' : '' }}>
+                      Kawin
+                    </option>
+                    <option value="Belum Kawin"
+                      {{ old('marital_status', $candidate->marital_status) == 'Belum Kawin' ? 'selected' : '' }}>
+                      Belum Kawin
+                    </option>
+                    <option value="Cerai Hidup"
+                      {{ old('marital_status', $candidate->marital_status) == 'Cerai Hidup' ? 'selected' : '' }}>
+                      Cerai Hidup
+                    </option>
+                    <option value="Cerai Mati"
+                      {{ old('marital_status', $candidate->marital_status) == 'Cerai Mati' ? 'selected' : '' }}>
+                      Cerai Mati
+                    </option>
+                  </select>
+                  @error('marital_status')
+                    <span class="text-danger">
+                      <small>{{ $message }}</small>
+                    </span>
                   @enderror
                 </div>
                 <div class="form-group">
                   <label for="religion">Agama</label>
-                  <input type="text" id="religion" value="{{ old('religion', $candidate->religion) }}"
-                    class="form-control @error('religion') is-invalid @enderror" name="religion">
+                  <select id="religion" name="religion"
+                    class="form-control @error('religion') is-invalid @enderror">
+                    <option value="" disabled selected>Choose</option>
+                    <option value="Islam" {{ old('religion', $candidate->religion) == 'Islam' ? 'selected' : '' }}>
+                      Islam</option>
+                    <option value="Kristen"
+                      {{ old('religion', $candidate->religion) == 'Kristen' ? 'selected' : '' }}>Kristen</option>
+                    <option value="Katolik"
+                      {{ old('religion', $candidate->religion) == 'Katolik' ? 'selected' : '' }}>Katolik</option>
+                    <option value="Hindu" {{ old('religion', $candidate->religion) == 'Hindu' ? 'selected' : '' }}>
+                      Hindu</option>
+                    <option value="Buddha" {{ old('religion', $candidate->religion) == 'Buddha' ? 'selected' : '' }}>
+                      Buddha</option>
+                    <option value="Konghucu"
+                      {{ old('religion', $candidate->religion) == 'Konghucu' ? 'selected' : '' }}>Konghucu</option>
+                    <option value="Dan Lain-lain"
+                      {{ old('religion', $candidate->religion) == 'Dan Lain-lain' ? 'selected' : '' }}>
+                      Dan Lain-lain
+                    </option>
+                  </select>
                   @error('religion')
-                    <a style="color: red">
-                      <small>
-                        {{ $message }}
-                      </small>
-                    </a>
+                    <span class="text-danger">
+                      <small>{{ $message }}</small>
+                    </span>
                   @enderror
                 </div>
                 <div class="form-group">
@@ -522,51 +587,27 @@
                     </a>
                   @enderror
                 </div>
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <label for="ethnic">Suku Bangsa</label>
-                    <input type="text" value="{{ old('ethnic', $candidate->ethnic) }}" id="ethnic"
-                      class="form-control @error('ethnic') is-invalid @enderror" name="ethnic">
-                    @error('ethnic')
-                      <a style="color: red">
-                        <small>
-                          {{ $message }}
-                        </small>
-                      </a>
-                    @enderror
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="blood_type">Gol. Darah</label>
-                    <select type="text" value="{{ old('blood_type') }}" id="blood_type" maxlength="2"
-                      class="form-control @error('blood_type') is-invalid @enderror" name="blood_type">
-                      <option value="" disabled selected>Choose</option>
-                      <option value="A-"{{ $candidate->blood_type == 'A-' ? '' : 'selected' }}>A-</option>
-                      <option value="A+"{{ $candidate->blood_type == 'A+' ? '' : 'selected' }}>A+</option>
-                      <option value="B-"{{ $candidate->blood_type == 'B-' ? '' : 'selected' }}>B-</option>
-                      <option value="B+"{{ $candidate->blood_type == 'B+' ? '' : 'selected' }}>B+</option>
-                      <option value="AB-"{{ $candidate->blood_type == 'AB-' ? '' : 'selected' }}>AB-</option>
-                      <option value="AB+"{{ $candidate->blood_type == 'AB+' ? '' : 'selected' }}>AB+</option>
-                      <option value="O-"{{ $candidate->blood_type == 'O-' ? '' : 'selected' }}>O-</option>
-                      <option value="O+"{{ $candidate->blood_type == 'O+' ? '' : 'selected' }}>O+</option>
-                    </select>
-                    @error('blood_type')
-                      <a style="color: red">
-                        <small>
-                          {{ $message }}
-                        </small>
-                      </a>
-                    @enderror
-                  </div>
+                <div class="form-group">
+                  <label for="ethnic">Suku Bangsa</label>
+                  <input type="text" value="{{ old('ethnic', $candidate->ethnic) }}" id="ethnic"
+                    class="form-control @error('ethnic') is-invalid @enderror" name="ethnic">
+                  @error('ethnic')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
                 </div>
                 <div class="form-group">
                   <label for="candidate_from">Pelamar Dari</label>
                   <select type="text" value="{{ old('candidate_from') }}" id="candidate_from"
                     class="form-control @error('candidate_from') is-invalid @enderror" name="candidate_from">
-                    <option value="" disabled selected>Choose</option>
-                    <option value="MANAJEMEN" {{ $candidate->candidate_from == 'MANAJEMEN' ? '' : 'selected' }}>
+                    <option value="" disabled>Choose</option>
+                    <option value="MANAJEMEN" {{ $candidate->candidate_from == 'MANAJEMEN' ? 'selected' : '' }}>
                       Manajemen
                     </option>
-                    <option value="UMUM"{{ $candidate->candidate_from == 'UMUM' ? '' : 'selected' }}>Umum</option>
+                    <option value="UMUM"{{ $candidate->candidate_from == 'UMUM' ? 'selected' : '' }}>Umum</option>
                   </select>
                   @error('candidate_from')
                     <a style="color: red">
@@ -576,18 +617,74 @@
                     </a>
                   @enderror
                 </div>
+              </div>
+
+              <div class="col-12">
                 <div class="form-group">
-                  <label for="current_address">Alamat Sekarang</label>
+                  <label for="ktp_address">Alamat Sesuai KTP</label>
+                  <textarea type="text" id="ktp_address" class="form-control  @error('ktp_address') is-invalid @enderror"
+                    name="ktp_address" rows="5"> {{ old('ktp_address', $candidate->ktp_address) }}</textarea>
+                  @error('ktp_address')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
+                </div>
+                <div class="row">
+                  <!-- Latitude and Longitude for Alamat KTP -->
+                  <div class="form-group col-md-5">
+                    <label for="latitude_ktp">Latitude Alamat KTP</label>
+                    <input type="text" id="latitude_ktp" value="{{ $candidate->latitude_ktp }}"
+                      name="latitude_ktp" class="form-control" readonly>
+                  </div>
+                  <div class="form-group col-md-5">
+                    <label for="longitude_ktp">Longitude Alamat KTP</label>
+                    <input type="text" id="longitude_ktp" value="{{ $candidate->latitude_ktp }}"
+                      name="longitude_ktp" class="form-control" readonly>
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label for="map_ktp">Map</label>
+                    <button type="button" class="form-control btn btn-sm btn-primary" data-bs-toggle="modal"
+                      data-bs-target="#mapModalKTP">
+                      Open
+                    </button>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="current_address">Alamat Domisili</label>
                   <textarea type="text" id="current_address" class="form-control @error('current_address') is-invalid @enderror"
                     name="current_address" rows="5"> {{ old('current_address', $candidate->current_address) }}</textarea>
+                  @error('current_address')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
                 </div>
-                @error('current_address')
-                  <a style="color: red">
-                    <small>
-                      {{ $message }}
-                    </small>
-                  </a>
-                @enderror
+                <div class="row mt-3">
+                  <!-- Latitude and Longitude for Alamat Domisili -->
+                  <div class="form-group col-md-5">
+                    <label for="latitude_domisili">Latitude Alamat Domisili</label>
+                    <input type="text" id="latitude_domisili" value="{{ $candidate->latitude_domisili }}"
+                      name="latitude_domisili" class="form-control" readonly>
+                  </div>
+                  <div class="form-group col-md-5">
+                    <label for="longitude_domisili">Longitude Alamat Domisili</label>
+                    <input type="text" id="longitude_domisili" value="{{ $candidate->longitude_domisili }}"
+                      name="longitude_domisili" class="form-control" readonly>
+                  </div>
+                  <div class="form-group col-md-2">
+                    <label for="map_domisili">Map</label>
+                    <button type="button" class="form-control btn btn-sm btn-primary" data-bs-toggle="modal"
+                      data-bs-target="#mapModalDomisili">
+                      Open
+                    </button>
+                  </div>
+                </div>
               </div>
 
               <div class="col-12 d-flex justify-content-end mt-4">
@@ -599,6 +696,40 @@
         </div>
       </div>
     </div>
+
+
+    <!-- Map Modal -->
+    <!-- Modal for KTP Map -->
+    <div class="modal fade" id="mapModalKTP" tabindex="-1" aria-labelledby="mapModalKTPLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="mapModalKTPLabel">Select Location for Alamat KTP</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div id="mapKTP" style="height: 400px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for Domisili Map -->
+    <div class="modal fade" id="mapModalDomisili" tabindex="-1" aria-labelledby="mapModalDomisiliLabel"
+      aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="mapModalDomisiliLabel">Select Location for Alamat Domisili</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div id="mapDomisili" style="height: 400px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </form>
 </section>
 
@@ -612,4 +743,79 @@
     reader.readAsDataURL(event.target.files[0]);
   }
 </script>
+
+<!-- Include Leaflet.js CSS and JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var mapKTP, mapDomisili;
+    var markerKTP, markerDomisili;
+
+    // Initialize KTP Map when modal is shown
+    $('#mapModalKTP').on('shown.bs.modal', function() {
+      if (!mapKTP) {
+        mapKTP = L.map('mapKTP').setView([-6.158011331721201, 106.88320219516756],
+          13); // Default location: Jakarta
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(mapKTP);
+
+        // Add marker when map is clicked
+        mapKTP.on('click', function(e) {
+          var lat = e.latlng.lat;
+          var lng = e.latlng.lng;
+
+          // Update input fields for KTP
+          document.getElementById('latitude_ktp').value = lat;
+          document.getElementById('longitude_ktp').value = lng;
+
+          // Place marker
+          if (markerKTP) {
+            mapKTP.removeLayer(markerKTP);
+          }
+          markerKTP = L.marker([lat, lng]).addTo(mapKTP);
+        });
+      }
+      setTimeout(function() {
+        mapKTP.invalidateSize();
+      }, 100);
+    });
+
+    // Initialize Domisili Map when modal is shown
+    $('#mapModalDomisili').on('shown.bs.modal', function() {
+      if (!mapDomisili) {
+        mapDomisili = L.map('mapDomisili').setView([-6.158011331721201, 106.88320219516756],
+          13); // Default location: Jakarta
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(mapDomisili);
+
+        // Add marker when map is clicked
+        mapDomisili.on('click', function(e) {
+          var lat = e.latlng.lat;
+          var lng = e.latlng.lng;
+
+          // Update input fields for Domisili
+          document.getElementById('latitude_domisili').value = lat;
+          document.getElementById('longitude_domisili').value = lng;
+
+          // Place marker
+          if (markerDomisili) {
+            mapDomisili.removeLayer(markerDomisili);
+          }
+          markerDomisili = L.marker([lat, lng]).addTo(mapDomisili);
+        });
+      }
+      setTimeout(function() {
+        mapDomisili.invalidateSize();
+      }, 100);
+    });
+
+    // Optionally add logic to reset markers or clear fields if needed.
+  });
+</script>
+
+
 @endsection

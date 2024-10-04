@@ -17,7 +17,7 @@
   </div>
 </div>
 
-<div class="row">
+{{-- <div class="row">
   @foreach ($trainingAttendeds as $trainingAttended)
     <div class="col-xl-6 col-md-6 col-sm-12">
       <div class="card" style="background-color:  #a3b3e626;">
@@ -81,8 +81,73 @@
     </div>
   @endforeach
 
-  @include('pages.recruitment.training-attended.modal-create')
+</div> --}}
+
+<div class="row">
+  <!-- Table with outer spacing -->
+  <div class="table-responsive">
+    <table class="table table-sm" style="margin: 0; font-size: 70%">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Pelatihan/Seminar</th>
+          <th>Penyelenggara</th>
+          <th>Tempat/Kota</th>
+          <th>Tahun</th>
+          <th>File</th>
+          <th style="width: 13%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @forelse ($trainingAttendeds as $trainingAttended)
+          <tr>
+            <td class="text-bold-500">{{ $loop->iteration }}</td>
+            <td class="text-bold-500">{{ $trainingAttended->training_name }}</td>
+            <td class="text-bold-500">{{ $trainingAttended->organizer_name }}</td>
+            <td class="text-bold-500">{{ $trainingAttended->city }}</td>
+            <td class="text-bold-500">{{ $trainingAttended->year }}</td>
+            <td class="text-bold-500">
+              @if ($trainingAttended->file_sertifikat)
+                <a href="{{ Storage::url($trainingAttended->file_sertifikat) }}" target="_blank">
+                  Lihat
+                </a>
+              @else
+                <span>-</span>
+              @endif
+            </td>
+            <td>
+              <div class="demo-inline-spacing">
+
+                <a data-bs-toggle="modal"
+                  data-bs-target="#modal-form-edit-training-attended-{{ $trainingAttended->id }}"
+                  class="btn btn-sm btn-icon btn-secondary text-white">
+                  <i class="bi bi-pencil-square"></i>
+                </a>
+                @include('pages.recruitment.training-attended.modal-edit')
+
+                <button class="btn btn-sm btn-light-danger mx-2"
+                  onclick="deleteTrainingAttend('{{ $trainingAttended->id }}')"><i class="bi bi-trash"></i></button>
+
+                <form id="deleteTrainingAttendForm_{{ $trainingAttended->id }}"
+                  action="{{ route('trainingAttended.destroy', $trainingAttended->id) }}" method="POST">
+                  @method('DELETE')
+                  @csrf
+                </form>
+
+              </div>
+            </td>
+          </tr>
+        @empty
+          <td class="text-bold-500 text-center" colspan="9">No data available in table</td>
+        @endforelse
+      </tbody>
+    </table>
+
+  </div>
+
 </div>
+
+@include('pages.recruitment.training-attended.modal-create')
 
 <script>
   function deleteTrainingAttend(getId) {

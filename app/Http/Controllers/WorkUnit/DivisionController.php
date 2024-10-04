@@ -38,6 +38,7 @@ class DivisionController extends Controller
         // Validation rules
         $request->validate([
             'name' => 'required|string|max:255',
+            'code' => 'required',
         ], [
             // Custom error messages
             'name.required' => 'Nama wajib diisi.',
@@ -74,6 +75,7 @@ class DivisionController extends Controller
         // Validation rules
         $request->validate([
             'name' => 'required|string|max:255',
+            'code' => 'required',
         ], [
             // Custom error messages
             'name.required' => 'Nama wajib diisi.',

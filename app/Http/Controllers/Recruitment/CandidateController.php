@@ -52,7 +52,7 @@ class CandidateController extends Controller
         //     }
         // }
 
-        $file_fields = ['photo', 'file_cv', 'file_ktp', 'file_kk', 'file_skck'];
+        $file_fields = ['photo', 'file_cv', 'file_ktp', 'file_kk', 'file_skck', 'file_vaksin', 'file_surat_sehat'];
 
         foreach ($file_fields as $file_field) {
             if ($request->hasFile($file_field)) {
@@ -108,7 +108,7 @@ class CandidateController extends Controller
         //     $data['photo'] = $path_photo;
         // }
 
-        $file_fields = ['photo', 'file_cv', 'file_ktp', 'file_kk', 'file_skck'];
+        $file_fields = ['photo', 'file_cv', 'file_ktp', 'file_kk', 'file_skck', 'file_vaksin', 'file_surat_sehat'];
 
         foreach ($file_fields as $file_field) {
             $path_file = $candidate->$file_field;

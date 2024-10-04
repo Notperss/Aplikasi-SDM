@@ -17,7 +17,7 @@
   </div>
 </div>
 
-<div class="row">
+{{-- <div class="row">
   @foreach ($educationalHistories as $educationalHistory)
     <div class="col-xl-6 col-md-6 col-sm-12">
       <div class="card" style="background-color:  #a3b3e626;">
@@ -72,9 +72,80 @@
       </div>
     </div>
   @endforeach
+</div> --}}
 
-  @include('pages.recruitment.educational-history.modal-create')
+<div class="row">
+  <!-- Table with outer spacing -->
+  <div class="table-responsive">
+    <table class="table table-sm" style="margin: 0; font-size: 70%">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Jenjang</th>
+          <th>Institusi</th>
+          <th>Jurusan</th> <!-- Updated: Combine year_from and year_to -->
+          <th>GPA/NEM</th>
+          <th>Periode</th>
+          <th>Lulus/Tidak</th>
+          <th>File Ijazah</th>
+          <th style="width: 13%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @forelse ($educationalHistories as $educationalHistory)
+          <tr>
+            <td class="text-bold-500">{{ $loop->iteration }}</td>
+            <td class="text-bold-500">{{ $educationalHistory->school_level }}</td>
+            <td class="text-bold-500">{{ $educationalHistory->school_name }}</td>
+            <td class="text-bold-500">{{ $educationalHistory->study }}</td>
+            <td class="text-bold-500">{{ $educationalHistory->gpa }}</td>
+            <td class="text-bold-500">
+              {{ $educationalHistory->year_from }} - {{ $educationalHistory->year_to }}
+            </td>
+            <td class="text-bold-500">{{ $educationalHistory->graduate }}</td>
+            <td class="text-bold-500">
+              @if ($educationalHistory->file_ijazah)
+                <a href="{{ Storage::url($educationalHistory->file_ijazah) }}" target="_blank">
+                  Lihat
+                </a>
+              @else
+                <span>-</span>
+              @endif
+            </td>
+
+            <td>
+              <div class="demo-inline-spacing">
+
+                <a data-bs-toggle="modal"
+                  data-bs-target="#modal-form-edit-educational-history-{{ $educationalHistory->id }}"
+                  class="btn btn-sm btn-icon btn-secondary text-white">
+                  <i class="bi bi-pencil-square"></i>
+                </a>
+                @include('pages.recruitment.educational-history.modal-edit')
+
+                <button class="btn btn-sm btn-light-danger mx-2"
+                  onclick="deleteEducational('{{ $educationalHistory->id }}')"><i class="bi bi-trash"></i></button>
+
+                <form id="deleteEducationalForm_{{ $educationalHistory->id }}"
+                  action="{{ route('educationalHistory.destroy', $educationalHistory) }}" method="POST">
+                  @method('DELETE')
+                  @csrf
+                </form>
+
+              </div>
+            </td>
+          </tr>
+        @empty
+          <td class="text-bold-500 text-center" colspan="9">No data available in table</td>
+        @endforelse
+      </tbody>
+    </table>
+
+  </div>
+
 </div>
+
+@include('pages.recruitment.educational-history.modal-create')
 
 <script>
   function deleteEducational(getId) {

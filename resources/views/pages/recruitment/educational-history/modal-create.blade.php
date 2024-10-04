@@ -59,18 +59,34 @@
                 @enderror
               </div>
 
-              <div class="mb-2">
-                <label class="form-label" for="gpa">GPA / NEM</label>
-                <input type="text" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.]/g, '')"
-                  id="gpa" name="gpa" class="form-control @error('gpa') is-invalid @enderror" required />
-                @error('gpa')
-                  <a style="color: red"><small>{{ $message }}</small></a>
-                @enderror
+              <div class="row">
+                <div class="col-md-6 mb-2">
+                  <label class="form-label" for="graduate">Lulus/Tidak</label>
+                  <select type="text" id="graduate" name="graduate"
+                    class="form-control @error('graduate') is-invalid @enderror" required>
+                    <option value="" disabled selected>Choose</option>
+                    <option value="LULUS" {{ old('graduate') == 'LULUS' ? 'selected' : '' }}> LULUS </option>
+                    <option value="TIDAK LULUS" {{ old('graduate') == 'TIDAK LULUS' ? 'selected' : '' }}> TIDAK LULUS
+                    </option>
+                  </select>
+                  @error('graduate')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div>
+
+                <div class="col-md-6 mb-2">
+                  <label class="form-label" for="gpa">GPA / NEM</label>
+                  <input type="text" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9.]/g, '')"
+                    id="gpa" name="gpa" class="form-control @error('gpa') is-invalid @enderror" />
+                  @error('gpa')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div>
               </div>
 
               <div class="row">
                 <div class="col-md-6 mb-2">
-                  <label for="year_from">Tahun Masuk</label>
+                  <label class="form-label" for="year_from">Tahun Masuk</label>
                   <input type="text" oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="4"
                     id="year" name="year_from" value="{{ old('year_from') }}"
                     class="form-control  @error('year_from') is-invalid @enderror" />

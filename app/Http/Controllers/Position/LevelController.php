@@ -24,7 +24,7 @@ class LevelController extends Controller
      */
     public function create()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -52,7 +52,7 @@ class LevelController extends Controller
      */
     public function show(Level $level)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -60,7 +60,7 @@ class LevelController extends Controller
      */
     public function edit(Level $level)
     {
-        //
+        abort(404);
     }
 
     /**

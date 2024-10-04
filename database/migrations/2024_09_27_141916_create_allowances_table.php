@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Position\Level;
 use Illuminate\Support\Facades\Schema;
 use App\Models\ManagementAccess\Company;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,10 +15,13 @@ return new class extends Migration {
         Schema::create('allowances', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Company::class)->nullable()->constrained()->onDelete('cascade');
+            $table->foreignIdFor(Level::class)->nullable()->constrained()->onDelete('cascade');
             $table->string('name');
             $table->string('type')->nullable();
-            $table->string('amount')->nullable();
-            $table->date('efective_date');
+            $table->string('natura')->nullable();
+            $table->string('amount');
+            $table->date('efective_date')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

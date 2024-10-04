@@ -37,10 +37,19 @@ class Candidate extends Model
         'recommended_position', //
         'marital_status', //
 
+        'paspor_number',
+
         'file_cv', //
         'file_kk', //
         'file_ktp', //
         'file_skck', //
+        'file_vaksin', //
+        'file_surat_sehat', //
+
+        'latitude_ktp',
+        'latitude_domisili',
+        'longitude_ktp',
+        'longitude_domisili',
     ];
 
     public function familyDetails()
@@ -66,5 +75,9 @@ class Candidate extends Model
     public function TrainingAttendeds()
     {
         return $this->hasMany(TrainingAttended::class);
+    }
+    public function Skills()
+    {
+        return $this->hasMany(Skill::class);
     }
 }

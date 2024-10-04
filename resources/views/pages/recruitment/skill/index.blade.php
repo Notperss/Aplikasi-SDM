@@ -22,20 +22,23 @@
     <table class="table table-sm">
       <thead>
         <tr>
+          <th>#</th>
           <th>Nama Keterampilan/Kompetensi</th>
           <th>Kemahiran</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
-        @foreach ($skills as $skill)
+        @forelse ($skills as $skill)
           <tr>
+            <td class="text-bold-500">{{ $loop->iteration }}</td>
             <td class="text-bold-500">{{ $skill->name }}</td>
             <td class="text-bold-500">
-              <span
+              {{-- <span
                 style="color: {{ $skill->mastery == 'Cukup' ? 'orange' : ($skill->mastery == 'Baik' ? 'rgba(0, 128, 255, 0.974)' : 'green') }}">
                 {{ $skill->mastery }}
-              </span>
+              </span> --}}
+              {{ $skill->mastery }}
             </td>
             <td>
               <div class="demo-inline-spacing">
@@ -56,7 +59,9 @@
               </div>
             </td>
           </tr>
-        @endforeach
+        @empty
+          <td class="text-bold-500 text-center" colspan="4">No data available in table</td>
+        @endforelse
       </tbody>
     </table>
   </div>

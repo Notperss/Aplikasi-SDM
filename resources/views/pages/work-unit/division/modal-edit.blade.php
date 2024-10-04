@@ -18,8 +18,33 @@
           <div class="row justify-content-center">
             <div class="col-md-11"> <!-- Make form smaller with col-md-6 and center it -->
 
+              <div class="my-2">
+                <label class="form-label" for="directorate_id">Direktorat</label>
+                <select id="directorate_id" name="directorate_id"
+                  class="form-control @error('directorate_id') is-invalid @enderror" required>
+                  <option value="" disabled selected>Choose</option>
+                  @foreach ($directorates as $directorate)
+                    <option value="{{ $directorate->id }}"
+                      {{ $directorate->id == $division->directorate_id ? 'selected' : '' }}>{{ $directorate->name }}
+                    </option>
+                  @endforeach
+                </select>
+                @error('directorate_id')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div>
+
               <div class="mb-2">
-                <label class="form-label" for="name">Divisi</label>
+                <label class="form-label" for="code">Kode Divisi</label>
+                <input id="code" name="code" maxlength="5" value="{{ $division->code }}"
+                  class="form-control @error('code') is-invalid @enderror" required>
+                @error('code')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div>
+
+              <div class="my-2">
+                <label class="form-label" for="name">Nama Divisi</label>
                 <input id="name" name="name" value="{{ $division->name }}"
                   class="form-control @error('name') is-invalid @enderror" required>
                 @error('name')

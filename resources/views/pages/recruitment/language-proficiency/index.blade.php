@@ -17,7 +17,7 @@
   </div>
 </div>
 
-<div class="row">
+{{-- <div class="row">
   @foreach ($languageProficiencies as $languageProficiency)
     <div class="col-xl-4 col-md-4 col-sm-6">
       <div class="card" style="background-color:  #a3b3e626;">
@@ -74,9 +74,67 @@
       </div>
     </div>
   @endforeach
+</div> --}}
 
-  @include('pages.recruitment.language-proficiency.modal-create')
+<div class="row">
+  <!-- Table with outer spacing -->
+  <div class="table-responsive">
+    <table class="table table-sm" style="margin: 0; font-size: 70%">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Bahasa</th>
+          <th>Lisan</th>
+          <th>Menulis</th>
+          <th>Membaca</th>
+          <th>Mendengar</th>
+          <th style="width: 13%"></th>
+        </tr>
+      </thead>
+      <tbody>
+        @forelse ($languageProficiencies as $languageProficiency)
+          <tr>
+            <td class="text-bold-500">{{ $loop->iteration }}</td>
+            <td class="text-bold-500">{{ $languageProficiency->language }}</td>
+            <td class="text-bold-500">{{ $languageProficiency->speaking }}</td>
+            <td class="text-bold-500">{{ $languageProficiency->writing }}</td>
+            <td class="text-bold-500">{{ $languageProficiency->reading }}</td>
+            <td class="text-bold-500">{{ $languageProficiency->listening }}</td>
+            <td>
+              <div class="demo-inline-spacing">
+
+                <a data-bs-toggle="modal"
+                  data-bs-target="#modal-form-edit-language-proficiency-{{ $languageProficiency->id }}"
+                  class="btn btn-sm btn-icon btn-secondary text-white">
+                  <i class="bi bi-pencil-square"></i>
+                </a>
+                @include('pages.recruitment.language-proficiency.modal-edit')
+
+                <button class="btn btn-sm btn-light-danger mx-2"
+                  onclick="deletelanguageProficiency('{{ $languageProficiency->id }}')">
+                  <i class="bi bi-trash"></i>
+                </button>
+
+                <form id="deletelanguageProficiencyForm_{{ $languageProficiency->id }}"
+                  action="{{ route('languageProficiency.destroy', $languageProficiency) }}" method="POST">
+                  @method('DELETE')
+                  @csrf
+                </form>
+
+              </div>
+            </td>
+          </tr>
+        @empty
+          <td class="text-bold-500 text-center" colspan="7">No data available in table</td>
+        @endforelse
+      </tbody>
+    </table>
+
+  </div>
+
 </div>
+
+@include('pages.recruitment.language-proficiency.modal-create')
 
 <script>
   function deletelanguageProficiency(getId) {

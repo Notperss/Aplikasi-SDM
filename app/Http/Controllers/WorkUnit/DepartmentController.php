@@ -29,7 +29,7 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        //
+        abort(404);
     }
 
     /**
@@ -61,7 +61,7 @@ class DepartmentController extends Controller
      */
     public function show(Department $department)
     {
-        //
+        abort(404);
     }
 
     /**
@@ -69,7 +69,7 @@ class DepartmentController extends Controller
      */
     public function edit(Department $department)
     {
-        //
+        abort(404);
     }
 
     /**

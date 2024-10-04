@@ -28,6 +28,7 @@
               <th>#</th>
               <th>Direktorat</th>
               <th>Division</th>
+              <th>Kode</th>
               <th></th>
             </tr>
           </thead>
@@ -37,6 +38,7 @@
                 <td class="text-center">{{ $loop->iteration }}</td>
                 <td>{{ $division->directorate->name }}</td>
                 <td>{{ $division->name }}</td>
+                <td>{{ $division->code }}</td>
                 <td>
 
                   <div class="d-flex justify-content-end mt-2">

@@ -15,7 +15,7 @@
           <div class="row justify-content-center">
             <div class="col-md-11"> <!-- Make form smaller with col-md-6 and center it -->
 
-              <div class="mb-2">
+              <div class="my-2">
                 <label class="form-label" for="directorate_id">Direktorat</label>
                 <select id="directorate_id" name="directorate_id"
                   class="form-control @error('directorate_id') is-invalid @enderror" required>
@@ -29,9 +29,17 @@
                 @enderror
               </div>
 
+              <div class="mb-2">
+                <label class="form-label" for="code">Kode Divisi</label>
+                <input id="code" name="code" maxlength="5"
+                  class="form-control @error('code') is-invalid @enderror" required>
+                @error('code')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div>
 
               <div class="my-2">
-                <label class="form-label" for="name">Divisi</label>
+                <label class="form-label" for="name">Nama Divisi</label>
                 <input id="name" name="name" class="form-control @error('name') is-invalid @enderror" required>
                 @error('name')
                   <a style="color: red"><small>{{ $message }}</small></a>
@@ -41,7 +49,6 @@
             </div>
           </div>
         </div>
-
 
         <div class="modal-footer">
           <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>

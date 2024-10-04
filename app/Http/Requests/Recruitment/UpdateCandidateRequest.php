@@ -28,8 +28,8 @@ class UpdateCandidateRequest extends FormRequest
             'phone_number' => ['required',],
             'ktp_address' => ['required', 'string'],
             'current_address' => ['required', 'string'],
-            'ktp_number' => ['required', 'digits:16', Rule::unique('candidates')->ignore($this->candidate)],
-            'kk_number' => ['required', 'digits:16', Rule::unique('candidates')->ignore($this->candidate)],
+            'ktp_number' => ['nullable', 'digits:16', Rule::unique('candidates')->ignore($this->candidate)],
+            'kk_number' => ['nullable', 'digits:16', Rule::unique('candidates')->ignore($this->candidate)],
             // 'npwp_number' => [
             //     'required',
             //     // 'digits:16',
@@ -45,6 +45,9 @@ class UpdateCandidateRequest extends FormRequest
             'gender' => ['required', 'string', 'in:LAKI-LAKI,PEREMPUAN'],
             'date_applied' => ['nullable', 'date'],
             'photo' => 'image|mimes:jpg,jpeg,png|max:512',
+
+            'paspor_number' => ['nullable', Rule::unique('candidates')->ignore($this->candidate)],
+
 
             'file_kk' => 'mimes:pdf|max:512',
             'file_ktp' => 'mimes:pdf|max:512',
@@ -130,6 +133,10 @@ class UpdateCandidateRequest extends FormRequest
 
             'file_cv.mimes' => 'Ekstensi file CV harus berupa pdf.',
             'file_cv.max' => 'Ukuran file CV maksimal adalah 500KB.',
+
+            'paspor_number.max_digits' => 'Nomor paspor tidak boleh lebih dari :max digit.',
+            'paspor_number.min_digits' => 'Nomor paspor tidak boleh kurang dari :min digit.',
+            'paspor_number.unique' => 'Nomor paspor sudah terdaftar.',
         ];
     }
 }
