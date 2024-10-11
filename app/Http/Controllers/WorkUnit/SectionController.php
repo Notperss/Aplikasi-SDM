@@ -18,7 +18,18 @@ class SectionController extends Controller
     public function index()
     {
         $companyId = Auth::user()->company_id;
-        $sections = Section::where('company_id', $companyId)->latest()->get();
+        $sections = Section::where('sections.company_id', $companyId)
+            ->join('departments', 'sections.department_id', '=', 'departments.id') // Join the levels table
+            ->join('divisions', 'departments.division_id', '=', 'divisions.id') // Join the divisions table
+            ->join('directorates', 'divisions.directorate_id', '=', 'directorates.id') // Join the directorates table via divisions
+            ->orderBy('directorates.name', 'asc') // Order by the directorates.name
+            ->orderBy('divisions.name', 'asc') // Then order by the divisions.name
+            ->orderBy('departments.name', 'asc') // Order by the departments.name
+            ->with(['department', 'department.division', 'department.division.directorate']) // Eager load the relationships
+            ->select('sections.*') // Select positions columns only
+            ->get();
+
+
         $departments = Department::where('company_id', $companyId)->orderBy('name', 'asc')->get();
         $divisions = Division::where('company_id', $companyId)->orderBy('name', 'asc')->get();
         $directorates = Directorate::where('company_id', $companyId)->orderBy('name', 'asc')->get();

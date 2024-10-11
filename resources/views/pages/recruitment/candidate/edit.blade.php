@@ -330,6 +330,8 @@
 
       </div>
       <div class="col-12 col-lg-8">
+        <a class="btn btn-sm btn-primary mb-2" href="{{ route('additional-details', $candidate) }}">
+          + Kelengkapan Data</a>
         <div class="card">
           <div class="card-body">
             <div class="row">

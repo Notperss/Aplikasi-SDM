@@ -41,7 +41,7 @@ class UpdateCandidateRequest extends FormRequest
             // 'height' => ['required', 'integer'],
             // 'weight' => ['required', 'integer'],
             'pob' => ['required', 'string'],
-            'dob' => ['required', 'date'],
+            'dob' => ['required', 'date', 'before:today'],
             'gender' => ['required', 'string', 'in:LAKI-LAKI,PEREMPUAN'],
             'date_applied' => ['nullable', 'date'],
             'photo' => 'image|mimes:jpg,jpeg,png|max:512',
@@ -53,6 +53,10 @@ class UpdateCandidateRequest extends FormRequest
             'file_ktp' => 'mimes:pdf|max:512',
             'file_cv' => 'mimes:pdf|max:512',
             'file_skck' => 'mimes:pdf|max:512',
+
+            'file_sim_a' => 'mimes:jpg,jpeg,png,pdf|max:512',
+            'file_sim_b' => 'mimes:jpg,jpeg,png,pdf|max:512',
+            'file_sim_c' => 'mimes:jpg,jpeg,png,pdf|max:512',
         ];
     }
 
@@ -110,6 +114,7 @@ class UpdateCandidateRequest extends FormRequest
 
             'dob.required' => 'Tanggal lahir wajib diisi.',
             'dob.date' => 'Tanggal lahir harus berupa format tanggal yang valid.',
+            'dob.before' => 'Tanggal lahir harus sebelum hari ini.',
 
             'gender.required' => 'Jenis kelamin wajib diisi.',
             'gender.string' => 'Jenis kelamin harus berupa teks.',
@@ -137,6 +142,15 @@ class UpdateCandidateRequest extends FormRequest
             'paspor_number.max_digits' => 'Nomor paspor tidak boleh lebih dari :max digit.',
             'paspor_number.min_digits' => 'Nomor paspor tidak boleh kurang dari :min digit.',
             'paspor_number.unique' => 'Nomor paspor sudah terdaftar.',
+
+            'file_sim_a.mimes' => 'Ekstensi file harus berupa jpg, jpeg,png, atau pdf.',
+            'file_sim_a.max' => 'Ukuran file maksimal adalah 500KB.',
+
+            'file_sim_b.mimes' => 'Ekstensi file harus berupa jpg, jpeg,png, atau pdf.',
+            'file_sim_b.max' => 'Ukuran file maksimal adalah 500KB.',
+
+            'file_sim_c.mimes' => 'Ekstensi file harus berupa jpg, jpeg,png, atau pdf.',
+            'file_sim_c.max' => 'Ukuran file maksimal adalah 500KB.',
         ];
     }
 }

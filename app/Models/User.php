@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Spatie\Activitylog\LogOptions;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\ManagementAccess\Company;
 use Illuminate\Notifications\Notifiable;
@@ -12,6 +13,30 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable, HasRoles;
+
+    /**
+     * Get the options for the activity log.
+     *
+     * @return \Spatie\Activitylog\LogOptions
+     */
+    public function getActivitylogOptions() : LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['name', 'email', 'password',]) // Specify the attributes you want to log
+            ->logOnlyDirty() // Log only changed attributes
+            ->useLogName('user'); // Specify the log name
+    }
+
+    /**
+     * Get the description for the given event.
+     *
+     * @param  string  $eventName
+     * @return string
+     */
+    public function getDescriptionForEvent(string $eventName) : string
+    {
+        return "User has been {$eventName}";
+    }
 
     /**
      * The attributes that are mass assignable.

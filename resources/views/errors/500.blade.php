@@ -1,9 +1,9 @@
 @extends('layouts.auth')
 @section('title', '500')
 @section('content')
+  <link rel="stylesheet" crossorigin href="{{ asset('dist/assets/compiled/css/error.css') }}">
+
   <div id="error">
-
-
     <div class="error-page container">
       <div class="col-md-8 col-12 offset-md-2">
         <div class="text-center">
@@ -16,7 +16,5 @@
         </div>
       </div>
     </div>
-
-
   </div>
 @endsection

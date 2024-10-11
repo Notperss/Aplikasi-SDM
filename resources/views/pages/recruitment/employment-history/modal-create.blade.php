@@ -3,7 +3,7 @@
   aria-labelledby="modal-form-add-employment-history-label" aria-hidden="true" style="display: none;">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form action="{{ route('employmentHistory.store') }}" method="post" enctype="multipart/form-data">
+      <form action="{{ route('candidateEmploymentHistory.store') }}" method="post" enctype="multipart/form-data">
         @csrf
 
         <div class="modal-header">

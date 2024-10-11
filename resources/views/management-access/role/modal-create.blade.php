@@ -35,7 +35,7 @@
           </div>
           <div class="col-12">
             <!-- Permission table -->
-            <div class="table-responsive">
+            {{-- <div class="table-responsive">
               <table class="table table-flush-spacing mb-0">
                 <tbody>
                   <tr>
@@ -58,22 +58,6 @@
                       </div>
                     </td>
                   </tr>
-                  {{-- @foreach ($permissions as $permission)
-                    <tr>
-                      <td class="text-nowrap fw-medium text-heading" colspan="2">
-                        <div class="d-flex ">
-                          <div class="form-check mb-0 me-4 me-lg-12">
-                            <input class="form-check-input permission-checkbox" name="permissions[]"
-                              value="{{ $permission->name }}" type="checkbox"
-                              id="{{ $permission->name }}-{{ $role->id }}" />
-                            <label class="form-check-label" for="{{ $permission->name }}-{{ $role->id }}">
-                              {{ $permission->name }}
-                            </label>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  @endforeach --}}
                   @foreach ($permissions as $key => $group)
                     <tr>
                       <td class="text-nowrap fw-medium text-heading">{{ ucfirst($key) }}</td>
@@ -95,7 +79,63 @@
                   @endforeach
                 </tbody>
               </table>
-            </div>
+            </div> --}}
+
+            <style>
+              /* Ensures long words or content wraps onto a new line */
+              td,
+              .form-check-label {
+                white-space: normal;
+                /* Allow breaking into multiple lines */
+                word-wrap: break-word;
+                /* Break long words if necessary */
+              }
+            </style>
+
+            <table class="table table-flush-spacing mb-0" style="word-break: break-all;">
+              <tbody>
+                <tr>
+                  <td colspan="2" class="text-nowrap fw-medium text-heading">
+                    <h5>Role Permissions</h5>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="text-nowrap fw-medium text-heading">Administrator Access <i class="bx bx-info-circle"
+                      data-bs-toggle="tooltip" data-bs-placement="top" title="Allows full access to the system"></i>
+                  </td>
+                  <td>
+                    <div class="d-flex justify-content-end">
+                      <div class="form-check mb-0">
+                        <input class="form-check-input" type="checkbox" id="selectAll" />
+                        <label class="form-check-label" for="selectAll">
+                          Select All
+                        </label>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+                @foreach ($permissions as $key => $group)
+                  <tr>
+                    <td class="text-nowrap fw-medium text-heading">{{ ucfirst($key) }}</td>
+                    <td>
+                      <div class="d-flex justify-content-end flex-wrap">
+                        @forelse($group as $permission)
+                          <div class="form-check mb-0 me-4 me-lg-12">
+                            <input class="form-check-input permission-checkbox" type="checkbox" name="permissions[]"
+                              value="{{ $permission->name }}" id="{{ $permission->name }}" />
+                            <label class="form-check-label" for="{{ $permission->name }}">
+                              {{ Str::after($permission->name, Str::before($permission->name, '.') . '.') }}
+                            </label>
+                          </div>
+                        @endforeach
+                      </div>
+                    </td>
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
+
             <!-- Permission table -->
           </div>
           <!--/ Edit role form -->

@@ -13,7 +13,7 @@ return new class extends Migration {
     {
         Schema::create('candidates', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Company::class)->nullable()->constrained()->onDelete('cascade');
+            $table->foreignIdFor(Company::class)->nullable()->constrained()->onDelete('restrict');
             $table->string('name');
             $table->date('dob');
             $table->string('pob');
@@ -54,6 +54,18 @@ return new class extends Migration {
             $table->string('longitude_domisili')->nullable();
             $table->string('latitude_ktp')->nullable();
             $table->string('latitude_domisili')->nullable();
+
+            $table->string('sim_a')->nullable();
+            $table->string('expired_sim_a')->nullable();
+            $table->string('file_sim_a')->nullable();
+
+            $table->string('sim_b')->nullable();
+            $table->string('expired_sim_b')->nullable();
+            $table->string('file_sim_b')->nullable();
+
+            $table->string('sim_c')->nullable();
+            $table->string('expired_sim_c')->nullable();
+            $table->string('file_sim_c')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

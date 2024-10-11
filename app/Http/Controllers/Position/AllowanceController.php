@@ -15,7 +15,17 @@ class AllowanceController extends Controller
      */
     public function index()
     {
-        $allowances = Allowance::where('company_id', Auth::user()->company_id)->latest()->get();
+
+        $allowances = Allowance::where('allowances.company_id', Auth::user()->company_id)
+            ->join('levels', 'allowances.level_id', '=', 'levels.id') // Join the levels table
+            ->orderBy('type', 'asc') // Order by the levels.name
+            ->orderBy('natura', 'asc') // Order by the levels.name
+            ->orderBy('levels.name', 'asc') // Order by the levels.name
+            ->with('level') // Load the level relationship for eager loading
+            ->select('allowances.*') // Select positions columns only
+            ->get();
+
+        // $allowances = Allowance::where('company_id', Auth::user()->company_id)->latest()->get();
         $levels = Level::where('company_id', Auth::user()->company_id)->latest()->get();
 
         return view('pages.position.allowance.index', compact('allowances', 'levels'));

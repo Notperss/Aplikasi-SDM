@@ -3,12 +3,13 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\Position\LevelController;
-use App\Http\Controllers\Recruitment\SkillController;
+use App\Http\Controllers\WorkUnit\SectionController;
+use App\Http\Controllers\Position\PositionController;
 use App\Http\Controllers\WorkUnit\DivisionController;
 use App\Http\Controllers\Position\AllowanceController;
 use App\Http\Controllers\Dashboard\DashboardController;
-use App\Http\Controllers\Employee\EmployeeCategoryController;
 use App\Http\Controllers\WorkUnit\DepartmentController;
 use App\Http\Controllers\WorkUnit\DirectorateController;
 use App\Http\Controllers\ManagementAccess\RoleController;
@@ -16,16 +17,18 @@ use App\Http\Controllers\ManagementAccess\UserController;
 use App\Http\Controllers\Recruitment\CandidateController;
 use App\Http\Controllers\ManagementAccess\RouteController;
 use App\Http\Controllers\ManagementAccess\CompanyController;
-use App\Http\Controllers\Recruitment\FamilyDetailController;
+use App\Http\Controllers\Employee\EmployeeCategoryController;
 use App\Http\Controllers\ManagementAccess\MenuItemController;
 use App\Http\Controllers\ManagementAccess\MenuGroupController;
+use App\Http\Controllers\Recruitment\CandidateSkillController;
 use App\Http\Controllers\ManagementAccess\PermissionController;
-use App\Http\Controllers\Position\PositionController;
-use App\Http\Controllers\Recruitment\TrainingAttendedController;
-use App\Http\Controllers\Recruitment\EmploymentHistoryController;
-use App\Http\Controllers\Recruitment\EducationalHistoryController;
-use App\Http\Controllers\Recruitment\LanguageProficiencyController;
-use App\Http\Controllers\WorkUnit\SectionController;
+use App\Http\Controllers\Recruitment\CandidateFamilyDetailController;
+use App\Http\Controllers\Recruitment\CandidateTrainingAttendedController;
+use App\Http\Controllers\Recruitment\CandidateEmploymentHistoryController;
+use App\Http\Controllers\Recruitment\CandidateEducationalHistoryController;
+use App\Http\Controllers\Recruitment\CandidateLanguageProficiencyController;
+use App\Http\Controllers\Recruitment\CandidateSocialPlatformController;
+
 
 // Route::permanentRedirect('/', '/login');
 
@@ -55,17 +58,20 @@ Route::group(['middleware' => ['web', 'auth', 'role:super-admin', 'verified',]],
 
 Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::resource('dashboard', DashboardController::class)->only('index', );
+    Route::resource('activity-log', ActivityLogController::class)->only('index');
+
     Route::resource('candidate', CandidateController::class);
     Route::prefix('candidate')->group(function () {
         Route::get('additional-details/{candidate}', [CandidateController::class, 'additionalDetails'])->name('additional-details');
         Route::post('/upload/{candidate}', [CandidateController::class, 'uploadDocument'])->name('upload.document');
     });
-    Route::resource('familyDetails', FamilyDetailController::class);
-    Route::resource('employmentHistory', EmploymentHistoryController::class);
-    Route::resource('educationalHistory', EducationalHistoryController::class);
-    Route::resource('languageProficiency', LanguageProficiencyController::class);
-    Route::resource('trainingAttended', TrainingAttendedController::class);
-    Route::resource('skill', SkillController::class);
+    Route::resource('candidateFamilyDetail', CandidateFamilyDetailController::class)->only('store', 'update', 'destroy');
+    Route::resource('candidateEmploymentHistory', CandidateEmploymentHistoryController::class)->only('store', 'update', 'destroy');
+    Route::resource('candidateEducationalHistory', CandidateEducationalHistoryController::class)->only('store', 'update', 'destroy');
+    Route::resource('candidateLanguageProficiency', CandidateLanguageProficiencyController::class)->only('store', 'update', 'destroy');
+    Route::resource('candidateTrainingAttended', CandidateTrainingAttendedController::class)->only('store', 'update', 'destroy');
+    Route::resource('candidateSkill', CandidateSkillController::class)->only('store', 'update', 'destroy');
+    Route::resource('candidateSocialPlatform', CandidateSocialPlatformController::class)->only('store', 'update', 'destroy');
 
     //workUnit
     Route::resource('directorate', DirectorateController::class)->only('index', 'store', 'update', 'destroy');

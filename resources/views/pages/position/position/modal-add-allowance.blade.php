@@ -103,10 +103,34 @@
                     @enderror
                   </div>
                   <div class="my-2">
-                    <label for="selected_allowances">Daftar Tunjangan:</label>
+                    <label for="selected_allowances">Daftar Tunjangan BPJS:</label>
                     <ul id="selected_allowances">
-                      @if (!empty($position->allowances()->pluck('allowances.name')->toArray()))
-                        @foreach ($position->allowances()->pluck('allowances.name')->toArray() as $allowance)
+                      @if (!empty($position->allowances()->where('type', 'BPJS')->pluck('allowances.name')->toArray()))
+                        @foreach ($position->allowances()->where('type', 'BPJS')->pluck('allowances.name')->toArray() as $allowance)
+                          <li>{{ $allowance }}</li>
+                        @endforeach
+                      @else
+                        <li>Tidak ada tunjangan.</li>
+                      @endif
+                    </ul>
+                  </div>
+                  <div class="mb-2">
+                    <label for="selected_allowances">Daftar Tunjangan NON-BPJS:</label>
+                    <ul id="selected_allowances">
+                      @if (!empty($position->allowances()->where('type', 'NON-BPJS')->pluck('allowances.name')->toArray()))
+                        @foreach ($position->allowances()->where('type', 'NON-BPJS')->pluck('allowances.name')->toArray() as $allowance)
+                          <li>{{ $allowance }}</li>
+                        @endforeach
+                      @else
+                        <li>Tidak ada tunjangan.</li>
+                      @endif
+                    </ul>
+                  </div>
+                  <div class="my-2">
+                    <label for="selected_allowances">Daftar Tunjangan PERUSAHAAN:</label>
+                    <ul id="selected_allowances">
+                      @if (!empty($position->allowances()->where('type', 'PERUSAHAAN')->pluck('allowances.name')->toArray()))
+                        @foreach ($position->allowances()->where('type', 'PERUSAHAAN')->pluck('allowances.name')->toArray() as $allowance)
                           <li>{{ $allowance }}</li>
                         @endforeach
                       @else

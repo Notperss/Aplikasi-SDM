@@ -4,18 +4,19 @@ namespace App\Http\Controllers\Recruitment;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Models\Recruitment\Skill;
 use App\Http\Controllers\Controller;
 use App\Models\Recruitment\Candidate;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Recruitment\FamilyDetail;
-use App\Models\Recruitment\TrainingAttended;
+use App\Models\Recruitment\CandidateSkill;
 use App\Models\Recruitment\CandidateDocument;
-use App\Models\Recruitment\EmploymentHistory;
-use App\Models\Recruitment\EducationalHistory;
-use App\Models\Recruitment\LanguageProficiency;
+use App\Models\Recruitment\CandidateFamilyDetail;
+use App\Models\Recruitment\CandidateTrainingAttended;
+use App\Models\Recruitment\CandidateEmploymentHistory;
+use App\Models\Recruitment\CandidateEducationalHistory;
 use App\Http\Requests\Recruitment\StoreCandidateRequest;
+use App\Models\Recruitment\CandidateLanguageProficiency;
 use App\Http\Requests\Recruitment\UpdateCandidateRequest;
+use App\Models\Recruitment\CandidateSocialPlatform;
 
 class CandidateController extends Controller
 {
@@ -52,21 +53,33 @@ class CandidateController extends Controller
         //     }
         // }
 
-        $file_fields = ['photo', 'file_cv', 'file_ktp', 'file_kk', 'file_skck', 'file_vaksin', 'file_surat_sehat'];
+        $file_fields = [
+            'photo',
+            'file_cv',
+            'file_ktp',
+            'file_kk',
+            'file_skck',
+            'file_vaksin',
+            'file_surat_sehat',
+            'file_sim_a',
+            'file_sim_b',
+            'file_sim_c',
+        ];
 
         foreach ($file_fields as $file_field) {
             if ($request->hasFile($file_field)) {
                 $file = $request->file($file_field); // Get the file
                 $extension = $file->getClientOriginalExtension(); // Get file extension
                 $file_name = $file_field . '_' . $data['name'] . '_' . time() . '.' . $extension; // Construct the file name
-                $data[$file_field] = $file->storeAs('files/' . $file_field, $file_name, 'public_local'); // Store the file
+                $data[$file_field] = $file->storeAs('files/candidate/' . $file_field, $file_name, 'public_local'); // Store the file
             }
         }
 
 
         $candidate = Candidate::create($data);
 
-        return redirect()->route('additional-details', $candidate)->with('success', 'Candidate has been created successfully!');
+        // return redirect()->route('additional-details', $candidate)->with('success', 'Candidate has been created successfully!');
+        return redirect()->route('candidate.show', $candidate)->with('success', 'Candidate has been created successfully!');
     }
 
     /**
@@ -108,7 +121,18 @@ class CandidateController extends Controller
         //     $data['photo'] = $path_photo;
         // }
 
-        $file_fields = ['photo', 'file_cv', 'file_ktp', 'file_kk', 'file_skck', 'file_vaksin', 'file_surat_sehat'];
+        $file_fields = [
+            'photo',
+            'file_cv',
+            'file_ktp',
+            'file_kk',
+            'file_skck',
+            'file_vaksin',
+            'file_surat_sehat',
+            'file_sim_a',
+            'file_sim_b',
+            'file_sim_c',
+        ];
 
         foreach ($file_fields as $file_field) {
             $path_file = $candidate->$file_field;
@@ -118,7 +142,7 @@ class CandidateController extends Controller
                 $extension = $file->getClientOriginalExtension();
                 $file_name = $file_field . '_' . $data['name'] . '_' . time() . '.' . $extension;
 
-                $data[$file_field] = $file->storeAs('files/' . $file_field, $file_name, 'public_local');
+                $data[$file_field] = $file->storeAs('files/candidate/' . $file_field, $file_name, 'public_local');
 
                 if (! empty($path_file)) {
                     Storage::disk('public_local')->delete($path_file);
@@ -129,7 +153,8 @@ class CandidateController extends Controller
         }
 
         $candidate->update($data);
-        return redirect()->route('candidate.index')->with('success', 'Candidate has been updated successfully!');
+        return redirect()->back()->with('success', 'Candidate has been updated successfully!');
+        // return redirect()->route('candidate.index')->with('success', 'Candidate has been updated successfully!');
     }
 
     /**
@@ -137,7 +162,18 @@ class CandidateController extends Controller
      */
     public function destroy(Candidate $candidate)
     {
-        $file_fields = ['photo', 'file_cv', 'file_ktp', 'file_kk', 'file_skck'];
+        $file_fields = [
+            'photo',
+            'file_cv',
+            'file_ktp',
+            'file_kk',
+            'file_skck',
+            'file_vaksin',
+            'file_surat_sehat',
+            'file_sim_a',
+            'file_sim_b',
+            'file_sim_c',
+        ];
 
         foreach ($file_fields as $file_field) {
             $file_path = $candidate->$file_field;
@@ -155,12 +191,13 @@ class CandidateController extends Controller
 
     public function additionalDetails(Candidate $candidate)
     {
-        $familyDetails = FamilyDetail::where('candidate_id', $candidate->id)->get();
-        $employmentHistories = EmploymentHistory::where('candidate_id', $candidate->id)->get();
-        $educationalHistories = EducationalHistory::where('candidate_id', operator: $candidate->id)->get();
-        $languageProficiencies = LanguageProficiency::where('candidate_id', $candidate->id)->get();
-        $trainingAttendeds = TrainingAttended::where('candidate_id', $candidate->id)->get();
-        $skills = Skill::where('candidate_id', $candidate->id)->get();
+        $familyDetails = CandidateFamilyDetail::where('candidate_id', $candidate->id)->get();
+        $employmentHistories = CandidateEmploymentHistory::where('candidate_id', $candidate->id)->get();
+        $educationalHistories = CandidateEducationalHistory::where('candidate_id', operator: $candidate->id)->get();
+        $languageProficiencies = CandidateLanguageProficiency::where('candidate_id', $candidate->id)->get();
+        $trainingAttendeds = CandidateTrainingAttended::where('candidate_id', $candidate->id)->get();
+        $skills = CandidateSkill::where('candidate_id', $candidate->id)->get();
+        $socialPlatforms = CandidateSocialPlatform::where('candidate_id', $candidate->id)->get();
         // $candidateDocuments = CandidateDocument::where('candidate_id', $candidate->id)->get();
         $ijazahDocuments = CandidateDocument::where('candidate_id', $candidate->id)->where('type_document', 'ijazah')->get();
         $ktpDocuments = CandidateDocument::where('candidate_id', $candidate->id)->where('type_document', 'ktp')->get();
@@ -177,6 +214,7 @@ class CandidateController extends Controller
                 'languageProficiencies',
                 'trainingAttendeds',
                 'skills',
+                'socialPlatforms',
                 'ijazahDocuments',
                 'ktpDocuments',
                 'skckDocuments',

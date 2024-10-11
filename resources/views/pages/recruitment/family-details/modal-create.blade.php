@@ -3,7 +3,7 @@
   aria-labelledby="modal-form-add-family-details-label" aria-hidden="true" style="display: none;">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form action="{{ route('familyDetails.store') }}" method="post">
+      <form action="{{ route('candidateFamilyDetail.store') }}" method="post">
         @csrf
 
         <div class="modal-header">
@@ -69,10 +69,11 @@
             </div>
 
             <div class="col-12 mb-1">
-              <label class="form-label" for="dob">Tanggal Lahir</label>
-              <input type="date" id="dob" name="dob" value="{{ old('dob') }}"
-                class="form-control flatpickr-no-config @error('dob') is-invalid @enderror" placeholder="Select date..">
-              @error('dob')
+              <label class="form-label" for="dob_family">Tanggal Lahir</label>
+              <input type="date" id="dob_family" name="dob_family" value="{{ old('dob_family') }}"
+                class="form-control flatpickr-no-config @error('dob_family') is-invalid @enderror"
+                placeholder="Select date..">
+              @error('dob_family')
                 <a style="color: red">
                   <small>
                     {{ $message }}
@@ -148,6 +149,49 @@
                 </a>
               @enderror
             </div>
+
+            <div class="row mt-2">
+              <div class="col-8">
+                <label for="is_in_kk">Masuk Ke dalam Kartu Keluarga</label>
+              </div>
+              <div class="col-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="is_in_kk" id="is_in_kk1" value="1">
+                  <label class="form-check-label" for="is_in_kk1">
+                    Ya
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="is_in_kk" id="is_in_kk2" value="0"
+                    checked>
+                  <label class="form-check-label" for="is_in_kk2">
+                    Tidak
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mt-2" id="bpjs-field">
+              <div class="col-8">
+                <label for="is_bpjs">BPJS</label>
+              </div>
+              <div class="col-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="is_bpjs" id="is_bpjs1" value="1">
+                  <label class="form-check-label" for="is_bpjs1">
+                    Ya
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="is_bpjs" id="is_bpjs2" value="0"
+                    checked>
+                  <label class="form-check-label" for="is_bpjs2">
+                    Tidak
+                  </label>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
         <div class="modal-footer">
@@ -159,3 +203,25 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<script>
+  $(document).ready(function() {
+    // Initially hide the BPJS field
+    $('#bpjs-field').hide();
+
+    // Show/hide BPJS based on the selected "Masuk Ke dalam Kartu Keluarga"
+    $('input[name="is_in_kk"]').change(function() {
+      var selectedValue = $('input[name="is_in_kk"]:checked').val();
+      // Show the BPJS field if "Ya" is selected (value is 1)
+      if (selectedValue === '1') {
+        $('#bpjs-field').show();
+      } else {
+        // Hide the BPJS field and reset its value
+        $('#bpjs-field').hide();
+        $('input[name="is_bpjs"]').prop('checked', '0'); // Reset BPJS options
+      }
+    });
+
+    // Trigger the change event on page load to handle any pre-selected value
+    $('input[name="is_in_kk"]:checked').trigger('change');
+  });
+</script>

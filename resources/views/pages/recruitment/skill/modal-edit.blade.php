@@ -1,14 +1,14 @@
 <!-- Modals add menu -->
-<div id="modal-form-edit-skill-{{ $skill->id }}" class="modal fade" tabindex="-1"
-  aria-labelledby="modal-form-edit-skill-{{ $skill->id }}-label" aria-hidden="true" style="display: none;">
+<div id="modal-form-edit-skill-{{ $candidateSkill->id }}" class="modal fade" tabindex="-1"
+  aria-labelledby="modal-form-edit-skill-{{ $candidateSkill->id }}-label" aria-hidden="true" style="display: none;">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form action="{{ route('skill.update', $skill) }}" method="post">
+      <form action="{{ route('candidateSkill.update', $candidateSkill) }}" method="post">
         @csrf
         @method('PUT')
 
         <div class="modal-header">
-          <h5 class="modal-title" id="modal-form-edit-skill-{{ $skill->id }}-label">
+          <h5 class="modal-title" id="modal-form-edit-skill-{{ $candidateSkill->id }}-label">
             Edit Data Pengalaman Kerja
           </h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
@@ -21,7 +21,7 @@
 
               <div class="mb-2">
                 <label class="form-label" for="name">Nama Keterampilan/Kompeten</label>
-                <input id="name" name="name" value="{{ $skill->name }}"
+                <input id="name" name="name" value="{{ $candidateSkill->name }}"
                   class="form-control @error('name') is-invalid @enderror" required>
                 @error('name')
                   <a style="color: red"><small>{{ $message }}</small></a>
@@ -33,9 +33,10 @@
                 <select id="mastery" name="mastery" class="form-control @error('mastery') is-invalid @enderror"
                   required>
                   <option value="" disabled>Choose</option>
-                  <option value="Cukup"{{ $skill->mastery == 'Cukup' ? 'selected' : '' }}>Cukup</option>
-                  <option value="Baik"{{ $skill->mastery == 'Baik' ? 'selected' : '' }}>Baik</option>
-                  <option value="Sangat Baik"{{ $skill->mastery == 'Sangat Baik' ? 'selected' : '' }}>Sangat Baik
+                  <option value="Cukup"{{ $candidateSkill->mastery == 'Cukup' ? 'selected' : '' }}>Cukup</option>
+                  <option value="Baik"{{ $candidateSkill->mastery == 'Baik' ? 'selected' : '' }}>Baik</option>
+                  <option value="Sangat Baik"{{ $candidateSkill->mastery == 'Sangat Baik' ? 'selected' : '' }}>Sangat
+                    Baik
                   </option>
                 </select>
                 @error('mastery')

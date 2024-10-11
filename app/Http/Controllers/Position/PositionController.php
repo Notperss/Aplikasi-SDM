@@ -20,7 +20,17 @@ class PositionController extends Controller
      */
     public function index()
     {
-        $positions = Position::where('company_id', Auth::user()->company_id)->latest()->get();
+        $positions = Position::where('positions.company_id', Auth::user()->company_id)
+            ->join('levels', 'positions.level_id', '=', 'levels.id') // Join the levels table
+            ->join('divisions', 'positions.division_id', '=', 'divisions.id') // Join the divisions table
+            ->join('directorates', 'divisions.directorate_id', '=', 'directorates.id') // Join the directorates table via divisions
+            ->orderBy('levels.name', 'asc') // Order by the levels.name
+            ->orderBy('divisions.name', 'asc') // Then order by the divisions.name
+            ->orderBy('directorates.name', 'asc') // Order by the directorates.name
+            ->with(['level', 'division', 'division.directorate']) // Eager load the relationships
+            ->select('positions.*') // Select positions columns only
+            ->get();
+
         $levels = Level::where('company_id', Auth::user()->company_id)->latest()->get();
         $directorates = Directorate::where('company_id', Auth::user()->company_id)->latest()->get();
         $divisions = Division::where('company_id', Auth::user()->company_id)->latest()->get();
@@ -128,23 +138,6 @@ class PositionController extends Controller
 
     public function positionAllowance(Request $request, Position $position)
     {
-        // Validate the form input
-        // $request->validate([
-        //     'allowance_id' => 'required|array',
-        //     'allowance_id.*' => 'exists:allowances,id', // Ensure all selected allowances exist
-        // ]);
-
-        // // Update position details (if applicable)
-        // $position->update([
-        //     // Other fields to update
-        // ]);
-
-        // // Sync the selected allowances
-        // $position->allowances()->sync($request->input('allowance_id'));
-
-        // // Redirect with success message
-        // return redirect()->route('positions.index')->with('success', 'Position updated successfully.');
-
         // Validate the incoming request, allowing allowance_id to be optional
         $validated = $request->validate([
             'allowance_id' => 'nullable|array', // Allow null if no allowances are selected

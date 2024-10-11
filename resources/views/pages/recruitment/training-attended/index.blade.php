@@ -138,7 +138,7 @@
             </td>
           </tr>
         @empty
-          <td class="text-bold-500 text-center" colspan="9">No data available in table</td>
+          <td class="text-bold-500 text-center" colspan="7">No data available in table</td>
         @endforelse
       </tbody>
     </table>

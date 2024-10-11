@@ -2,13 +2,82 @@
 
 namespace App\Models\Recruitment;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Candidate extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, LogsActivity;
+
+    public function getActivitylogOptions() : LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly([
+                'company_id',
+                'name',
+                'photo',
+                'email',
+                'phone_number',
+                'ktp_address',
+                'current_address',
+                // 'npwp_number',
+                'ktp_number',
+                'kk_number',
+                'religion',
+                'nationality',
+                // 'height',
+                // 'weight',
+                'pob',
+                'dob',
+                'gender',
+                'date_applied',
+
+                'is_qualify',
+                'is_hire',
+                'ethnic', //
+                'blood_type',
+                'candidate_from', //
+                'applied_position', //
+                'recommended_position', //
+                'marital_status', //
+
+                'paspor_number',
+
+                'file_cv', //
+                'file_kk', //
+                'file_ktp', //
+                'file_skck', //
+                'file_vaksin', //
+                'file_surat_sehat', //
+
+                'latitude_ktp',
+                'latitude_domisili',
+                'longitude_ktp',
+                'longitude_domisili',
+
+                'sim_a',
+                'expired_sim_a',
+                'file_sim_a',
+
+                'sim_b',
+                'expired_sim_b',
+                'file_sim_b',
+
+                'sim_c',
+                'expired_sim_c',
+                'file_sim_c',
+            ]) // Specify the attributes you want to log
+            ->logOnlyDirty() // Log only changed attributes
+            ->useLogName('candidate-log'); // Specify the log name
+    }
+
+    public function getDescriptionForEvent(string $eventName) : string
+    {
+        return "{$this->name} has been {$eventName}";
+    }
     protected $fillable = [
         'name',
         'photo',
@@ -50,23 +119,35 @@ class Candidate extends Model
         'latitude_domisili',
         'longitude_ktp',
         'longitude_domisili',
+
+        'sim_a',
+        'expired_sim_a',
+        'file_sim_a',
+
+        'sim_b',
+        'expired_sim_b',
+        'file_sim_b',
+
+        'sim_c',
+        'expired_sim_c',
+        'file_sim_c',
     ];
 
     public function familyDetails()
     {
-        return $this->hasMany(FamilyDetail::class);
+        return $this->hasMany(CandidateFamilyDetail::class)->orderBy('dob_family', 'asc');
     }
     public function employmentHistories()
     {
-        return $this->hasMany(EmploymentHistory::class);
+        return $this->hasMany(CandidateEmploymentHistory::class)->orderBy('year_from', 'desc');
     }
     public function educationalHistories()
     {
-        return $this->hasMany(EducationalHistory::class);
+        return $this->hasMany(CandidateEducationalHistory::class)->orderBy('year_from', 'desc');
     }
     public function languageProficiencies()
     {
-        return $this->hasMany(LanguageProficiency::class);
+        return $this->hasMany(CandidateLanguageProficiency::class);
     }
     public function CandidateDocuments()
     {
@@ -74,10 +155,14 @@ class Candidate extends Model
     }
     public function TrainingAttendeds()
     {
-        return $this->hasMany(TrainingAttended::class);
+        return $this->hasMany(CandidateTrainingAttended::class)->orderBy('year', 'desc');
     }
     public function Skills()
     {
-        return $this->hasMany(Skill::class);
+        return $this->hasMany(CandidateSkill::class);
+    }
+    public function SocialsPlatform()
+    {
+        return $this->hasMany(CandidateSocialPlatform::class);
     }
 }

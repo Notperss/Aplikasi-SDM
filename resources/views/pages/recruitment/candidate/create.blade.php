@@ -523,6 +523,7 @@
             <p class="mb-0 mt-3" style="font-size: 70%"> * Latar Belakang Foto Warna Merah</p>
             <p class="mb-0" style="font-size: 70%"> * Ekstensi File : jpg, jpeg, png</p>
             <p class="mb-0" style="font-size: 70%"> * Ukuran File Maks. 500KB</p>
+            <p class="mb-0" style="font-size: 70%"> * Dimensi Foto 3x4</p>
             <p class="mb-0" style="font-size: 70%"> * Pastikan foto wajah terlihat jelas</p>
           </div>
 
@@ -934,6 +935,89 @@
                     </button>
                   </div>
                 </div>
+              </div>
+              <hr>
+
+              <div class="col-12">
+
+                <div class="row">
+                  <div class="form-group col-md-5">
+                    <label for="sim_a">SIM A</label>
+                    <input type="text" value="{{ old('sim_a') }}"
+                      oninput="this.value = this.value.replace(/\D+/g, '')" id="sim_a" name="sim_a"
+                      class="form-control">
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="expired_sim_a">Masa Berlaku</label>
+                    <input type="date" value="{{ old('expired_sim_a') }}" id="expired_sim_a"
+                      name="expired_sim_a" class="form-control">
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="file_sim_a">File</label>
+                    <input class="form-control" accept=".jpg, .png, .pdf, .jpeg" type="file" name="file_sim_a"
+                      id="file_sim_a">
+                    @error('file_sim_a')
+                      <a style="color: red">
+                        <small>
+                          {{ $message }}
+                        </small>
+                      </a>
+                    @enderror
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="form-group col-md-5">
+                    <label for="sim_b">SIM B</label>
+                    <input type="text" value="{{ old('sim_b') }}"
+                      oninput="this.value = this.value.replace(/\D+/g, '')" id="sim_b" name="sim_b"
+                      class="form-control">
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="expired_sim_b">Masa Berlaku</label>
+                    <input type="date" value="{{ old('expired_sim_b') }}" id="expired_sim_b"
+                      name="expired_sim_b" class="form-control">
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="file_sim_b">File</label>
+                    <input class="form-control" accept=".jpg, .png, .pdf, .jpeg" type="file" name="file_sim_b"
+                      id="file_sim_b">
+                    @error('file_sim_b')
+                      <a style="color: red">
+                        <small>
+                          {{ $message }}
+                        </small>
+                      </a>
+                    @enderror
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="form-group col-md-5">
+                    <label for="sim_c">SIM C</label>
+                    <input type="text" value="{{ old('sim_c') }}"
+                      oninput="this.value = this.value.replace(/\D+/g, '')" id="sim_c" name="sim_c"
+                      class="form-control">
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="expired_sim_c">Masa Berlaku</label>
+                    <input type="date" value="{{ old('expired_sim_c') }}" id="expired_sim_c"
+                      name="expired_sim_c" class="form-control">
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="file_sim_c">File</label>
+                    <input class="form-control" accept=".jpg, .png, .pdf, .jpeg" type="file" name="file_sim_c"
+                      id="file_sim_c">
+                    @error('file_sim_c')
+                      <a style="color: red">
+                        <small>
+                          {{ $message }}
+                        </small>
+                      </a>
+                    @enderror
+                  </div>
+                </div>
+
               </div>
 
               <div class="col-12 d-flex justify-content-end mt-4">

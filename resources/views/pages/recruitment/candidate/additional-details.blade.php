@@ -35,11 +35,15 @@
             </li>
             <li class="nav-item" role="presentation">
               <a class="nav-link" id="skill-tab" data-bs-toggle="tab" href="#skill" role="tab"
-                aria-controls="skill" aria-selected="false">Keterampilan/Kompetensi</a>
+                aria-controls="skill" aria-selected="false">Keterampilan</a>
             </li>
             <li class="nav-item" role="presentation">
               <a class="nav-link" id="language-proficiency-tab" data-bs-toggle="tab" href="#language-proficiency"
                 role="tab" aria-controls="language-proficiency" aria-selected="false">Bahasa Asing</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="social-media-tab" data-bs-toggle="tab" href="#social-media" role="tab"
+                aria-controls="social-media" aria-selected="false">Sosial Media</a>
             </li>
             {{-- <li class="nav-item" role="presentation">
               <a class="nav-link" id="candidate-document-tab" data-bs-toggle="tab" href="#candidate-document"
@@ -68,6 +72,9 @@
             <div class="tab-pane fade" id="language-proficiency" role="tabpanel"
               aria-labelledby="language-proficiency-tab">
               @include('pages.recruitment.language-proficiency.index')
+            </div>
+            <div class="tab-pane fade" id="social-media" role="tabpanel" aria-labelledby="social-media-tab">
+              @include('pages.recruitment.social-media.index')
             </div>
             {{-- <div class="tab-pane fade" id="candidate-document" role="tabpanel" aria-labelledby="candidate-document-tab">
               @include('pages.recruitment.candidate-document.index')

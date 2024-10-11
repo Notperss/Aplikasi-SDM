@@ -15,15 +15,28 @@
   <link rel="stylesheet" href="{{ asset('dist/assets/compiled/css/app.css') }}">
   <link rel="stylesheet" href="{{ asset('dist/assets/compiled/css/app-dark.css') }}">
   <link rel="stylesheet" href="{{ asset('dist/assets/compiled/css/auth.css') }}">
+  <link rel="stylesheet" href="{{ asset('dist/assets/extensions/sweetalert2/sweetalert2.min.css') }}">
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 
 <body>
   <script src="{{ asset('dist/assets/static/js/initTheme.js') }}"></script>
   <div id="auth">
-
+    {{-- <x-validation-errors /> --}}
     @yield('content')
 
   </div>
+
+
+  <script src="{{ asset('dist/assets/static/js/components/dark.js') }}"></script>
+  <script src="{{ asset('dist/assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
+  <script src="{{ asset('dist/assets/compiled/js/app.js') }}"></script>
+
+  <script src="{{ asset('dist/assets/extensions/sweetalert2/sweetalert2.min.js') }}"></script>
+
+
 </body>
 
 </html>

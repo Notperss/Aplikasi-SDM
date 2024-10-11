@@ -2,697 +2,367 @@
 @section('title', 'Candidate')
 @section('content')
 
-  {{-- @section('breadcrumb')
-  <x-breadcrumb title="Data Diri Pelamar" page="Recruitment" active="Candidate" route="{{ route('candidate.index') }}" />
-@endsection --}}
+  <link rel="stylesheet" href="{{ asset('dist/assets/extensions/toastify-js/src/toastify.css') }}">
+  <script src="{{ asset('dist/assets/extensions/toastify-js/src/toastify.js') }}"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+
+  @if (session()->has('success'))
+    <script>
+      Toastify({
+        text: "{{ session('success') }}", // Display success message from session
+        duration: 4000, // Duration of the toast
+        close: true, // Option to close the toast manually
+        gravity: "top", // Toast appears at the top
+        position: "right", // Align toast to the right
+        backgroundColor: "#28a745", // Success color
+      }).showToast();
+    </script>
+  @endif
 
   <nav class="navbar navbar-light">
     <div class="container d-block">
-      <a href="{{ url()->previous() }}"><i class="bi bi-chevron-left"></i></a>
-      <a class="btn btn-primary ms-4" href="{{ url()->previous() }}">
+      <a href="{{ route('candidate.index') }}"><i class="bi bi-chevron-left"></i></a>
+      <a class="btn btn-primary ms-4" href="{{ route('candidate.index') }}">
         Back
       </a>
     </div>
   </nav>
 
+  @if ($errors->any())
+    <!-- Toast with Placements -->
+    <script>
+      @foreach ($errors->all() as $error)
+        Toastify({
+          text: "{{ $error }}", // Display each error message
+          duration: 4000, // Duration of the toast
+          close: true, // Option to close the toast manually
+          gravity: "top", // Toast appears at the top
+          position: "right", // Align toast to the right
+          backgroundColor: "#dc3545", // Error color (Bootstrap danger)
+        }).showToast();
+      @endforeach
+    </script>
+  @endif
+
+
 
   <section class="section">
-    <div class="row justify-content-center">
-
-      <div class="col-12 text-center mb-3">
-        <h3>Data Lengkap {{ $candidate->name }}</h3>
+    <div class="row mx-3">
+      <div class="col-2">
+        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+          <a class="nav-link show active" id="v-pills-informasi-dasar-tab" data-bs-toggle="pill"
+            href="#v-pills-informasi-dasar" role="tab" aria-controls="v-pills-informasi-dasar"
+            aria-selected="true">Informasi Dasar</a>
+          <a class="nav-link" id="v-pills-data-keluarga-tab" data-bs-toggle="pill" href="#v-pills-data-keluarga"
+            role="tab" aria-controls="v-pills-data-keluarga" aria-selected="false">Data Keluarga</a>
+          <a class="nav-link" id="v-pills-riwayat-pekerjaan-tab" data-bs-toggle="pill" href="#v-pills-riwayat-pekerjaan"
+            role="tab" aria-controls="v-pills-riwayat-pekerjaan" aria-selected="false">Riwayat Pekerjaan</a>
+          <a class="nav-link" id="v-pills-riwayat-pendidikan-tab" data-bs-toggle="pill" href="#v-pills-riwayat-pendidikan"
+            role="tab" aria-controls="v-pills-riwayat-pendidikan" aria-selected="false">Riwayat Pendidikan</a>
+          <a class="nav-link" id="v-pills-kemampuan-bahasa-tab" data-bs-toggle="pill" href="#v-pills-kemampuan-bahasa"
+            role="tab" aria-controls="v-pills-kemampuan-bahasa" aria-selected="false">Kemampuan Bahasa</a>
+          <a class="nav-link" id="v-pills-seminar-tab" data-bs-toggle="pill" href="#v-pills-seminar" role="tab"
+            aria-controls="v-pills-seminar" aria-selected="false">Seminar/Pelatihan</a>
+          <a class="nav-link" id="v-pills-keterampilan-tab" data-bs-toggle="pill" href="#v-pills-keterampilan"
+            role="tab" aria-controls="v-pills-keterampilan" aria-selected="false">Keterampilan</a>
+          <a class="nav-link" id="v-pills-sosial-media-tab" data-bs-toggle="pill" href="#v-pills-sosial-media"
+            role="tab" aria-controls="v-pills-sosial-media" aria-selected="false">Sosial Media</a>
+        </div>
       </div>
+      <div class="col-10">
+        <div class="tab-content" id="v-pills-tabContent">
 
-      <div class="col-12 col-lg-3">
-        <div class="card-body mb-2">
-          <div class="d-flex justify-content-center align-items-center flex-column">
-
-            <!-- Image Preview -->
-            <img src="{{ asset($candidate->photo ? 'storage/' . $candidate->photo : 'storage/img/2.jpg') }}"
-              alt="user-avatar" class="d-block rounded" width="150px" id="uploadedAvatar" />
-
-            <!-- Upload Icon and Input -->
-            <label for="photo" class="mt-2" style="text-align: center; display: block; width: 100%;">
-              <span>{{ $candidate->name }}</span>
-            </label>
+          <div class="tab-pane fade" id="v-pills-data-keluarga" role="tabpanel"
+            aria-labelledby="v-pills-data-keluarga-tab">
+            @include('pages.recruitment.candidate.show-detail.family-detail')
           </div>
-
-          <div class="card mt-3">
-            <div class="card-content">
-              <div class="card-body">
-
-                <div class="mb-3">
-                  <label for="file_cv" class="form-label">CV</label> <br>
-                  @if ($candidate->file_cv)
-                    <a href="{{ Storage::url($candidate->file_cv) }}" target="_blank"
-                      class="text-sm btn btn-sm btn-primary">
-                      {{-- {{ pathinfo($candidate->file_cv, PATHINFO_FILENAME) }} --}}
-                      Lihat
-                    </a>
-                  @else
-                    <span>-</span>
-                  @endif
-                </div>
-                <div class="mb-3">
-                  <label for="file_ktp" class="form-label">KTP & NPWP</label><br>
-                  @if ($candidate->file_ktp)
-                    <a href="{{ Storage::url($candidate->file_ktp) }}" target="_blank"
-                      class="text-sm btn btn-sm btn-primary">
-                      {{-- {{ pathinfo($candidate->file_ktp, PATHINFO_FILENAME) }} --}}
-                      Lihat
-                    </a>
-                  @else
-                    <span>-</span>
-                  @endif
-                </div>
-                <div class="mb-3">
-                  <label for="file_skck" class="form-label">SKCK AKTIF</label><br>
-                  @if ($candidate->file_skck)
-                    <a href="{{ Storage::url($candidate->file_skck) }}" target="_blank"
-                      class="text-sm btn btn-sm btn-primary">
-                      {{-- {{ pathinfo($candidate->file_skck, PATHINFO_FILENAME) }} --}}
-                      Lihat
-                    </a>
-                  @else
-                    <span>-</span>
-                  @endif
-                </div>
-                <div class="mb-3">
-                  <label for="file_kk" class="form-label">KARTU KELUARGA</label><br>
-                  @if ($candidate->file_kk)
-                    <a href="{{ Storage::url($candidate->file_kk) }}" target="_blank"
-                      class="text-sm btn btn-sm btn-primary">
-                      {{-- {{ pathinfo($candidate->file_kk, PATHINFO_FILENAME) }} --}}
-                      Lihat
-                    </a>
-                  @else
-                    <span>-</span>
-                  @endif
-                </div>
-                <div class="mb-3">
-                  <label for="file_surat_sehat" class="form-label">SURAT KETERANGAN SEHAT</label><br>
-                  @if ($candidate->file_surat_sehat)
-                    <a href="{{ Storage::url($candidate->file_surat_sehat) }}" target="_blank"
-                      class="text-sm btn btn-sm btn-primary">
-                      {{-- {{ pathinfo($candidate->file_surat_sehat, PATHINFO_FILENAME) }} --}}
-                      Lihat
-                    </a>
-                  @else
-                    <span>-</span>
-                  @endif
-                </div>
-                <div class="mb-3">
-                  <label for="file_vaksin" class="form-label">SERTIFIKAT VAKSIN</label><br>
-                  @if ($candidate->file_vaksin)
-                    <a href="{{ Storage::url($candidate->file_vaksin) }}" target="_blank"
-                      class="text-sm btn btn-sm btn-primary">
-                      {{-- {{ pathinfo($candidate->file_vaksin, PATHINFO_FILENAME) }} --}}
-                      Lihat
-                    </a>
-                  @else
-                    <span>-</span>
-                  @endif
-                </div>
-
-              </div>
-            </div>
+          <div class="tab-pane fade" id="v-pills-riwayat-pekerjaan" role="tabpanel"
+            aria-labelledby="v-pills-riwayat-pekerjaan-tab">
+            @include('pages.recruitment.candidate.show-detail.employment-history-detail')
+          </div>
+          <div class="tab-pane fade" id="v-pills-riwayat-pendidikan" role="tabpanel"
+            aria-labelledby="v-pills-riwayat-pendidikan-tab">
+            @include('pages.recruitment.candidate.show-detail.educational-history-detail')
+          </div>
+          <div class="tab-pane fade" id="v-pills-kemampuan-bahasa" role="tabpanel"
+            aria-labelledby="v-pills-kemampuan-bahasa-tab">
+            @include('pages.recruitment.candidate.show-detail.language-proficiency-detail')
+          </div>
+          <div class="tab-pane fade" id="v-pills-seminar" role="tabpanel" aria-labelledby="v-pills-seminar-tab">
+            @include('pages.recruitment.candidate.show-detail.training-attended-detail')
+          </div>
+          <div class="tab-pane fade" id="v-pills-keterampilan" role="tabpanel" aria-labelledby="v-pills-keterampilan-tab">
+            @include('pages.recruitment.candidate.show-detail.skill-detail')
+          </div>
+          <div class="tab-pane fade" id="v-pills-sosial-media" role="tabpanel"
+            aria-labelledby="v-pills-sosial-media-tab">
+            @include('pages.recruitment.candidate.show-detail.social-platform-detail')
+          </div>
+          <div class="tab-pane fade show active" id="v-pills-informasi-dasar" role="tabpanel"
+            aria-labelledby="v-pills-informasi-dasar-tab">
+            @include('pages.recruitment.candidate.show-detail.candidate-detail')
           </div>
         </div>
       </div>
-
-      <div class="col-12 col-lg-7">
-        <div class="card">
-          <div class="card-body">
-            <div class="row">
-
-              <div class="col-md-6 col-12">
-                <div class="form-group">
-                  <label for="name">Nama Lengkap</label>
-                  <input type="text" id="name" value="{{ old('name', $candidate->name) }}"
-                    class="form-control @error('name') is-invalid @enderror" name="name" readonly>
-                </div>
-                <div class="form-group">
-                  <label for="email">Email</label>
-                  <input type="email" id="email" value="{{ old('email', $candidate->email) }}"
-                    class="form-control @error('email') is-invalid @enderror" name="email" readonly>
-                </div>
-                <div class="form-group">
-                  <label for="phone_number">No. Telp</label>
-                  <input type="text" id="phone_number" value="{{ old('phone_number', $candidate->phone_number) }}"
-                    maxlength="13" class="form-control @error('phone_number') is-invalid @enderror" name="phone_number"
-                    readonly>
-                </div>
-                <div class="form-group">
-                  <label for="paspor_number">No. Paspor</label>
-                  <input type="text" id="paspor_number" value="{{ old('paspor_number', $candidate->paspor_number) }}"
-                    maxlength="16" class="form-control @error('paspor_number') is-invalid @enderror" name="paspor_number"
-                    readonly>
-                </div>
-                <div class="form-group">
-                  <label for="ktp_number">No. KTP</label>
-                  <input type="text" id="ktp_number" value="{{ old('ktp_number', $candidate->ktp_number) }}"
-                    maxlength="16" class="form-control @error('ktp_number') is-invalid @enderror" name="ktp_number"
-                    readonly>
-                </div>
-                <div class="form-group">
-                  <label for="kk_number">No. Kartu Keluarga</label>
-                  <input type="text" id="kk_number" value="{{ old('kk_number', $candidate->kk_number) }}"
-                    maxlength="16" class="form-control @error('kk_number') is-invalid @enderror" name="kk_number"
-                    readonly>
-                </div>
-                <div class="form-group">
-                  <label for="npwp_number">Jabatan Yang Dilamar</label>
-                  <input type="text" inputmode="numeric"
-                    value="{{ old('npwp_number', $candidate->applied_position) }}" id="npwp_number"
-                    class="form-control @error('npwp_number') is-invalid @enderror" name="npwp_number" readonly>
-                </div>
-                <div class="form-group">
-                  <label for="npwp_number">Rekomendasi Penempatan</label>
-                  <input type="text" inputmode="numeric"
-                    value="{{ old('npwp_number', $candidate->recommended_position) }}" maxlength="16" id="npwp_number"
-                    class="form-control @error('npwp_number') is-invalid @enderror" name="npwp_number" readonly>
-                </div>
-              </div>
-
-              <div class="col-md-6 col-12">
-                <div class="form-group">
-                  <label for="pob">Tempat Lahir</label>
-                  <input type="text" id="pob" value="{{ old('pob', $candidate->pob) }}"
-                    class="form-control @error('pob') is-invalid @enderror" name="pob" readonly>
-                </div>
-                <div class="form-group">
-                  <label for="dob">Tanggal Lahir </label>
-                  {{-- <label for="dob">Tanggal Lahir {{ $ageInYears }} tahun {{ $ageInMonths }} bulan</label> --}}
-                  <input type="date" id="dob" name="dob" value="{{ old('dob', $candidate->dob) }}"
-                    class="form-control @error('dob') is-invalid @enderror" placeholder="Select date.." readonly>
-                </div>
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <label for="gender">Jenis Kelamin</label>
-                    <select name="gender" id="gender" class="form-control  @error('gender') is-invalid @enderror"
-                      disabled>
-                      <option value="" disabled selected>Choose</option>
-                      <option value="LAKI-LAKI"
-                        {{ old('gender', $candidate->gender) == 'LAKI-LAKI' ? 'selected' : '' }}>
-                        Laki-laki
-                      </option>
-                      <option value="PEREMPUAN"
-                        {{ old('gender', $candidate->gender) == 'PEREMPUAN' ? 'selected' : '' }}>
-                        Perempuan
-                      </option>
-                    </select>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="blood_type">Gol. Darah</label>
-                    <input type="text" value="{{ old('blood_type', $candidate->blood_type) }}" id="blood_type"
-                      class="form-control  @error('blood_type') is-invalid @enderror" maxlength="3" name="blood_type"
-                      readonly>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="npwp_number">Status Perkawinan </label>
-                  <input type="text" value="{{ old('npwp_number', $candidate->marital_status) }}" maxlength="16"
-                    id="npwp_number" class="form-control @error('npwp_number') is-invalid @enderror"
-                    name="npwp_number" readonly>
-                </div>
-                <div class="form-group">
-                  <label for="religion">Agama</label>
-                  <input type="text" id="religion" value="{{ old('religion', $candidate->religion) }}"
-                    class="form-control @error('religion') is-invalid @enderror" name="religion" readonly>
-                </div>
-                <div class="form-group">
-                  <label for="nationality">Kewarganegaraan</label>
-                  <input type="text" value="{{ old('nationality', $candidate->nationality) }}" id="nationality"
-                    class="form-control @error('nationality') is-invalid @enderror" name="nationality" readonly>
-                </div>
-                <div class="form-group">
-                  <label for="ethnic">Suku Bangsa</label>
-                  <input type="text" value="{{ old('ethnic', $candidate->ethnic) }}" id="ethnic"
-                    class="form-control @error('ethnic') is-invalid @enderror" name="ethnic" readonly>
-                </div>
-                <div class="form-group">
-                  <label for="candidate_from">Pelamar Dari</label>
-                  <input type="text" value="{{ old('candidate_from', $candidate->candidate_from) }}"
-                    id="candidate_from" class="form-control @error('candidate_from') is-invalid @enderror"
-                    name="candidate_from" readonly>
-                </div>
-              </div>
-
-              <div class="col-12">
-                <div class="form-group">
-                  <label for="ktp_address">Alamat Sesuai KTP</label>
-                  <textarea type="text" id="ktp_address" class="form-control  @error('ktp_address') is-invalid @enderror"
-                    name="ktp_address" rows="5" readonly> {{ old('ktp_address', $candidate->ktp_address) }}</textarea>
-                </div>
-                <div class="row">
-                  <!-- Latitude and Longitude for Alamat KTP -->
-                  <div class="form-group col-md-6">
-                    <label for="latitude_ktp">Latitude Alamat KTP</label>
-                    <input type="text" id="latitude_ktp" value="{{ $candidate->latitude_ktp }}"
-                      class="form-control" readonly>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="longitude_ktp">Longitude Alamat KTP</label>
-                    <input type="text" id="longitude_ktp" value="{{ $candidate->longitude_ktp }}"
-                      class="form-control" readonly>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="current_address">Alamat Sekarang</label>
-                  <textarea type="text" id="current_address" class="form-control @error('current_address') is-invalid @enderror"
-                    name="current_address" rows="5" readonly> {{ old('current_address', $candidate->current_address) }}</textarea>
-                </div>
-                <div class="row">
-                  <!-- Latitude and Longitude for Alamat domisili -->
-                  <div class="form-group col-md-6">
-                    <label for="latitude_domisili">Latitude Domisili</label>
-                    <input type="text" id="latitude_domisili" value="{{ $candidate->latitude_domisili }}"
-                      class="form-control" readonly>
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="longitude_domisili">Longitude Domisili</label>
-                    <input type="text" id="longitude_domisili" value="{{ $candidate->longitude_domisili }}"
-                      class="form-control" readonly>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- data keluarga -->
-      <div class="col-12 col-lg-10">
-        <div class="card">
-          <div class="card-body">
-            <div class="row">
-              <h3>Data Keluarga</h3>
-
-              <!-- Table with outer spacing -->
-              <div class="table-responsive">
-                <h4 class="text-center">Keluarga kandung</h4>
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>Hubungan</th>
-                      <th>Nama</th>
-                      <th>L/P</th>
-                      <th>Tgl Lahir</th>
-                      <th>No. Telp</th>
-                      <th>Pendidikan</th>
-                      <th>Pekerjaan</th>
-                      <th>Alamat</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @php
-                      $orderedRelations = ['BAPAK', 'IBU', 'SAUDARA KANDUNG'];
-
-                      $sortedFamilyDetails = $candidate->familyDetails
-                          ->whereIn('relation', $orderedRelations)
-                          ->sortBy(function ($familyDetail) use ($orderedRelations) {
-                              return array_search($familyDetail->relation, $orderedRelations);
-                          });
-                    @endphp
-                    @forelse ($sortedFamilyDetails as $familyDetail)
-                      <tr>
-                        <td class="text-bold-500">{{ $familyDetail->relation }}</td>
-                        <td>{{ $familyDetail->name }}</td>
-                        <td class="text-bold-500">{{ $familyDetail->gender }}</td>
-                        <td class="text-bold-500">
-                          {{ Carbon\Carbon::parse($familyDetail->dob)->translatedFormat('d F Y') }}
-                        </td>
-                        <td class="text-bold-500">{{ $familyDetail->phone_number }}</td>
-                        <td class="text-bold-500">{{ $familyDetail->education }}</td>
-                        <td class="text-bold-500">{{ $familyDetail->job }}</td>
-                        <td class="text-bold-500">{{ $familyDetail->address }}</td>
-                      </tr>
-                    @empty
-                      <tr>
-                        <td class="text-center" colspan="8">No data available in table</td>
-                      </tr>
-                    @endforelse
-
-                  </tbody>
-                </table>
-              </div>
-              <hr class="my-4">
-              <!-- Table with outer spacing -->
-              <div class="table-responsive">
-                <h4 class="text-center">Keluarga KK</h4>
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>Hubungan</th>
-                      <th>Nama</th>
-                      <th>L/P</th>
-                      <th>Tgl Lahir</th>
-                      <th>No. Telp</th>
-                      <th>Pendidikan</th>
-                      <th>Pekerjaan</th>
-                      <th>Alamat</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @php
-                      $orderedRelations = ['SUAMI', 'ISTRI', 'ANAK'];
-
-                      $sortedFamilyDetails = $candidate->familyDetails
-                          ->whereIn('relation', $orderedRelations)
-                          ->sortBy(function ($familyDetail) use ($orderedRelations) {
-                              return array_search($familyDetail->relation, $orderedRelations);
-                          });
-                    @endphp
-                    @forelse ($sortedFamilyDetails as $familyDetail)
-                      <tr>
-                        <td class="text-bold-500">{{ $familyDetail->relation }}</td>
-                        <td>{{ $familyDetail->name }}</td>
-                        <td class="text-bold-500">{{ $familyDetail->gender }}</td>
-                        <td class="text-bold-500">
-                          {{ Carbon\Carbon::parse($familyDetail->dob)->translatedFormat('d F Y') }}
-                        </td>
-                        <td class="text-bold-500">{{ $familyDetail->phone_number }}</td>
-                        <td class="text-bold-500">{{ $familyDetail->education }}</td>
-                        <td class="text-bold-500">{{ $familyDetail->job }}</td>
-                        <td class="text-bold-500">{{ $familyDetail->address }}</td>
-                      </tr>
-                    @empty
-                      <tr>
-                        <td class="text-center" colspan="8">No data available in table</td>
-                      </tr>
-                    @endforelse
-
-                  </tbody>
-                </table>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- pendidikan -->
-      <div class="col-12 col-lg-10">
-        <div class="card">
-          <div class="card-body">
-            <div class="row">
-              <h3>Riwayat Pendidikan</h3>
-              <!-- Table with outer spacing -->
-              <div class="table-responsive">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>Tingkat</th>
-                      <th>Institusi</th>
-                      <th>Jurusan</th>
-                      <th>GPA/NEM</th>
-                      <th style="text-align: center;">
-                        <div>Tahun</div>
-                        <div style="display: flex; justify-content: space-between;">
-                          <span>Masuk</span>
-                          <span>-</span>
-                          <span>Keluar</span>
-                        </div>
-                      </th>
-                      <th>Lulus/Tidak</th>
-                      <th>Ijazah</th>
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    @forelse ($candidate->educationalHistories as $educationalHistory)
-                      <tr>
-                        <td class="text-bold-500">{{ $educationalHistory->school_level }}</td>
-                        <td>{{ $educationalHistory->school_name }}</td>
-                        <td class="text-bold-500">{{ $educationalHistory->study }}</td>
-                        <td class="text-bold-500">{{ $educationalHistory->gpa }}</td>
-                        <td style="text-align: center;">
-                          <div style="display: flex; justify-content: space-between;">
-                            <span>{{ $educationalHistory->year_from }}</span>
-                            <span>-</span>
-                            <span>{{ $educationalHistory->year_to }}</span>
-                          </div>
-                        </td>
-                        <td class="text-bold-500">{{ $educationalHistory->graduate }}</td>
-                        <td class="text-bold-500 text-center">
-                          @if ($educationalHistory->file_ijazah)
-                            <a href="{{ Storage::url($educationalHistory->file_ijazah) }}" target="_blank"
-                              class="text-sm">
-                              Lihat
-                            </a>
-                          @else
-                            <span>-</span>
-                          @endif
-                        </td>
-                      </tr>
-                    @empty
-                      <tr>
-                        <td class="text-center" colspan="8">No data available in table</td>
-                      </tr>
-                    @endforelse
-
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- pengalaman -->
-      <div class="col-12 col-lg-10">
-        <div class="card">
-          <div class="card-body">
-            <div class="row">
-              <h3>Pengalaman Kerja</h3>
-              <!-- Table with outer spacing -->
-              <div class="table-responsive">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>Nama Perusahaan</th>
-                      <th>Posisi </th>
-                      <th>Atasan</th>
-                      <th style="text-align: center;">
-                        <div>Lama Bekerja</div>
-                        <div style="display: flex; justify-content: space-between;">
-                          <span>Masuk</span>
-                          <span>-</span>
-                          <span>Keluar</span>
-                        </div>
-                      </th>
-                      <th>Gaji</th>
-                      <th>Alasan Berhenti</th>
-                      <th>File</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @forelse ($candidate->employmentHistories as $employmentHistory)
-                      <tr>
-                        <td>{{ $employmentHistory->company_name }}</td>
-                        <td class="text-bold-500">{{ $employmentHistory->position }}</td>
-                        <td class="text-bold-500">{{ $employmentHistory->direct_supervisor }}</td>
-                        <td style="text-align: center;">
-                          <div style="display: flex; justify-content: space-between;">
-                            <span>{{ $employmentHistory->year_from }}</span>
-                            <span>-</span>
-                            <span>{{ $employmentHistory->year_to }}</span>
-                          </div>
-                        </td>
-                        <td class="text-bold-500">Rp. {{ number_format($employmentHistory->salary, 0, ',', '.') }}</td>
-                        <td class="text-bold-500">{{ $employmentHistory->reason }}</td>
-                        <td class="text-bold-500 text-center">
-                          @if ($employmentHistory->file)
-                            <a href="{{ Storage::url($employmentHistory->file) }}" target="_blank" class="text-sm">
-                              Lihat
-                            </a>
-                          @else
-                            <span>-</span>
-                          @endif
-                        </td>
-                      </tr>
-                    @empty
-                      <tr>
-                        <td class="text-center" colspan="7">No data available in table</td>
-                      </tr>
-                    @endforelse
-
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Bahasa Asing -->
-      <div class="col-12 col-lg-10">
-        <div class="card">
-          <div class="card-body">
-            <div class="row">
-              <h3>Bahasa Asing</h3>
-              <!-- Table with outer spacing -->
-              <div class="table-responsive">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>Bahasa</th>
-                      <th>Lisan</th>
-                      <th>Menulis</th>
-                      <th>Membaca</th>
-                      <th>Mendengar</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @forelse ($candidate->languageProficiencies as $languageProficiency)
-                      <tr>
-                        <td>{{ $languageProficiency->language }}</td>
-                        <td>{{ $languageProficiency->speaking }}</td>
-                        <td>{{ $languageProficiency->writing }}</td>
-                        <td>{{ $languageProficiency->reading }}</td>
-                        <td>{{ $languageProficiency->listening }}</td>
-                      </tr>
-                    @empty
-                      <tr>
-                        <td class="text-center" colspan="5">No data available in table</td>
-                      </tr>
-                    @endforelse
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Seminar/Pelatihan -->
-      <div class="col-12 col-lg-10">
-        <div class="card">
-          <div class="card-body">
-
-            <div class="row">
-              <h3>Pelatihan/Seminar</h3>
-              <!-- Table with outer spacing -->
-              <div class="table-responsive">
-                <table class="table table-sm" style="margin: 0;">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Pelatihan/Seminar</th>
-                      <th>Penyelenggara</th>
-                      <th>Tempat/Kota</th>
-                      <th>Tahun</th>
-                      <th>File</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @forelse ($candidate->trainingAttendeds as $trainingAttended)
-                      <tr>
-                        <td class="text-bold-500">{{ $loop->iteration }}</td>
-                        <td class="text-bold-500">{{ $trainingAttended->training_name }}</td>
-                        <td class="text-bold-500">{{ $trainingAttended->organizer_name }}</td>
-                        <td class="text-bold-500">{{ $trainingAttended->city }}</td>
-                        <td class="text-bold-500">{{ $trainingAttended->year }}</td>
-                        <td class="text-bold-500">
-                          @if ($trainingAttended->file_sertifikat)
-                            <a href="{{ Storage::url($trainingAttended->file_sertifikat) }}" target="_blank">
-                              Lihat
-                            </a>
-                          @else
-                            <span>-</span>
-                          @endif
-                        </td>
-                      </tr>
-                    @empty
-                      <td class="text-bold-500 text-center" colspan="9">No data available in table</td>
-                    @endforelse
-                  </tbody>
-                </table>
-
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- keterampilan -->
-      <div class="col-12 col-lg-10">
-        <div class="card">
-          <div class="card-body">
-            <div class="row">
-              <h3>Keterampilan/Kompeten</h3>
-              <!-- Table with outer spacing -->
-              <div class="table-responsive">
-                <table class="table table-sm">
-                  <thead>
-                    <tr>
-                      <th>Nama Keterampilan/Kompetensi</th>
-                      <th>Kemahiran</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @forelse ($candidate->skills as $skill)
-                      <tr>
-                        <td class="text-bold-500">{{ $skill->name }}</td>
-                        <td class="text-bold-500">
-                          {{ $skill->mastery }}
-                        </td>
-                      </tr>
-                    @empty
-                      <td class="text-bold-500 text-center" colspan="2">No data available in table</td>
-                    @endforelse
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Dokumen-dokumen-->
-      {{-- <div class="col-12 col-lg-10">
-        <div class="card">
-          <div class="card-body">
-            <div class="row">
-              <h3>Dokumen-dokumen</h3>
-              <!-- Table with outer spacing -->
-              <div class="table-responsive">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>Jenis File</th>
-                      <th>Nama File</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @forelse ($candidate->candidateDocuments as $candidateDocument)
-                      <tr>
-                        <td>{{ $candidateDocument->type_document }}</td>
-                        <td>{{ pathinfo($candidateDocument->file, PATHINFO_FILENAME) }}</td>
-                        <td>
-                          <a href="{{ Storage::url($candidateDocument->file) }}" class="btn btn-primary"
-                            target="_blank">
-                            Lihat
-                          </a>
-                        </td>
-                      </tr>
-                    @empty
-                      <tr>
-                        <td class="text-center" colspan="3">No data available in table</td>
-                      </tr>
-                    @endforelse
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> --}}
+    </div>
 
     </div>
+
+
   </section>
 
+  <!--preview img-->
+  <script>
+    function previewImage(event) {
+      var reader = new FileReader();
+      reader.onload = function() {
+        var output = document.getElementById('uploadedAvatar');
+        output.src = reader.result;
+      }
+      reader.readAsDataURL(event.target.files[0]);
+    }
+  </script>
+
+  <!-- sweetalsert-->
+  <script>
+    document.getElementById('submitBtn').addEventListener('click', function(e) {
+      Swal.fire({
+        title: 'Are you sure to update it?',
+        // text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, submit it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          document.getElementById('updateForm').submit();
+        }
+      });
+    });
+  </script>
+
+  <script>
+    function deleteFamilyDetail(getId) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // If the user clicks "Yes, delete it!", submit the corresponding form
+          document.getElementById('deleteFamilyDetailForm_' + getId).submit();
+        }
+      });
+    }
+  </script>
+
+  <script>
+    function deleteEducational(getId) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // If the user clicks "Yes, delete it!", submit the corresponding form
+          document.getElementById('deleteEducationalForm_' + getId).submit();
+        }
+      });
+    }
+  </script>
+
+  <script>
+    function deleteEmploymenHistory(getId) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // If the user clicks "Yes, delete it!", submit the corresponding form
+          document.getElementById('deleteCandidateEmploymentHistoryForm_' + getId).submit();
+        }
+      });
+    }
+  </script>
+
+  <script>
+    function deletecandidateLanguageProficiency(getId) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // If the user clicks "Yes, delete it!", submit the corresponding form
+          document.getElementById('deletecandidateLanguageProficiencyForm_' + getId).submit();
+        }
+      });
+    }
+  </script>
+
+  <script>
+    function deleteTrainingAttend(getId) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // If the user clicks "Yes, delete it!", submit the corresponding form
+          document.getElementById('deleteTrainingAttendForm_' + getId).submit();
+        }
+      });
+    }
+  </script>
+
+  <script>
+    function deleteskill(getId) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // If the user clicks "Yes, delete it!", submit the corresponding form
+          document.getElementById('deleteskillForm_' + getId).submit();
+        }
+      });
+    }
+  </script>
+
+  <script>
+    function deletecandidateSocialPlatform(getId) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // If the user clicks "Yes, delete it!", submit the corresponding form
+          document.getElementById('deletecandidateSocialPlatformForm_' + getId).submit();
+        }
+      });
+    }
+  </script>
+  <!-- /sweetalsert-->
+
+  <!--leaflet-->
+  <!-- Include Leaflet.js CSS and JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var mapKTP, mapDomisili;
+      var markerKTP, markerDomisili;
+
+      // Initialize KTP Map when modal is shown
+      $('#mapModalKTP').on('shown.bs.modal', function() {
+        if (!mapKTP) {
+          mapKTP = L.map('mapKTP').setView([{{ $candidate->latitude_ktp ?? -6.1580339989448305 }},
+              {{ $candidate->longitude_ktp ?? 106.88319683074951 }}
+            ],
+            13); // Default location: Jakarta
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          }).addTo(mapKTP);
+
+          // Add a marker at the candidate's KTP location
+          var markerKTP = L.marker([{{ $candidate->latitude_ktp ?? -6.1580339989448305 }},
+            {{ $candidate->longitude_ktp ?? 106.88319683074951 }}
+          ]).addTo(
+            mapKTP);
+
+          // Optional: Bind a popup to the marker with some information
+          markerKTP.bindPopup("<b>Lokasi Alamat KTP</b>").openPopup();
+
+          // Add marker when map is clicked
+          mapKTP.on('click', function(e) {
+            var lat = e.latlng.lat;
+            var lng = e.latlng.lng;
+
+            // Update input fields for KTP
+            document.getElementById('latitude_ktp').value = lat;
+            document.getElementById('longitude_ktp').value = lng;
+
+            // Place marker
+            if (markerKTP) {
+              mapKTP.removeLayer(markerKTP);
+            }
+            markerKTP = L.marker([lat, lng]).addTo(mapKTP);
+          });
+        }
+        setTimeout(function() {
+          mapKTP.invalidateSize();
+        }, 100);
+      });
+
+      // Initialize Domisili Map when modal is shown
+      $('#mapModalDomisili').on('shown.bs.modal', function() {
+        if (!mapDomisili) {
+          mapDomisili = L.map('mapDomisili').setView([{{ $candidate->latitude_domisili ?? -6.1580339989448305 }},
+              {{ $candidate->longitude_domisili ?? 106.88319683074951 }}
+            ],
+            13); // Default location: Jakarta
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          }).addTo(mapDomisili);
+
+          // Add a marker at the candidate's domisili location
+          var markerDomisili = L.marker([{{ $candidate->latitude_domisili ?? -6.1580339989448305 }},
+            {{ $candidate->longitude_domisili ?? 106.88319683074951 }}
+          ]).addTo(
+            mapDomisili);
+
+          // Optional: Bind a popup to the marker with some information
+          markerDomisili.bindPopup("<b>Lokasi Alamat Domisili</b>").openPopup();
+
+          // Add marker when map is clicked
+          mapDomisili.on('click', function(e) {
+            var lat = e.latlng.lat;
+            var lng = e.latlng.lng;
+
+            // Update input fields for Domisili
+            document.getElementById('latitude_domisili').value = lat;
+            document.getElementById('longitude_domisili').value = lng;
+
+            // Place marker
+            if (markerDomisili) {
+              mapDomisili.removeLayer(markerDomisili);
+            }
+            markerDomisili = L.marker([lat, lng]).addTo(mapDomisili);
+          });
+        }
+        setTimeout(function() {
+          mapDomisili.invalidateSize();
+        }, 100);
+      });
+
+      // Optionally add logic to reset markers or clear fields if needed.
+    });
+  </script>
+  <!--/leaflet-->
+  <script>
+    Fancybox.bind("[data-fancybox]", {
+      // Your custom options
+    });
+  </script>
 @endsection

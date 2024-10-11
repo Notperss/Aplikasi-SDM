@@ -3,7 +3,7 @@
   aria-hidden="true" style="display: none;">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form action="{{ route('skill.store') }}" method="post" enctype="multipart/form-data">
+      <form action="{{ route('candidateSkill.store') }}" method="post" enctype="multipart/form-data">
         @csrf
 
         <div class="modal-header">

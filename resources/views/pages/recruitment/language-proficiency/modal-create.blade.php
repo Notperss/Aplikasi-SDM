@@ -3,7 +3,7 @@
   aria-labelledby="modal-form-add-language-proficiency-label" aria-hidden="true" style="display: none;">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form action="{{ route('languageProficiency.store') }}" method="post">
+      <form action="{{ route('candidateLanguageProficiency.store') }}" method="post">
         @csrf
 
         <div class="modal-header">

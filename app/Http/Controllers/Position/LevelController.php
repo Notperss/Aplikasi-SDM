@@ -14,7 +14,7 @@ class LevelController extends Controller
      */
     public function index()
     {
-        $levels = Level::where('company_id', Auth::user()->company_id)->latest()->get();
+        $levels = Level::where('company_id', Auth::user()->company_id)->orderBy('name', 'asc')->get();
 
         return view('pages.position.level.index', compact('levels'));
     }

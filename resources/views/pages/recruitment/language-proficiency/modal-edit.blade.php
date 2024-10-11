@@ -1,15 +1,16 @@
 <!-- Modals add menu -->
-<div id="modal-form-edit-language-proficiency-{{ $languageProficiency->id }}" class="modal fade" tabindex="-1"
-  aria-labelledby="modal-form-edit-language-proficiency-{{ $languageProficiency->id }}-label" aria-hidden="true"
+<div id="modal-form-edit-language-proficiency-{{ $candidateLanguageProficiency->id }}" class="modal fade" tabindex="-1"
+  aria-labelledby="modal-form-edit-language-proficiency-{{ $candidateLanguageProficiency->id }}-label" aria-hidden="true"
   style="display: none;">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form action="{{ route('languageProficiency.update', $languageProficiency) }}" method="post">
+      <form action="{{ route('candidateLanguageProficiency.update', $candidateLanguageProficiency) }}" method="post">
         @csrf
         @method('PUT')
 
         <div class="modal-header">
-          <h5 class="modal-title" id="modal-form-edit-language-proficiency-{{ $languageProficiency->id }}-label">
+          <h5 class="modal-title"
+            id="modal-form-edit-language-proficiency-{{ $candidateLanguageProficiency->id }}-label">
             Edit Data Pengalaman Kerja
           </h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
@@ -22,7 +23,7 @@
 
               <div class="mb-2">
                 <label class="form-label" for="language">Bahasa Asing</label>
-                <input id="language" name="language" value="{{ $languageProficiency->language }}"
+                <input id="language" name="language" value="{{ $candidateLanguageProficiency->language }}"
                   class="form-control @error('language') is-invalid @enderror" required>
                 @error('language')
                   <a style="color: red"><small>{{ $message }}</small></a>
@@ -34,9 +35,12 @@
                 <select id="speaking" name="speaking" class="form-control @error('speaking') is-invalid @enderror"
                   required>
                   <option value="" disabled selected>Choose</option>
-                  <option value="Cukup"{{ $languageProficiency->speaking == 'Cukup' ? 'selected' : '' }}>Cukup</option>
-                  <option value="Baik"{{ $languageProficiency->speaking == 'Baik' ? 'selected' : '' }}>Baik</option>
-                  <option value="Sangat Baik"{{ $languageProficiency->speaking == 'Sangat Baik' ? 'selected' : '' }}>
+                  <option value="Cukup"{{ $candidateLanguageProficiency->speaking == 'Cukup' ? 'selected' : '' }}>Cukup
+                  </option>
+                  <option value="Baik"{{ $candidateLanguageProficiency->speaking == 'Baik' ? 'selected' : '' }}>Baik
+                  </option>
+                  <option
+                    value="Sangat Baik"{{ $candidateLanguageProficiency->speaking == 'Sangat Baik' ? 'selected' : '' }}>
                     Sangat Baik
                   </option>
                 </select>
@@ -50,9 +54,12 @@
                 <select id="writing" name="writing" class="form-control @error('writing') is-invalid @enderror"
                   required>
                   <option value="" disabled selected>Choose</option>
-                  <option value="Cukup"{{ $languageProficiency->writing == 'Cukup' ? 'selected' : '' }}>Cukup</option>
-                  <option value="Baik"{{ $languageProficiency->writing == 'Baik' ? 'selected' : '' }}>Baik</option>
-                  <option value="Sangat Baik"{{ $languageProficiency->writing == 'Sangat Baik' ? 'selected' : '' }}>
+                  <option value="Cukup"{{ $candidateLanguageProficiency->writing == 'Cukup' ? 'selected' : '' }}>Cukup
+                  </option>
+                  <option value="Baik"{{ $candidateLanguageProficiency->writing == 'Baik' ? 'selected' : '' }}>Baik
+                  </option>
+                  <option
+                    value="Sangat Baik"{{ $candidateLanguageProficiency->writing == 'Sangat Baik' ? 'selected' : '' }}>
                     Sangat Baik
                 </select>
                 @error('writing')
@@ -65,9 +72,12 @@
                 <select id="reading" name="reading" class="form-control @error('reading') is-invalid @enderror"
                   required>
                   <option value="" disabled selected>Choose</option>
-                  <option value="Cukup"{{ $languageProficiency->reading == 'Cukup' ? 'selected' : '' }}>Cukup</option>
-                  <option value="Baik"{{ $languageProficiency->reading == 'Baik' ? 'selected' : '' }}>Baik</option>
-                  <option value="Sangat Baik"{{ $languageProficiency->reading == 'Sangat Baik' ? 'selected' : '' }}>
+                  <option value="Cukup"{{ $candidateLanguageProficiency->reading == 'Cukup' ? 'selected' : '' }}>Cukup
+                  </option>
+                  <option value="Baik"{{ $candidateLanguageProficiency->reading == 'Baik' ? 'selected' : '' }}>Baik
+                  </option>
+                  <option
+                    value="Sangat Baik"{{ $candidateLanguageProficiency->reading == 'Sangat Baik' ? 'selected' : '' }}>
                     Sangat Baik
                 </select>
                 @error('reading')
@@ -80,10 +90,13 @@
                 <select id="listening" name="listening" class="form-control @error('listening') is-invalid @enderror"
                   required>
                   <option value="" disabled selected>Choose</option>
-                  <option value="Cukup"{{ $languageProficiency->listening == 'Cukup' ? 'selected' : '' }}>Cukup
+                  <option value="Cukup"{{ $candidateLanguageProficiency->listening == 'Cukup' ? 'selected' : '' }}>
+                    Cukup
                   </option>
-                  <option value="Baik"{{ $languageProficiency->listening == 'Baik' ? 'selected' : '' }}>Baik</option>
-                  <option value="Sangat Baik"{{ $languageProficiency->listening == 'Sangat Baik' ? 'selected' : '' }}>
+                  <option value="Baik"{{ $candidateLanguageProficiency->listening == 'Baik' ? 'selected' : '' }}>Baik
+                  </option>
+                  <option
+                    value="Sangat Baik"{{ $candidateLanguageProficiency->listening == 'Sangat Baik' ? 'selected' : '' }}>
                     Sangat Baik
                 </select>
                 @error('listening')
