@@ -5,6 +5,9 @@ let jquery_datatable = $("#table1").DataTable({
 let jquery_datatable_1 = $("#table3").DataTable({
     responsive: true,
 });
+let jquery_datatable_2 = $("#table4").DataTable({
+    responsive: true,
+});
 
 let customized_datatable = $("#table2").DataTable({
     responsive: true,
@@ -31,3 +34,4 @@ const setTableColor = () => {
 setTableColor();
 jquery_datatable.on("draw", setTableColor);
 jquery_datatable_1.on("draw", setTableColor);
+jquery_datatable_2.on("draw", setTableColor);

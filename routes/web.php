@@ -28,7 +28,8 @@ use App\Http\Controllers\Recruitment\CandidateEmploymentHistoryController;
 use App\Http\Controllers\Recruitment\CandidateEducationalHistoryController;
 use App\Http\Controllers\Recruitment\CandidateLanguageProficiencyController;
 use App\Http\Controllers\Recruitment\CandidateSocialPlatformController;
-
+use App\Http\Controllers\Recruitment\SelectedCandidateController;
+use App\Http\Controllers\Recruitment\SelectionController;
 
 // Route::permanentRedirect('/', '/login');
 
@@ -65,6 +66,21 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
         Route::get('additional-details/{candidate}', [CandidateController::class, 'additionalDetails'])->name('additional-details');
         Route::post('/upload/{candidate}', [CandidateController::class, 'uploadDocument'])->name('upload.document');
     });
+
+    Route::resource('selection', SelectionController::class)->only('index', 'edit', 'store', 'update', 'destroy');
+    Route::patch('/selections/{id}/restore', [SelectionController::class, 'restore'])->name('selections.restore');
+
+    Route::resource('selectedCandidate', SelectedCandidateController::class)->only('store', 'edit', 'update', 'destroy');
+    Route::post('/selection/store/{selection}', [SelectedCandidateController::class, 'addCandidate'])->name('selectedCandidate.addCandidate');
+    Route::get('selectedCandidate/{selection}/selection-result', [SelectedCandidateController::class, 'resultSelection'])->name('selectedCandidate.resultSelection');
+
+    // Route::post('/selection/store-candidate/{selection}', [SelectionController::class, 'storeCandidate'])->name('selection.storeCandidate');
+    // Route::delete('/selection/destroy-candidate/{selectedCandidate}', [SelectionController::class, 'destroyCandidate'])->name('selection.destroyCandidate');
+
+
+
+
+
     Route::resource('candidateFamilyDetail', CandidateFamilyDetailController::class)->only('store', 'update', 'destroy');
     Route::resource('candidateEmploymentHistory', CandidateEmploymentHistoryController::class)->only('store', 'update', 'destroy');
     Route::resource('candidateEducationalHistory', CandidateEducationalHistoryController::class)->only('store', 'update', 'destroy');

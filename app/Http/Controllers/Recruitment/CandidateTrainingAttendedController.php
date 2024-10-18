@@ -80,7 +80,7 @@ class CandidateTrainingAttendedController extends Controller
                 Storage::disk('public_local')->delete($path_sertifikat);
             }
         } else {
-            $data['sertifikat'] = $path_sertifikat;
+            $data['file_sertifikat'] = $path_sertifikat;
         }
         $candidateTrainingAttended->update($data);
         return redirect()->back()->with('success', 'Data has been updated successfully!');

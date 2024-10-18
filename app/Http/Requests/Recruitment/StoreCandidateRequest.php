@@ -23,20 +23,26 @@ class StoreCandidateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string'],
-            'email' => ['required', 'string', 'email', 'unique:candidates,email'],
+            'email' => ['nullable', 'string', 'email', 'unique:candidates,email'],
+            // 'email' => ['required', 'string', 'email', 'unique:candidates,email'],
             'phone_number' => ['required',],
             'ktp_address' => ['required', 'string'],
             'current_address' => ['required', 'string'],
-            'ktp_number' => ['nullable', 'digits:16', 'unique:candidates,ktp_number'],
+            'ktp_number' => ['required', 'digits:16', 'unique:candidates,ktp_number'],
             'kk_number' => ['nullable', 'digits:16', 'unique:candidates,kk_number'],
             // 'npwp_number' => [
             //     'required', 'digits:16',
             //     // 'regex:/^\d{2}\.\d{3}\.\d{3}\.\d{1}-\d{3}\.\d{3}$/',
             //     'unique:candidates,npwp_number',
             // ],
+
+            'last_educational' => 'required',
+            'study' => 'required',
+            'marital_status' => 'required',
+
             'photo' => 'image|mimes:jpg,jpeg,png|max:512',
-            'religion' => ['required', 'string'],
-            'nationality' => ['required', 'string'],
+            'religion' => ['nullable', 'string'],
+            'nationality' => ['nullable', 'string'],
             // 'height' => ['required', 'integer'],
             // 'weight' => ['required', 'integer'],
             'pob' => ['required', 'string'],
@@ -50,6 +56,10 @@ class StoreCandidateRequest extends FormRequest
             'file_ktp' => 'mimes:pdf|max:512',
             'file_cv' => 'mimes:pdf|max:512',
             'file_skck' => 'mimes:pdf|max:512',
+            'file_ijazah' => 'mimes:pdf|max:512',
+            'file_sertifikat' => 'mimes:pdf|max:512',
+            'file_vaksin' => 'mimes:pdf|max:512',
+            'file_surat_sehat' => 'mimes:pdf|max:512',
 
             'file_sim_a' => 'mimes:jpg,jpeg,png,pdf|max:512',
             'file_sim_b' => 'mimes:jpg,jpeg,png,pdf|max:512',
@@ -74,7 +84,12 @@ class StoreCandidateRequest extends FormRequest
             'ktp_address.required' => 'Alamat KTP wajib diisi.',
             'ktp_address.string' => 'Alamat KTP harus berupa teks.',
 
-            'current_address.required' => 'Alamat saat ini wajib diisi.',
+            'last_educational.required' => 'Pendidikan Terakhir ini wajib diisi.',
+            'study.required' => 'Jurusan wajib diisi.',
+
+            'marital_status.required' => 'Status Perkawinan wajib diisi.',
+
+            'current_address.required' => 'Alamat Domisili wajib diisi.',
             'current_address.string' => 'Alamat saat ini harus berupa teks.',
 
             'npwp_number.required' => 'Nomor NPWP wajib diisi.',

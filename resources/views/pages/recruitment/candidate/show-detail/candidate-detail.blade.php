@@ -54,8 +54,22 @@
                     @if ($candidate->file_ktp)
                       <a href="{{ asset('storage/' . $candidate->file_ktp) }}" target="_blank"
                         class="text-sm btn btn-sm btn-primary">
-                        {{-- {{ pathinfo($candidate->file_cv, PATHINFO_FILENAME) }} --}}
-                        Lihat CV
+                        Lihat KTP & NPWP
+                      </a>
+                    @else
+                      <span>-</span>
+                    @endif
+                  </div>
+                  <div class="mb-3">
+                    <label for="file_ijazah" class="form-label">IJAZAH & TRANSKRIP NILAI</label><br>
+                    @can('candidate.update')
+                      <input class="form-control form-control-sm mb-1" accept=".pdf" type="file" id="file_ijazah"
+                        name="file_ijazah">
+                    @endcan
+                    @if ($candidate->file_ijazah)
+                      <a href="{{ asset('storage/' . $candidate->file_ijazah) }}" target="_blank"
+                        class="text-sm btn btn-sm btn-primary">
+                        Lihat Ijazah & Transkrip Nilai
                       </a>
                     @else
                       <span>-</span>
@@ -121,6 +135,21 @@
                       <span>-</span>
                     @endif
                   </div>
+                  <div class="mb-3">
+                    <label for="file_sertifikat" class="form-label">SERTIFIKAT PELATIHAN</label><br>
+                    @can('candidate.update')
+                      <input class="form-control form-control-sm mb-1" accept=".pdf" type="file"
+                        id="file_sertifikat" name="file_sertifikat">
+                    @endcan
+                    @if ($candidate->file_sertifikat)
+                      <a href="{{ asset('storage/' . $candidate->file_sertifikat) }}" target="_blank"
+                        class="text-sm btn btn-sm btn-primary">
+                        Lihat Sertifikat
+                      </a>
+                    @else
+                      <span>-</span>
+                    @endif
+                  </div>
 
                 </div>
               </div>
@@ -136,7 +165,7 @@
                 <div class="col-md-6 col-12">
 
                   <div class="form-group">
-                    <label for="name">Nama Lengkap</label>
+                    <label for="name">Nama Lengkap <code>*</code></label>
                     <input type="text" id="name" value="{{ old('name', $candidate->name) }}"
                       class="form-control @error('name') is-invalid @enderror" name="name">
                     @error('name')
@@ -162,7 +191,7 @@
                   </div>
 
                   <div class="form-group">
-                    <label for="phone_number">No. Telp</label>
+                    <label for="phone_number">No. Telp <code>*</code></label>
                     <input type="text" id="phone_number"
                       value="{{ old('phone_number', $candidate->phone_number) }}" maxlength="13"
                       oninput="this.value = this.value.replace(/\D+/g, '')"
@@ -191,7 +220,7 @@
                   </div>
 
                   <div class="form-group">
-                    <label for="ktp_number">No. KTP</label>
+                    <label for="ktp_number">No. KTP <code>*</code></label>
                     <input type="text" id="ktp_number" value="{{ old('ktp_number', $candidate->ktp_number) }}"
                       maxlength="16" oninput="this.value = this.value.replace(/\D+/g, '')"
                       class="form-control @error('ktp_number') is-invalid @enderror" name="ktp_number">
@@ -215,6 +244,56 @@
                           {{ $message }}
                         </small>
                       </a>
+                    @enderror
+                  </div>
+
+                  <div class="form-group">
+                    <label for="last_educational">Pendidikan Terakhir <code>*</code></label>
+                    <select type="text" id="last_educational" name="last_educational"
+                      class="form-control @error('last_educational') is-invalid @enderror">
+                      <option value="" disabled selected>Choose</option>
+                      <option value="S-3"
+                        {{ old('last_educational', $candidate->last_educational) == 'S-3' ? 'selected' : '' }}> S-3
+                      </option>
+                      <option value="S-2"
+                        {{ old('last_educational', $candidate->last_educational) == 'S-2' ? 'selected' : '' }}> S-2
+                      </option>
+                      <option value="S-1"
+                        {{ old('last_educational', $candidate->last_educational) == 'S-1' ? 'selected' : '' }}> S-1
+                      </option>
+                      <option value="D-4"
+                        {{ old('last_educational', $candidate->last_educational) == 'D-4' ? 'selected' : '' }}> D-4
+                      </option>
+                      <option value="D-3"
+                        {{ old('last_educational', $candidate->last_educational) == 'D-3' ? 'selected' : '' }}> D-3
+                      </option>
+                      <option value="D-2"
+                        {{ old('last_educational', $candidate->last_educational) == 'D-2' ? 'selected' : '' }}> D-2
+                      </option>
+                      <option value="D-1"
+                        {{ old('last_educational', $candidate->last_educational) == 'D-1' ? 'selected' : '' }}> D-1
+                      </option>
+                      <option value="MA"
+                        {{ old('last_educational', $candidate->last_educational) == 'MA' ? 'selected' : '' }}> MA
+                      </option>
+                      <option value="SMK"
+                        {{ old('last_educational', $candidate->last_educational) == 'SMK-3' ? 'selected' : '' }}> SMK
+                      </option>
+                      <option value="SMA"
+                        {{ old('last_educational', $candidate->last_educational) == 'SMA' ? 'selected' : '' }}> SMA
+                      </option>
+                      <option value="MTS"
+                        {{ old('last_educational', $candidate->last_educational) == 'MTS' ? 'selected' : '' }}> MTS
+                      </option>
+                      <option value="SMP"
+                        {{ old('last_educational', $candidate->last_educational) == 'SMP' ? 'selected' : '' }}> SMP
+                      </option>
+                      <option value="SD"
+                        {{ old('last_educational', $candidate->last_educational) == 'SD' ? 'selected' : '' }}> SD
+                      </option>
+                    </select>
+                    @error('last_educational')
+                      <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>
 
@@ -251,7 +330,7 @@
 
                 <div class="col-md-6 col-12">
                   <div class="form-group">
-                    <label for="pob">Tempat Lahir</label>
+                    <label for="pob">Tempat Lahir <code>*</code></label>
                     <input type="text" id="pob" value="{{ old('pob', $candidate->pob) }}"
                       class="form-control @error('pob') is-invalid @enderror" name="pob">
                     @error('pob')
@@ -263,7 +342,7 @@
                     @enderror
                   </div>
                   <div class="form-group">
-                    <label for="dob">Tanggal Lahir</label>
+                    <label for="dob">Tanggal Lahir <code>*</code></label>
                     <input type="date" id="dob" name="dob" value="{{ old('dob', $candidate->dob) }}"
                       class="form-control flatpickr-no-config @error('dob') is-invalid @enderror"
                       placeholder="Select date..">
@@ -277,7 +356,7 @@
                   </div>
                   <div class="row">
                     <div class="form-group col-md-6">
-                      <label for="gender">Jenis Kelamin</label>
+                      <label for="gender">Jenis Kelamin <code>*</code></label>
                       <select name="gender" id="gender"
                         class="form-control  @error('gender') is-invalid @enderror">
                         <option value="" disabled selected>Choose</option>
@@ -303,12 +382,16 @@
                       <select id="blood_type" class="form-control @error('blood_type') is-invalid @enderror"
                         name="blood_type">
                         <option value="" disabled selected>Choose</option>
+                        <option value="A" {{ $candidate->blood_type == 'A' ? 'selected' : '' }}>A</option>
                         <option value="A-" {{ $candidate->blood_type == 'A-' ? 'selected' : '' }}>A-</option>
                         <option value="A+" {{ $candidate->blood_type == 'A+' ? 'selected' : '' }}>A+</option>
+                        <option value="B" {{ $candidate->blood_type == 'B' ? 'selected' : '' }}>B</option>
                         <option value="B-" {{ $candidate->blood_type == 'B-' ? 'selected' : '' }}>B-</option>
                         <option value="B+" {{ $candidate->blood_type == 'B+' ? 'selected' : '' }}>B+</option>
+                        <option value="AB" {{ $candidate->blood_type == 'AB' ? 'selected' : '' }}>AB</option>
                         <option value="AB-" {{ $candidate->blood_type == 'AB-' ? 'selected' : '' }}>AB-</option>
                         <option value="AB+" {{ $candidate->blood_type == 'AB+' ? 'selected' : '' }}>AB+</option>
+                        <option value="O" {{ $candidate->blood_type == 'O' ? 'selected' : '' }}>O</option>
                         <option value="O-" {{ $candidate->blood_type == 'O-' ? 'selected' : '' }}>O-</option>
                         <option value="O+" {{ $candidate->blood_type == 'O+' ? 'selected' : '' }}>O+</option>
                       </select>
@@ -320,7 +403,7 @@
                     </div>
                   </div>
                   <div class="form-group">
-                    <label for="marital_status">Status Perkawinan</label>
+                    <label for="marital_status">Status Perkawinan <code>*</code></label>
                     <select id="marital_status" name="marital_status"
                       class="form-control @error('marital_status') is-invalid @enderror">
                       <option value="" disabled selected>Choose</option>
@@ -389,6 +472,18 @@
                     @enderror
                   </div>
                   <div class="form-group">
+                    <label for="study">Jurusan <code>*</code></label>
+                    <input type="text" value="{{ old('study', $candidate->study) }}" id="study"
+                      class="form-control @error('study') is-invalid @enderror" name="study">
+                    @error('study')
+                      <a style="color: red">
+                        <small>
+                          {{ $message }}
+                        </small>
+                      </a>
+                    @enderror
+                  </div>
+                  <div class="form-group">
                     <label for="ethnic">Suku Bangsa</label>
                     <input type="text" value="{{ old('ethnic', $candidate->ethnic) }}" id="ethnic"
                       class="form-control @error('ethnic') is-invalid @enderror" name="ethnic">
@@ -421,8 +516,23 @@
                 </div>
 
                 <div class="col-12">
+
+
                   <div class="form-group">
-                    <label for="ktp_address">Alamat Sesuai KTP</label>
+                    <label for="reference">Refrensi</label>
+                    <textarea type="text" id="reference" class="form-control  @error('reference') is-invalid @enderror"
+                      name="reference" rows="5"> {{ old('reference', $candidate->reference) }}</textarea>
+                    @error('reference')
+                      <a style="color: red">
+                        <small>
+                          {{ $message }}
+                        </small>
+                      </a>
+                    @enderror
+                  </div>
+
+                  <div class="form-group">
+                    <label for="ktp_address">Alamat Sesuai KTP <code>*</code></label>
                     <textarea type="text" id="ktp_address" class="form-control  @error('ktp_address') is-invalid @enderror"
                       name="ktp_address" rows="5"> {{ old('ktp_address', $candidate->ktp_address) }}</textarea>
                     @error('ktp_address')
@@ -455,7 +565,7 @@
                   </div>
 
                   <div class="form-group">
-                    <label for="current_address">Alamat Domisili</label>
+                    <label for="current_address">Alamat Domisili <code>*</code></label>
                     <textarea type="text" id="current_address" class="form-control @error('current_address') is-invalid @enderror"
                       name="current_address" rows="5"> {{ old('current_address', $candidate->current_address) }}</textarea>
                     @error('current_address')

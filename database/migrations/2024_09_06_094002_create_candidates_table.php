@@ -42,11 +42,17 @@ return new class extends Migration {
             $table->string('marital_status')->nullable(); //
 
             $table->string('paspor_number')->nullable(); //
+            $table->string('last_educational')->nullable(); //
+            $table->string('study')->nullable(); //
+            $table->string('reference')->nullable(); //
+            $table->string('disability')->nullable(); //
 
             $table->string('file_cv')->nullable(); //
             $table->string('file_kk')->nullable(); //
+            $table->string('file_ijazah')->nullable(); //
             $table->string('file_ktp')->nullable(); //
             $table->string('file_skck')->nullable(); //
+            $table->string('file_sertifikat')->nullable(); //
             $table->string('file_vaksin')->nullable(); //
             $table->string('file_surat_sehat')->nullable(); //
 

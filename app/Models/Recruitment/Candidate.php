@@ -44,12 +44,19 @@ class Candidate extends Model
                 'recommended_position', //
                 'marital_status', //
 
+                'last_educational',
+                'study',
+                'reference',
+                'disability',
+
                 'paspor_number',
 
                 'file_cv', //
                 'file_kk', //
                 'file_ktp', //
                 'file_skck', //
+                'file_ijazah', //
+                'file_sertifikat', //
                 'file_vaksin', //
                 'file_surat_sehat', //
 
@@ -106,12 +113,19 @@ class Candidate extends Model
         'recommended_position', //
         'marital_status', //
 
+        'last_educational',
+        'study',
+        'reference',
+        'disability',
+
         'paspor_number',
 
         'file_cv', //
         'file_kk', //
         'file_ktp', //
         'file_skck', //
+        'file_ijazah', //
+        'file_sertifikat', //
         'file_vaksin', //
         'file_surat_sehat', //
 
@@ -131,7 +145,12 @@ class Candidate extends Model
         'sim_c',
         'expired_sim_c',
         'file_sim_c',
+
+        'is_hire',
+        'is_selection',
     ];
+
+    protected $casts = ['is_hire' => 'boolean', 'is_selection' => 'boolean'];
 
     public function familyDetails()
     {
@@ -164,5 +183,10 @@ class Candidate extends Model
     public function SocialsPlatform()
     {
         return $this->hasMany(CandidateSocialPlatform::class);
+    }
+
+    public function SelectedCandidates()
+    {
+        return $this->hasMany(SelectedCandidate::class);
     }
 }

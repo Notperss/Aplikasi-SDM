@@ -523,8 +523,8 @@
             <p class="mb-0 mt-3" style="font-size: 70%"> * Latar Belakang Foto Warna Merah</p>
             <p class="mb-0" style="font-size: 70%"> * Ekstensi File : jpg, jpeg, png</p>
             <p class="mb-0" style="font-size: 70%"> * Ukuran File Maks. 500KB</p>
-            <p class="mb-0" style="font-size: 70%"> * Dimensi Foto 3x4</p>
-            <p class="mb-0" style="font-size: 70%"> * Pastikan foto wajah terlihat jelas</p>
+            <p class="mb-0" style="font-size: 70%"> * Dimensi Foto 4x6</p>
+            <p class="mb-0" style="font-size: 70%"> * Pastikan Foto Wajah Terlihat Jelas</p>
           </div>
 
           <div class="card mt-3">
@@ -538,6 +538,10 @@
                 <div class="mb-3">
                   <label for="file_ktp" class="form-label">KTP & NPWP</label>
                   <input class="form-control" accept=".pdf" type="file" id="file_ktp" name="file_ktp">
+                </div>
+                <div class="mb-3">
+                  <label for="file_ijazah" class="form-label">IJAZAH & TRANSKRIP NILAI</label>
+                  <input class="form-control" accept=".pdf" type="file" id="file_ijazah" name="file_ijazah">
                 </div>
                 <div class="mb-3">
                   <label for="file_skck" class="form-label">SKCK AKTIF</label>
@@ -556,6 +560,11 @@
                   <label for="file_vaksin" class="form-label">SERTIFIKAT VAKSIN</label>
                   <input class="form-control" accept=".pdf" type="file" id="file_vaksin" name="file_vaksin">
                 </div>
+                <div class="mb-3">
+                  <label for="file_sertifikat" class="form-label">SERTIFIKAT PELATIHAN</label>
+                  <input class="form-control" accept=".pdf" type="file" id="file_sertifikat"
+                    name="file_sertifikat">
+                </div>
                 <p class="card-text text-sm">
                   * Ekstensi File : pdf <br>
                   * Ukuran File Maks. 500KB
@@ -573,7 +582,7 @@
             <div class="row">
               <div class="col-md-6 col-12">
                 <div class="form-group">
-                  <label for="name">Nama Lengkap</label>
+                  <label for="name">Nama Lengkap <code>*</code></label>
                   <input type="text" id="name" value="{{ old('name') }}"
                     class="form-control @error('name') is-invalid @enderror" name="name">
                   @error('name')
@@ -599,7 +608,7 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="phone_number">No. Telpon</label>
+                  <label for="phone_number">No. Telpon <code>*</code></label>
                   <input type="text" id="phone_number" value="{{ old('phone_number') }}" maxlength="14"
                     oninput="this.value = this.value.replace(/\D+/g, '')"
                     class="form-control @error('phone_number') is-invalid @enderror" name="phone_number">
@@ -627,7 +636,7 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="ktp_number">No. KTP</label>
+                  <label for="ktp_number">No. KTP <code>*</code></label>
                   <input type="text" id="ktp_number" value="{{ old('ktp_number') }}" maxlength="16"
                     oninput="this.value = this.value.replace(/\D+/g, '')"
                     class="form-control @error('ktp_number') is-invalid @enderror" name="ktp_number">
@@ -651,6 +660,30 @@
                         {{ $message }}
                       </small>
                     </a>
+                  @enderror
+                </div>
+
+                <div class="form-group">
+                  <label for="last_educational">Pendidikan Terakhir <code>*</code></label>
+                  <select type="text" id="last_educational" name="last_educational"
+                    class="form-control @error('last_educational') is-invalid @enderror">
+                    <option value="" disabled selected>Choose</option>
+                    <option value="S-3" {{ old('last_educational') == 'S-3' ? 'selected' : '' }}> S-3 </option>
+                    <option value="S-2" {{ old('last_educational') == 'S-2' ? 'selected' : '' }}> S-2 </option>
+                    <option value="S-1" {{ old('last_educational') == 'S-1' ? 'selected' : '' }}> S-1 </option>
+                    <option value="D-4" {{ old('last_educational') == 'D-4' ? 'selected' : '' }}> D-4 </option>
+                    <option value="D-3" {{ old('last_educational') == 'D-3' ? 'selected' : '' }}> D-3 </option>
+                    <option value="D-2" {{ old('last_educational') == 'D-2' ? 'selected' : '' }}> D-2 </option>
+                    <option value="D-1" {{ old('last_educational') == 'D-1' ? 'selected' : '' }}> D-1 </option>
+                    <option value="MA" {{ old('last_educational') == 'MA' ? 'selected' : '' }}> MA </option>
+                    <option value="SMK" {{ old('last_educational') == 'SMK-3' ? 'selected' : '' }}> SMK </option>
+                    <option value="SMA" {{ old('last_educational') == 'SMA' ? 'selected' : '' }}> SMA </option>
+                    <option value="MTS" {{ old('last_educational') == 'MTS' ? 'selected' : '' }}> MTS </option>
+                    <option value="SMP" {{ old('last_educational') == 'SMP' ? 'selected' : '' }}> SMP </option>
+                    <option value="SD" {{ old('last_educational') == 'SD' ? 'selected' : '' }}> SD </option>
+                  </select>
+                  @error('last_educational')
+                    <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror
                 </div>
 
@@ -681,23 +714,29 @@
                   @enderror
                 </div>
 
-                {{-- <div class="form-group">
-                  <label for="ktp_address">Alamat Sesuai KTP</label>
-                  <textarea type="text" id="ktp_address" class="form-control  @error('ktp_address') is-invalid @enderror"
-                    name="ktp_address" rows="5">{{ old('ktp_address') }}</textarea>
-                  @error('ktp_address')
+                <div class="form-group">
+                  <label for="candidate_from">Pelamar Dari</label>
+                  <select type="text" id="candidate_from"
+                    class="form-control @error('candidate_from') is-invalid @enderror" name="candidate_from">
+                    <option value="" disabled selected>Choose</option>
+                    <option value="MANAJEMEN" {{ old('candidate_from') == 'MANAJEMEN' ? 'selected' : '' }}>Manajemen
+                    </option>
+                    <option value="UMUM" {{ old('candidate_from') == 'UMUM' ? 'selected' : '' }}>Umum</option>
+                  </select>
+                  @error('candidate_from')
                     <a style="color: red">
                       <small>
                         {{ $message }}
                       </small>
                     </a>
                   @enderror
-                </div> --}}
+                </div>
+
               </div>
 
               <div class="col-md-6 col-12">
                 <div class="form-group">
-                  <label for="pob">Tempat Lahir</label>
+                  <label for="pob">Tempat Lahir <code>*</code></label>
                   <input type="text" id="pob" value="{{ old('pob') }}"
                     class="form-control @error('pob') is-invalid @enderror" name="pob">
                   @error('pob')
@@ -710,10 +749,9 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="dob">Tanggal Lahir</label>
+                  <label for="dob">Tanggal Lahir <code>*</code></label>
                   <input type="date" id="dob" name="dob" value="{{ old('dob') }}"
-                    class="form-control flatpickr-no-config @error('dob') is-invalid @enderror"
-                    placeholder="Select date..">
+                    class="form-control  @error('dob') is-invalid @enderror" placeholder="Select date..">
                   @error('dob')
                     <a style="color: red">
                       <small>
@@ -725,7 +763,7 @@
 
                 <div class="row">
                   <div class="form-group col-md-6">
-                    <label for="gender">Jenis Kelamin</label>
+                    <label for="gender">Jenis Kelamin <code>*</code></label>
                     <select name="gender" id="gender"
                       class="form-control  @error('gender') is-invalid @enderror">
                       <option value="" disabled selected>Choose</option>
@@ -750,13 +788,16 @@
                       class="form-control @error('blood_type') is-invalid @enderror" name="blood_type">
                       <option value="" disabled {{ old('blood_type') === null ? 'selected' : '' }}>Choose
                       </option>
-                      <option value="-" {{ old('blood_type') == '-' ? 'selected' : '' }}>-</option>
+                      <option value="A" {{ old('blood_type') == 'A' ? 'selected' : '' }}>A</option>
                       <option value="A-" {{ old('blood_type') == 'A-' ? 'selected' : '' }}>A-</option>
                       <option value="A+" {{ old('blood_type') == 'A+' ? 'selected' : '' }}>A+</option>
+                      <option value="B" {{ old('blood_type') == 'B' ? 'selected' : '' }}>B</option>
                       <option value="B-" {{ old('blood_type') == 'B-' ? 'selected' : '' }}>B-</option>
                       <option value="B+" {{ old('blood_type') == 'B+' ? 'selected' : '' }}>B+</option>
+                      <option value="AB" {{ old('blood_type') == 'AB' ? 'selected' : '' }}>AB</option>
                       <option value="AB-" {{ old('blood_type') == 'AB-' ? 'selected' : '' }}>AB-</option>
                       <option value="AB+" {{ old('blood_type') == 'AB+' ? 'selected' : '' }}>AB+</option>
+                      <option value="O" {{ old('blood_type') == 'O' ? 'selected' : '' }}>O</option>
                       <option value="O-" {{ old('blood_type') == 'O-' ? 'selected' : '' }}>O-</option>
                       <option value="O+" {{ old('blood_type') == 'O+' ? 'selected' : '' }}>O+</option>
                     </select>
@@ -771,7 +812,7 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="marital_status">Status Perkawinan</label>
+                  <label for="marital_status">Status Perkawinan <code>*</code></label>
                   <select id="marital_status" class="form-control @error('marital_status') is-invalid @enderror"
                     name="marital_status">
                     <option value="" disabled selected>Choose</option>
@@ -819,7 +860,11 @@
                     </option>
                   </select>
                   @error('religion')
-                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
                   @enderror
                 </div>
 
@@ -828,6 +873,19 @@
                   <input type="text" value="Indonesia" id="nationality"
                     class="form-control @error('nationality') is-invalid @enderror" name="nationality">
                   @error('nationality')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
+                </div>
+
+                <div class="form-group">
+                  <label for="study">Jurusan <code>*</code></label>
+                  <input type="text" value="{{ old('study') }}" id="study"
+                    class="form-control @error('study') is-invalid @enderror" name="study">
+                  @error('study')
                     <a style="color: red">
                       <small>
                         {{ $message }}
@@ -850,15 +908,39 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="candidate_from">Pelamar Dari</label>
-                  <select type="text" id="candidate_from"
-                    class="form-control @error('candidate_from') is-invalid @enderror" name="candidate_from">
-                    <option value="" disabled selected>Choose</option>
-                    <option value="MANAJEMEN" {{ old('candidate_from') == 'MANAJEMEN' ? 'selected' : '' }}>Manajemen
+                  <label for="disability">Penyandang Disabilitas</label>
+                  <select type="text" id="disability" name="disability"
+                    class="form-control @error('disability') is-invalid @enderror">
+                    <option value="" selected>Tidak Ada</option>
+                    <option value="Tunanetra" {{ old('disability') == 'Tunanetra' ? 'selected' : '' }}>
+                      Tunanetra (Tidak bisa melihat / buta)
                     </option>
-                    <option value="UMUM" {{ old('candidate_from') == 'UMUM' ? 'selected' : '' }}>Umum</option>
+                    <option value="Tunarungu" {{ old('disability') == 'Tunarungu' ? 'selected' : '' }}>
+                      Tunarungu (Tidak bisa mendengar / tuli)
+                    </option>
+                    <option value="Tunawicara" {{ old('disability') == 'Tunawicara' ? 'selected' : '' }}>
+                      Tunawicara (Tidak bisa berbicara / bisu)
+                    </option>
+                    <option value="Tunadaksa" {{ old('disability') == 'Tunadaksa' ? 'selected' : '' }}>
+                      Tunadaksa (Cacat tubuh)
+                    </option>
+                    <option value="Tunalaras" {{ old('disability') == 'Tunalaras' ? 'selected' : '' }}>
+                      Tunalaras (Cacat suara dan nada)
+                    </option>
                   </select>
-                  @error('candidate_from')
+                  @error('disability')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div>
+
+              </div>
+
+              <div class="col-12">
+                <div class="form-group">
+                  <label for="reference">Refrensi</label>
+                  <textarea type="text" id="reference" class="form-control  @error('reference') is-invalid @enderror"
+                    name="reference" rows="3">{{ old('reference') }}</textarea>
+                  @error('reference')
                     <a style="color: red">
                       <small>
                         {{ $message }}
@@ -867,11 +949,8 @@
                   @enderror
                 </div>
 
-              </div>
-
-              <div class="col-12">
                 <div class="form-group">
-                  <label for="ktp_address">Alamat Sesuai KTP</label>
+                  <label for="ktp_address">Alamat Sesuai KTP <code>*</code></label>
                   <textarea type="text" id="ktp_address" class="form-control  @error('ktp_address') is-invalid @enderror"
                     name="ktp_address" rows="5">{{ old('ktp_address') }}</textarea>
                   @error('ktp_address')
@@ -903,7 +982,7 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="current_address">Alamat Domisili</label>
+                  <label for="current_address">Alamat Domisili <code>*</code></label>
                   <textarea type="text" id="current_address" class="form-control @error('current_address') is-invalid @enderror"
                     name="current_address" rows="5"> {{ old('current_address') }}</textarea>
                   @error('current_address')
@@ -936,6 +1015,7 @@
                   </div>
                 </div>
               </div>
+
               <hr>
 
               <div class="col-12">
