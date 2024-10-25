@@ -44,7 +44,20 @@
 
                 <td>{{ $selection->interviewer }}</td>
                 <td>{{ $selection->description }}</td>
-                <td>{{ 'Proses' }}</td>
+                <td>
+                  <div class="text-center">
+                    @if ($selection->is_finished)
+                      <span class="badge bg-primary">Selesai</span><br>
+                      @if ($selection->status == 'Ada Pemenang')
+                        <span class="badge bg-primary mt-1">{{ $selection->status }}</span>
+                      @else
+                        <span class="badge bg-danger mt-1">{{ $selection->status }}</span>
+                      @endif
+                    @else
+                      <span class="badge bg-warning">Proses</span>
+                    @endif
+                  </div>
+                </td>
                 <td>
                   @if ($selection->file_selection)
                     <a href="{{ Storage::url($selection->file_selection) }}" target="_blank">
@@ -57,6 +70,7 @@
                     @endforeach --}}
                   @endif
                 </td>
+                {{-- <td>{{ $selection->status }}</td> --}}
                 <td>
                   {{-- 
                   <div class="d-flex justify-content-end mt-2">
@@ -80,33 +94,35 @@
                       @csrf
                     </form>
                   </div> --}}
+                  @if ($selection->is_finished == 0 || auth()->user()->hasRole('super-admin'))
+                    <a class="btn btn-sm btn-info mx-1"
+                      href="{{ route('selectedCandidate.resultSelection', $selection) }}">
+                      <i class="bi bi-card-checklist"></i>
+                    </a>
+                    {{-- @endif
 
-                  <a class="btn btn-sm btn-info mx-1"
-                    href="{{ route('selectedCandidate.resultSelection', $selection) }}">
-                    <i class="bi bi-card-checklist"></i>
-                  </a>
 
+                  @if ($selection->is_finished == 0 || auth()->user()->hasRole('super-admin')) --}}
+                    <div class="btn-group">
+                      <div class="dropdown">
+                        <button class="btn btn-sm btn-primary dropdown-toggle me-1" type="button"
+                          id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <a class="dropdown-item" href="{{ route('selection.edit', $selection) }}">Edit</a>
 
-                  <div class="btn-group">
-                    <div class="dropdown">
-                      <button class="btn btn-sm btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton"
-                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="bi bi-three-dots-vertical"></i>
-                      </button>
-                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                          <button class="dropdown-item" onclick="showSweetAlert('{{ $selection->id }}')">Hapus</button>
 
-                        <a class="dropdown-item" href="{{ route('selection.edit', $selection) }}">Edit</a>
-
-                        <button class="dropdown-item" onclick="showSweetAlert('{{ $selection->id }}')">Hapus</button>
-
-                        <form id="deleteForm_{{ $selection->id }}"
-                          action="{{ route('selection.destroy', $selection->id) }}" method="POST">
-                          @method('DELETE')
-                          @csrf
-                        </form>
+                          <form id="deleteForm_{{ $selection->id }}"
+                            action="{{ route('selection.destroy', $selection->id) }}" method="POST">
+                            @method('DELETE')
+                            @csrf
+                          </form>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  @endif
 
 
                 </td>
@@ -143,7 +159,7 @@
                   <td>{{ $selection->start_selection }}</td>
                   <td>{{ $selection->deleted_at }}</td>
                   <td>
-                    <form action="{{ route('selections.restore', $selection->id) }}" method="POST">
+                    <form action="{{ route('selection.restore', $selection->id) }}" method="POST">
                       @csrf
                       @method('PATCH')
                       <button type="submit" class="btn btn-success btn-sm">Restore</button>
@@ -214,6 +230,5 @@
       /* Ensure it appears above other elements */
     }
   </style>
-
 
 @endsection

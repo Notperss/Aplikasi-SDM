@@ -68,7 +68,11 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     });
 
     Route::resource('selection', SelectionController::class)->only('index', 'edit', 'store', 'update', 'destroy');
-    Route::patch('/selections/{id}/restore', [SelectionController::class, 'restore'])->name('selections.restore');
+    Route::patch('/selection/{id}/restore', [SelectionController::class, 'restore'])->name('selection.restore');
+    Route::patch('selection/{selection}/close', [SelectionController::class, 'closeSelection'])->name('selection.close');
+    Route::get('get-candidate', [SelectionController::class, 'getCandidate'])->name('selection.getCandidate');
+    Route::get('/hired-candidates', [SelectionController::class, 'hiredCandidates'])->name('selection.hiredCandidates');
+
 
     Route::resource('selectedCandidate', SelectedCandidateController::class)->only('store', 'edit', 'update', 'destroy');
     Route::post('/selection/store/{selection}', [SelectedCandidateController::class, 'addCandidate'])->name('selectedCandidate.addCandidate');

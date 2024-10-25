@@ -23,7 +23,12 @@ class Selection extends Model
         'interviewer',
         'description',
         'file_selection',
+        'is_finished',
+        'status',
     ];
+
+    protected $casts = ['is_finished' => 'boolean',];
+
 
     public function company()
     {
@@ -35,8 +40,13 @@ class Selection extends Model
         return $this->belongsTo(Position::class);
     }
 
-    public function SelectedCandidates()
+    public function selectedCandidates()
     {
         return $this->hasMany(SelectedCandidate::class);
+    }
+
+    public function selectedPositions()
+    {
+        return $this->belongsToMany(Position::class, 'position_selection');
     }
 }

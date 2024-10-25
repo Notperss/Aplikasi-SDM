@@ -24,6 +24,7 @@ return new class extends Migration {
             $table->date('end_selection')->nullable();
             $table->text('description')->nullable();
             $table->string('file_selection')->nullable();
+            $table->boolean('is_finished')->default(false)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

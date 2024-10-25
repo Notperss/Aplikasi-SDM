@@ -289,7 +289,7 @@
                       {{ old('last_educational', $candidate->last_educational) == 'MA' ? 'selected' : '' }}> MA
                     </option>
                     <option value="SMK"
-                      {{ old('last_educational', $candidate->last_educational) == 'SMK-3' ? 'selected' : '' }}> SMK
+                      {{ old('last_educational', $candidate->last_educational) == 'SMK' ? 'selected' : '' }}> SMK
                     </option>
                     <option value="SMA"
                       {{ old('last_educational', $candidate->last_educational) == 'SMA' ? 'selected' : '' }}> SMA
@@ -337,7 +337,7 @@
                   @enderror
                 </div>
 
-                <div class="form-group">
+                {{-- <div class="form-group">
                   <label for="candidate_from">Pelamar Dari</label>
                   <select type="text" value="{{ old('candidate_from') }}" id="candidate_from"
                     class="form-control @error('candidate_from') is-invalid @enderror" name="candidate_from">
@@ -354,7 +354,7 @@
                       </small>
                     </a>
                   @enderror
-                </div>
+                </div> --}}
 
               </div>
 
@@ -557,6 +557,40 @@
               </div>
 
               <div class="col-12">
+
+                <div class="form-group">
+                  <label for="tag">Tag</label>
+                  <textarea type="text" id="tag" class="form-control  @error('tag') is-invalid @enderror" name="tag"
+                    rows="5"> {{ old('tag', $candidate->tag) }}</textarea>
+                  @error('tag')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
+                </div>
+
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <label for="candidate_from">Pelamar Dari</label>
+                    <select type="text" value="{{ old('candidate_from') }}" id="candidate_from"
+                      class="form-control @error('candidate_from') is-invalid @enderror" name="candidate_from">
+                      <option value="" disabled>Choose</option>
+                      <option value="MANAJEMEN" {{ $candidate->candidate_from == 'MANAJEMEN' ? 'selected' : '' }}>
+                        Manajemen
+                      </option>
+                      <option value="UMUM"{{ $candidate->candidate_from == 'UMUM' ? 'selected' : '' }}>Umum</option>
+                    </select>
+                    @error('candidate_from')
+                      <a style="color: red">
+                        <small>
+                          {{ $message }}
+                        </small>
+                      </a>
+                    @enderror
+                  </div>
+                </div>
 
 
                 <div class="form-group">

@@ -21,89 +21,73 @@
             <div class="col-md-11"> <!-- Make form smaller with col-md-6 and center it -->
 
               <div class="row">
-                //hasil seleksi belom beres
-                <div class="col-md-6">
-                  <div class="my-2">
-                    <label class="form-label" for="name">Nama Seleksi</label>
-                    <input id="name" name="name" value="{{ old('name') }}"
-                      class="form-control @error('name') is-invalid @enderror">
-                    @error('name')
-                      <a style="color: red"><small>{{ $message }}</small></a>
-                    @enderror
-                  </div>
-                  <div class="mb-2">
-                    <label class="form-label" for="pic_selection">PIC Divisi Pemohon</label>
-                    <input id="pic_selection" name="pic_selection" value="{{ old('pic_selection') }}"
-                      class="form-control @error('pic_selection') is-invalid @enderror">
-                    @error('pic_selection')
-                      <a style="color: red"><small>{{ $message }}</small></a>
-                    @enderror
-                  </div>
-                  <div class="mb-2">
-                    <label class="form-label" for="interviewer">Pewawancara</label>
-                    <input id="interviewer" name="interviewer" value="{{ old('interviewer') }}"
-                      class="form-control @error('interviewer') is-invalid @enderror" required>
-                    @error('interviewer')
-                      <a style="color: red"><small>{{ $message }}</small></a>
-                    @enderror
-                  </div>
-                </div>
+                <div class="col-md-12 my-2">
+                  {{-- <div class="my-2">
+                    <input type="radio" class="btn-check" value="1" name="result_selection"
+                      id="primary-outlined-{{ $selectedCandidate->id }}" autocomplete="off"
+                      @checked($selectedCandidate->candidate->is_hire)>
+                    <label class="btn btn-outline-primary"
+                      for="primary-outlined-{{ $selectedCandidate->id }}">Hired</label>
 
-                <div class="col-md-6">
+                    <input type="radio" class="btn-check" value="0" name="result_selection"
+                      id="danger-outlined-{{ $selectedCandidate->id }}" autocomplete="off" @checked($selectedCandidate->candidate->is_hire === false)>
+                    <label class="btn btn-outline-danger"
+                      for="danger-outlined-{{ $selectedCandidate->id }}">Failed</label>
+                  </div> --}}
+
                   <div class="my-2">
                     <label class="form-label" for="position_id">Jabatan</label>
                     <select id="position_id" name="position_id"
-                      class="form-control @error('position_id') is-invalid @enderror" required>
-                      <option value="" disabled selected>Choose</option>
-                      {{-- @foreach ($positions as $position)
-                        <option value="{{ $position->id }}" {{ old('position_id') ? 'selection' : '' }}>
-                          {{ $position->name }}</option>
-                      @endforeach --}}
+                      class="form-control choices @error('position_id') is-invalid @enderror ">
+                      <option value="" selected>Tidak Ada</option>
+
+                      @foreach ($selectedPositions as $selectedPosition)
+                        <option value="{{ $selectedPosition->id }}"
+                          {{ $selectedCandidate->position_id == $selectedPosition->id ? 'selected' : '' }}>
+                          {{ $selectedPosition->name }}
+                        </option>
+                      @endforeach
+
                     </select>
                     @error('position_id')
-                      <a style="color: red"><small>{{ $message }}</small></a>
-                    @enderror
-                  </div>
-                  <div class="my-2">
-                    <label class="form-label" for="start_selection">Tgl Mulai Seleksi</label>
-                    <input type="date" id="start_selection" name="start_selection"
-                      value="{{ old('start_selection') }}"
-                      class="form-control @error('start_selection') is-invalid @enderror" required>
-                    @error('start_selection')
-                      <a style="color: red"><small>{{ $message }}</small></a>
-                    @enderror
-                  </div>
-                  <div class="mb-2">
-                    <label class="form-label" for="end_selection">Tgl Selesai Seleksi</label>
-                    <input type="date" id="end_selection" name="end_selection" value="{{ old('end_selection') }}"
-                      class="form-control @error('end_selection') is-invalid @enderror">
-                    @error('end_selection')
-                      <a style="color: red"><small>{{ $message }}</small></a>
+                      <div style="color: red"><small>{{ $message }}</small></div>
                     @enderror
                   </div>
 
-                </div>
-                <div class="col-md-12">
+                  {{-- @if ($selectedCandidate->position_id)
+                    <div class="mb-2">
+                      <label class="form-label" for="position">Jabatan Yang Dipilih</label>
+                      <input id="position" value="{{ $selectedCandidate->position->name ?? 'No position selected' }}"
+                        class="form-control @error('position') is-invalid @enderror" readonly>
+                    </div>
+                  @endif --}}
+
 
                   <div class="mb-2">
-                    <label class="form-label" for="description">Keterangan</label>
+                    <label class="form-label" for="description">Keterangan Hasil Seleksi</label>
                     <textarea id="description" name="description" rows="5"
-                      class="form-control @error('description') is-invalid @enderror">{{ old('description') }} </textarea>
+                      class="form-control @error('description') is-invalid @enderror">{{ old('description', $selectedCandidate->description) }} </textarea>
                     @error('description')
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>
 
                   <div class="mb-2">
-                    <label for="file_selection" class="form-label">File</label>
-                    <input class="form-control @error('file_selection') is-invalid @enderror" accept=".pdf"
-                      type="file" id="file_selection" name="file_selection">
-                    @error('file_selection')
-                      <a style="color: red"><small>{{ $message }}</small></a>
-                    @enderror
+                    <label for="file_selected_candidate" class="form-label">File</label>
+                    <input class="form-control @error('file_selected_candidate') is-invalid @enderror"
+                      accept=".pdf, .png, .jpeg, .jpg" type="file" id="file_selected_candidate"
+                      name="file_selected_candidate">
+                    @if ($selectedCandidate->file_selected_candidate)
+                      <a href="{{ asset('storage/' . $selectedCandidate->file_selected_candidate) }}" target="_blank"
+                        class="text-sm btn btn-sm btn-primary mt-3">
+                        Lihat File
+                      </a>
+                    @else
+                      <span>-</span>
+                    @endif
+
                   </div>
                 </div>
-
               </div>
 
             </div>

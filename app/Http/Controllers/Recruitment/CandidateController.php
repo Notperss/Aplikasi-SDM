@@ -7,16 +7,17 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Recruitment\Candidate;
 use Illuminate\Support\Facades\Storage;
+use Yajra\DataTables\Facades\DataTables;
 use App\Models\Recruitment\CandidateSkill;
 use App\Models\Recruitment\CandidateDocument;
 use App\Models\Recruitment\CandidateFamilyDetail;
+use App\Models\Recruitment\CandidateSocialPlatform;
 use App\Models\Recruitment\CandidateTrainingAttended;
 use App\Models\Recruitment\CandidateEmploymentHistory;
 use App\Models\Recruitment\CandidateEducationalHistory;
 use App\Http\Requests\Recruitment\StoreCandidateRequest;
 use App\Models\Recruitment\CandidateLanguageProficiency;
 use App\Http\Requests\Recruitment\UpdateCandidateRequest;
-use App\Models\Recruitment\CandidateSocialPlatform;
 
 class CandidateController extends Controller
 {
@@ -25,7 +26,47 @@ class CandidateController extends Controller
      */
     public function index()
     {
-        $candidates = Candidate::latest()->get();
+        $candidates = Candidate::where('is_hire', false)->where('is_selection', false)->latest();
+
+        if (request()->ajax()) {
+            return DataTables::of($candidates)
+                ->addIndexColumn()
+                ->addColumn('action', function ($item) {
+                    return '
+                    <div class="btn-group mb-1">
+                  <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton"
+                      data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="bi bi-three-dots-vertical"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item" href="' . route('candidate.edit', $item) . '">Edit</a>
+                        <button class="dropdown-item" onclick=" showSweetAlert(' . $item->id . ') ">Hapus</button>
+                        <form id="deleteForm_' . $item->id . '"
+                          action="' . route('candidate.destroy', $item->id) . '" method="POST">
+                          ' . method_field('delete') . csrf_field() . '
+                        </form>
+                    </div>
+                  </div>
+                </div>
+                    ';
+                })->editColumn('photo', function ($item) {
+                    if ($item->photo) {
+                        return ' <div class="fixed-frame">
+                    <img src="' . asset('storage/' . $item->photo) . '" data-fancybox alt="Icon User"
+                      class="framed-image" style="cursor: pointer">
+                  </div>';
+                    } else {
+                        return 'No Image';
+                    }
+                })->editColumn('created_at', function ($item) {
+                    return '' . Carbon::parse($item->created_at)->translatedFormat('d F Y') . '';
+                })
+                ->rawColumns(['action', 'photo'])
+                ->toJson();
+        }
+
+
         return view('pages.recruitment.candidate.index', compact('candidates'));
     }
 
@@ -43,15 +84,6 @@ class CandidateController extends Controller
     public function store(StoreCandidateRequest $request)
     {
         $data = $request->all();
-
-        // $fileFields = ['photo', 'file_cv', 'file_ktp', 'file_kk', 'file_skck'];
-        // // upload process here
-        // foreach ($fileFields as $fileField) {
-        //     if ($request->hasFile($fileField)) {
-        //         $extension = $data[$fileField]->getClientOriginalExtension();
-        //         $data[$fileField] = $request->file($fileField)->storeAs('files/' . $fileFields, $fileFields . '_' . $data['name'] . '_' . time() . '.' . $extension, 'public_local');
-        //     }
-        // }
 
         $file_fields = [
             'photo',
@@ -80,8 +112,7 @@ class CandidateController extends Controller
 
         $candidate = Candidate::create($data);
 
-        // return redirect()->route('additional-details', $candidate)->with('success', 'Candidate has been created successfully!');
-        return redirect()->route('candidate.show', $candidate)->with('success', 'Candidate has been created successfully!');
+        return redirect()->route('candidate.index')->with('success', 'Candidate has been created successfully!');
     }
 
     /**
@@ -157,8 +188,8 @@ class CandidateController extends Controller
         }
 
         $candidate->update($data);
-        return redirect()->back()->with('success', 'Candidate has been updated successfully!');
-        // return redirect()->route('candidate.index')->with('success', 'Candidate has been updated successfully!');
+        // return redirect()->back()->with('success', 'Candidate has been updated successfully!');
+        return redirect()->route('candidate.index')->with('success', 'Candidate has been updated successfully!');
     }
 
     /**

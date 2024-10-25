@@ -2,6 +2,7 @@
 
 namespace App\Models\Recruitment;
 
+use App\Models\Position\Position;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,6 +13,7 @@ class SelectedCandidate extends Model
 
     protected $fillable = [
         'candidate_id',
+        'position_id',
         'selection_id',
         'file_selected_candidate',
         'description',
@@ -20,6 +22,10 @@ class SelectedCandidate extends Model
     public function candidate()
     {
         return $this->belongsTo(Candidate::class);
+    }
+    public function position()
+    {
+        return $this->belongsTo(Position::class);
     }
 
     public function selection()

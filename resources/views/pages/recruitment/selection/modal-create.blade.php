@@ -20,23 +20,23 @@
 
                 <div class="col-md-6">
                   <div class="my-2">
-                    <label class="form-label" for="name">Nama Seleksi</label>
+                    <label class="form-label" for="name">Nama Seleksi <code>*</code></label>
                     <input id="name" name="name" value="{{ old('name') }}"
-                      class="form-control @error('name') is-invalid @enderror">
+                      class="form-control @error('name') is-invalid @enderror" required>
                     @error('name')
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>
                   <div class="mb-2">
-                    <label class="form-label" for="pic_selection">PIC Divisi Pemohon</label>
+                    <label class="form-label" for="pic_selection">PIC Divisi Pemohon <code>*</code></label>
                     <input id="pic_selection" name="pic_selection" value="{{ old('pic_selection') }}"
-                      class="form-control @error('pic_selection') is-invalid @enderror">
+                      class="form-control @error('pic_selection') is-invalid @enderror" required>
                     @error('pic_selection')
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>
                   <div class="mb-2">
-                    <label class="form-label" for="interviewer">Pewawancara</label>
+                    <label class="form-label" for="interviewer">Pewawancara <code>*</code></label>
                     <input id="interviewer" name="interviewer" value="{{ old('interviewer') }}"
                       class="form-control @error('interviewer') is-invalid @enderror" required>
                     @error('interviewer')
@@ -44,13 +44,13 @@
                     @enderror
                   </div>
                 </div>
-
                 <div class="col-md-6">
                   <div class="my-2">
-                    <label class="form-label" for="position_id">Jabatan</label>
-                    <select id="position_id" name="position_id"
-                      class="form-control @error('position_id') is-invalid @enderror" required>
-                      <option value="" disabled selected>Choose</option>
+                    <label class="form-label" for="position_id">Jabatan <code>*</code></label>
+                    <select id="position_id" name="position_id[]"
+                      class="form-control choices @error('position_id') is-invalid @enderror multiple-remove"
+                      multiple="multiple" required>
+                      <option value="" disabled>Choose</option>
                       @foreach ($positions as $position)
                         <option value="{{ $position->id }}" {{ old('position_id') ? 'selection' : '' }}>
                           {{ $position->name }}</option>
@@ -61,7 +61,7 @@
                     @enderror
                   </div>
                   <div class="my-2">
-                    <label class="form-label" for="start_selection">Tgl Mulai Seleksi</label>
+                    <label class="form-label" for="start_selection">Tgl Mulai Seleksi <code>*</code></label>
                     <input type="date" id="start_selection" name="start_selection"
                       value="{{ old('start_selection') }}"
                       class="form-control @error('start_selection') is-invalid @enderror" required>
@@ -77,10 +77,8 @@
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>
-
                 </div>
                 <div class="col-md-12">
-
                   <div class="mb-2">
                     <label class="form-label" for="description">Keterangan</label>
                     <textarea id="description" name="description" rows="5"
@@ -89,7 +87,6 @@
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>
-
                   <div class="mb-2">
                     <label for="file_selection" class="form-label">File</label>
                     <input class="form-control @error('file_selection') is-invalid @enderror" accept=".pdf"
@@ -145,7 +142,7 @@
 
 <div id="modal-form-add-candidate" class="modal fade" tabindex="-1"
   aria-labelledby="modal-form-add-candidate-label" aria-hidden="true" style="display: none;">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-dialog modal-dialog-centered modal-fullscreen">
     <div class="modal-content">
 
       <div class="card">
@@ -155,48 +152,138 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
           </div>
         </div>
-        <div class="card-body">
-          <table class="table table-striped" id="table4" style="font-size: 85%">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Pelamar</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach ($candidates as $candidate)
-                <tr>
-                  <td class="text-center">
-                    @if ($candidate->photo)
-                      <div class="fixed-frame">
-                        <img src="{{ asset('storage/' . $candidate->photo) }}" alt="img"
-                          class="framed-image enlargeable" style="cursor: pointer;">
-                      </div>
-                    @else
-                      No Image
-                    @endif
-                  </td>
-                  <td>{{ $candidate->name }}</td>
-                  <td>{{ $candidate->email }}</td>
-                  <td>{{ $candidate->phone_number }}</td>
-                  <td>
-                    <div class="btn-group mb-1">
-                      <button class="btn btn-sm btn-primary pilih-candidate" data-id="{{ $candidate->id }}"
-                        data-name="{{ $candidate->name }}" data-email="{{ $candidate->email }}"
-                        data-phone="{{ $candidate->phone_number }}">
-                        Pilih
-                      </button>
-                    </div>
 
-                  </td>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped" id="table-candidate" style="font-size: 85%; width: 100%">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col"></th>
+                  <th scope="col">Pelamar</th>
+                  <th scope="col">Usia</th>
+                  <th scope="col">Jenis Kelamin</th>
+                  <th scope="col">Phone</th>
+                  <th scope="col">Posisi yang dilamar</th>
+                  <th scope="col">Pendidikan</th>
+                  <th scope="col">Jurusan</th>
+                  <th scope="col">Penyandang Disabilitas</th>
+                  <th scope="col">Status Perkawinan</th>
+                  <th scope="col">Tag</th>
+                  <th scope="col"></th>
                 </tr>
-              @endforeach
-            </tbody>
-          </table>
+                <tr>
+                  <th scope="col">
+                  </th>
+                  <th scope="col"><button id="resetFilter" class="btn btn-primary btn-sm">Reset</button></th>
+                  <th scope="col">
+                    <textarea type="text" class="form-control form-control-sm" id="nameSearch" placeholder="search ..."></textarea>
+                  </th>
+                  <th scope="col">
+                    <input type="text" oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="2"
+                      class="form-control form-control-sm" id="ageSearch" placeholder="search ..."></input>
+                  </th>
+                  <th scope="col">
+                    <select type="text" id="genderFilter" class="form-control form-control-sm"
+                      style="width: 100%">
+                      <option value="" disabled selected>Choose</option>
+                      <option value="LAKI-LAKI">LAKI-LAKI</option>
+                      <option value="PEREMPUAN">PEREMPUAN</option>
+                    </select>
+                  </th>
+                  <th scope="col">
+                    <textarea type="text" class="form-control form-control-sm" id="phoneSearch" placeholder="search ..."></textarea>
+                  </th>
+                  <th scope="col">
+                    <textarea type="text" class="form-control form-control-sm" id="appPositionSearch" placeholder="search ..."></textarea>
+                  </th>
+                  <th scope="col">
+                    <select type="text" id="educateFilter" class="form-control form-control-sm"
+                      style="width: 100%">
+                      <option value="" disabled selected>Choose</option>
+                      <option value="S-3"> S-3 </option>
+                      <option value="S-2"> S-2 </option>
+                      <option value="S-1"> S-1 </option>
+                      <option value="D-4"> D-4 </option>
+                      <option value="D-3"> D-3 </option>
+                      <option value="D-2"> D-2 </option>
+                      <option value="D-1"> D-1 </option>
+                      <option value="MA"> MA </option>
+                      <option value="SMK"> SMK </option>
+                      <option value="SMA"> SMA </option>
+                      <option value="MTS"> MTS </option>
+                      <option value="SMP"> SMP </option>
+                      <option value="SD"> SD </option>
+                    </select>
+                  </th>
+                  <th scope="col">
+                    <textarea type="text" class="form-control form-control-sm" id="studySearch" placeholder="search ..."></textarea>
+                  </th>
+                  <th scope="col">
+                    <textarea type="text" class="form-control form-control-sm" id="disabilitySearch" placeholder="search ..."></textarea>
+                  </th>
+                  <th scope="col">
+                    <select type="text" id="maritalFilter" class="form-control form-control-sm"
+                      style="width: 100%">
+                      <option value="" disabled selected>Choose</option>
+                      <option value="Kawin">Kawin</option>
+                      <option value="Belum Kawin">
+                        Belum Kawin</option>
+                      <option value="Cerai Hidup">
+                        Cerai Hidup</option>
+                      <option value="Cerai Mati">
+                        Cerai Mati</option>
+                    </select>
+                  </th>
+                  <th scope="col" colspan="2">
+                    <textarea type="text" class="form-control form-control-sm" id="tagSearch" placeholder="search ..."></textarea>
+                  </th>
+
+                </tr>
+              </thead>
+              <tbody>
+                {{-- @foreach ($candidates as $candidate)
+                        <tr>
+                          <td class="text-center">
+                            @if ($candidate->photo)
+                              <div class="fixed-frame">
+                                <img src="{{ asset('storage/' . $candidate->photo) }}" alt="img"
+                                  class="framed-image enlargeable" style="cursor: pointer;">
+                              </div>
+                            @else
+                              No Image
+                            @endif
+                          </td>
+                          <td>{{ $candidate->name }}</td>
+                          <td>{{ $candidate->gender }}</td>
+                          <td>{{ $candidate->phone_number }}</td>
+                          <td>{{ $candidate->applied_position }}</td>
+                          <td>{{ $candidate->last_educational }}</td>
+                          <td>{{ $candidate->study }}</td>
+                          <td>{{ $candidate->disability }}</td>
+                          <td>{{ $candidate->marital_status }}</td>
+                          <td>{{ $candidate->tag }}</td>
+                          <td>
+                            <div class="btn-group mb-1">
+                              <button class="btn btn-sm btn-primary pilih-candidate" data-id="{{ $candidate->id }}"
+                                data-name="{{ $candidate->name }}" data-email="{{ $candidate->email }}"
+                                data-phone="{{ $candidate->phone_number }}">
+                                Pilih
+                              </button>
+                            </div>
+
+                          </td>
+                        </tr>
+                      @endforeach --}}
+              </tbody>
+            </table>
+          </div>
         </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+        </div>
+
       </div>
 
     </div><!-- /.modal-content -->
@@ -213,6 +300,396 @@
     myModal.show();
   }
 </script>
+
+@push('after-script')
+  {{-- <script>
+    jQuery(document).ready(function($) {
+      $('#table-candidate').DataTable({
+        processing: true,
+        serverSide: true,
+        ordering: true,
+        pageLength: 10, // Show all records by default
+        lengthMenu: [
+          [10, 25, 50, 100, -1],
+          [10, 25, 50, 100, 'All']
+        ], // Add 'All' option to the length menu
+        ajax: {
+          url: "{{ route('selection.index') }}",
+        },
+        columns: [{
+            data: 'DT_RowIndex',
+            name: 'DT_RowIndex',
+            orderable: false,
+            searchable: false,
+            width: '5%',
+          }, {
+            data: 'photo',
+            name: 'photo',
+          },
+          {
+            data: 'name',
+            name: 'name',
+          },
+          {
+            data: 'gender',
+            name: 'gender',
+          },
+          {
+            data: 'phone_number',
+            name: 'phone_number',
+          },
+          {
+            data: 'applied_position',
+            name: 'applied_position',
+          },
+          {
+            data: 'last_educational',
+            name: 'last_educational',
+          },
+          {
+            data: 'study',
+            name: 'study',
+          },
+          {
+            data: 'disability',
+            name: 'disability',
+          },
+          {
+            data: 'marital_status',
+            name: 'marital_status',
+          },
+          {
+            data: 'tag',
+            name: 'tag',
+          },
+          {
+            data: 'action',
+            name: 'action',
+            orderable: false,
+            searchable: false,
+            className: 'no-print' // Add this class to exclude the column from printing
+          },
+        ],
+        columnDefs: [{
+          className: 'text-center',
+          targets: '_all'
+        }, ],
+      });
+    });
+  </script>
+
+  <script>
+    // Function to handle candidate selection and toggling button
+    document.querySelectorAll('.pilih-candidate').forEach(button => {
+      button.addEventListener('click', function() {
+        const id = this.getAttribute('data-id');
+        const name = this.getAttribute('data-name');
+        const email = this.getAttribute('data-email');
+        const phone = this.getAttribute('data-phone');
+
+        // If the button is in 'Pilih' state
+        if (this.textContent.trim() === 'Pilih') {
+          // Check if the candidate is already added
+          if (document.querySelector(`#selectedCandidatesTable tbody tr[data-id="${id}"]`)) {
+            alert('Candidate already added!');
+            return;
+          }
+
+          // Append the candidate to the selected table
+          const row = `
+          <tr data-id="${id}">
+            <td>${name}</td>
+            <td>${email}</td>
+            <td>${phone}</td>
+            <td><button type="button" class="btn btn-sm btn-danger remove-candidate">Remove</button></td>
+          </tr>
+        `;
+          document.querySelector('#selectedCandidatesTable tbody').insertAdjacentHTML('beforeend', row);
+
+          // Change button text to 'Remove'
+          this.textContent = 'Remove';
+          this.classList.remove('btn-primary');
+          this.classList.add('btn-danger');
+        }
+        // If the button is in 'Remove' state
+        else {
+          // Remove the candidate from the selected table
+          const row = document.querySelector(`#selectedCandidatesTable tbody tr[data-id="${id}"]`);
+          if (row) {
+            row.remove();
+          }
+
+          // Change button text back to 'Pilih'
+          this.textContent = 'Pilih';
+          this.classList.remove('btn-danger');
+          this.classList.add('btn-primary');
+        }
+      });
+    });
+
+    // Use event delegation for removing a candidate directly from the table
+    document.querySelector('#selectedCandidatesTable').addEventListener('click', function(event) {
+      if (event.target.classList.contains('remove-candidate')) {
+        const row = event.target.closest('tr');
+        const id = row.getAttribute('data-id');
+
+        // Remove the row
+        row.remove();
+
+        // Change the corresponding 'Remove' button back to 'Pilih'
+        const button = document.querySelector(`.pilih-candidate[data-id="${id}"]`);
+        if (button) {
+          button.textContent = 'Pilih';
+          button.classList.remove('btn-danger');
+          button.classList.add('btn-primary');
+        }
+      }
+    });
+
+    // Handle form submission to send selected candidates
+    document.getElementById('selectedCandidatesForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const candidates = [];
+      const rows = document.querySelectorAll('#selectedCandidatesTable tbody tr');
+
+      rows.forEach(row => {
+        const id = row.getAttribute('data-id');
+        candidates.push({
+          id: id,
+        });
+      });
+
+      // Set the hidden input value to the JSON string of candidates
+      document.getElementById('candidatesInput').value = JSON.stringify(candidates);
+
+      // Submit the form
+      this.submit();
+    });
+  </script> --}}
+
+  <script>
+    // Initialize DataTable for candidate listing
+    jQuery(document).ready(function($) {
+      const table = $('#table-candidate').DataTable({
+        searching: false,
+        processing: true,
+        serverSide: true,
+        ordering: false,
+        pageLength: 10,
+        lengthMenu: [
+          [10, 25, 50, 100, -1],
+          [10, 25, 50, 100, 'All']
+        ], // Add 'All' option to the length menu
+        ajax: {
+          url: "{{ route('selection.index') }}",
+          data: function(d) {
+            d.name = $('#nameSearch').val();
+            d.age = $('#ageSearch').val();
+            d.gender = $('#genderFilter').val();
+            d.phone_number = $('#phoneSearch').val(); // Should match the database column
+            d.applied_position = $('#appPositionSearch').val();
+            d.last_educational = $('#educateFilter').val();
+            d.study = $('#studySearch').val();
+            d.disability = $('#disabilitySearch').val();
+            d.marital_status = $('#maritalFilter').val();
+            d.tag = $('#tagSearch').val();
+            console.log(d);
+          }
+        },
+        columns: [{
+            data: 'DT_RowIndex',
+            name: 'DT_RowIndex',
+            orderable: false,
+            searchable: false,
+            width: '5%'
+          },
+          {
+            data: 'photo',
+            name: 'photo'
+          },
+          {
+            data: 'name',
+            name: 'name'
+          },
+          {
+            data: 'age',
+            name: 'age'
+          },
+          {
+            data: 'gender',
+            name: 'gender'
+          },
+          {
+            data: 'phone_number',
+            name: 'phone_number'
+          },
+          {
+            data: 'applied_position',
+            name: 'applied_position'
+          },
+          {
+            data: 'last_educational',
+            name: 'last_educational'
+          },
+          {
+            data: 'study',
+            name: 'study'
+          },
+          {
+            data: 'disability',
+            name: 'disability'
+          },
+          {
+            data: 'marital_status',
+            name: 'marital_status'
+          },
+          {
+            data: 'tag',
+            name: 'tag'
+          },
+          {
+            data: 'action',
+            name: 'action',
+            orderable: false,
+            searchable: false,
+            className: 'no-print'
+          }
+        ],
+        columnDefs: [{
+          className: 'text-center',
+          targets: '_all'
+        }],
+      });
+
+      $('#nameSearch').keyup(function() {
+        table.draw();
+      });
+      $('#ageSearch').keyup(function() {
+        table.draw();
+      });
+      // Event listener for the year filter dropdown
+      $('#genderFilter').change(function() {
+        table.draw();
+      });
+      // Event listener for the regarding search input
+      $('#phoneSearch').keyup(function() {
+        table.draw();
+      });
+      // Event listener for the regarding search input
+      $('#appPositionSearch').keyup(function() {
+        table.draw();
+      });
+      $('#educateFilter').change(function() {
+        table.draw();
+      });
+      $('#studySearch').keyup(function() {
+        table.draw();
+      });
+      // Event listener for the regarding search input
+      $('#disabilitySearch').keyup(function() {
+        table.draw();
+      });
+      $('#maritalFilter').change(function() {
+        table.draw();
+      });
+      $('#tagSearch').keyup(function() {
+        table.draw();
+      });
+
+      // Event listener for the reset button
+      $('#resetFilter').click(function() {
+        $('#nameSearch').val(''); // Clear the regarding search input
+        $('#ageSearch').val(''); // Clear the regarding search input
+        $('#genderFilter').val(''); // Clear the regarding search input
+        $('#phoneSearch').val(''); // Clear the regarding search input
+        $('#appPositionSearch').val(''); // Clear the regarding search input
+        $('#educateFilter').val(''); // Clear the regarding search input
+        $('#studySearch').val(''); // Clear the regarding search input
+        $('#disabilitySearch').val(''); // Clear the regarding search input
+        $('#maritalFilter').val(''); // Clear the regarding search input
+        $('#tagSearch').val(''); // Clear the regarding search input
+        table.draw(); // Redraw the table
+      });
+
+      // Delegate event handling for 'Pilih' buttons
+      $('#table-candidate').on('click', '.pilih-candidate', function() {
+        const button = $(this);
+        const id = button.data('id');
+        const name = button.data('name');
+        const email = button.data('email');
+        const phone = button.data('phone');
+
+        // If the button is in 'Pilih' state
+        if (button.text().trim() === 'Pilih') {
+          // Check if the candidate is already added
+          if ($(`#selectedCandidatesTable tbody tr[data-id="${id}"]`).length > 0) {
+            alert('Candidate already added!');
+            return;
+          }
+
+          // Append the candidate to the selected table
+          const row = `
+        <tr data-id="${id}">
+          <td>${name}</td>
+          <td>${email}</td>
+          <td>${phone}</td>
+          <td><button type="button" class="btn btn-sm btn-danger remove-candidate">Remove</button></td>
+        </tr>`;
+          $('#selectedCandidatesTable tbody').append(row);
+
+          // Change button text to 'Remove'
+          button.text('Remove');
+          button.removeClass('btn-primary').addClass('btn-danger');
+        }
+        // If the button is in 'Remove' state
+        else {
+          // Remove the candidate from the selected table
+          $(`#selectedCandidatesTable tbody tr[data-id="${id}"]`).remove();
+
+          // Change button text back to 'Pilih'
+          button.text('Pilih');
+          button.removeClass('btn-danger').addClass('btn-primary');
+        }
+      });
+
+      // Use event delegation for removing a candidate directly from the selected table
+      $('#selectedCandidatesTable').on('click', '.remove-candidate', function() {
+        const row = $(this).closest('tr');
+        const id = row.data('id');
+
+        // Remove the row from the table
+        row.remove();
+
+        // Change the corresponding 'Remove' button back to 'Pilih'
+        const button = $(`.pilih-candidate[data-id="${id}"]`);
+        if (button.length > 0) {
+          button.text('Pilih');
+          button.removeClass('btn-danger').addClass('btn-primary');
+        }
+      });
+
+      // Handle form submission to send selected candidates
+      $('#selectedCandidatesForm').on('submit', function(event) {
+        event.preventDefault();
+
+        const candidates = [];
+        $('#selectedCandidatesTable tbody tr').each(function() {
+          const id = $(this).data('id');
+          candidates.push({
+            id: id
+          });
+        });
+
+        // Set the hidden input value to the JSON string of candidates
+        $('#candidatesInput').val(JSON.stringify(candidates));
+
+        // Submit the form
+        this.submit();
+      });
+    });
+  </script>
+@endpush
 
 {{-- <script>
   // Function to append selected candidate to the table
@@ -279,93 +756,3 @@
     this.submit();
   });
 </script> --}}
-
-<script>
-  // Function to handle candidate selection and toggling button
-  document.querySelectorAll('.pilih-candidate').forEach(button => {
-    button.addEventListener('click', function() {
-      const id = this.getAttribute('data-id');
-      const name = this.getAttribute('data-name');
-      const email = this.getAttribute('data-email');
-      const phone = this.getAttribute('data-phone');
-
-      // If the button is in 'Pilih' state
-      if (this.textContent.trim() === 'Pilih') {
-        // Check if the candidate is already added
-        if (document.querySelector(`#selectedCandidatesTable tbody tr[data-id="${id}"]`)) {
-          alert('Candidate already added!');
-          return;
-        }
-
-        // Append the candidate to the selected table
-        const row = `
-          <tr data-id="${id}">
-            <td>${name}</td>
-            <td>${email}</td>
-            <td>${phone}</td>
-            <td><button type="button" class="btn btn-sm btn-danger remove-candidate">Remove</button></td>
-          </tr>
-        `;
-        document.querySelector('#selectedCandidatesTable tbody').insertAdjacentHTML('beforeend', row);
-
-        // Change button text to 'Remove'
-        this.textContent = 'Remove';
-        this.classList.remove('btn-primary');
-        this.classList.add('btn-danger');
-      }
-      // If the button is in 'Remove' state
-      else {
-        // Remove the candidate from the selected table
-        const row = document.querySelector(`#selectedCandidatesTable tbody tr[data-id="${id}"]`);
-        if (row) {
-          row.remove();
-        }
-
-        // Change button text back to 'Pilih'
-        this.textContent = 'Pilih';
-        this.classList.remove('btn-danger');
-        this.classList.add('btn-primary');
-      }
-    });
-  });
-
-  // Use event delegation for removing a candidate directly from the table
-  document.querySelector('#selectedCandidatesTable').addEventListener('click', function(event) {
-    if (event.target.classList.contains('remove-candidate')) {
-      const row = event.target.closest('tr');
-      const id = row.getAttribute('data-id');
-
-      // Remove the row
-      row.remove();
-
-      // Change the corresponding 'Remove' button back to 'Pilih'
-      const button = document.querySelector(`.pilih-candidate[data-id="${id}"]`);
-      if (button) {
-        button.textContent = 'Pilih';
-        button.classList.remove('btn-danger');
-        button.classList.add('btn-primary');
-      }
-    }
-  });
-
-  // Handle form submission to send selected candidates
-  document.getElementById('selectedCandidatesForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    const candidates = [];
-    const rows = document.querySelectorAll('#selectedCandidatesTable tbody tr');
-
-    rows.forEach(row => {
-      const id = row.getAttribute('data-id');
-      candidates.push({
-        id: id,
-      });
-    });
-
-    // Set the hidden input value to the JSON string of candidates
-    document.getElementById('candidatesInput').value = JSON.stringify(candidates);
-
-    // Submit the form
-    this.submit();
-  });
-</script>

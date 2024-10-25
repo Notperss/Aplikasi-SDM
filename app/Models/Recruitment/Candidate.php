@@ -2,6 +2,7 @@
 
 namespace App\Models\Recruitment;
 
+use App\Models\Position\Position;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -48,6 +49,8 @@ class Candidate extends Model
                 'study',
                 'reference',
                 'disability',
+
+                'tag',
 
                 'paspor_number',
 
@@ -118,6 +121,8 @@ class Candidate extends Model
         'reference',
         'disability',
 
+        'tag',
+
         'paspor_number',
 
         'file_cv', //
@@ -185,8 +190,12 @@ class Candidate extends Model
         return $this->hasMany(CandidateSocialPlatform::class);
     }
 
-    public function SelectedCandidates()
+    public function selectedCandidates()
     {
         return $this->hasMany(SelectedCandidate::class);
+    }
+    public function position()
+    {
+        return $this->hasOne(Position::class);
     }
 }

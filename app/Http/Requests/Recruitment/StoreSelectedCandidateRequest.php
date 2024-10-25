@@ -37,6 +37,8 @@ class StoreSelectedCandidateRequest extends FormRequest
             'position_id' => 'required|exists:positions,id', // Memastikan ID kandidat ada di database
             'interviewer' => 'required|string', // Memastikan ID kandidat ada di database
             'start_selection' => 'required|date', // Memastikan ID kandidat ada di database
+            'end_selection' => 'nullable|date', // Memastikan ID kandidat ada di database
+            'file_selection' => 'mimes:pdf|max:512',
 
         ];
     }
@@ -62,6 +64,11 @@ class StoreSelectedCandidateRequest extends FormRequest
 
             'start_selection.required' => 'Tanggal mulai seleksi wajib diisi.',
             'start_selection.date' => 'Tanggal mulai seleksi harus berupa tanggal yang valid.',
+
+            'end_selection.date' => 'Tanggal selesai seleksi harus berupa tanggal yang valid.',
+
+            'file_selection.mimes' => 'File seleksi harus berupa PDF.',
+            'file_selection.max' => 'Ukuran file seleksi tidak boleh lebih dari 500KB.',
         ];
     }
 }

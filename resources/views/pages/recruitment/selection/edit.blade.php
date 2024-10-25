@@ -22,24 +22,24 @@
 
               <div class="col-md-6">
                 <div class="my-2">
-                  <label class="form-label" for="name">Nama Seleksi</label>
+                  <label class="form-label" for="name">Nama Seleksi <code>*</code></label>
                   <input id="name" name="name" value="{{ old('name', $selection->name) }}"
-                    class="form-control @error('name') is-invalid @enderror">
+                    class="form-control @error('name') is-invalid @enderror" required>
                   @error('name')
                     <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror
                 </div>
                 <div class="mb-2">
-                  <label class="form-label" for="pic_selection">PIC Divisi Pemohon</label>
+                  <label class="form-label" for="pic_selection">PIC Divisi Pemohon <code>*</code></label>
                   <input id="pic_selection" name="pic_selection"
                     value="{{ old('pic_selection', $selection->pic_selection) }}"
-                    class="form-control @error('pic_selection') is-invalid @enderror">
+                    class="form-control @error('pic_selection') is-invalid @enderror" required>
                   @error('pic_selection')
                     <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror
                 </div>
                 <div class="mb-2">
-                  <label class="form-label" for="interviewer">Pewawancara</label>
+                  <label class="form-label" for="interviewer">Pewawancara <code>*</code></label>
                   <input id="interviewer" name="interviewer" value="{{ old('interviewer', $selection->interviewer) }}"
                     class="form-control @error('interviewer') is-invalid @enderror" required>
                   @error('interviewer')
@@ -50,22 +50,49 @@
 
               <div class="col-md-6">
                 <div class="my-2">
-                  <label class="form-label" for="position_id">Jabatan</label>
-                  <select id="position_id" name="position_id"
-                    class="form-control @error('position_id') is-invalid @enderror" required>
-                    <option value="" disabled selected>Choose</option>
+                  <label class="form-label" for="position_id">Jabatan <code>*</code></label>
+                  <select id="position_id" name="position_id[]"
+                    class="form-control choices @error('position_id') is-invalid @enderror multiple-remove" required
+                    multiple>
+                    <option value="" disabled>Choose</option>
+
                     @foreach ($positions as $position)
                       <option value="{{ $position->id }}"
-                        {{ old('position_id', $selection->position_id) == $position->id ? 'selected' : '' }}>
-                        {{ $position->name }}</option>
+                        {{ in_array($position->id, old('position_id', $selectedPositionIds)) ? 'selected' : '' }}>
+                        {{ $position->name }}
+                      </option>
                     @endforeach
                   </select>
                   @error('position_id')
-                    <a style="color: red"><small>{{ $message }}</small></a>
+                    <div style="color: red"><small>{{ $message }}</small></div>
                   @enderror
                 </div>
+
+                {{--
+                @if ($selection->selectedPositions)
+                  <div class="my-2">
+                    <label class="form-label" for="list-group">Jabatan yang dipilih</label>
+                    <ul class="list-group">
+                      <div class="row">
+                        @forelse ($selection->selectedPositions as $position)
+                          <div class="col-md-6">
+                            <li class="list-group-item"><i class="bi bi-dot"></i> {{ $position->name }}</li>
+                          </div>
+                        @empty
+                          <div class="col-md-12">
+                            <li class="list-group-item"><i class="bi bi-dot"></i> Tidak ada jabatan yang dipilih</li>
+                          </div>
+                        @endforelse
+                      </div>
+                    </ul>
+                    @error('position_id')
+                      <a style="color: red"><small>{{ $message }}</small></a>
+                    @enderror
+                  </div>
+                @endif --}}
+
                 <div class="my-2">
-                  <label class="form-label" for="start_selection">Tgl Mulai Seleksi</label>
+                  <label class="form-label" for="start_selection">Tgl Mulai Seleksi <code>*</code></label>
                   <input type="date" id="start_selection" name="start_selection"
                     value="{{ old('start_selection', $selection->start_selection) }}"
                     class="form-control @error('start_selection') is-invalid @enderror" required>
@@ -166,15 +193,18 @@
             <td>{{ $selectedCandidate->candidate->email }}</td>
             <td>{{ $selectedCandidate->candidate->phone_number }}</td>
             <td>
-              <button class="btn btn-danger mx-2" onclick="destroyCandidate('{{ $selectedCandidate->id }}')">
-                <i class="bi bi-trash"></i>
-              </button>
+              @if ($dataCount > 1)
+                <button class="btn btn-danger mx-2"
+                  onclick="destroyCandidate('{{ $selectedCandidate->id }}', {{ $dataCount }})">
+                  <i class="bi bi-trash"></i>
+                </button>
 
-              <form id="deleteForm_{{ $selectedCandidate->id }}"
-                action="{{ route('selectedCandidate.destroy', $selectedCandidate->id) }}" method="POST">
-                @method('DELETE')
-                @csrf
-              </form>
+                <form id="deleteForm_{{ $selectedCandidate->id }}"
+                  action="{{ route('selectedCandidate.destroy', $selectedCandidate->id) }}" method="POST">
+                  @method('DELETE')
+                  @csrf
+                </form>
+              @endif
             </td>
           </tr>
         @endforeach
@@ -187,7 +217,7 @@
 <div id="modal-form-add-candidate-edit-{{ $selection->id }}" class="modal fade" tabindex="-1"
   aria-labelledby="modal-form-add-candidate-edit-{{ $selection->id }}-label" aria-hidden="true"
   style="display: none;">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+  <div class="modal-dialog modal-dialog-centered modal-fullscreen">
     <div class="modal-content">
 
       <form id="candidateSelectionForm" action="{{ route('selectedCandidate.addCandidate', $selection) }}"
@@ -202,18 +232,94 @@
             </div>
           </div>
           <div class="card-body">
-            <table class="table table-striped" id="table1" style="font-size: 85%">
+            <table class="table table-striped" id="table-candidate" style="font-size: 85%; width: 100%">
               <thead>
                 <tr>
-                  <th></th>
-                  <th>Pelamar</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th></th>
+                  <th scope="col">#</th>
+                  <th scope="col"></th>
+                  <th scope="col">Pelamar</th>
+                  <th scope="col">Usia</th>
+                  <th scope="col">Jenis Kelamin</th>
+                  <th scope="col">Phone</th>
+                  <th scope="col">Posisi yang dilamar</th>
+                  <th scope="col">Pendidikan</th>
+                  <th scope="col">Jurusan</th>
+                  <th scope="col">Penyandang Disabilitas</th>
+                  <th scope="col">Status Perkawinan</th>
+                  <th scope="col">Tag</th>
+                  <th scope="col"></th>
+                </tr>
+                <tr>
+                  <th scope="col">
+                  </th>
+                  <th scope="col"><a id="resetFilter" class="btn btn-primary btn-sm">Reset</a></th>
+                  <th scope="col">
+                    <textarea type="text" class="form-control form-control-sm" id="nameSearch" placeholder="search ..."></textarea>
+                  </th>
+                  <th scope="col">
+                    <input type="text" oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="2"
+                      class="form-control form-control-sm" id="ageSearch" placeholder="search ..."></input>
+                  </th>
+                  <th scope="col">
+                    <select type="text" id="genderFilter" class="form-control form-control-sm"
+                      style="width: 100%">
+                      <option value="" disabled selected>Choose</option>
+                      <option value="LAKI-LAKI">LAKI-LAKI</option>
+                      <option value="PEREMPUAN">PEREMPUAN</option>
+                    </select>
+                  </th>
+                  <th scope="col">
+                    <textarea type="text" class="form-control form-control-sm" id="phoneSearch" placeholder="search ..."></textarea>
+                  </th>
+                  <th scope="col">
+                    <textarea type="text" class="form-control form-control-sm" id="appPositionSearch" placeholder="search ..."></textarea>
+                  </th>
+                  <th scope="col">
+                    <select type="text" id="educateFilter" class="form-control form-control-sm"
+                      style="width: 100%">
+                      <option value="" disabled selected>Choose</option>
+                      <option value="S-3"> S-3 </option>
+                      <option value="S-2"> S-2 </option>
+                      <option value="S-1"> S-1 </option>
+                      <option value="D-4"> D-4 </option>
+                      <option value="D-3"> D-3 </option>
+                      <option value="D-2"> D-2 </option>
+                      <option value="D-1"> D-1 </option>
+                      <option value="MA"> MA </option>
+                      <option value="SMK"> SMK </option>
+                      <option value="SMA"> SMA </option>
+                      <option value="MTS"> MTS </option>
+                      <option value="SMP"> SMP </option>
+                      <option value="SD"> SD </option>
+                    </select>
+                  </th>
+                  <th scope="col">
+                    <textarea type="text" class="form-control form-control-sm" id="studySearch" placeholder="search ..."></textarea>
+                  </th>
+                  <th scope="col">
+                    <textarea type="text" class="form-control form-control-sm" id="disabilitySearch" placeholder="search ..."></textarea>
+                  </th>
+                  <th scope="col">
+                    <select type="text" id="maritalFilter" class="form-control form-control-sm"
+                      style="width: 100%">
+                      <option value="" disabled selected>Choose</option>
+                      <option value="Kawin">Kawin</option>
+                      <option value="Belum Kawin">
+                        Belum Kawin</option>
+                      <option value="Cerai Hidup">
+                        Cerai Hidup</option>
+                      <option value="Cerai Mati">
+                        Cerai Mati</option>
+                    </select>
+                  </th>
+                  <th scope="col" colspan="2">
+                    <textarea type="text" class="form-control form-control-sm" id="tagSearch" placeholder="search ..."></textarea>
+                  </th>
+
                 </tr>
               </thead>
               <tbody>
-                @foreach ($candidates as $candidate)
+                {{-- @foreach ($candidates as $candidate)
                   <tr>
                     <td class="text-center">
                       @if ($candidate->photo)
@@ -238,22 +344,217 @@
                       </div>
                     </td>
                   </tr>
-                @endforeach
+                @endforeach --}}
               </tbody>
             </table>
 
 
           </div>
         </div>
-        <input type="hidden" name="selected_candidate" id="selected_candidate">
+        <input type="hidden" name="selected_candidate" id="selected_candidate" value="">
       </form>
 
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div>
 
+
+
 <script>
-  function destroyCandidate(getId) {
+  function openMyModalEdit(selectionId) {
+    let modalId = `modal-form-add-candidate-edit-${selectionId}`;
+    let myModal = new bootstrap.Modal(document.getElementById(modalId), {});
+    myModal.show();
+  }
+
+  // function confirmSelection(candidateId, candidateName) {
+  //   // alert('Button clicked for candidate: ' + candidateName); // Test alert
+
+  //   if (confirm('Apakah Anda yakin ingin memilih ' + candidateName + ' sebagai kandidat?')) {
+  //     document.getElementById('selected_candidate').value = candidateId;
+  //     document.getElementById('candidateSelectionForm').submit();
+  //   }
+  // }
+
+  function addCandidate(getId, getName) {
+    Swal.fire({
+      // title: 'Are you sure?',
+      text: 'Apakah Anda yakin ingin memilih ' + getName + ' sebagai kandidat?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, select it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Set the selected candidate ID into the hidden input field
+        document.getElementById('selected_candidate').value = getId;
+        // Submit the form
+        document.getElementById('candidateSelectionForm').submit();
+      }
+    });
+  }
+</script>
+
+@push('after-script')
+  <script>
+    // Initialize DataTable for candidate listing
+    jQuery(document).ready(function($) {
+      const table = $('#table-candidate').DataTable({
+        searching: false,
+        processing: true,
+        serverSide: true,
+        ordering: false,
+        pageLength: 10,
+        lengthMenu: [
+          [10, 25, 50, 100, -1],
+          [10, 25, 50, 100, 'All']
+        ], // Add 'All' option to the length menu
+        ajax: {
+          url: "{{ route('selection.getCandidate') }}",
+          data: function(d) {
+            d.name = $('#nameSearch').val();
+            d.age = $('#ageSearch').val();
+            d.gender = $('#genderFilter').val();
+            d.phone_number = $('#phoneSearch').val(); // Should match the database column
+            d.applied_position = $('#appPositionSearch').val();
+            d.last_educational = $('#educateFilter').val();
+            d.study = $('#studySearch').val();
+            d.disability = $('#disabilitySearch').val();
+            d.marital_status = $('#maritalFilter').val();
+            d.tag = $('#tagSearch').val();
+            console.log(d);
+          }
+        },
+        columns: [{
+            data: 'DT_RowIndex',
+            name: 'DT_RowIndex',
+            orderable: false,
+            searchable: false,
+            width: '5%'
+          },
+          {
+            data: 'photo',
+            name: 'photo'
+          },
+          {
+            data: 'name',
+            name: 'name'
+          },
+          {
+            data: 'age',
+            name: 'age'
+          },
+          {
+            data: 'gender',
+            name: 'gender'
+          },
+          {
+            data: 'phone_number',
+            name: 'phone_number'
+          },
+          {
+            data: 'applied_position',
+            name: 'applied_position'
+          },
+          {
+            data: 'last_educational',
+            name: 'last_educational'
+          },
+          {
+            data: 'study',
+            name: 'study'
+          },
+          {
+            data: 'disability',
+            name: 'disability'
+          },
+          {
+            data: 'marital_status',
+            name: 'marital_status'
+          },
+          {
+            data: 'tag',
+            name: 'tag'
+          },
+          {
+            data: 'action',
+            name: 'action',
+            orderable: false,
+            searchable: false,
+            className: 'no-print'
+          }
+        ],
+        columnDefs: [{
+          className: 'text-center',
+          targets: '_all'
+        }],
+      });
+
+      $('#nameSearch').keyup(function() {
+        table.draw();
+      });
+      $('#ageSearch').keyup(function() {
+        table.draw();
+      });
+      // Event listener for the year filter dropdown
+      $('#genderFilter').change(function() {
+        table.draw();
+      });
+      // Event listener for the regarding search input
+      $('#phoneSearch').keyup(function() {
+        table.draw();
+      });
+      // Event listener for the regarding search input
+      $('#appPositionSearch').keyup(function() {
+        table.draw();
+      });
+      $('#educateFilter').change(function() {
+        table.draw();
+      });
+      $('#studySearch').keyup(function() {
+        table.draw();
+      });
+      // Event listener for the regarding search input
+      $('#disabilitySearch').keyup(function() {
+        table.draw();
+      });
+      $('#maritalFilter').change(function() {
+        table.draw();
+      });
+      $('#tagSearch').keyup(function() {
+        table.draw();
+      });
+
+      // Event listener for the reset button
+      $('#resetFilter').click(function() {
+        $('#nameSearch').val(''); // Clear the regarding search input
+        $('#ageSearch').val(''); // Clear the regarding search input
+        $('#genderFilter').val(''); // Clear the regarding search input
+        $('#phoneSearch').val(''); // Clear the regarding search input
+        $('#appPositionSearch').val(''); // Clear the regarding search input
+        $('#educateFilter').val(''); // Clear the regarding search input
+        $('#studySearch').val(''); // Clear the regarding search input
+        $('#disabilitySearch').val(''); // Clear the regarding search input
+        $('#maritalFilter').val(''); // Clear the regarding search input
+        $('#tagSearch').val(''); // Clear the regarding search input
+        table.draw(); // Redraw the table
+      });
+    });
+  </script>
+@endpush
+
+
+<script>
+  function destroyCandidate(getId, dataCount) {
+    if (dataCount <= 1) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Cannot delete the last remaining item!',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+      return; // Stop the process if there is only one item
+    }
+
     Swal.fire({
       title: 'Are you sure?',
       text: 'You won\'t be able to revert this!',
@@ -269,25 +570,6 @@
   }
 </script>
 
-
-<script>
-  function openMyModalEdit(selectionId) {
-    let modalId = `modal-form-add-candidate-edit-${selectionId}`;
-    let myModal = new bootstrap.Modal(document.getElementById(modalId), {});
-    myModal.show();
-  }
-
-  function confirmSelection(candidateId, candidateName) {
-    // Show a confirmation alert
-    if (confirm('Apakah Anda yakin ingin memilih ' + candidateName + ' sebagai kandidat?')) {
-      // If confirmed, set the selected candidate ID in the hidden input field
-      document.getElementById('selected_candidate').value = candidateId;
-
-      // Submit the form
-      document.getElementById('candidateSelectionForm').submit();
-    }
-  }
-</script>
 
 <style>
   .fixed-frame {

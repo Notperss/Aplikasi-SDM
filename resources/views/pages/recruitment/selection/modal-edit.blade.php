@@ -23,23 +23,23 @@
 
                 <div class="col-md-6">
                   <div class="my-2">
-                    <label class="form-label" for="name">Nama Seleksi</label>
+                    <label class="form-label" for="name">Nama Seleksi <code>*</code></label>
                     <input id="name" name="name" value="{{ old('name') }}"
-                      class="form-control @error('name') is-invalid @enderror">
+                      class="form-control @error('name') is-invalid @enderror" required>
                     @error('name')
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>
                   <div class="mb-2">
-                    <label class="form-label" for="pic_selection">PIC Divisi Pemohon</label>
+                    <label class="form-label" for="pic_selection">PIC Divisi Pemohon <code>*</code></label>
                     <input id="pic_selection" name="pic_selection" value="{{ old('pic_selection') }}"
-                      class="form-control @error('pic_selection') is-invalid @enderror">
+                      class="form-control @error('pic_selection') is-invalid @enderror" required>
                     @error('pic_selection')
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>
                   <div class="mb-2">
-                    <label class="form-label" for="interviewer">Pewawancara</label>
+                    <label class="form-label" for="interviewer">Pewawancara <code>*</code></label>
                     <input id="interviewer" name="interviewer" value="{{ old('interviewer') }}"
                       class="form-control @error('interviewer') is-invalid @enderror" required>
                     @error('interviewer')
@@ -50,7 +50,7 @@
 
                 <div class="col-md-6">
                   <div class="my-2">
-                    <label class="form-label" for="position_id">Jabatan</label>
+                    <label class="form-label" for="position_id">Jabatan <code>*</code></label>
                     <select id="position_id" name="position_id"
                       class="form-control @error('position_id') is-invalid @enderror" required>
                       <option value="" disabled selected>Choose</option>
@@ -64,7 +64,7 @@
                     @enderror
                   </div>
                   <div class="my-2">
-                    <label class="form-label" for="start_selection">Tgl Mulai Seleksi</label>
+                    <label class="form-label" for="start_selection">Tgl Mulai Seleksi <code>*</code></label>
                     <input type="date" id="start_selection" name="start_selection"
                       value="{{ old('start_selection') }}"
                       class="form-control @error('start_selection') is-invalid @enderror" required>

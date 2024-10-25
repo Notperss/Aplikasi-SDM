@@ -116,6 +116,13 @@ class PositionController extends Controller
             'level_id.required' => 'Level wajib diisi.',
             'name.max' => 'Jabatan tidak boleh lebih dari 255 karakter.',
         ]);
+
+        if ($request->level_id != $position->level_id) {
+            // Detach all allowances associated with the position
+            $position->allowances()->detach();
+        }
+
+        // Update the position with the validated data
         $position->update($request->all());
         return redirect()->back()->with('success', 'Data has been updated successfully!');
     }

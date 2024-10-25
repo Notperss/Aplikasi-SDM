@@ -28,9 +28,10 @@
       </div>
     </div>
     <div class="card-body">
-      <table class="table table-striped" id="table1" style="font-size: 85%">
+      <table class="table table-striped" id="table-candidate" style="font-size: 85%">
         <thead>
           <tr>
+            <th></th>
             <th></th>
             <th>Pelamar</th>
             <th>Email</th>
@@ -41,7 +42,7 @@
           </tr>
         </thead>
         <tbody>
-          @foreach ($candidates as $candidate)
+          {{-- @foreach ($candidates as $candidate)
             <tr>
               <td class="text-center">
                 @if ($candidate->photo)
@@ -57,9 +58,9 @@
               <td>{{ $candidate->email }}</td>
               <td>{{ $candidate->phone_number }}</td>
               <td>{{ Carbon\Carbon::parse($candidate->created_at)->translatedFormat('d F Y') }}</td>
-              {{-- <td>
+              <!-- <td>
                   <span class="badge bg-success">Hire</span>
-                </td> --}}
+                </td> -->
               <td>
                 <div class="btn-group mb-1">
                   <div class="dropdown">
@@ -68,10 +69,10 @@
                       <i class="bi bi-three-dots-vertical"></i>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      {{-- <a class="dropdown-item" href="{{ route('additional-details', $candidate) }}">
-                          Kelengkapan Data</a> --}}
+                      <!-- <a class="dropdown-item" href="{{ route('additional-details', $candidate) }}">
+                          Kelengkapan Data</a> -->
                       <a class="dropdown-item" href="{{ route('candidate.edit', $candidate) }}">Edit</a>
-                      {{-- <button class="dropdown-item" onclick="editAlert({{ $candidate->id }})">Edit</button> --}}
+                      <!-- <button class="dropdown-item" onclick="editAlert({{ $candidate->id }})">Edit</button> -->
                       @role('super-admin')
                         <button class="dropdown-item" onclick="showSweetAlert('{{ $candidate->id }}')">Hapus</button>
 
@@ -87,12 +88,71 @@
 
               </td>
             </tr>
-          @endforeach
+          @endforeach --}}
         </tbody>
       </table>
     </div>
   </div>
 </section>
+
+@push('after-script')
+  <script>
+    jQuery(document).ready(function($) {
+      $('#table-candidate').DataTable({
+        processing: true,
+        serverSide: true,
+        ordering: true,
+        pageLength: 10, // Show all records by default
+        lengthMenu: [
+          [10, 25, 50, 100, -1],
+          [10, 25, 50, 100, 'All']
+        ], // Add 'All' option to the length menu
+        ajax: {
+          url: "{{ route('candidate.index') }}",
+        },
+        columns: [{
+            data: 'DT_RowIndex',
+            name: 'DT_RowIndex',
+            orderable: false,
+            searchable: false,
+            width: '5%',
+          },
+          {
+            data: 'photo',
+            name: 'photo',
+          },
+          {
+            data: 'name',
+            name: 'name',
+          },
+          {
+            data: 'email',
+            name: 'email',
+          },
+          {
+            data: 'phone_number',
+            name: 'phone_number',
+          },
+          {
+            data: 'created_at',
+            name: 'created_at',
+          },
+          {
+            data: 'action',
+            name: 'action',
+            orderable: false,
+            searchable: false,
+            className: 'no-print' // Add this class to exclude the column from printing
+          },
+        ],
+        columnDefs: [{
+          className: 'text-center',
+          targets: '_all'
+        }, ],
+      });
+    });
+  </script>
+@endpush
 
 
 <style>
@@ -144,7 +204,7 @@
   }
 </script>
 
-<script>
+{{-- <script>
   function editAlert(getId) {
     Swal.fire({
       title: 'Apakah ingin mengedit data?',
@@ -158,7 +218,7 @@
       }
     });
   }
-</script>
+</script> --}}
 
 <script>
   Fancybox.bind("[data-fancybox]", {
