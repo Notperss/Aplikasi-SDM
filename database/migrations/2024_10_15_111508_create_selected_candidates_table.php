@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->foreignIdFor(Selection::class)->constrained()->onDelete('cascade');
             $table->string('file_selected_candidate')->nullable();
             $table->text('description')->nullable();
+            $table->boolean('is_approve')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

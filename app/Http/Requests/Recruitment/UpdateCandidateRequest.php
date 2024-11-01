@@ -54,15 +54,16 @@ class UpdateCandidateRequest extends FormRequest
 
             'paspor_number' => ['nullable', Rule::unique('candidates')->ignore($this->candidate)],
 
+            $validateFile = 'mimes:pdf|max:512',
 
-            'file_kk' => 'mimes:pdf|max:512',
-            'file_ktp' => 'mimes:pdf|max:512',
-            'file_cv' => 'mimes:pdf|max:512',
-            'file_skck' => 'mimes:pdf|max:512',
-            'file_ijazah' => 'mimes:pdf|max:512',
-            'file_sertifikat' => 'mimes:pdf|max:512',
-            'file_vaksin' => 'mimes:pdf|max:512',
-            'file_surat_sehat' => 'mimes:pdf|max:512',
+            'file_kk' => $validateFile,
+            'file_ktp' => $validateFile,
+            'file_cv' => $validateFile,
+            'file_skck' => $validateFile,
+            'file_ijazah' => $validateFile,
+            'file_sertifikat' => $validateFile,
+            'file_vaksin' => $validateFile,
+            'file_surat_sehat' => $validateFile,
 
             'file_sim_a' => 'mimes:jpg,jpeg,png,pdf|max:512',
             'file_sim_b' => 'mimes:jpg,jpeg,png,pdf|max:512',
@@ -152,6 +153,7 @@ class UpdateCandidateRequest extends FormRequest
 
             'file_cv.mimes' => 'Ekstensi file CV harus berupa pdf.',
             'file_cv.max' => 'Ukuran file CV maksimal adalah 500KB.',
+            'file_cv.required' => 'File CV wajib diunggah.',
 
             'paspor_number.unique' => 'Nomor paspor sudah terdaftar.',
             'paspor_number.max_digits' => 'Nomor paspor tidak boleh lebih dari 10 digit.',

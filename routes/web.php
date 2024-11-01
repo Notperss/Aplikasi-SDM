@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\Position\LevelController;
 use App\Http\Controllers\WorkUnit\SectionController;
+use App\Http\Controllers\Employee\EmployeeController;
 use App\Http\Controllers\Position\PositionController;
 use App\Http\Controllers\WorkUnit\DivisionController;
 use App\Http\Controllers\Position\AllowanceController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\WorkUnit\DirectorateController;
 use App\Http\Controllers\ManagementAccess\RoleController;
 use App\Http\Controllers\ManagementAccess\UserController;
 use App\Http\Controllers\Recruitment\CandidateController;
+use App\Http\Controllers\Recruitment\SelectionController;
 use App\Http\Controllers\ManagementAccess\RouteController;
 use App\Http\Controllers\ManagementAccess\CompanyController;
 use App\Http\Controllers\Employee\EmployeeCategoryController;
@@ -22,14 +24,13 @@ use App\Http\Controllers\ManagementAccess\MenuItemController;
 use App\Http\Controllers\ManagementAccess\MenuGroupController;
 use App\Http\Controllers\Recruitment\CandidateSkillController;
 use App\Http\Controllers\ManagementAccess\PermissionController;
+use App\Http\Controllers\Recruitment\SelectedCandidateController;
 use App\Http\Controllers\Recruitment\CandidateFamilyDetailController;
+use App\Http\Controllers\Recruitment\CandidateSocialPlatformController;
 use App\Http\Controllers\Recruitment\CandidateTrainingAttendedController;
 use App\Http\Controllers\Recruitment\CandidateEmploymentHistoryController;
 use App\Http\Controllers\Recruitment\CandidateEducationalHistoryController;
 use App\Http\Controllers\Recruitment\CandidateLanguageProficiencyController;
-use App\Http\Controllers\Recruitment\CandidateSocialPlatformController;
-use App\Http\Controllers\Recruitment\SelectedCandidateController;
-use App\Http\Controllers\Recruitment\SelectionController;
 
 // Route::permanentRedirect('/', '/login');
 
@@ -71,12 +72,21 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::patch('/selection/{id}/restore', [SelectionController::class, 'restore'])->name('selection.restore');
     Route::patch('selection/{selection}/close', [SelectionController::class, 'closeSelection'])->name('selection.close');
     Route::get('get-candidate', [SelectionController::class, 'getCandidate'])->name('selection.getCandidate');
-    Route::get('/hired-candidates', [SelectionController::class, 'hiredCandidates'])->name('selection.hiredCandidates');
+
+    Route::patch('/selection/{id}/update-approval', [SelectionController::class, 'updateApprovalStatus'])->name('selection.updateApprovalStatus');
 
 
-    Route::resource('selectedCandidate', SelectedCandidateController::class)->only('store', 'edit', 'update', 'destroy');
+
+    Route::resource('selectedCandidate', SelectedCandidateController::class)->only('store', 'show', 'edit', 'update', 'destroy');
     Route::post('/selection/store/{selection}', [SelectedCandidateController::class, 'addCandidate'])->name('selectedCandidate.addCandidate');
     Route::get('selectedCandidate/{selection}/selection-result', [SelectedCandidateController::class, 'resultSelection'])->name('selectedCandidate.resultSelection');
+    Route::get('/hired-candidates', [SelectedCandidateController::class, 'hiredCandidates'])->name('selectedCandidate.hiredCandidates');
+    // Route::patch('/selectedCandidate/approve/{id}', [SelectedCandidateController::class, 'approve'])->name('selectedCandidate.approve');
+    // Route::patch('/selectedCandidate/reject/{id}', [SelectedCandidateController::class, 'reject'])->name('selectedCandidate.reject');
+
+    Route::patch('/selected-candidate/{id}/update-approval', [SelectedCandidateController::class, 'updateApprovalStatus'])->name('selectedCandidate.updateApprovalStatus');
+
+
 
     // Route::post('/selection/store-candidate/{selection}', [SelectionController::class, 'storeCandidate'])->name('selection.storeCandidate');
     // Route::delete('/selection/destroy-candidate/{selectedCandidate}', [SelectionController::class, 'destroyCandidate'])->name('selection.destroyCandidate');
@@ -109,7 +119,11 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::put('/positions/{position}', [PositionController::class, 'positionAllowance'])->name('positionAllowance');
 
     //Employee
+    Route::resource('employee', EmployeeController::class);
+    Route::get('/new-employee/{id}', [EmployeeController::class, 'newEmployee'])->name('employee.newEmployee');
+
     Route::resource('employeeCategory', EmployeeCategoryController::class)->only('index', 'store', 'update', 'destroy');
+
 
 
 });

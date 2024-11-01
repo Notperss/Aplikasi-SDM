@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Recruitment;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\PositionExistsAndSelectionNotFinished;
 
 class StoreSelectedCandidateRequest extends FormRequest
 {
@@ -32,11 +33,14 @@ class StoreSelectedCandidateRequest extends FormRequest
         }
 
         return [
+            'name' => 'required|string', // Validate that the array of candidates exists and isn't empty
+            'fptk_number' => 'required|string', // Validate that the array of candidates exists and isn't empty
             'candidates' => 'required|array|min:1', // Validate that the array of candidates exists and isn't empty
             'candidates.*.id' => 'required|exists:candidates,id', // Ensure each candidate ID exists in the database
-            'position_id' => 'required|exists:positions,id', // Memastikan ID kandidat ada di database
+            'division_id' => 'required|exists:divisions,id', // Ensure each candidate ID exists in the database
+            'position_id' => ['required', 'exists:positions,id', new PositionExistsAndSelectionNotFinished],
             'interviewer' => 'required|string', // Memastikan ID kandidat ada di database
-            'start_selection' => 'required|date', // Memastikan ID kandidat ada di database
+            'start_selection' => 'nullable|date', // Memastikan ID kandidat ada di database
             'end_selection' => 'nullable|date', // Memastikan ID kandidat ada di database
             'file_selection' => 'mimes:pdf|max:512',
 
@@ -56,6 +60,7 @@ class StoreSelectedCandidateRequest extends FormRequest
             'candidates.array' => 'Data kandidat harus berupa array.',
             'candidates.*.id.exists' => 'Kandidat yang dipilih tidak ada dalam database.',
 
+            'name.required' => 'Nama Seleksi wajib diisi.',
             'position_id.required' => 'Posisi wajib diisi.',
             'position_id.exists' => 'Posisi yang dipilih tidak valid atau tidak ada dalam database.',
 

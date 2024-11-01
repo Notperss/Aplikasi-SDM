@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Recruitment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Position\Position;
+use App\Models\WorkUnit\Division;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Recruitment\Candidate;
 use App\Models\Recruitment\Selection;
 use Illuminate\Support\Facades\Storage;
@@ -22,12 +24,20 @@ class SelectionController extends Controller
     public function index(Request $request)
     {
         $selections = Selection::latest()->get();
-        // Assuming you want to get the latest selection
-        $latestSelection = Selection::latest()->first();
+        $divisions = Division::orderBy('name', 'asc')->get();
+        // $latestSelection = Selection::latest()->first();
 
-        $positions = Position::when($latestSelection && $latestSelection->status == 'Ada Pemenang', function ($query) {
-            return $query->whereDoesntHave('selectedPositions');
-        })->get();
+        $positions = Position::whereDoesntHave('selectedPositions', function ($query) {
+            $query->where('is_finished', false);
+        })->whereDoesntHave('selectedCandidates', function ($query) {
+            $query->where('is_hire', null);
+        })->whereDoesntHave('selectedCandidates', function ($query) {
+            $query->where('is_approve', null);
+        })->whereDoesntHave('employee', function ($query) {
+            $query->where('date_leaving', null);
+        })
+
+            ->latest()->get();
 
         $candidates = Candidate::where('is_hire', false)->where('is_selection', false)->orderBy('name', 'asc');
         $softDeletedSelections = Selection::onlyTrashed()->with('selectedCandidates')->get();
@@ -109,7 +119,7 @@ class SelectionController extends Controller
                 ->toJson();
         }
 
-        return view('pages.recruitment.selection.index', compact('selections', 'positions', 'candidates', 'softDeletedSelections'));
+        return view('pages.recruitment.selection.index', compact('selections', 'divisions', 'positions', 'candidates', 'softDeletedSelections'));
     }
 
     /**
@@ -128,6 +138,13 @@ class SelectionController extends Controller
         // dd($request->all());
         $data = $request->except('position_id');
 
+        $company_id = Auth::user()->company_id;
+
+        $requestData = array_merge($data, [
+            'company_id' => $company_id,
+        ]);
+
+
         if ($request->hasFile('file_selection')) {
             $file = $request->file('file_selection'); // Get the file from the request
             $extension = $file->getClientOriginalExtension(); // Get the file extension
@@ -135,7 +152,7 @@ class SelectionController extends Controller
             $data['file_selection'] = $file->storeAs('files/selection/file_selection', $file_name, 'public_local'); // Store the file
         }
 
-        $selection = Selection::create($data);
+        $selection = Selection::create($requestData);
 
         $selection->selectedPositions()->sync($request->input('position_id'));
 
@@ -168,15 +185,20 @@ class SelectionController extends Controller
      */
     public function edit(Selection $selection)
     {
-        $selectedPositionIds = $selection->selectedPositions->pluck('id')->toArray();
-        $positions = Position::whereDoesntHave('selectedPositions')
-            ->orWhereIn('id', $selectedPositionIds)
-            ->orderBy('name', 'asc')
-            ->get();
+        // $selectedPositionIds = $selection->selectedPositions->pluck('id')->toArray();
+        // $positions = Position::whereDoesntHave('selectedPositions')
+        //     ->orWhereIn('id', $selectedPositionIds)
+        //     ->orderBy('name', 'asc')
+        //     ->get();
+
+        $positions = Position::latest()->get();
+
+        $divisions = Division::orderBy('name', 'asc')->get();
 
         $candidates = Candidate::where('is_hire', false)->where('is_selection', false)->orderBy('name', 'asc')->get();
         $dataCount = $selection->selectedCandidates()->count();
-        return view('pages.recruitment.selection.edit', compact('selection', 'positions', 'candidates', 'selectedPositionIds', 'dataCount'));
+        // return view('pages.recruitment.selection.edit', compact('selection', 'positions', 'candidates', 'selectedPositionIds', 'dataCount', 'divisions'));
+        return view('pages.recruitment.selection.edit', compact('selection', 'positions', 'candidates', 'dataCount', 'divisions'));
 
     }
 
@@ -330,22 +352,31 @@ class SelectionController extends Controller
 
         $selectedCandidates = $selection->selectedCandidates;
 
+        // $unapprovedCandidates = $selectedCandidates->filter(function ($candidate) {
+        //     return $candidate->position_id && ! $candidate->is_approve; // Assuming 'approved' is a boolean attribute
+        // });
+
         // Check for the winning option and positions with candidates
-        if ($request->selected_option == 'Ada Pemenang') {
-            if ($selection->selectedPositions()->whereDoesntHave('selectedCandidates')->exists()) {
-                return redirect()->route('selection.index')->with('error', 'Some positions are still not assigned to candidates. Please resolve this before closing the selection.');
-            }
+        if ($request->selected_option == 1) {
+            // if ($selection->selectedPositions()->whereDoesntHave('selectedCandidates')->exists()) {
+            //     return redirect()->back()->with('error', 'Some positions are still not assigned to candidates. Please resolve this before closing the selection.');
+            // }
+
+            // if ($unapprovedCandidates->isNotEmpty()) {
+            //     // Handle the validation failure (e.g., throw a validation exception or return a message)
+            //     return back()->withErrors(['selectedCandidates' => 'Some candidates with a position are not approved.']);
+            // }
 
             // Update candidate selection status
             foreach ($selectedCandidates as $selectedCandidate) {
                 $candidate = Candidate::find($selectedCandidate->candidate_id);
                 if ($candidate) {
-                    $candidate->is_selection = $candidate->is_hire; // Set is_selection based on is_hire
+                    $candidate->is_selection = 0;
                     $candidate->save();
                 }
             }
         } else {
-            // If no winner, reset candidate selection and hire status
+            // if no winner
             foreach ($selectedCandidates as $selectedCandidate) {
                 $candidate = Candidate::find($selectedCandidate->candidate_id);
                 if ($candidate) {
@@ -460,19 +491,33 @@ class SelectionController extends Controller
         }
     }
 
-    public function hiredCandidates()
+    public function updateApprovalStatus(Request $request, $id)
     {
-        $queryCandidate = Candidate::latest();
+        $selection = Selection::findOrFail($id);
 
-        $candidates = $queryCandidate
-            ->where('is_hire', true)
-            ->whereHas('selectedCandidates.selection', function ($query) {
-                $query->where('is_finished', true)->where('status', 'Ada Pemenang');  // Filter based on finished selections
-            })
-            ->get();
+        if ($request->has('is_approve')) {
+            $selection->is_approve = $request->input('is_approve');
+            $selection->save();
 
-        return view('pages.recruitment.selection.hired-candidate', compact('candidates'));
+            if ($selection->is_approve == 0) {
+                // Reset selected candidates and their main candidate records if rejected
+                foreach ($selection->selectedCandidates as $selectedCandidate) {
+                    if ($selectedCandidate->position_id) {
+                        $selectedCandidate->is_approve = 0;
+                        $selectedCandidate->is_hire = 0;
+                        $selectedCandidate->save();
+                    }
 
+                    Candidate::where('id', $selectedCandidate->candidate_id)
+                        ->update(['is_selection' => 0, 'is_hire' => 0]);
+                }
+            }
+
+            $message = $selection->is_approve ? 'Selection approved.' : 'Selection rejected.';
+            return redirect()->back()->with('success', $message);
+        }
+
+        return redirect()->back()->with('error', 'Invalid request. Approval status is missing.');
     }
 
 }

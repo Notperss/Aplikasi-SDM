@@ -28,7 +28,7 @@
             <div class="mb-2">
               <label class="form-label" for="pic_selection">PIC Divisi Pemohon</label>
               <input id="pic_selection" name="pic_selection"
-                value="{{ old('pic_selection', $selection->pic_selection) }}"
+                value="{{ old('pic_selection', $selection->division->name ?? '-') }}"
                 class="form-control @error('pic_selection') is-invalid @enderror" readonly>
               @error('pic_selection')
                 <a style="color: red"><small>{{ $message }}</small></a>
@@ -36,8 +36,8 @@
             </div>
             <div class="mb-2">
               <label class="form-label" for="interviewer">Pewawancara</label>
-              <input id="interviewer" name="interviewer" value="{{ old('interviewer', $selection->interviewer) }}"
-                class="form-control @error('interviewer') is-invalid @enderror" readonly>
+              <textarea id="interviewer" name="interviewer" rows="3"
+                class="form-control @error('interviewer') is-invalid @enderror" readonly> {{ old('interviewer', $selection->interviewer) }} </textarea>
               @error('interviewer')
                 <a style="color: red"><small>{{ $message }}</small></a>
               @enderror
@@ -154,7 +154,7 @@
           <th>Pelamar</th>
           <th>Email</th>
           <th>Phone</th>
-          <th>Status</th>
+          {{-- <th>Status</th> --}}
           <th>Jabatan</th>
           <th>Action</th>
         </tr>
@@ -175,15 +175,15 @@
             <td>{{ $selectedCandidate->candidate->name }}</td>
             <td>{{ $selectedCandidate->candidate->email }}</td>
             <td>{{ $selectedCandidate->candidate->phone_number }}</td>
-            <td>
-              @if ($selectedCandidate->candidate->is_hire)
-                <span class="badge bg-primary">Hired</span>
-              @elseif ($selectedCandidate->candidate->is_hire === false)
-                -
+            {{-- <td>
+              @if ($selectedCandidate->is_approve)
+                <span class="badge bg-primary mt-1">Disetujui</span>
+              @elseif ($selectedCandidate->is_approve === 0)
+                <span class="badge bg-danger mt-1">Ditolak</span>
               @else
                 -
               @endif
-            </td>
+            </td> --}}
             <td>
               @if ($selectedCandidate->position_id)
                 <span class="badge bg-primary">{{ $selectedCandidate->position->name }}</span>
@@ -192,14 +192,87 @@
               @endif
             </td>
             <td>
-              <a data-bs-toggle="modal"
-                data-bs-target="#modal-form-edit-result-selection-{{ $selectedCandidate->id }}"
-                class="btn btn-sm btn-icon btn-secondary text-white">
-                <i class="bi bi-pencil-square"></i>
-              </a>
+              <div class="btn-group mb-1">
 
-              @include('pages.recruitment.selection.modal-result')
+                <a data-bs-toggle="modal"
+                  data-bs-target="#modal-form-edit-result-selection-{{ $selectedCandidate->id }}"
+                  class="btn btn-sm btn-icon btn-secondary text-white">
+                  <i class="bi bi-pencil-square"></i>
+                </a>
 
+                @include('pages.recruitment.selection.modal-result')
+
+                @if ($selectedCandidate->position_id)
+                  @role('super-admins')
+                    <div class="dropdown">
+                      <button class="btn btn-sm btn-primary dropdown-toggle me-1" type="button"
+                        id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="bi bi-three-dots-vertical"></i>
+                      </button>
+                      {{-- <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <button class="dropdown-item"
+                          onclick="confirmAction('approve', 'Apakah Anda yakin ingin menyetujui?', {{ $selectedCandidate->id }})">
+                          Approve
+                        </button>
+
+                        <button class="dropdown-item"
+                          onclick="confirmAction('reject', 'Apakah Anda yakin ingin menolak?', {{ $selectedCandidate->id }})">
+                          Reject
+                        </button>
+
+                        <!-- Forms for Approve and Reject actions -->
+                        <form id="approveForm_{{ $selectedCandidate->id }}"
+                          action="{{ route('selectedCandidate.approve', $selectedCandidate->id) }}" method="POST"
+                          style="display: none;">
+                          @csrf
+                          @method('patch')
+                        </form>
+
+                        <form id="rejectForm_{{ $selectedCandidate->id }}"
+                          action="{{ route('selectedCandidate.reject', $selectedCandidate->id) }}" method="POST"
+                          style="display: none;">
+                          @csrf
+                          @method('patch')
+                        </form>
+
+                      </div> --}}
+
+                      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <button class="dropdown-item"
+                          onclick="confirmAction('approve', 'Apakah Anda yakin ingin menyetujui?', {{ $selectedCandidate->id }})">
+                          Approve
+                        </button>
+
+                        <button class="dropdown-item"
+                          onclick="confirmAction('reject', 'Apakah Anda yakin ingin menolak?', {{ $selectedCandidate->id }})">
+                          Reject
+                        </button>
+
+                        <!-- Forms for Approve and Reject actions -->
+                        <form id="approveForm_{{ $selectedCandidate->id }}"
+                          action="{{ route('selectedCandidate.updateApprovalStatus', $selectedCandidate->id) }}"
+                          method="POST" style="display: none;">
+                          @csrf
+                          @method('patch')
+                          <input type="hidden" name="is_approve" value="1"> <!-- Approve value -->
+                        </form>
+
+                        <form id="rejectForm_{{ $selectedCandidate->id }}"
+                          action="{{ route('selectedCandidate.updateApprovalStatus', $selectedCandidate->id) }}"
+                          method="POST" style="display: none;">
+                          @csrf
+                          @method('patch')
+                          <input type="hidden" name="is_approve" value="0"> <!-- Reject value -->
+                        </form>
+                      </div>
+
+
+                    </div>
+                  @endrole
+                @endif
+
+
+              </div>
             </td>
           </tr>
         @endforeach
@@ -211,7 +284,7 @@
 
 
 
-<script>
+{{-- <script>
   function destroyCandidate(getId) {
     Swal.fire({
       title: 'Are you sure?',
@@ -226,7 +299,7 @@
       }
     });
   }
-</script>
+</script> --}}
 
 <script>
   function closeSelection(getId) {
@@ -238,8 +311,8 @@
       html: `
         <label for="selectionOption">Choose an option:</label>
         <select id="selectionOption" class="swal2-select">
-          <option value="Ada Pemenang">Ada Pemenang</option>
-          <option value="Tidak Ada Pemenang">Tidak Ada Pemenang</option>
+          <option value="1">Kandidat Terpilih</option>
+          <option value="0">Tidak Ada kandidat Terpilih</option>
         </select>
       `,
       preConfirm: () => {
@@ -264,9 +337,49 @@
   }
 </script>
 
-
+{{-- <script>
+  function confirmAction(actionType, message, getId) {
+    Swal.fire({
+      title: message,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ya, lanjutkan!',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Submit the corresponding form based on action type
+        const formId = actionType === 'approve' ? 'approveForm_' : 'rejectForm_';
+        document.getElementById(formId + getId).submit();
+      }
+    });
+  }
+</script> --}}
 
 <script>
+  function confirmAction(action, message, candidateId) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: message,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, ' + action + ' it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Submit the correct form based on the action type
+        if (action === 'approve') {
+          document.getElementById('approveForm_' + candidateId).submit();
+        } else if (action === 'reject') {
+          document.getElementById('rejectForm_' + candidateId).submit();
+        }
+      }
+    });
+  }
+</script>
+
+{{-- <script>
   function editAlert(getId) {
     Swal.fire({
       title: 'Tutup Seleksi?',
@@ -280,7 +393,7 @@
       }
     });
   }
-</script>
+</script> --}}
 
 
 {{-- <script>

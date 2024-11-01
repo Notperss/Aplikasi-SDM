@@ -27,15 +27,19 @@ return new class extends Migration {
             $table->string('kk_number')->nullable();
             $table->string('religion')->nullable();
             $table->string('nationality')->nullable();
-            // $table->integer('height');
-            // $table->integer('weight');
+
+            $table->integer('height')->nullable();
+            $table->integer('weight')->nullable();
+            $table->boolean('glasses')->nullable();
+
+
             $table->enum('gender', ['LAKI-LAKI', 'PEREMPUAN']);
             $table->date('date_applied')->nullable();
 
             $table->text('tag')->nullable();
 
-            $table->boolean('is_selection')->default(true);
-            $table->boolean('is_hire')->default(true);
+            $table->boolean('is_selection')->default(false);
+            $table->boolean('is_hire')->default(false);
             $table->string('ethnic')->nullable(); //
             $table->string('blood_type')->nullable();
             $table->string('candidate_from')->nullable(); //

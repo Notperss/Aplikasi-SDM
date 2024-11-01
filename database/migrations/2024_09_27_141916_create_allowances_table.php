@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->string('name');
             $table->string('type')->nullable();
             $table->string('natura')->nullable();
-            $table->string('amount');
+            $table->string('amount')->nullable();
             $table->date('efective_date')->nullable();
             $table->text('description')->nullable();
             $table->timestamps();

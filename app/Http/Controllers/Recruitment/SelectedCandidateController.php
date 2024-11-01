@@ -79,6 +79,10 @@ class SelectedCandidateController extends Controller
         } else {
             $data['file_selected_candidate'] = $path_file;
         }
+
+        $selectedCandidate->is_approve = null;
+        $selectedCandidate->is_hire = null;
+
         $selectedCandidate->update($data);
 
         $candidate->update([
@@ -130,8 +134,17 @@ class SelectedCandidateController extends Controller
 
     public function resultSelection(Selection $selection)
     {
+
         $selectedCandidates = $selection->selectedCandidates()->orderBy('position_id', 'desc')->get();
-        $selectedPositions = $selection->selectedPositions()->whereDoesntHave('selectedCandidates')->get();
+        $selectedPositions = $selection->selectedPositions()
+            ->where('selection_id', $selection->id)
+            ->whereDoesntHave('selectedCandidates', function ($query) use ($selection) {
+                $query->where('selection_id', $selection->id);
+            })
+
+            ->get();
+
+
         // $selectedPositions = $selection->selectedPositions()
         //     ->leftJoin('selected_candidates', 'positions.id', '=', 'selected_candidates.position_id')
         //     ->whereNull('selected_candidates.position_id')
@@ -141,4 +154,100 @@ class SelectedCandidateController extends Controller
 
         return view('pages.recruitment.selection.result-selection', compact('selection', 'selectedPositions', 'selectedCandidates'));
     }
+
+    public function hiredCandidates()
+    {
+        // $queryCandidate = Candidate::latest();
+
+        // $candidates = $queryCandidate
+        //     ->where('is_hire', true)
+        //     ->whereHas('selectedCandidates.selection', function ($query) {
+        //         $query->where('is_finished', true)->where('status', 'Ada Pemenang');  // Filter based on finished selections
+        //     })
+        //     ->get();
+
+        $selectedCandidates = SelectedCandidate::with(['candidate', 'selection'])
+
+            ->whereNotNull('position_id')
+            ->whereHas('selection', function ($query) {
+                $query->where('is_finished', true)->where('status', true)->where('is_approve', true);
+            })->orderBy('is_approve', 'desc')->orderBy('created_at', 'asc')
+            ->get();
+
+        return view('pages.recruitment.selection.hired-candidate', compact('selectedCandidates'));
+
+    }
+
+    // Method to handle approval of a selection
+    // public function approve($id)
+    // {
+    //     // Find the selection by ID
+    //     $selection = SelectedCandidate::findOrFail($id);
+
+    //     // Update the status to approved (you can adjust the logic based on your requirements)
+    //     // $selection->status = 'approved';  // Set the approved status
+    //     $selection->is_approve = true;   // Set the selection as finished
+    //     $selection->save();
+
+    //     // Redirect back with a success message
+    //     return redirect()->back()->with('success', 'Kandidat telah disetujui.');
+    // }
+
+    // // Method to handle rejection of a selection
+    // public function reject($id)
+    // {
+    //     // Find the selection by ID
+    //     $selection = SelectedCandidate::findOrFail($id);
+
+    //     // Update the status to rejected (you can adjust the logic based on your requirements)
+    //     // $selection->status = 'rejected';  // Set the rejected status
+    //     $selection->position_id = null;   // Set the selection as finished
+    //     $selection->is_approve = false;   // Set the selection as finished
+    //     $selection->save();
+
+    //     // Redirect back with a success message
+    //     return redirect()->back()->with('success', 'Kandidat telah ditolak.');
+    // }
+
+
+    public function updateApprovalStatus(Request $request, $id)
+    {
+        // Find the candidate by ID
+        $selectedCandidate = SelectedCandidate::findOrFail($id);
+
+        // Check the is_approve value and update the candidate status
+        if ($request->has('is_approve')) {
+            $selectedCandidate->is_approve = $request->input('is_approve');
+
+            Candidate::where('id', $selectedCandidate->candidate_id)
+                ->update(['is_selection' => 1, 'is_hire' => 1]);
+
+            if ($selectedCandidate->is_approve == 0) {
+                $selectedCandidate->is_hire = 0;
+
+                Candidate::where('id', $selectedCandidate->candidate_id)
+                    ->update(['is_selection' => 0, 'is_hire' => 0]);
+            } else {
+                $selectedCandidate->is_hire = null;
+            }
+
+            $selectedCandidate->save();
+
+            // Set a success message based on the approval status
+            $message = $selectedCandidate->is_approve ? 'Candidate approved.' : 'Candidate rejected.';
+            return redirect()->back()->with('success', $message);
+        }
+        // // Check the is_approve value and update the candidate status
+        // if ($request->has('is_hire')) {
+        //     $selectedCandidate->is_hire = $request->input('is_hire');
+        //     $selectedCandidate->save();
+
+        //     // Set a success message based on the approval status
+        //     $message = $selectedCandidate->is_hire ? 'Candidate approved.' : 'Candidate rejected.';
+        //     return redirect()->back()->with('success', $message);
+        // }
+
+        return redirect()->back()->with('error', 'Invalid request. Approval status is missing.');
+    }
+
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models\Position;
 
+use App\Models\Employee\Employee;
 use App\Models\WorkUnit\Section;
 use App\Models\WorkUnit\Division;
 use App\Models\WorkUnit\Department;
@@ -70,14 +71,16 @@ class Position extends Model
     {
         return $this->belongsToMany(Allowance::class, 'position_allowances');
     }
-
     public function selectedCandidates()
     {
         return $this->hasMany(SelectedCandidate::class);
     }
-
     public function selectedPositions()
     {
         return $this->belongsToMany(Selection::class, 'position_selection');
+    }
+    public function employee()
+    {
+        return $this->hasOne(Employee::class);
     }
 }

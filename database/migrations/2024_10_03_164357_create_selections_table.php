@@ -2,6 +2,7 @@
 
 use App\Models\ManagementAccess\Company;
 use App\Models\Position\Position;
+use App\Models\WorkUnit\Division;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,14 +17,17 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(Company::class)->nullable()->constrained()->onDelete('cascade');
             $table->foreignIdFor(Position::class)->constrained()->onDelete('cascade');
+            $table->foreignIdFor(Division::class)->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->string('pic_selection')->nullable();
+            // $table->string('pic_selection')->nullable();
             $table->string('interviewer')->nullable();
-            $table->date('date_selection');
-            $table->date('start_selection');
+            $table->string('fptk_number')->nullable();
+            // $table->date('date_selection');
+            $table->date('start_selection')->nullable();
             $table->date('end_selection')->nullable();
             $table->text('description')->nullable();
             $table->string('file_selection')->nullable();
+            $table->string('status')->nullable();
             $table->boolean('is_finished')->default(false)->nullable();
             $table->timestamps();
             $table->softDeletes();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Recruitment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Recruitment\Candidate;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
@@ -26,7 +27,7 @@ class CandidateController extends Controller
      */
     public function index()
     {
-        $candidates = Candidate::where('is_hire', false)->where('is_selection', false)->latest();
+        $candidates = Candidate::latest();
 
         if (request()->ajax()) {
             return DataTables::of($candidates)
@@ -85,6 +86,12 @@ class CandidateController extends Controller
     {
         $data = $request->all();
 
+        $company_id = Auth::user()->company_id;
+
+        $requestData = array_merge($data, [
+            'company_id' => $company_id,
+        ]);
+
         $file_fields = [
             'photo',
             'file_cv',
@@ -109,8 +116,20 @@ class CandidateController extends Controller
             }
         }
 
+        $candidate = Candidate::create($requestData);
 
-        $candidate = Candidate::create($data);
+        // // Save the photo separately in the CandidatePhoto model
+        // if ($request->hasFile('photo')) {
+        //     $photo = $request->file('photo');
+        //     $photo_extension = $photo->getClientOriginalExtension();
+        //     $photo_name = 'photo_' . $data['name'] . '_' . time() . '.' . $photo_extension;
+        //     $photo_path = $photo->storeAs('files/candidate/photo', $photo_name, 'public_local');
+
+        //     // Create a new CandidatePhoto entry
+        //     $candidate->candidatePhotos()->create([
+        //         'file_path' => $photo_path,
+        //     ]);
+        // }
 
         return redirect()->route('candidate.index')->with('success', 'Candidate has been created successfully!');
     }

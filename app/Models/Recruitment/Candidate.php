@@ -2,6 +2,7 @@
 
 namespace App\Models\Recruitment;
 
+use App\Models\Employee\Employee;
 use App\Models\Position\Position;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
@@ -29,8 +30,8 @@ class Candidate extends Model
                 'kk_number',
                 'religion',
                 'nationality',
-                // 'height',
-                // 'weight',
+                'height',
+                'weight',
                 'pob',
                 'dob',
                 'gender',
@@ -100,8 +101,9 @@ class Candidate extends Model
         'kk_number',
         'religion',
         'nationality',
-        // 'height',
-        // 'weight',
+        'height',
+        'weight',
+        'glasses',
         'pob',
         'dob',
         'gender',
@@ -197,5 +199,14 @@ class Candidate extends Model
     public function position()
     {
         return $this->hasOne(Position::class);
+    }
+    public function employee()
+    {
+        return $this->hasOne(Employee::class);
+    }
+
+    public function candidatePhotos()
+    {
+        return $this->hasMany(CandidatePhoto::class);
     }
 }

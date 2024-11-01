@@ -42,10 +42,10 @@
               <div class="card-body">
 
                 <div class="mb-3">
-                  <label for="file_cv" class="form-label">CV <code>*</code></label> <br>
+                  <label for="file_cv" class="form-label">CV</label> <br>
                   @can('candidate.update')
-                    <input class="form-control form-control-sm mb-1 @error('file_cv') is-invalid @enderror" accept=".pdf"
-                      type="file" id="file_cv" name="file_cv">
+                    <input class="form-control form-control-sm mb-1" accept=".pdf" type="file" id="file_cv"
+                      name="file_cv">
                   @endcan
                   @if ($candidate->file_cv)
                     <a href="{{ asset('storage/' . $candidate->file_cv) }}" target="_blank"
@@ -56,14 +56,6 @@
                   @else
                     <span>-</span>
                   @endif
-
-                  @error('file_cv')
-                    <a style="color: red">
-                      <small>
-                        {{ $message }}
-                      </small>
-                    </a>
-                  @enderror
                 </div>
                 <div class="mb-3">
                   <label for="file_ktp" class="form-label">KTP & NPWP</label><br>
@@ -126,8 +118,7 @@
                   @endif
                 </div>
                 <div class="mb-3">
-                  <label for="file_surat_sehat" class="form-label">SURAT KETERANGAN SEHAT <br>/ BEBAS
-                    NARKOBA</label><br>
+                  <label for="file_surat_sehat" class="form-label">SURAT KETERANGAN SEHAT</label><br>
                   @can('candidate.update')
                     <input class="form-control form-control-sm mb-1" accept=".pdf" type="file" id="file_surat_sehat"
                       name="file_surat_sehat">
@@ -346,25 +337,6 @@
                   @enderror
                 </div>
 
-                <div class="form-group">
-                  <label for="glasses">Kacatama</label>
-                  <select type="text" id="glasses" class="form-control @error('glasses') is-invalid @enderror"
-                    name="glasses">
-                    {{-- <option value="" disabled selected>Choose</option> --}}
-                    <option value="0" {{ old('glasses', $candidate->glasses) == '0' ? 'selected' : '' }}>Tidak
-                    </option>
-                    <option value="1" {{ old('glasses', $candidate->glasses) == '1' ? 'selected' : '' }}>Iya
-                    </option>
-                  </select>
-                  @error('glasses')
-                    <a style="color: red">
-                      <small>
-                        {{ $message }}
-                      </small>
-                    </a>
-                  @enderror
-                </div>
-
                 {{-- <div class="form-group">
                   <label for="candidate_from">Pelamar Dari</label>
                   <select type="text" value="{{ old('candidate_from') }}" id="candidate_from"
@@ -456,34 +428,6 @@
                       <small class="text-danger">
                         {{ $message }}
                       </small>
-                    @enderror
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <label for="height">Tinggi (cm)</label>
-                    <input type="text" value="{{ old('height', $candidate->height) }}" id="height"
-                      class="form-control @error('height') is-invalid @enderror" maxlength="3"
-                      oninput="this.value = this.value.replace(/\D+/g, '')" name="height">
-                    @error('height')
-                      <a style="color: red">
-                        <small>
-                          {{ $message }}
-                        </small>
-                      </a>
-                    @enderror
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="weight">Berat (kg)</label>
-                    <input type="text" value="{{ old('weight', $candidate->weight) }}" id="weight"
-                      class="form-control  @error('weight') is-invalid @enderror" maxlength="3"
-                      oninput="this.value = this.value.replace(/\D+/g, '')" name="weight">
-                    @error('weight')
-                      <a style="color: red">
-                        <small>
-                          {{ $message }}
-                        </small>
-                      </a>
                     @enderror
                   </div>
                 </div>
@@ -601,10 +545,10 @@
                       {{ old('disability', $candidate->disability) == 'Tunadaksa' ? 'selected' : '' }}>
                       Tunadaksa (Cacat tubuh)
                     </option>
-                    {{-- <option value="Tunalaras"
+                    <option value="Tunalaras"
                       {{ old('disability', $candidate->disability) == 'Tunalaras' ? 'selected' : '' }}>
                       Tunalaras (Cacat suara dan nada)
-                    </option> --}}
+                    </option>
                   </select>
                   @error('disability')
                     <a style="color: red"><small>{{ $message }}</small></a>

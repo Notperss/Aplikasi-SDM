@@ -1,498 +1,13 @@
 @extends('layouts.app')
-@section('title', 'Pelamar')
+@section('title', 'Karyawan')
 @section('content')
 
 @section('breadcrumb')
-  <x-breadcrumb title="Data Diri Pelamar" page="Recruitment" active="Pelamar" route="{{ route('candidate.index') }}" />
+  <x-breadcrumb title="Data Diri Karyawan" page="Karyawan" active="Karyawan" route="{{ route('employee.index') }}" />
 @endsection
 
-<!-- // Basic multiple Column Form section start -->
-{{-- <section id="multiple-column-form">
-  <div class="row match-height">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-content">
-          <div class="card-body">
-            <form action="{{ route('candidate.store') }}" method="post" enctype="multipart/form-data">
-              @csrf
-
-              <div class="row">
-
-                <div class="col-md-6 col-12">
-                  <div class="form-group">
-                    <label for="name">Nama Lengkap</label>
-                    <input type="text" id="name" value="{{ old('name') }}"
-                      class="form-control @error('name') is-invalid @enderror" name="name">
-                    @error('name')
-                      <a style="color: red">
-                        <small>
-                          {{ $message }}
-                        </small>
-                      </a>
-                    @enderror
-                  </div>
-                  <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" value="{{ old('email') }}"
-                      class="form-control @error('email') is-invalid @enderror" name="email">
-                    @error('email')
-                      <a style="color: red">
-                        <small>
-                          {{ $message }}
-                        </small>
-                      </a>
-                    @enderror
-                  </div>
-                  <div class="form-group">
-                    <label for="phone_number">No. Telpon</label>
-                    <input type="text" id="phone_number" value="{{ old('phone_number') }}" maxlength="13"
-                      oninput="this.value = this.value.replace(/\D+/g, '')"
-                      class="form-control @error('phone_number') is-invalid @enderror" name="phone_number">
-                    @error('phone_number')
-                      <a style="color: red">
-                        <small>
-                          {{ $message }}
-                        </small>
-                      </a>
-                    @enderror
-                  </div>
-                  <div class="form-group">
-                    <label for="ktp_number">No. KTP</label>
-                    <input type="text" id="ktp_number" value="{{ old('ktp_number') }}" maxlength="16"
-                      oninput="this.value = this.value.replace(/\D+/g, '')"
-                      class="form-control @error('ktp_number') is-invalid @enderror" name="ktp_number">
-                    @error('ktp_number')
-                      <a style="color: red">
-                        <small>
-                          {{ $message }}
-                        </small>
-                      </a>
-                    @enderror
-                  </div>
-                  <div class="form-group">
-                    <label for="kk_number">No. Kartu Keluarga</label>
-                    <input type="text" id="kk_number" value="{{ old('kk_number') }}" maxlength="16"
-                      oninput="this.value = this.value.replace(/\D+/g, '')"
-                      class="form-control @error('kk_number') is-invalid @enderror" name="kk_number">
-                    @error('kk_number')
-                      <a style="color: red">
-                        <small>
-                          {{ $message }}
-                        </small>
-                      </a>
-                    @enderror
-                  </div>
-                  <div class="form-group">
-                    <label for="npwp_number">No. NPWP</label>
-                    <input type="text" inputmode="numeric" value="{{ old('npwp_number') }}" maxlength="16"
-                      oninput="this.value = this.value.replace(/\D+/g, '')" id="npwp_number"
-                      class="form-control @error('npwp_number') is-invalid @enderror" name="npwp_number">
-                    @error('npwp_number')
-                      <a style="color: red">
-                        <small>
-                          {{ $message }}
-                        </small>
-                      </a>
-                    @enderror
-                  </div>
-                  <div class="form-group">
-                    <label for="ktp_address">Alamat Sesuai KTP</label>
-                    <textarea type="text" id="ktp_address" value="{{ old('ktp_address') }}"
-                      class="form-control  @error('ktp_address') is-invalid @enderror" name="ktp_address" rows="5"></textarea>
-                    @error('ktp_address')
-                      <a style="color: red">
-                        <small>
-                          {{ $message }}
-                        </small>
-                      </a>
-                    @enderror
-                  </div>
-                </div>
-
-                <div class="col-md-6 col-12">
-                  <div class="form-group">
-                    <label for="pob">Tempat Lahir</label>
-                    <input type="text" id="pob" value="{{ old('pob') }}"
-                      class="form-control @error('pob') is-invalid @enderror" name="pob">
-                    @error('pob')
-                      <a style="color: red">
-                        <small>
-                          {{ $message }}
-                        </small>
-                      </a>
-                    @enderror
-                  </div>
-                  <div class="form-group">
-                    <label for="dob">Tanggal Lahir</label>
-                    <input type="date" id="dob" name="dob" value="{{ old('dob') }}"
-                      class="form-control flatpickr-no-config @error('dob') is-invalid @enderror"
-                      placeholder="Select date..">
-                    @error('dob')
-                      <a style="color: red">
-                        <small>
-                          {{ $message }}
-                        </small>
-                      </a>
-                    @enderror
-                  </div>
-                  <div class="form-group">
-                    <label for="gender">Jenis Kelamin</label>
-                    <select name="gender" id="gender"
-                      class="form-control  @error('gender') is-invalid @enderror">
-                      <option value="" disabled selected>Choose</option>
-                      <option value="LAKI-LAKI" {{ old('gender') == 'LAKI-LAKI' ? 'selected' : '' }}>
-                        Laki-laki
-                      </option>
-                      <option value="PEREMPUAN" {{ old('gender') == 'PEREMPUAN' ? 'selected' : '' }}>
-                        Perempuan
-                      </option>
-                    </select>
-                    @error('gender')
-                      <a style="color: red">
-                        <small>
-                          {{ $message }}
-                        </small>
-                      </a>
-                    @enderror
-                  </div>
-                  <div class="form-group">
-                    <label for="religion">Agama</label>
-                    <input type="text" id="religion" value="{{ old('religion') }}"
-                      class="form-control @error('religion') is-invalid @enderror" name="religion">
-                    @error('religion')
-                      <a style="color: red">
-                        <small>
-                          {{ $message }}
-                        </small>
-                      </a>
-                    @enderror
-                  </div>
-                  <div class="form-group">
-                    <label for="nationality">Kewarganegaraan</label>
-                    <input type="text" value="{{ old('nationality') }}" id="nationality"
-                      class="form-control @error('nationality') is-invalid @enderror" name="nationality">
-                    @error('nationality')
-                      <a style="color: red">
-                        <small>
-                          {{ $message }}
-                        </small>
-                      </a>
-                    @enderror
-                  </div>
-                  <div class="row">
-                    <div class="form-group col-md-6">
-                      <label for="height">Tinggi (cm)</label>
-                      <input type="text" value="{{ old('height') }}" id="height"
-                        class="form-control @error('height') is-invalid @enderror" maxlength="3"
-                        oninput="this.value = this.value.replace(/\D+/g, '')" name="height">
-                      @error('height')
-                        <a style="color: red">
-                          <small>
-                            {{ $message }}
-                          </small>
-                        </a>
-                      @enderror
-                    </div>
-                    <div class="form-group col-md-6">
-                      <label for="weight">Berat (kg)</label>
-                      <input type="text" value="{{ old('weight') }}" id="weight"
-                        class="form-control  @error('weight') is-invalid @enderror" maxlength="3"
-                        oninput="this.value = this.value.replace(/\D+/g, '')" name="weight">
-                      @error('weight')
-                        <a style="color: red">
-                          <small>
-                            {{ $message }}
-                          </small>
-                        </a>
-                      @enderror
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="current_address">Alamat Sekarang</label>
-                    <textarea type="text" id="current_address" class="form-control @error('current_address') is-invalid @enderror"
-                      name="current_address" rows="5"> {{ old('current_address') }}</textarea>
-                  </div>
-                  @error('current_address')
-                    <a style="color: red">
-                      <small>
-                        {{ $message }}
-                      </small>
-                    </a>
-                  @enderror
-                </div>
-
-                <div class="col-12 d-flex justify-content-end mt-4">
-                  <button type="submit" class="btn btn-primary me-1 mb-1">Submit</button>
-                  <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
-                </div>
-              </div>
-
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section> --}}
-<!-- // Basic multiple Column Form section end -->
-
-{{-- <section class="section">
-  <form action="{{ route('candidate.store') }}" method="post" enctype="multipart/form-data">
-    @csrf
-    <div class="row">
-      <div class="col-12 col-lg-4">
-        <div class="card-body mb-2">
-          <div class="d-flex justify-content-center align-items-center flex-column">
-
-            <!-- Image Preview -->
-            <img src="{{ asset('storage/img/2.jpg') }}" alt="user-avatar" class="d-block rounded" width="150px"
-              id="uploadedAvatar" />
-
-            <!-- Upload Icon and Input -->
-            <label for="uploadImage" class="mt-2" style="cursor: pointer;">
-              <i class="bi bi-upload" style="font-size: 24px; color: rgba(0, 128, 255, 0.974);"></i>
-              <span> Upload</span>
-              <input type="file" id="uploadImage" value="{{ old('photo') }}" name="photo"
-                accept=".jpg, .jpeg, .png" style="display: none;" onchange="previewImage(event)" />
-            </label>
-
-            <!-- Display validation error message -->
-            @if ($errors->has('photo'))
-              <div class="alert alert-danger mt-2" style="font-size: 70%">
-                {{ $errors->first('photo') }}
-              </div>
-            @endif
-
-            <!-- Additional Information -->
-            <p class="mb-0 mt-3" style="font-size: 70%"> * Latar Belakang Foto Warna Merah</p>
-            <p class="mb-0" style="font-size: 70%"> * Ekstensi File : jpg, jpeg, png</p>
-            <p class="mb-0" style="font-size: 70%"> * Ukuran File Maks. 500KB</p>
-            <p class="mb-0" style="font-size: 70%"> * Pastikan foto wajah terlihat jelas</p>
-          </div>
-        </div>
-
-      </div>
-      <div class="col-12 col-lg-8">
-        <div class="card">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-md-6 col-12">
-                <div class="form-group">
-                  <label for="name">Nama Lengkap</label>
-                  <input type="text" id="name" value="{{ old('name') }}"
-                    class="form-control @error('name') is-invalid @enderror" name="name">
-                  @error('name')
-                    <a style="color: red">
-                      <small>
-                        {{ $message }}
-                      </small>
-                    </a>
-                  @enderror
-                </div>
-                <div class="form-group">
-                  <label for="email">Email</label>
-                  <input type="email" id="email" value="{{ old('email') }}"
-                    class="form-control @error('email') is-invalid @enderror" name="email">
-                  @error('email')
-                    <a style="color: red">
-                      <small>
-                        {{ $message }}
-                      </small>
-                    </a>
-                  @enderror
-                </div>
-                <div class="form-group">
-                  <label for="phone_number">No. Telpon</label>
-                  <input type="text" id="phone_number" value="{{ old('phone_number') }}" maxlength="13"
-                    oninput="this.value = this.value.replace(/\D+/g, '')"
-                    class="form-control @error('phone_number') is-invalid @enderror" name="phone_number">
-                  @error('phone_number')
-                    <a style="color: red">
-                      <small>
-                        {{ $message }}
-                      </small>
-                    </a>
-                  @enderror
-                </div>
-                <div class="form-group">
-                  <label for="ktp_number">No. KTP</label>
-                  <input type="text" id="ktp_number" value="{{ old('ktp_number') }}" maxlength="16"
-                    oninput="this.value = this.value.replace(/\D+/g, '')"
-                    class="form-control @error('ktp_number') is-invalid @enderror" name="ktp_number">
-                  @error('ktp_number')
-                    <a style="color: red">
-                      <small>
-                        {{ $message }}
-                      </small>
-                    </a>
-                  @enderror
-                </div>
-                <div class="form-group">
-                  <label for="kk_number">No. Kartu Keluarga</label>
-                  <input type="text" id="kk_number" value="{{ old('kk_number') }}" maxlength="16"
-                    oninput="this.value = this.value.replace(/\D+/g, '')"
-                    class="form-control @error('kk_number') is-invalid @enderror" name="kk_number">
-                  @error('kk_number')
-                    <a style="color: red">
-                      <small>
-                        {{ $message }}
-                      </small>
-                    </a>
-                  @enderror
-                </div>
-                <div class="form-group">
-                  <label for="npwp_number">No. NPWP</label>
-                  <input type="text" inputmode="numeric" value="{{ old('npwp_number') }}" maxlength="16"
-                    oninput="this.value = this.value.replace(/\D+/g, '')" id="npwp_number"
-                    class="form-control @error('npwp_number') is-invalid @enderror" name="npwp_number">
-                  @error('npwp_number')
-                    <a style="color: red">
-                      <small>
-                        {{ $message }}
-                      </small>
-                    </a>
-                  @enderror
-                </div>
-                <div class="form-group">
-                  <label for="ktp_address">Alamat Sesuai KTP</label>
-                  <textarea type="text" id="ktp_address" class="form-control  @error('ktp_address') is-invalid @enderror"
-                    name="ktp_address" rows="5">{{ old('ktp_address') }}</textarea>
-                  @error('ktp_address')
-                    <a style="color: red">
-                      <small>
-                        {{ $message }}
-                      </small>
-                    </a>
-                  @enderror
-                </div>
-              </div>
-
-              <div class="col-md-6 col-12">
-                <div class="form-group">
-                  <label for="pob">Tempat Lahir</label>
-                  <input type="text" id="pob" value="{{ old('pob') }}"
-                    class="form-control @error('pob') is-invalid @enderror" name="pob">
-                  @error('pob')
-                    <a style="color: red">
-                      <small>
-                        {{ $message }}
-                      </small>
-                    </a>
-                  @enderror
-                </div>
-                <div class="form-group">
-                  <label for="dob">Tanggal Lahir</label>
-                  <input type="date" id="dob" name="dob" value="{{ old('dob') }}"
-                    class="form-control flatpickr-no-config @error('dob') is-invalid @enderror"
-                    placeholder="Select date..">
-                  @error('dob')
-                    <a style="color: red">
-                      <small>
-                        {{ $message }}
-                      </small>
-                    </a>
-                  @enderror
-                </div>
-                <div class="form-group">
-                  <label for="gender">Jenis Kelamin</label>
-                  <select name="gender" id="gender" class="form-control  @error('gender') is-invalid @enderror">
-                    <option value="" disabled selected>Choose</option>
-                    <option value="LAKI-LAKI" {{ old('gender') == 'LAKI-LAKI' ? 'selected' : '' }}>
-                      Laki-laki
-                    </option>
-                    <option value="PEREMPUAN" {{ old('gender') == 'PEREMPUAN' ? 'selected' : '' }}>
-                      Perempuan
-                    </option>
-                  </select>
-                  @error('gender')
-                    <a style="color: red">
-                      <small>
-                        {{ $message }}
-                      </small>
-                    </a>
-                  @enderror
-                </div>
-                <div class="form-group">
-                  <label for="religion">Agama</label>
-                  <input type="text" id="religion" value="{{ old('religion') }}"
-                    class="form-control @error('religion') is-invalid @enderror" name="religion">
-                  @error('religion')
-                    <a style="color: red">
-                      <small>
-                        {{ $message }}
-                      </small>
-                    </a>
-                  @enderror
-                </div>
-                <div class="form-group">
-                  <label for="nationality">Kewarganegaraan</label>
-                  <input type="text" value="{{ old('nationality') }}" id="nationality"
-                    class="form-control @error('nationality') is-invalid @enderror" name="nationality">
-                  @error('nationality')
-                    <a style="color: red">
-                      <small>
-                        {{ $message }}
-                      </small>
-                    </a>
-                  @enderror
-                </div>
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <label for="height">Tinggi (cm)</label>
-                    <input type="text" value="{{ old('height') }}" id="height"
-                      class="form-control @error('height') is-invalid @enderror" maxlength="3"
-                      oninput="this.value = this.value.replace(/\D+/g, '')" name="height">
-                    @error('height')
-                      <a style="color: red">
-                        <small>
-                          {{ $message }}
-                        </small>
-                      </a>
-                    @enderror
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="weight">Berat (kg)</label>
-                    <input type="text" value="{{ old('weight') }}" id="weight"
-                      class="form-control  @error('weight') is-invalid @enderror" maxlength="3"
-                      oninput="this.value = this.value.replace(/\D+/g, '')" name="weight">
-                    @error('weight')
-                      <a style="color: red">
-                        <small>
-                          {{ $message }}
-                        </small>
-                      </a>
-                    @enderror
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="current_address">Alamat Sekarang</label>
-                  <textarea type="text" id="current_address" class="form-control @error('current_address') is-invalid @enderror"
-                    name="current_address" rows="5"> {{ old('current_address') }}</textarea>
-                </div>
-                @error('current_address')
-                  <a style="color: red">
-                    <small>
-                      {{ $message }}
-                    </small>
-                  </a>
-                @enderror
-              </div>
-
-              <div class="col-12 d-flex justify-content-end mt-4">
-                <button type="submit" class="btn btn-primary me-1 mb-1">Submit</button>
-                <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
-              </div>
-            </div>
-
-  </form>
-  </div>
-  </div>
-  </div>
-  </div>
-</section> --}}
-
 <section class="section">
-  <form action="{{ route('candidate.store') }}" method="post" enctype="multipart/form-data">
+  <form action="{{ route('employee.store') }}" method="post" enctype="multipart/form-data">
     @csrf
     <div class="row">
 
@@ -527,21 +42,13 @@
             <p class="mb-0" style="font-size: 70%"> * Pastikan Foto Wajah Terlihat Jelas</p>
           </div>
 
-          <div class="card mt-3">
+          {{-- <div class="card mt-3">
             <div class="card-content">
               <div class="card-body">
 
                 <div class="mb-3">
-                  <label for="file_cv" class="form-label">CV <code>*</code></label>
-                  <input class="form-control @error('file_cv') is-invalid @enderror" accept=".pdf" type="file"
-                    id="file_cv" name="file_cv">
-                  @error('file_cv')
-                    <a style="color: red">
-                      <small>
-                        {{ $message }}
-                      </small>
-                    </a>
-                  @enderror
+                  <label for="file_cv" class="form-label">CV</label>
+                  <input class="form-control" accept=".pdf" type="file" id="file_cv" name="file_cv">
                 </div>
                 <div class="mb-3">
                   <label for="file_ktp" class="form-label">KTP & NPWP</label>
@@ -560,7 +67,7 @@
                   <input class="form-control" accept=".pdf" type="file" id="file_kk" name="file_kk">
                 </div>
                 <div class="mb-3">
-                  <label for="file_surat_sehat" class="form-label">SURAT KETERANGAN SEHAT <br>/ BEBAS NARKOBA</label>
+                  <label for="file_surat_sehat" class="form-label">SURAT KETERANGAN SEHAT</label>
                   <input class="form-control" accept=".pdf" type="file" id="file_surat_sehat"
                     name="file_surat_sehat">
                 </div>
@@ -579,12 +86,147 @@
                 </p>
               </div>
             </div>
-          </div>
+          </div> --}}
 
         </div>
       </div>
 
       <div class="col-12 col-lg-8">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+
+              <div class="form-group col-md-6">
+                <label for="nik">NIK <code>*</code></label>
+                <input type="text" id="nik" value="{{ old('nik') }}"
+                  class="form-control @error('nik') is-invalid @enderror" name="nik">
+                @error('nik')
+                  <a style="color: red">
+                    <small>
+                      {{ $message }}
+                    </small>
+                  </a>
+                @enderror
+              </div>
+              <div class="form-group col-md-6">
+                <label for="position_id">Jabatan <code>*</code></label>
+                <select name="position_id" id="position_id"
+                  class="form-control choices  @error('position_id') is-invalid @enderror">
+                  <option value="" disabled selected>Choose</option>
+                  @foreach ($positions as $position)
+                    <option value="{{ $position->id }}" {{ old('position_id') == $position->id ? 'selected' : '' }}>
+                      {{ $position->name }}</option>
+                  @endforeach
+                </select>
+                @error('position_id')
+                  <a style="color: red">
+                    <small>
+                      {{ $message }}
+                    </small>
+                  </a>
+                @enderror
+              </div>
+              <div class="form-group col-md-6">
+                <label for="employee_category_id">Kategori Karyawan <code>*</code></label>
+                <select name="employee_category_id" id="employee_category_id"
+                  class="form-control choices  @error('employee_category_id') is-invalid @enderror">
+                  <option value="" disabled selected>Choose</option>
+                  @foreach ($employeeCategories as $employeeCategory)
+                    <option value="{{ $employeeCategory->id }}"
+                      {{ old('employee_category_id') == $employeeCategory->id ? 'selected' : '' }}>
+                      {{ $employeeCategory->name }}</option>
+                  @endforeach
+                </select>
+                @error('employee_category_id')
+                  <a style="color: red">
+                    <small>
+                      {{ $message }}
+                    </small>
+                  </a>
+                @enderror
+              </div>
+              <div class="form-group col-md-6">
+                <label for="employee_status">Status Karyawan <code>*</code></label>
+                <select type="text" id="employee_status"
+                  class="form-control choices @error('employee_status') is-invalid @enderror" name="employee_status"
+                  required>
+                  <option value="" disabled selected>Choose</option>
+                  <option value="AKTIF" {{ old('employee_status') == 'AKTIF' ? 'selected' : '' }}>AKTIF</option>
+                  <option value="PENSIUN" {{ old('employee_status') == 'PENSIUN' ? 'selected' : '' }}>PENSIUN</option>
+                  <option value="RESIGN" {{ old('employee_status') == 'RESIGN' ? 'selected' : '' }}>RESIGN</option>
+                  <option value="TIDAK ADA AKSES" {{ old('employee_status') == 'TIDAK ADA AKSES' ? 'selected' : '' }}>
+                    TIDAK ADA AKSES</option>
+                </select>
+                @error('employee_status')
+                  <a style="color: red">
+                    <small>
+                      {{ $message }}
+                    </small>
+                  </a>
+                @enderror
+              </div>
+              <div class="form-group col-md-6">
+                <label for="work_relationship">Hubungan Kerja <code>*</code></label>
+                <select type="text" id="work_relationship"
+                  class="form-control choices @error('work_relationship') is-invalid @enderror" name="work_relationship"
+                  required>
+                  <option value="" disabled selected>Choose</option>
+                  <option value="KONTRAK" {{ old('work_relationship') == 'KONTRAK' ? 'selected' : '' }}>KONTRAK
+                  </option>
+                  <option value="TETAP" {{ old('work_relationship') == 'TETAP' ? 'selected' : '' }}>TETAP</option>
+                  <option value="INTERNSHIP" {{ old('work_relationship') == 'INTERNSHIP' ? 'selected' : '' }}>
+                    INTERNSHIP
+                  </option>
+                </select>
+                @error('work_relationship')
+                  <a style="color: red">
+                    <small>
+                      {{ $message }}
+                    </small>
+                  </a>
+                @enderror
+              </div>
+              <div class="form-group col-md-6">
+                <label for="work_status">Status Pekerjaan <code>*</code></label>
+                <select type="text" id="work_status"
+                  class="form-control choices @error('work_status') is-invalid @enderror" name="work_status" required>
+                  <option value="" disabled selected>Choose</option>
+                  <option value="FULL-TIME" {{ old('work_status') == 'FULL-TIME' ? 'selected' : '' }}>FULL-TIME
+                  </option>
+                  <option value="PART-TIME" {{ old('work_status') == 'PART-TIME' ? 'selected' : '' }}>PART-TIME
+                  </option>
+                  <option value="INTERNSHIP" {{ old('work_status') == 'INTERNSHIP' ? 'selected' : '' }}>INTERNSHIP
+                  </option>
+                  <option value="TERMINATED" {{ old('work_status') == 'TERMINATED' ? 'selected' : '' }}>TERMINATED
+                  </option>
+                </select>
+                @error('work_status')
+                  <a style="color: red">
+                    <small>
+                      {{ $message }}
+                    </small>
+                  </a>
+                @enderror
+              </div>
+              <div class="form-group col-md-6">
+                <label for="date_joining">Date Of Joining <code>*</code></label>
+                <input type="date" id="date_joining"
+                  class="form-control @error('date_joining') is-invalid @enderror" name="date_joining" required>
+                @error('date_joining')
+                  <a style="color: red">
+                    <small>
+                      {{ $message }}
+                    </small>
+                  </a>
+                @enderror
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12">
         <div class="card">
           <div class="card-body">
             <div class="row">
@@ -616,11 +258,25 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="phone_number">No. Telpon <code>*</code></label>
-                  <input type="text" id="phone_number" value="{{ old('phone_number') }}" maxlength="14"
+                  <label for="phone_number1">No. Telpon <code>*</code></label>
+                  <input type="text" id="phone_number1" value="{{ old('phone_number1') }}" maxlength="14"
                     oninput="this.value = this.value.replace(/\D+/g, '')"
-                    class="form-control @error('phone_number') is-invalid @enderror" name="phone_number">
-                  @error('phone_number')
+                    class="form-control @error('phone_number1') is-invalid @enderror" name="phone_number1">
+                  @error('phone_number1')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
+                </div>
+
+                <div class="form-group">
+                  <label for="phone_number2">No. Telpon 2</label>
+                  <input type="text" id="phone_number2" value="{{ old('phone_number2') }}" maxlength="14"
+                    oninput="this.value = this.value.replace(/\D+/g, '')"
+                    class="form-control @error('phone_number2') is-invalid @enderror" name="phone_number2">
+                  @error('phone_number2')
                     <a style="color: red">
                       <small>
                         {{ $message }}
@@ -631,9 +287,8 @@
 
                 <div class="form-group">
                   <label for="paspor_number">No. Paspor</label>
-                  <input type="text" id="paspor_number" maxlength="9" value="{{ old('paspor_number') }}"
-                    maxlength="16" class="form-control @error('paspor_number') is-invalid @enderror"
-                    name="paspor_number">
+                  <input type="text" id="paspor_number" maxlength="12" value="{{ old('paspor_number') }}"
+                    class="form-control @error('paspor_number') is-invalid @enderror" name="paspor_number">
                   @error('paspor_number')
                     <a style="color: red">
                       <small>
@@ -672,34 +327,10 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="last_educational">Pendidikan Terakhir <code>*</code></label>
-                  <select type="text" id="last_educational" name="last_educational"
-                    class="form-control @error('last_educational') is-invalid @enderror">
-                    <option value="" disabled selected>Choose</option>
-                    <option value="S-3" {{ old('last_educational') == 'S-3' ? 'selected' : '' }}> S-3 </option>
-                    <option value="S-2" {{ old('last_educational') == 'S-2' ? 'selected' : '' }}> S-2 </option>
-                    <option value="S-1" {{ old('last_educational') == 'S-1' ? 'selected' : '' }}> S-1 </option>
-                    <option value="D-4" {{ old('last_educational') == 'D-4' ? 'selected' : '' }}> D-4 </option>
-                    <option value="D-3" {{ old('last_educational') == 'D-3' ? 'selected' : '' }}> D-3 </option>
-                    <option value="D-2" {{ old('last_educational') == 'D-2' ? 'selected' : '' }}> D-2 </option>
-                    <option value="D-1" {{ old('last_educational') == 'D-1' ? 'selected' : '' }}> D-1 </option>
-                    <option value="MA" {{ old('last_educational') == 'MA' ? 'selected' : '' }}> MA </option>
-                    <option value="SMK" {{ old('last_educational') == 'SMK' ? 'selected' : '' }}> SMK </option>
-                    <option value="SMA" {{ old('last_educational') == 'SMA' ? 'selected' : '' }}> SMA </option>
-                    <option value="MTS" {{ old('last_educational') == 'MTS' ? 'selected' : '' }}> MTS </option>
-                    <option value="SMP" {{ old('last_educational') == 'SMP' ? 'selected' : '' }}> SMP </option>
-                    <option value="SD" {{ old('last_educational') == 'SD' ? 'selected' : '' }}> SD </option>
-                  </select>
-                  @error('last_educational')
-                    <a style="color: red"><small>{{ $message }}</small></a>
-                  @enderror
-                </div>
-
-                <div class="form-group">
-                  <label for="applied_position">Jabatan Yang Dilamar</label>
-                  <input type="text" value="{{ old('applied_position') }}" id="applied_position"
-                    class="form-control @error('applied_position') is-invalid @enderror" name="applied_position">
-                  @error('applied_position')
+                  <label for="npwp_number">No. NPWP</label>
+                  <input type="text" id="npwp_number" value="{{ old('npwp_number') }}"
+                    class="form-control @error('npwp_number') is-invalid @enderror" name="npwp_number">
+                  @error('npwp_number')
                     <a style="color: red">
                       <small>
                         {{ $message }}
@@ -709,11 +340,12 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="recommended_position">Rekomendasi Penempatan</label>
-                  <input type="text" value="{{ old('recommended_position') }}" id="recommended_position"
-                    class="form-control @error('recommended_position') is-invalid @enderror"
-                    name="recommended_position">
-                  @error('recommended_position')
+                  <label for="bpjs_kesehatan_number">No. BPJS Kesehatan</label>
+                  <input type="text" id="bpjs_kesehatan_number" value="{{ old('bpjs_kesehatan_number') }}"
+                    oninput="this.value = this.value.replace(/\D+/g, '')"
+                    class="form-control @error('bpjs_kesehatan_number') is-invalid @enderror"
+                    name="bpjs_kesehatan_number">
+                  @error('bpjs_kesehatan_number')
                     <a style="color: red">
                       <small>
                         {{ $message }}
@@ -723,15 +355,11 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="glasses">Kacatama</label>
-                  <select type="text" id="glasses" class="form-control @error('glasses') is-invalid @enderror"
-                    name="glasses">
-                    {{-- <option value="" disabled selected>Choose</option> --}}
-                    <option value="0" {{ old('glasses') == '0' ? 'selected' : '' }}>Tidak
-                    </option>
-                    <option value="1" {{ old('glasses') == '1' ? 'selected' : '' }}>Iya</option>
-                  </select>
-                  @error('glasses')
+                  <label for="bpjs_naker_number">No. BPJS Ketenagakerjaan</label>
+                  <input type="text" id="bpjs_naker_number" value="{{ old('bpjs_naker_number') }}"
+                    oninput="this.value = this.value.replace(/\D+/g, '')"
+                    class="form-control @error('bpjs_naker_number') is-invalid @enderror" name="bpjs_naker_number">
+                  @error('bpjs_naker_number')
                     <a style="color: red">
                       <small>
                         {{ $message }}
@@ -819,35 +447,6 @@
 
                 </div>
 
-                <div class="row">
-                  <div class="form-group col-md-6">
-                    <label for="height">Tinggi (cm)</label>
-                    <input type="text" value="{{ old('height') }}" id="height"
-                      class="form-control @error('height') is-invalid @enderror" maxlength="3"
-                      oninput="this.value = this.value.replace(/\D+/g, '')" name="height">
-                    @error('height')
-                      <a style="color: red">
-                        <small>
-                          {{ $message }}
-                        </small>
-                      </a>
-                    @enderror
-                  </div>
-                  <div class="form-group col-md-6">
-                    <label for="weight">Berat (kg)</label>
-                    <input type="text" value="{{ old('weight') }}" id="weight"
-                      class="form-control  @error('weight') is-invalid @enderror" maxlength="3"
-                      oninput="this.value = this.value.replace(/\D+/g, '')" name="weight">
-                    @error('weight')
-                      <a style="color: red">
-                        <small>
-                          {{ $message }}
-                        </small>
-                      </a>
-                    @enderror
-                  </div>
-                </div>
-
                 <div class="form-group">
                   <label for="marital_status">Status Perkawinan <code>*</code></label>
                   <select id="marital_status" class="form-control @error('marital_status') is-invalid @enderror"
@@ -919,6 +518,30 @@
                 </div>
 
                 <div class="form-group">
+                  <label for="last_educational">Pendidikan Terakhir <code>*</code></label>
+                  <select type="text" id="last_educational" name="last_educational"
+                    class="form-control @error('last_educational') is-invalid @enderror">
+                    <option value="" disabled selected>Choose</option>
+                    <option value="S-3" {{ old('last_educational') == 'S-3' ? 'selected' : '' }}> S-3 </option>
+                    <option value="S-2" {{ old('last_educational') == 'S-2' ? 'selected' : '' }}> S-2 </option>
+                    <option value="S-1" {{ old('last_educational') == 'S-1' ? 'selected' : '' }}> S-1 </option>
+                    <option value="D-4" {{ old('last_educational') == 'D-4' ? 'selected' : '' }}> D-4 </option>
+                    <option value="D-3" {{ old('last_educational') == 'D-3' ? 'selected' : '' }}> D-3 </option>
+                    <option value="D-2" {{ old('last_educational') == 'D-2' ? 'selected' : '' }}> D-2 </option>
+                    <option value="D-1" {{ old('last_educational') == 'D-1' ? 'selected' : '' }}> D-1 </option>
+                    <option value="MA" {{ old('last_educational') == 'MA' ? 'selected' : '' }}> MA </option>
+                    <option value="SMK" {{ old('last_educational') == 'SMK' ? 'selected' : '' }}> SMK </option>
+                    <option value="SMA" {{ old('last_educational') == 'SMA' ? 'selected' : '' }}> SMA </option>
+                    <option value="MTS" {{ old('last_educational') == 'MTS' ? 'selected' : '' }}> MTS </option>
+                    <option value="SMP" {{ old('last_educational') == 'SMP' ? 'selected' : '' }}> SMP </option>
+                    <option value="SD" {{ old('last_educational') == 'SD' ? 'selected' : '' }}> SD </option>
+                  </select>
+                  @error('last_educational')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div>
+
+                <div class="form-group">
                   <label for="study">Jurusan <code>*</code></label>
                   <input type="text" value="{{ old('study') }}" id="study"
                     class="form-control @error('study') is-invalid @enderror" name="study">
@@ -961,9 +584,6 @@
                     <option value="Tunadaksa" {{ old('disability') == 'Tunadaksa' ? 'selected' : '' }}>
                       Tunadaksa (Cacat tubuh)
                     </option>
-                    {{-- <option value="Tunalaras" {{ old('disability') == 'Tunalaras' ? 'selected' : '' }}>
-                      Tunalaras (Cacat suara dan nada)
-                    </option> --}}
                   </select>
                   @error('disability')
                     <a style="color: red"><small>{{ $message }}</small></a>
@@ -992,7 +612,8 @@
                     <select type="text" id="candidate_from"
                       class="form-control @error('candidate_from') is-invalid @enderror" name="candidate_from">
                       <option value="" disabled selected>Choose</option>
-                      <option value="MANAJEMEN" {{ old('candidate_from') == 'MANAJEMEN' ? 'selected' : '' }}>Manajemen
+                      <option value="MANAJEMEN" {{ old('candidate_from') == 'MANAJEMEN' ? 'selected' : '' }}>
+                        Manajemen
                       </option>
                       <option value="UMUM" {{ old('candidate_from') == 'UMUM' ? 'selected' : '' }}>Umum</option>
                     </select>
@@ -1024,6 +645,20 @@
                   <textarea type="text" id="ktp_address" class="form-control  @error('ktp_address') is-invalid @enderror"
                     name="ktp_address" rows="5">{{ old('ktp_address') }}</textarea>
                   @error('ktp_address')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
+                </div>
+
+                <div class="form-group col-md-3">
+                  <label for="zipcode_ktp">Kode Pos KTP <code>*</code></label>
+                  <input type="text" oninput="this.value = this.value.replace(/\D+/g, '')" id="zipcode_ktp"
+                    value="{{ old('zipcode_ktp') }}"
+                    class="form-control  @error('zipcode_ktp') is-invalid @enderror" name="zipcode_ktp">
+                  @error('zipcode_ktp')
                     <a style="color: red">
                       <small>
                         {{ $message }}
@@ -1090,6 +725,7 @@
 
               <div class="col-12">
 
+                {{-- sim --}}
                 <div class="row">
                   <div class="form-group col-md-5">
                     <label for="sim_a">SIM A</label>
@@ -1168,16 +804,113 @@
                   </div>
                 </div>
 
-              </div>
+                <hr>
 
-              <div class="col-12 d-flex justify-content-end mt-4">
-                <button type="submit" class="btn btn-primary me-1 mb-1">Submit</button>
-                <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
+                {{-- filefile --}}
+                <div class="row">
+                  <div class="form-group col-md-4">
+                    <label for="file_cv" class="form-label">CV</label>
+                    <input class="form-control" accept=".pdf" type="file" id="file_cv" name="file_cv">
+                    @error('file_cv')
+                      <a style="color: red">
+                        <small>
+                          {{ $message }}
+                        </small>
+                      </a>
+                    @enderror
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="file_ktp" class="form-label">KTP & NPWP</label>
+                    <input class="form-control" accept=".pdf" type="file" id="file_ktp" name="file_ktp">
+                    @error('file_ktp')
+                      <a style="color: red">
+                        <small>
+                          {{ $message }}
+                        </small>
+                      </a>
+                    @enderror
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="file_ijazah" class="form-label">IJAZAH & TRANSKRIP NILAI</label>
+                    <input class="form-control" accept=".pdf" type="file" id="file_ijazah" name="file_ijazah">
+                    @error('file_ijazah')
+                      <a style="color: red">
+                        <small>
+                          {{ $message }}
+                        </small>
+                      </a>
+                    @enderror
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="file_skck" class="form-label">SKCK AKTIF</label>
+                    <input class="form-control" accept=".pdf" type="file" id="file_skck" name="file_skck">
+                    @error('file_skck')
+                      <a style="color: red">
+                        <small>
+                          {{ $message }}
+                        </small>
+                      </a>
+                    @enderror
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="file_kk" class="form-label">KARTU KELUARGA</label>
+                    <input class="form-control" accept=".pdf" type="file" id="file_kk" name="file_kk">
+                    @error('file_kk')
+                      <a style="color: red">
+                        <small>
+                          {{ $message }}
+                        </small>
+                      </a>
+                    @enderror
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="file_surat_sehat" class="form-label">SURAT SEHAT / BEBAS NARKOBA</label>
+                    <input class="form-control" accept=".pdf" type="file" id="file_surat_sehat"
+                      name="file_surat_sehat">
+                    @error('file_surat_sehat')
+                      <a style="color: red">
+                        <small>
+                          {{ $message }}
+                        </small>
+                      </a>
+                    @enderror
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="file_vaksin" class="form-label">SERTIFIKAT VAKSIN</label>
+                    <input class="form-control" accept=".pdf" type="file" id="file_vaksin" name="file_vaksin">
+                    @error('file_vaksin')
+                      <a style="color: red">
+                        <small>
+                          {{ $message }}
+                        </small>
+                      </a>
+                    @enderror
+                  </div>
+                  <div class="form-group col-md-4">
+                    <label for="file_sertifikat" class="form-label">SERTIFIKAT PELATIHAN</label>
+                    <input class="form-control" accept=".pdf" type="file" id="file_sertifikat"
+                      name="file_sertifikat">
+                    @error('file_sertifikat')
+                      <a style="color: red">
+                        <small>
+                          {{ $message }}
+                        </small>
+                      </a>
+                    @enderror
+                  </div>
+                </div>
+
               </div>
+            </div>
+
+            <div class="col-12 d-flex justify-content-end mt-4">
+              <button type="submit" class="btn btn-primary me-1 mb-1">Submit</button>
+              <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
     </div>
 

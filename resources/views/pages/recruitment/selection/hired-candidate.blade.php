@@ -18,21 +18,23 @@
       </div>
     </div>
     <div class="card-body">
-      <table class="table table-striped" id="table1" style="font-size: 85%;">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th></th>
-            <th>Kandidat</th>
-            <th>Jabatan</th>
-            <th>Keterangan</th>
-            <th>File</th>
-            <th>Status</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach ($candidates as $candidate)
+      <div class="table-responsive">
+        <table class="table table-striped" id="table1" style="font-size: 85%;">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th></th>
+              <th>Kandidat</th>
+              <th>Seleksi</th>
+              <th>Jabatan</th>
+              <th>Keterangan</th>
+              <th>File</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {{-- @foreach ($candidates as $candidate)
             <tr>
               <td>{{ $loop->iteration }}</td>
 
@@ -72,10 +74,6 @@
               <td>
                 Status
               </td>
-              {{-- <td>{{ Carbon\Carbon::parse($candidate->created_at)->translatedFormat('d F Y') }}</td> --}}
-              <!-- <td>
-                  <span class="badge bg-success">Hire</span>
-                </td> -->
               <td>
                 <div class="btn-group mb-1">
                   <div class="dropdown">
@@ -97,9 +95,112 @@
 
               </td>
             </tr>
-          @endforeach
-        </tbody>
-      </table>
+          @endforeach --}}
+
+            @foreach ($selectedCandidates as $candidate)
+              <tr>
+                <td>{{ $loop->iteration }}</td>
+                <td class="text-center">
+                  @if ($candidate->candidate->photo)
+                    <div class="fixed-frame">
+                      <img src="{{ asset('storage/' . $candidate->candidate->photo) }}" data-fancybox alt="Icon User"
+                        class="framed-image" style="cursor: pointer">
+                    </div>
+                  @else
+                    No Image
+                  @endif
+                </td>
+                <td>{{ $candidate->candidate->name }}</td>
+                <td>
+                  {{ $candidate->selection->name ?? '-' }}
+                </td>
+                <td>
+                  <span class="badge bg-primary">{{ $candidate->position->name ?? '-' }}</span>
+                </td>
+                <td>
+                  {{ $candidate->description ?? '-' }}
+                </td>
+                <td>
+
+                  @if ($candidate->file_selected_candidate)
+                    <a href="{{ asset('storage/' . $candidate->file_selected_candidate) }}"
+                      class="btn btn-sm btn-primary" target="_blank">
+                      Lihat
+                    </a>
+                  @else
+                    -
+                  @endif
+
+                </td>
+                <td>
+                  @if ($candidate->is_approve === 1)
+                    <span class="badge bg-success">Disetujui</span>
+                  @elseif($candidate->is_approve === 0)
+                    <span class="badge bg-danger">Ditolak</span>
+                  @else
+                    -
+                  @endif
+                </td>
+                <td>
+                  @if ($candidate->is_hire === null || auth()->user()->hasRole('super-admin'))
+                    <div class="btn-group mb-1">
+                      @if ($candidate->is_approve === 1)
+                        @role('ka-dep|super-admin')
+                          <a class="btn btn-sm btn-info mx-1" title="Tambahkan ke karyawan"
+                            href="{{ route('employee.newEmployee', encrypt($candidate->id)) }}">
+                            <i class="bi bi-person-plus-fill"></i>
+                          </a>
+                        @endrole
+                      @endif
+
+                      @if ($candidate->is_approve === null || auth()->user()->hasRole('super-admin'))
+                        @role('manager|super-admin')
+                          <div class="dropdown">
+                            <button class="btn btn-sm btn-primary dropdown-toggle me-1" type="button"
+                              id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"
+                              aria-expanded="false">
+                              <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <button class="dropdown-item"
+                                onclick="confirmAction('approve', 'Apakah Anda yakin ingin menyetujui?', {{ $candidate->id }})">
+                                Approve
+                              </button>
+
+                              <button class="dropdown-item"
+                                onclick="confirmAction('reject', 'Apakah Anda yakin ingin menolak?', {{ $candidate->id }})">
+                                Reject
+                              </button>
+
+                              <!-- Forms for Approve and Reject actions -->
+                              <form id="approveForm_{{ $candidate->id }}"
+                                action="{{ route('selectedCandidate.updateApprovalStatus', $candidate->id) }}"
+                                method="POST" style="display: none;">
+                                @csrf
+                                @method('patch')
+                                <input type="hidden" name="is_approve" value="1"> <!-- hire value -->
+                              </form>
+
+                              <form id="rejectForm_{{ $candidate->id }}"
+                                action="{{ route('selectedCandidate.updateApprovalStatus', $candidate->id) }}"
+                                method="POST" style="display: none;">
+                                @csrf
+                                @method('patch')
+                                <input type="hidden" name="is_approve" value="0"> <!-- Reject value -->
+                              </form>
+                            </div>
+                          </div>
+                        @endrole
+                      @endif
+                    </div>
+                  @endif
+
+                </td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </section>
@@ -163,21 +264,22 @@
 
 
 <script>
-  function confirmAction(actionType, message) {
+  function confirmAction(actionType, message, getId) {
     Swal.fire({
       title: message,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, proceed!',
-      cancelButtonText: 'Cancel'
+      confirmButtonText: 'Ya, lanjutkan!',
+      cancelButtonText: 'Batal'
     }).then((result) => {
       if (result.isConfirmed) {
-
+        // Submit the corresponding form based on action type
+        const formId = actionType === 'approve' ? 'approveForm_' : 'rejectForm_';
+        document.getElementById(formId + getId).submit();
       }
     });
   }
 </script>
-
 
 {{-- @include('pages.recruitment.candidate.modal-create') --}}
 

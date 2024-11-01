@@ -28,17 +28,24 @@
                     @enderror
                   </div>
                   <div class="mb-2">
-                    <label class="form-label" for="pic_selection">PIC Divisi Pemohon <code>*</code></label>
-                    <input id="pic_selection" name="pic_selection" value="{{ old('pic_selection') }}"
-                      class="form-control @error('pic_selection') is-invalid @enderror" required>
-                    @error('pic_selection')
+                    <label class="form-label" for="division_id">Divisi Pemohon <code>*</code></label>
+                    <select id="division_id" name="division_id" value="{{ old('division_id') }}"
+                      class="form-control choices @error('division_id') is-invalid @enderror" required>
+                      <option value="" selected disabled>Choose</option>
+                      @foreach ($divisions as $division)
+                        <option value="{{ $division->id }}" {{ old('division_id') == $division->id ? 'selected' : '' }}>
+                          {{ $division->name }}
+                        </option>
+                      @endforeach
+                    </select>
+                    @error('division_id')
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>
                   <div class="mb-2">
                     <label class="form-label" for="interviewer">Pewawancara <code>*</code></label>
-                    <input id="interviewer" name="interviewer" value="{{ old('interviewer') }}"
-                      class="form-control @error('interviewer') is-invalid @enderror" required>
+                    <textarea id="interviewer" name="interviewer" value="{{ old('interviewer') }}"
+                      class="form-control @error('interviewer') is-invalid @enderror" rows="3" required> </textarea>
                     @error('interviewer')
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
@@ -61,10 +68,10 @@
                     @enderror
                   </div>
                   <div class="my-2">
-                    <label class="form-label" for="start_selection">Tgl Mulai Seleksi <code>*</code></label>
+                    <label class="form-label" for="start_selection">Tgl Mulai Seleksi</label>
                     <input type="date" id="start_selection" name="start_selection"
                       value="{{ old('start_selection') }}"
-                      class="form-control @error('start_selection') is-invalid @enderror" required>
+                      class="form-control @error('start_selection') is-invalid @enderror">
                     @error('start_selection')
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
@@ -84,6 +91,14 @@
                     <textarea id="description" name="description" rows="5"
                       class="form-control @error('description') is-invalid @enderror">{{ old('description') }} </textarea>
                     @error('description')
+                      <a style="color: red"><small>{{ $message }}</small></a>
+                    @enderror
+                  </div>
+                  <div class="my-2">
+                    <label class="form-label" for="fptk_number">Nomor FPTK <code>*</code></label>
+                    <input id="fptk_number" name="fptk_number" value="{{ old('fptk_number') }}"
+                      class="form-control @error('fptk_number') is-invalid @enderror" required>
+                    @error('fptk_number')
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>

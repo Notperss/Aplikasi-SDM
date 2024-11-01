@@ -4,6 +4,7 @@ namespace App\Models\Recruitment;
 
 use App\Models\ManagementAccess\Company;
 use App\Models\Position\Position;
+use App\Models\WorkUnit\Division;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -14,9 +15,10 @@ class Selection extends Model
 
     protected $fillable = [
         'company_id',
-        'position_id',
+        // 'position_id',
+        'division_id',
         'name',
-        'pic_selection',
+        'fptk_number',
         'date_selection',
         'start_selection',
         'end_selection',
@@ -35,9 +37,13 @@ class Selection extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function position()
+    // public function position()
+    // {
+    //     return $this->belongsTo(Position::class);
+    // }
+    public function division()
     {
-        return $this->belongsTo(Position::class);
+        return $this->belongsTo(Division::class);
     }
 
     public function selectedCandidates()

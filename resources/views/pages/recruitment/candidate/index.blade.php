@@ -28,21 +28,22 @@
       </div>
     </div>
     <div class="card-body">
-      <table class="table table-striped" id="table-candidate" style="font-size: 85%">
-        <thead>
-          <tr>
-            <th></th>
-            <th></th>
-            <th>Pelamar</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Date Applied</th>
-            {{-- <th>Status</th> --}}
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {{-- @foreach ($candidates as $candidate)
+      <div class="table-responsive">
+        <table class="table table-striped" id="table-candidate" style="font-size: 85%">
+          <thead>
+            <tr>
+              <th></th>
+              <th></th>
+              <th>Pelamar</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Date Applied</th>
+              {{-- <th>Status</th> --}}
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {{-- @foreach ($candidates as $candidate)
             <tr>
               <td class="text-center">
                 @if ($candidate->photo)
@@ -89,8 +90,9 @@
               </td>
             </tr>
           @endforeach --}}
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </section>

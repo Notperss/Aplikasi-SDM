@@ -43,8 +43,8 @@ class StoreCandidateRequest extends FormRequest
             'photo' => 'image|mimes:jpg,jpeg,png|max:512',
             'religion' => ['nullable', 'string'],
             'nationality' => ['nullable', 'string'],
-            // 'height' => ['required', 'integer'],
-            // 'weight' => ['required', 'integer'],
+            'height' => ['nullable', 'integer'],
+            'weight' => ['nullable', 'integer'],
             'pob' => ['required', 'string'],
             'dob' => ['required', 'date', 'before:today'],
             'gender' => ['required', 'string', 'in:LAKI-LAKI,PEREMPUAN'],
@@ -54,7 +54,7 @@ class StoreCandidateRequest extends FormRequest
 
             'file_kk' => 'mimes:pdf|max:512',
             'file_ktp' => 'mimes:pdf|max:512',
-            'file_cv' => 'mimes:pdf|max:512',
+            'file_cv' => 'required|mimes:pdf|max:512',
             'file_skck' => 'mimes:pdf|max:512',
             'file_ijazah' => 'mimes:pdf|max:512',
             'file_sertifikat' => 'mimes:pdf|max:512',
@@ -150,6 +150,7 @@ class StoreCandidateRequest extends FormRequest
 
             'file_cv.mimes' => 'Ekstensi file CV harus berupa pdf.',
             'file_cv.max' => 'Ukuran file CV maksimal adalah 500KB.',
+            'file_cv.required' => 'File CV wajib diunggah.',
 
             'paspor_number.unique' => 'Nomor paspor sudah terdaftar.',
             'paspor_number.max_digits' => 'Nomor paspor tidak boleh lebih dari 10 digit.',
