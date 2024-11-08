@@ -5,8 +5,17 @@ namespace App\Models\Employee;
 use App\Models\Position\Position;
 use App\Models\Recruitment\Candidate;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Employee\EmployeeCategory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Employee\PersonalData\EmployeeSkill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Employee\PersonalData\EmployeeJobHistory;
+use App\Models\Employee\PersonalData\EmployeeFamilyDetail;
+use App\Models\Employee\PersonalData\EmployeeSocialPlatform;
+use App\Models\Employee\PersonalData\EmployeeTrainingAttended;
+use App\Models\Employee\PersonalData\EmployeeEducationalHistory;
+use App\Models\Employee\PersonalData\EmployeeLanguageProficiency;
+use App\Models\Employee\PersonalData\EmployeePhoto;
 
 class Employee extends Model
 {
@@ -37,6 +46,9 @@ class Employee extends Model
         'bpjs_naker_number',////v
         'religion',//
         'nationality',//
+
+        'last_educational',
+        'study',
 
         'employee_status',////v
         'work_status',////v
@@ -101,5 +113,50 @@ class Employee extends Model
     public function candidate()
     {
         return $this->belongsTo(Candidate::class);
+    }
+    public function employeeCategory()
+    {
+        return $this->belongsTo(EmployeeCategory::class);
+    }
+    public function familyDetails()
+    {
+        return $this->hasMany(EmployeeFamilyDetail::class)->orderBy('dob_family', 'asc');
+    }
+    public function jobHistories()
+    {
+        return $this->hasMany(EmployeeJobHistory::class)->orderBy('year_from', 'desc');
+    }
+    public function educationalHistories()
+    {
+        return $this->hasMany(EmployeeEducationalHistory::class)->orderBy('year_from', 'desc');
+    }
+    public function languageProficiencies()
+    {
+        return $this->hasMany(EmployeeLanguageProficiency::class);
+    }
+    public function EmployeeDocuments()
+    {
+        return $this->hasMany(EmployeeDocument::class);
+    }
+    public function TrainingAttendeds()
+    {
+        return $this->hasMany(EmployeeTrainingAttended::class)->orderBy('year', 'desc');
+    }
+    public function Skills()
+    {
+        return $this->hasMany(EmployeeSkill::class);
+    }
+    public function SocialsPlatform()
+    {
+        return $this->hasMany(EmployeeSocialPlatform::class);
+    }
+
+    public function employeePhotos()
+    {
+        return $this->hasMany(EmployeePhoto::class);
+    }
+    public function contracts()
+    {
+        return $this->hasMany(Contract::class);
     }
 }

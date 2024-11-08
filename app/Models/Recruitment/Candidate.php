@@ -159,38 +159,6 @@ class Candidate extends Model
 
     protected $casts = ['is_hire' => 'boolean', 'is_selection' => 'boolean'];
 
-    public function familyDetails()
-    {
-        return $this->hasMany(CandidateFamilyDetail::class)->orderBy('dob_family', 'asc');
-    }
-    public function employmentHistories()
-    {
-        return $this->hasMany(CandidateEmploymentHistory::class)->orderBy('year_from', 'desc');
-    }
-    public function educationalHistories()
-    {
-        return $this->hasMany(CandidateEducationalHistory::class)->orderBy('year_from', 'desc');
-    }
-    public function languageProficiencies()
-    {
-        return $this->hasMany(CandidateLanguageProficiency::class);
-    }
-    public function CandidateDocuments()
-    {
-        return $this->hasMany(CandidateDocument::class);
-    }
-    public function TrainingAttendeds()
-    {
-        return $this->hasMany(CandidateTrainingAttended::class)->orderBy('year', 'desc');
-    }
-    public function Skills()
-    {
-        return $this->hasMany(CandidateSkill::class);
-    }
-    public function SocialsPlatform()
-    {
-        return $this->hasMany(CandidateSocialPlatform::class);
-    }
 
     public function selectedCandidates()
     {
@@ -205,8 +173,4 @@ class Candidate extends Model
         return $this->hasOne(Employee::class);
     }
 
-    public function candidatePhotos()
-    {
-        return $this->hasMany(CandidatePhoto::class);
-    }
 }

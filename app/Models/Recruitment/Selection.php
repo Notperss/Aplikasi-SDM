@@ -55,4 +55,8 @@ class Selection extends Model
     {
         return $this->belongsToMany(Position::class, 'position_selection');
     }
+    public function historySelections()
+    {
+        return $this->hasMany(HistorySelection::class);
+    }
 }

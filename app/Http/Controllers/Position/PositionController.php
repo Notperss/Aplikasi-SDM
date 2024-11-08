@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers\Position;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Position\Level;
+use App\Models\WorkUnit\Section;
 use App\Models\Position\Position;
-use App\Http\Controllers\Controller;
+use App\Models\WorkUnit\Division;
 use App\Models\Position\Allowance;
 use App\Models\WorkUnit\Department;
+use App\Http\Controllers\Controller;
 use App\Models\WorkUnit\Directorate;
-use App\Models\WorkUnit\Division;
-use App\Models\WorkUnit\Section;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
 
 class PositionController extends Controller
 {
@@ -28,8 +30,8 @@ class PositionController extends Controller
             ->orderBy('divisions.name', 'asc') // Then order by the divisions.name
             ->orderBy('directorates.name', 'asc') // Order by the directorates.name
             ->with(['level', 'division', 'division.directorate']) // Eager load the relationships
-            ->select('positions.*') // Select positions columns only
-            ->get();
+            ->select('positions.*'); // Select positions columns only;
+
 
         $levels = Level::where('company_id', Auth::user()->company_id)->latest()->get();
         $directorates = Directorate::where('company_id', Auth::user()->company_id)->latest()->get();
@@ -38,6 +40,100 @@ class PositionController extends Controller
         $sections = Section::where('company_id', Auth::user()->company_id)->latest()->get();
 
         $allowances = Allowance::where('company_id', Auth::user()->company_id)->latest()->get();
+
+
+        if (request()->ajax()) {
+            return DataTables::of($positions)
+                ->addIndexColumn()
+                ->addColumn('action', function ($position) {
+                    return '
+        <div class="d-flex justify-content-end mt-2">
+            <a href="' . route('addAllowances', $position) . '"
+                class="btn btn-sm btn-icon btn-light-primary" title="tunjangan">
+                <i class="bi bi-wallet-fill"></i>
+            </a>
+
+            <a href="' . route('position.edit', $position) . '"
+                class="btn btn-sm btn-icon btn-secondary text-white mx-2" title="edit">
+                <i class="bi bi-pencil-square"></i>
+            </a>
+
+            <button class="btn btn-sm btn-light-danger mr-2" onclick="showSweetAlert(\'' . $position->id . '\')"
+                title="hapus">
+                <i class="bi bi-trash"></i>
+            </button>
+
+            <form id="deleteForm_' . $position->id . '" action="' . route('position.destroy', $position->id) . '"
+                method="POST" style="display: none;">
+                ' . method_field('DELETE') . csrf_field() . '
+            </form>
+                </div>
+            ';
+                })
+
+                ->editColumn('department', function ($position) {
+                    return $position->department->name;
+                })
+                ->editColumn('section', function ($position) {
+                    return $position->section->name;
+                })
+
+                ->rawColumns(['action',])
+                ->toJson();
+        }
+
+
+        // $isSuperAdmin = Auth::user()->hasRole('super-admin');
+
+        // $positions = Position::when(! $isSuperAdmin, function ($query) {
+        //     return $query->where('positions.company_id', Auth::user()->company_id);
+        // })
+        //     ->join('levels', 'positions.level_id', '=', 'levels.id') // Join the levels table
+        //     ->join('divisions', 'positions.division_id', '=', 'divisions.id') // Join the divisions table
+        //     ->join('directorates', 'divisions.directorate_id', '=', 'directorates.id') // Join the directorates table via divisions
+        //     ->orderBy('levels.name', 'asc') // Order by the levels.name
+        //     ->orderBy('divisions.name', 'asc') // Then order by the divisions.name
+        //     ->orderBy('directorates.name', 'asc') // Order by the directorates.name
+        //     ->with(['level', 'division', 'division.directorate']) // Eager load the relationships
+        //     ->select('positions.*') // Select positions columns only
+        //     ->get();
+
+        // $levels = Level::when(! $isSuperAdmin, function ($query) {
+        //     return $query->where('company_id', Auth::user()->company_id);
+        // })
+        //     ->latest()
+        //     ->get();
+
+        // $directorates = Directorate::when(! $isSuperAdmin, function ($query) {
+        //     return $query->where('company_id', Auth::user()->company_id);
+        // })
+        //     ->latest()
+        //     ->get();
+
+        // $divisions = Division::when(! $isSuperAdmin, function ($query) {
+        //     return $query->where('company_id', Auth::user()->company_id);
+        // })
+        //     ->latest()
+        //     ->get();
+
+        // $departments = Department::when(! $isSuperAdmin, function ($query) {
+        //     return $query->where('company_id', Auth::user()->company_id);
+        // })
+        //     ->latest()
+        //     ->get();
+
+        // $sections = Section::when(! $isSuperAdmin, function ($query) {
+        //     return $query->where('company_id', Auth::user()->company_id);
+        // })
+        //     ->latest()
+        //     ->get();
+
+        // $allowances = Allowance::when(! $isSuperAdmin, function ($query) {
+        //     return $query->where('company_id', Auth::user()->company_id);
+        // })
+        //     ->latest()
+        //     ->get();
+
 
         return view('pages.position.position.index',
             compact(
@@ -96,7 +192,20 @@ class PositionController extends Controller
      */
     public function edit(Position $position)
     {
-        abort(404);
+
+        $levels = Level::where('company_id', Auth::user()->company_id)->latest()->get();
+        $directorates = Directorate::where('company_id', Auth::user()->company_id)->latest()->get();
+        $divisions = Division::where('company_id', Auth::user()->company_id)->latest()->get();
+        $departments = Department::where('company_id', Auth::user()->company_id)->latest()->get();
+        $sections = Section::where('company_id', Auth::user()->company_id)->latest()->get();
+        return view('pages.position.position.edit', compact(
+            'position',
+            'levels',
+            'directorates',
+            'divisions',
+            'departments',
+            'sections',
+        ));
     }
 
     /**
@@ -124,7 +233,7 @@ class PositionController extends Controller
 
         // Update the position with the validated data
         $position->update($request->all());
-        return redirect()->back()->with('success', 'Data has been updated successfully!');
+        return redirect()->route('position.index')->with('success', 'Data has been updated successfully!');
     }
 
     /**
@@ -142,6 +251,11 @@ class PositionController extends Controller
         $sections = Section::where('department_id', $departmentId)->get();
         return response()->json($sections);
     }
+    public function addAllowances(Position $position)
+    {
+        $allowances = Allowance::where('company_id', Auth::user()->company_id)->latest()->get();
+        return view('pages.position.position.add-allowances', compact('position', 'allowances'));
+    }
 
     public function positionAllowance(Request $request, Position $position)
     {
@@ -154,6 +268,6 @@ class PositionController extends Controller
         // Sync the position's allowances (if allowance_id is null, sync with an empty array)
         $position->allowances()->sync($validated['allowance_id'] ?? []);
 
-        return redirect()->route('position.index')->with('success', 'Position allowances updated successfully.');
+        return redirect()->back()->with('success', 'Position allowances updated successfully.');
     }
 }

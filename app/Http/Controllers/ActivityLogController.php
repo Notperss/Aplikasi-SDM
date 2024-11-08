@@ -14,7 +14,7 @@ class ActivityLogController extends Controller
      */
     public function index()
     {
-        $activities = Activity::latest()->get();
+        $activities = Activity::latest();
 
         if (request()->ajax()) {
             return DataTables::of($activities)

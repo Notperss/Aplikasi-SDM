@@ -42,14 +42,14 @@
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>
-                  <div class="mb-2">
+                  {{-- <div class="mb-2">
                     <label class="form-label" for="interviewer">Pewawancara <code>*</code></label>
                     <textarea id="interviewer" name="interviewer" value="{{ old('interviewer') }}"
                       class="form-control @error('interviewer') is-invalid @enderror" rows="3" required> </textarea>
                     @error('interviewer')
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
-                  </div>
+                  </div> --}}
                 </div>
                 <div class="col-md-6">
                   <div class="my-2">
@@ -76,16 +76,24 @@
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>
-                  <div class="mb-2">
+                  {{-- <div class="mb-2">
                     <label class="form-label" for="end_selection">Tgl Selesai Seleksi</label>
                     <input type="date" id="end_selection" name="end_selection" value="{{ old('end_selection') }}"
                       class="form-control @error('end_selection') is-invalid @enderror">
                     @error('end_selection')
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
-                  </div>
+                  </div> --}}
                 </div>
                 <div class="col-md-12">
+                  <div class="mb-2">
+                    <label class="form-label" for="interviewer">Pewawancara <code>*</code></label>
+                    <textarea id="interviewer" name="interviewer" value="{{ old('interviewer') }}"
+                      class="form-control @error('interviewer') is-invalid @enderror" rows="3" required> </textarea>
+                    @error('interviewer')
+                      <a style="color: red"><small>{{ $message }}</small></a>
+                    @enderror
+                  </div>
                   <div class="mb-2">
                     <label class="form-label" for="description">Keterangan</label>
                     <textarea id="description" name="description" rows="5"

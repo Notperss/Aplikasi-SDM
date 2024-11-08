@@ -28,6 +28,7 @@
               <th>#</th>
               <th>Kode</th>
               <th>Direktorat</th>
+              <th>type</th>
               <th></th>
             </tr>
           </thead>
@@ -37,6 +38,13 @@
                 <td class="text-center">{{ $loop->iteration }}</td>
                 <td>{{ $directorate->code }}</td>
                 <td>{{ $directorate->name }}</td>
+                <td>
+                  @if ($directorate->is_non)
+                    <span class="badge bg-light-primary">Direktorat</span>
+                  @else
+                    <span class="badge bg-light-warning">Non-Direktorat</span>
+                  @endif
+                </td>
                 <td>
 
                   <div class="d-flex justify-content-end mt-2">

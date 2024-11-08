@@ -23,25 +23,27 @@
       </div>
     </div>
     <div class="card-body">
-      <div class="table-responsive">
-        <table class="table table-striped" id="table-employee" style="font-size: 85%">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th></th>
-              <th>Karyawan</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
 
-          </tbody>
-        </table>
-      </div>
+      <table class="table table-striped" id="table-employee" style="font-size: 85%">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th></th>
+            <th>NIK</th>
+            <th>Nama</th>
+            <th>Kategori Karyawan</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+      </table>
     </div>
+
   </div>
 </section>
 
@@ -72,8 +74,18 @@
             name: 'photo',
           },
           {
+            data: 'nik',
+            name: 'nik',
+          },
+          {
             data: 'name',
             name: 'name',
+          },
+          {
+            data: 'employeeCategory',
+            name: 'employeeCategory',
+            orderable: false,
+            searchable: false,
           },
           {
             data: 'email',

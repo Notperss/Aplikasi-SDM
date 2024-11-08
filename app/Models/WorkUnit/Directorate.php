@@ -11,7 +11,9 @@ class Directorate extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['company_id', 'code', 'name',];
+    protected $fillable = ['company_id', 'code', 'name', 'is_non'];
+
+    protected $casts = ['is_non' => 'boolean'];
 
     public function company()
     {

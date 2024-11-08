@@ -148,14 +148,13 @@
               <div class="form-group col-md-6">
                 <label for="employee_status">Status Karyawan <code>*</code></label>
                 <select type="text" id="employee_status"
-                  class="form-control choices @error('employee_status') is-invalid @enderror" name="employee_status"
-                  required>
+                  class="form-control choices @error('employee_status') is-invalid @enderror" name="employee_status">
                   <option value="" disabled selected>Choose</option>
                   <option value="AKTIF" {{ old('employee_status') == 'AKTIF' ? 'selected' : '' }}>AKTIF</option>
                   <option value="PENSIUN" {{ old('employee_status') == 'PENSIUN' ? 'selected' : '' }}>PENSIUN</option>
                   <option value="RESIGN" {{ old('employee_status') == 'RESIGN' ? 'selected' : '' }}>RESIGN</option>
-                  <option value="TIDAK ADA AKSES" {{ old('employee_status') == 'TIDAK ADA AKSES' ? 'selected' : '' }}>
-                    TIDAK ADA AKSES</option>
+                  <option value="NON AKTIF" {{ old('employee_status') == 'NON AKTIF' ? 'selected' : '' }}>
+                    NON AKTIF</option>
                 </select>
                 @error('employee_status')
                   <a style="color: red">
@@ -168,8 +167,8 @@
               <div class="form-group col-md-6">
                 <label for="work_relationship">Hubungan Kerja <code>*</code></label>
                 <select type="text" id="work_relationship"
-                  class="form-control choices @error('work_relationship') is-invalid @enderror" name="work_relationship"
-                  required>
+                  class="form-control choices @error('work_relationship') is-invalid @enderror"
+                  name="work_relationship">
                   <option value="" disabled selected>Choose</option>
                   <option value="KONTRAK" {{ old('work_relationship') == 'KONTRAK' ? 'selected' : '' }}>KONTRAK
                   </option>
@@ -187,17 +186,15 @@
                 @enderror
               </div>
               <div class="form-group col-md-6">
-                <label for="work_status">Status Pekerjaan <code>*</code></label>
+                <label for="work_status">Tipe Waktu Pekerjaan <code>*</code></label>
                 <select type="text" id="work_status"
-                  class="form-control choices @error('work_status') is-invalid @enderror" name="work_status" required>
+                  class="form-control choices @error('work_status') is-invalid @enderror" name="work_status">
                   <option value="" disabled selected>Choose</option>
                   <option value="FULL-TIME" {{ old('work_status') == 'FULL-TIME' ? 'selected' : '' }}>FULL-TIME
                   </option>
                   <option value="PART-TIME" {{ old('work_status') == 'PART-TIME' ? 'selected' : '' }}>PART-TIME
                   </option>
                   <option value="INTERNSHIP" {{ old('work_status') == 'INTERNSHIP' ? 'selected' : '' }}>INTERNSHIP
-                  </option>
-                  <option value="TERMINATED" {{ old('work_status') == 'TERMINATED' ? 'selected' : '' }}>TERMINATED
                   </option>
                 </select>
                 @error('work_status')
@@ -210,8 +207,8 @@
               </div>
               <div class="form-group col-md-6">
                 <label for="date_joining">Date Of Joining <code>*</code></label>
-                <input type="date" id="date_joining"
-                  class="form-control @error('date_joining') is-invalid @enderror" name="date_joining" required>
+                <input type="date" id="date_joining" value="{{ now()->format('Y-m-d') }}"
+                  class="form-control @error('date_joining') is-invalid @enderror" name="date_joining">
                 @error('date_joining')
                   <a style="color: red">
                     <small>
@@ -328,7 +325,7 @@
 
                 <div class="form-group">
                   <label for="npwp_number">No. NPWP</label>
-                  <input type="text" id="npwp_number" value="{{ old('npwp_number') }}"
+                  <input type="text" id="npwp_number" value="{{ old('npwp_number') }}" maxlength="20"
                     class="form-control @error('npwp_number') is-invalid @enderror" name="npwp_number">
                   @error('npwp_number')
                     <a style="color: red">
@@ -342,7 +339,7 @@
                 <div class="form-group">
                   <label for="bpjs_kesehatan_number">No. BPJS Kesehatan</label>
                   <input type="text" id="bpjs_kesehatan_number" value="{{ old('bpjs_kesehatan_number') }}"
-                    oninput="this.value = this.value.replace(/\D+/g, '')"
+                    oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="20"
                     class="form-control @error('bpjs_kesehatan_number') is-invalid @enderror"
                     name="bpjs_kesehatan_number">
                   @error('bpjs_kesehatan_number')
@@ -357,9 +354,27 @@
                 <div class="form-group">
                   <label for="bpjs_naker_number">No. BPJS Ketenagakerjaan</label>
                   <input type="text" id="bpjs_naker_number" value="{{ old('bpjs_naker_number') }}"
-                    oninput="this.value = this.value.replace(/\D+/g, '')"
+                    oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="20"
                     class="form-control @error('bpjs_naker_number') is-invalid @enderror" name="bpjs_naker_number">
                   @error('bpjs_naker_number')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
+                </div>
+
+                <div class="form-group">
+                  <label for="glasses">Kacatama</label>
+                  <select type="text" id="glasses" class="form-control @error('glasses') is-invalid @enderror"
+                    name="glasses">
+                    {{-- <option value="" disabled selected>Choose</option> --}}
+                    <option value="0" {{ old('glasses') == '0' ? 'selected' : '' }}>Tidak
+                    </option>
+                    <option value="1" {{ old('glasses') == '1' ? 'selected' : '' }}>Iya</option>
+                  </select>
+                  @error('glasses')
                     <a style="color: red">
                       <small>
                         {{ $message }}
@@ -445,6 +460,35 @@
                     @enderror
                   </div>
 
+                </div>
+
+                <div class="row">
+                  <div class="form-group col-md-6">
+                    <label for="height">Tinggi (cm)</label>
+                    <input type="text" value="{{ old('height') }}" id="height"
+                      class="form-control @error('height') is-invalid @enderror" maxlength="3"
+                      oninput="this.value = this.value.replace(/\D+/g, '')" name="height">
+                    @error('height')
+                      <a style="color: red">
+                        <small>
+                          {{ $message }}
+                        </small>
+                      </a>
+                    @enderror
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label for="weight">Berat (kg)</label>
+                    <input type="text" value="{{ old('weight') }}" id="weight"
+                      class="form-control  @error('weight') is-invalid @enderror" maxlength="3"
+                      oninput="this.value = this.value.replace(/\D+/g, '')" name="weight">
+                    @error('weight')
+                      <a style="color: red">
+                        <small>
+                          {{ $message }}
+                        </small>
+                      </a>
+                    @enderror
+                  </div>
                 </div>
 
                 <div class="form-group">

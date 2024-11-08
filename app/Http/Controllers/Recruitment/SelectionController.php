@@ -15,6 +15,7 @@ use Yajra\DataTables\Facades\DataTables;
 use App\Models\Recruitment\SelectedCandidate;
 use App\Http\Requests\Recruitment\StoreSelectedCandidateRequest;
 use App\Http\Requests\Recruitment\UpdateSelectedCandidateRequest;
+use App\Models\Recruitment\HistorySelection;
 
 class SelectionController extends Controller
 {
@@ -23,9 +24,17 @@ class SelectionController extends Controller
      */
     public function index(Request $request)
     {
-        $selections = Selection::latest()->get();
-        $divisions = Division::orderBy('name', 'asc')->get();
-        // $latestSelection = Selection::latest()->first();
+
+        $companyId = Auth::user()->company_id;
+        $isSuperAdmin = Auth::user()->hasRole('super-admin');
+
+        $selections = Selection::latest()->when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('company_id', $companyId);
+        })->get();
+
+        $divisions = Division::orderBy('name', 'asc')->when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('company_id', $companyId);
+        })->get();
 
         $positions = Position::whereDoesntHave('selectedPositions', function ($query) {
             $query->where('is_finished', false);
@@ -35,11 +44,16 @@ class SelectionController extends Controller
             $query->where('is_approve', null);
         })->whereDoesntHave('employee', function ($query) {
             $query->where('date_leaving', null);
-        })
+        })->latest()
+            ->when(! $isSuperAdmin, function ($query) use ($companyId) {
+                $query->where('company_id', $companyId);
+            })->get();
 
-            ->latest()->get();
+        $candidates = Candidate::where('is_hire', false)->where('is_selection', false)
+            ->when(! $isSuperAdmin, function ($query) use ($companyId) {
+                $query->where('company_id', $companyId);
+            })->orderBy('name', 'asc');
 
-        $candidates = Candidate::where('is_hire', false)->where('is_selection', false)->orderBy('name', 'asc');
         $softDeletedSelections = Selection::onlyTrashed()->with('selectedCandidates')->get();
 
         if (request()->ajax()) {
@@ -94,14 +108,11 @@ class SelectionController extends Controller
                         ';
                 })
                 ->editColumn('photo', function ($item) {
-                    if ($item->photo) {
-                        return ' <div class="fixed-frame">
-                    <img src="' . asset('storage/' . $item->photo) . '" data-fancybox alt="Icon User"
-                      class="framed-image" style="cursor: pointer">
-                  </div>';
-                    } else {
-                        return 'No Image';
-                    }
+                    return $item->photo
+                        ? '<div class="fixed-frame">
+                                <img src="' . asset('storage/' . $item->photo) . '" data-fancybox alt="Icon User" class="framed-image" style="cursor: pointer">
+                            </div>'
+                        : 'No Image';
                 })->editColumn('age', function ($item) {
                     if ($item->dob) {
                         $dob = Carbon::parse($item->dob);
@@ -115,7 +126,7 @@ class SelectionController extends Controller
                     }
                     return 'N/A'; // Return 'N/A' if dob is not available
                 })
-                ->rawColumns(['action', 'photo', ''])
+                ->rawColumns(['action', 'photo', 'age'])
                 ->toJson();
         }
 
@@ -140,17 +151,16 @@ class SelectionController extends Controller
 
         $company_id = Auth::user()->company_id;
 
-        $requestData = array_merge($data, [
-            'company_id' => $company_id,
-        ]);
-
-
         if ($request->hasFile('file_selection')) {
             $file = $request->file('file_selection'); // Get the file from the request
             $extension = $file->getClientOriginalExtension(); // Get the file extension
             $file_name = 'file_selection_' . $data['name'] . '_' . time() . '.' . $extension; // Construct the file name
             $data['file_selection'] = $file->storeAs('files/selection/file_selection', $file_name, 'public_local'); // Store the file
         }
+
+        $requestData = array_merge($data, [
+            'company_id' => $company_id,
+        ]);
 
         $selection = Selection::create($requestData);
 
@@ -185,20 +195,20 @@ class SelectionController extends Controller
      */
     public function edit(Selection $selection)
     {
-        // $selectedPositionIds = $selection->selectedPositions->pluck('id')->toArray();
-        // $positions = Position::whereDoesntHave('selectedPositions')
-        //     ->orWhereIn('id', $selectedPositionIds)
-        //     ->orderBy('name', 'asc')
-        //     ->get();
+        $selectedPositionIds = $selection->selectedPositions->pluck('id')->toArray();
+        $positions = Position::whereDoesntHave('selectedPositions')
+            ->orWhereIn('id', $selectedPositionIds)
+            ->orderBy('name', 'asc')
+            ->get();
 
-        $positions = Position::latest()->get();
+        // $positions = Position::latest()->get();
 
         $divisions = Division::orderBy('name', 'asc')->get();
 
         $candidates = Candidate::where('is_hire', false)->where('is_selection', false)->orderBy('name', 'asc')->get();
         $dataCount = $selection->selectedCandidates()->count();
-        // return view('pages.recruitment.selection.edit', compact('selection', 'positions', 'candidates', 'selectedPositionIds', 'dataCount', 'divisions'));
-        return view('pages.recruitment.selection.edit', compact('selection', 'positions', 'candidates', 'dataCount', 'divisions'));
+        return view('pages.recruitment.selection.edit', compact('selection', 'positions', 'candidates', 'selectedPositionIds', 'dataCount', 'divisions'));
+        // return view('pages.recruitment.selection.edit', compact('selection', 'positions', 'candidates', 'dataCount', 'divisions'));
 
     }
 
@@ -519,5 +529,36 @@ class SelectionController extends Controller
 
         return redirect()->back()->with('error', 'Invalid request. Approval status is missing.');
     }
+
+    // public function storeHistory(Request $request, $selection)
+    // {
+    //     $request->validate([
+    //         'date' => 'required|date',
+    //         'name' => 'required|string|max:255',
+    //         'description' => 'nullable|',
+    //     ], [
+    //         'name.required' => 'Proses wajib diisi.',
+    //         'date.required' => 'Tanggal wajib diisi.',
+    //         'name.string' => 'Proses harus berupa teks.',
+    //         'name.max' => 'Proses tidak boleh lebih dari 255 karakter.',
+    //     ]);
+
+
+    //     $requestData = array_merge($request->all(), [
+    //         'selection_id' => $selection,
+    //     ]);
+
+    //     HistorySelection::create($requestData);
+
+    //     // Redirect back with success message
+    //     return redirect()->back()->with('success', 'Data has been created successfully!');
+
+    // }
+    // public function deleteHistory()
+    // {
+    //     // $candidateSkill->delete();
+    //     // return redirect()->back()->with('success', 'Data has been deleted successfully!');
+
+    // }
 
 }

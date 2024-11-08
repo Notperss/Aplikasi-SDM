@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Recruitment;
 use Illuminate\Http\Request;
 use App\Models\Position\Position;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Recruitment\Candidate;
 use App\Models\Recruitment\Selection;
 use Illuminate\Support\Facades\Storage;
@@ -166,13 +167,22 @@ class SelectedCandidateController extends Controller
         //     })
         //     ->get();
 
-        $selectedCandidates = SelectedCandidate::with(['candidate', 'selection'])
+        $isSuperAdmin = Auth::user()->hasRole('super-admin');
 
+        $selectedCandidates = SelectedCandidate::with(['candidate', 'selection'])
             ->whereNotNull('position_id')
-            ->whereHas('selection', function ($query) {
-                $query->where('is_finished', true)->where('status', true)->where('is_approve', true);
-            })->orderBy('is_approve', 'desc')->orderBy('created_at', 'asc')
+            ->whereHas('selection', function ($query) use ($isSuperAdmin) {
+                if (! $isSuperAdmin) {
+                    $query->where('company_id', Auth::user()->company_id);
+                }
+                $query->where('is_finished', true)
+                    ->where('status', true)
+                    ->where('is_approve', true);
+            })
+            ->orderBy('is_approve', 'desc')
+            ->orderBy('created_at', 'asc')
             ->get();
+
 
         return view('pages.recruitment.selection.hired-candidate', compact('selectedCandidates'));
 

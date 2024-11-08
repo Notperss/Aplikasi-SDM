@@ -16,16 +16,29 @@
             <div class="col-md-11"> <!-- Make form smaller with col-md-6 and center it -->
 
               <div class="my-2">
-                <label class="form-label" for="code">Kode Direktorat</label>
+                <label class="form-label" for="code">Kode Direktorat <code>*</code></label>
                 <input id="code" name="code" class="form-control @error('code') is-invalid @enderror" required>
                 @error('code')
                   <a style="color: red"><small>{{ $message }}</small></a>
                 @enderror
               </div>
               <div class="mb-2">
-                <label class="form-label" for="name">Nama Direktorat</label>
+                <label class="form-label" for="name">Nama Direktorat <code>*</code></label>
                 <input id="name" name="name" class="form-control @error('name') is-invalid @enderror" required>
                 @error('name')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div>
+
+              <div class="mb-2">
+                <label class="form-label" for="is_non">Type <code>*</code></label>
+                <select id="is_non" name="is_non" class="form-control @error('is_non') is-invalid @enderror"
+                  required>
+                  <option value="" disabled selected>Choose</option>
+                  <option value="1" {{ old('is_non') == '1' ? 'selected' : '' }}>Direktorat</option>
+                  <option value="0" {{ old('is_non') == '0' ? 'selected' : '' }}>Non-Direktorat</option>
+                </select>
+                @error('is_non')
                   <a style="color: red"><small>{{ $message }}</small></a>
                 @enderror
               </div>

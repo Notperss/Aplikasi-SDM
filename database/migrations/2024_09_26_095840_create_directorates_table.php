@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->foreignIdFor(Company::class)->nullable()->constrained()->onDelete('cascade');
             $table->string('code');
             $table->string('name');
+            $table->boolean('is_non');
             $table->timestamps();
             $table->softDeletes();
         });

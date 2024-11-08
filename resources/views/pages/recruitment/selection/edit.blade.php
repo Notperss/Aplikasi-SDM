@@ -45,14 +45,14 @@
                     <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror
                 </div>
-                <div class="mb-2">
+                {{-- <div class="mb-2">
                   <label class="form-label" for="interviewer">Pewawancara <code>*</code></label>
                   <textarea id="interviewer" name="interviewer" rows="3"
                     class="form-control @error('interviewer') is-invalid @enderror" required>{{ old('interviewer', $selection->interviewer) }} </textarea>
                   @error('interviewer')
                     <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror
-                </div>
+                </div> --}}
               </div>
 
               <div class="col-md-6">
@@ -63,12 +63,12 @@
                     multiple>
                     <option value="" disabled>Choose</option>
 
-                    {{-- @foreach ($positions as $position)
+                    @foreach ($positions as $position)
                       <option value="{{ $position->id }}"
                         {{ in_array($position->id, old('position_id', $selectedPositionIds)) ? 'selected' : '' }}>
                         {{ $position->name }}
                       </option>
-                    @endforeach --}}
+                    @endforeach
                     {{-- @foreach ($positions as $position)
                       <option value="{{ $position->id }}"
                         {{ in_array($position->id, old('position_id', $position->id)) ? 'selected' : '' }}>
@@ -113,7 +113,7 @@
                     <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror
                 </div>
-                <div class="mb-2">
+                {{-- <div class="mb-2">
                   <label class="form-label" for="end_selection">Tgl Selesai Seleksi</label>
                   <input type="date" id="end_selection" name="end_selection"
                     value="{{ old('end_selection', $selection->end_selection) }}"
@@ -121,10 +121,19 @@
                   @error('end_selection')
                     <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror
-                </div>
+                </div> --}}
 
               </div>
               <div class="col-md-12">
+
+                <div class="mb-2">
+                  <label class="form-label" for="interviewer">Pewawancara <code>*</code></label>
+                  <textarea id="interviewer" name="interviewer" rows="3"
+                    class="form-control @error('interviewer') is-invalid @enderror" required>{{ old('interviewer', $selection->interviewer) }} </textarea>
+                  @error('interviewer')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div>
 
                 <div class="mb-2">
                   <label class="form-label" for="description">Keterangan</label>
@@ -177,62 +186,129 @@
 
 
 
-
-  <a class="btn btn-primary btn-md mb-2" onclick="openMyModalEdit({{ $selection->id }})">
-    <i class="bi bi-plus-lg"></i>
-    Kandidat
-  </a>
-
-
-  <div class="col-md-12">
-    <div class="d-flex justify-content-between align-items-center ">
-      <h5 class="fw-normal my-3 text-body">Daftar Kandidat</h5>
+  <div class="card">
+    <div class="card-header">
+      <div class="d-flex justify-content-between align-items-center ">
+        <h5 class="fw-normal my-3 text-body">History Seleksi</h5>
+        <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
+          data-bs-target="#modal-form-history-selection">
+          <i class="bi bi-plus-lg"></i>
+          History Seleksi
+        </button>
+        @include('pages.recruitment.selection.modal-history')
+      </div>
     </div>
-    <table class="table table-striped" id="table2" style="font-size: 85%">
-      <thead>
-        <tr>
-          <th></th>
-          <th>Pelamar</th>
-          <th>Email</th>
-          <th>Phone</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach ($selection->SelectedCandidates as $selectedCandidate)
-          <tr>
-            <td class="text-center">
-              @if ($selectedCandidate->candidate->photo)
-                <div class="fixed-frame">
-                  <img src="{{ asset('storage/' . $selectedCandidate->candidate->photo) }}" alt="img"
-                    class="framed-image enlargeable" style="cursor: pointer;">
-                </div>
-              @else
-                No Image
-              @endif
-            </td>
-            <td>{{ $selectedCandidate->candidate->name }}</td>
-            <td>{{ $selectedCandidate->candidate->email }}</td>
-            <td>{{ $selectedCandidate->candidate->phone_number }}</td>
-            <td>
-              @if ($dataCount > 1)
-                <button class="btn btn-danger mx-2"
-                  onclick="destroyCandidate('{{ $selectedCandidate->id }}', {{ $dataCount }})">
-                  <i class="bi bi-trash"></i>
-                </button>
+    <div class="card-body">
+      <div class="row justify-content-center">
+        <div class="col-md-12">
+          <table class="table table-striped" id="table2" style="font-size: 85%">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Tanggal</th>
+                <th>Proses</th>
+                <th>Keterangan</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach ($selection->historySelections as $historySelection)
+                <tr>
+                  <td>{{ $loop->iteration }}</td>
+                  <td>{{ Carbon\Carbon::parse($historySelection->date)->translatedFormat('l, d F Y') ?? '-' }}</td>
+                  <td>{{ $historySelection->name_process }}</td>
+                  <td>{{ $historySelection->description }}</td>
+                  <td> <button class="btn btn-danger mx-2" onclick="deleteHistory('{{ $historySelection->id }}')"><i
+                        class="bi bi-trash"></i></button>
 
-                <form id="deleteForm_{{ $selectedCandidate->id }}"
-                  action="{{ route('selectedCandidate.destroy', $selectedCandidate->id) }}" method="POST">
-                  @method('DELETE')
-                  @csrf
-                </form>
-              @endif
-            </td>
-          </tr>
-        @endforeach
-      </tbody>
-    </table>
+                    <form id="historyDeleteForm_{{ $historySelection->id }}"
+                      action="{{ route('historySelection.destroy', $historySelection->id) }}" method="POST">
+                      @method('DELETE')
+                      @csrf
+                    </form>
+                  </td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
+
+
+
+  <div class="card">
+    <div class="card-header">
+      <div class="d-flex justify-content-between align-items-center ">
+        <h5 class="fw-normal my-3 text-body">Daftar Kandidat</h5>
+        <a class="btn btn-primary btn-md mb-2" onclick="openMyModalEdit({{ $selection->id }})">
+          <i class="bi bi-plus-lg"></i>
+          Kandidat
+        </a>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row justify-content-center">
+
+        <div class="col-md-12">
+          <table class="table table-striped" id="table1" style="font-size: 85%">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Pelamar</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach ($selection->SelectedCandidates as $selectedCandidate)
+                <tr>
+                  <td class="text-center">
+                    @if ($selectedCandidate->candidate->photo)
+                      <div class="fixed-frame">
+                        <img src="{{ asset('storage/' . $selectedCandidate->candidate->photo) }}" alt="img"
+                          class="framed-image enlargeable" style="cursor: pointer;">
+                      </div>
+                    @else
+                      No Image
+                    @endif
+                  </td>
+                  <td>{{ $selectedCandidate->candidate->name }}</td>
+                  <td>{{ $selectedCandidate->candidate->email }}</td>
+                  <td>{{ $selectedCandidate->candidate->phone_number }}</td>
+                  <td>
+                    @if ($dataCount > 1)
+                      <button class="btn btn-danger mx-2"
+                        onclick="destroyCandidate('{{ $selectedCandidate->id }}', {{ $dataCount }})">
+                        <i class="bi bi-trash"></i>
+                      </button>
+
+                      <form id="deleteForm_{{ $selectedCandidate->id }}"
+                        action="{{ route('selectedCandidate.destroy', $selectedCandidate->id) }}" method="POST">
+                        @method('DELETE')
+                        @csrf
+                      </form>
+                    @endif
+                  </td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
 
 </section>
 
@@ -565,6 +641,22 @@
 @endpush
 
 
+<script>
+  function deleteHistory(getId) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // If the user clicks "Yes, delete it!", submit the corresponding form
+        document.getElementById('historyDeleteForm_' + getId).submit();
+      }
+    });
+  }
+</script>
 <script>
   function destroyCandidate(getId, dataCount) {
     if (dataCount <= 1) {

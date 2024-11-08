@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\Position\LevelController;
 use App\Http\Controllers\WorkUnit\SectionController;
+use App\Http\Controllers\Employee\ContractController;
 use App\Http\Controllers\Employee\EmployeeController;
 use App\Http\Controllers\Position\PositionController;
 use App\Http\Controllers\WorkUnit\DivisionController;
@@ -22,15 +23,16 @@ use App\Http\Controllers\ManagementAccess\CompanyController;
 use App\Http\Controllers\Employee\EmployeeCategoryController;
 use App\Http\Controllers\ManagementAccess\MenuItemController;
 use App\Http\Controllers\ManagementAccess\MenuGroupController;
-use App\Http\Controllers\Recruitment\CandidateSkillController;
 use App\Http\Controllers\ManagementAccess\PermissionController;
+use App\Http\Controllers\Recruitment\HistorySelectionController;
 use App\Http\Controllers\Recruitment\SelectedCandidateController;
-use App\Http\Controllers\Recruitment\CandidateFamilyDetailController;
-use App\Http\Controllers\Recruitment\CandidateSocialPlatformController;
-use App\Http\Controllers\Recruitment\CandidateTrainingAttendedController;
-use App\Http\Controllers\Recruitment\CandidateEmploymentHistoryController;
-use App\Http\Controllers\Recruitment\CandidateEducationalHistoryController;
-use App\Http\Controllers\Recruitment\CandidateLanguageProficiencyController;
+use App\Http\Controllers\Employee\PersonalData\EmployeeSkillController;
+use App\Http\Controllers\Employee\PersonalData\EmployeeJobHistoryController;
+use App\Http\Controllers\Employee\PersonalData\EmployeeFamilyDetailController;
+use App\Http\Controllers\Employee\PersonalData\EmployeeSocialPlatformController;
+use App\Http\Controllers\Employee\PersonalData\EmployeeTrainingAttendedController;
+use App\Http\Controllers\Employee\PersonalData\EmployeeEducationalHistoryController;
+use App\Http\Controllers\Employee\PersonalData\EmployeeLanguageProficiencyController;
 
 // Route::permanentRedirect('/', '/login');
 
@@ -68,10 +70,11 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
         Route::post('/upload/{candidate}', [CandidateController::class, 'uploadDocument'])->name('upload.document');
     });
 
-    Route::resource('selection', SelectionController::class)->only('index', 'edit', 'store', 'update', 'destroy');
+    Route::resource('selection', SelectionController::class)->except('create');
     Route::patch('/selection/{id}/restore', [SelectionController::class, 'restore'])->name('selection.restore');
     Route::patch('selection/{selection}/close', [SelectionController::class, 'closeSelection'])->name('selection.close');
     Route::get('get-candidate', [SelectionController::class, 'getCandidate'])->name('selection.getCandidate');
+
 
     Route::patch('/selection/{id}/update-approval', [SelectionController::class, 'updateApprovalStatus'])->name('selection.updateApprovalStatus');
 
@@ -86,6 +89,9 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
 
     Route::patch('/selected-candidate/{id}/update-approval', [SelectedCandidateController::class, 'updateApprovalStatus'])->name('selectedCandidate.updateApprovalStatus');
 
+    Route::resource('historySelection', HistorySelectionController::class)->only('edit', 'update', 'destroy');
+    Route::post('store-history/{selection}', [HistorySelectionController::class, 'store'])->name('historySelection.store');
+
 
 
     // Route::post('/selection/store-candidate/{selection}', [SelectionController::class, 'storeCandidate'])->name('selection.storeCandidate');
@@ -93,15 +99,13 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
 
 
 
-
-
-    Route::resource('candidateFamilyDetail', CandidateFamilyDetailController::class)->only('store', 'update', 'destroy');
-    Route::resource('candidateEmploymentHistory', CandidateEmploymentHistoryController::class)->only('store', 'update', 'destroy');
-    Route::resource('candidateEducationalHistory', CandidateEducationalHistoryController::class)->only('store', 'update', 'destroy');
-    Route::resource('candidateLanguageProficiency', CandidateLanguageProficiencyController::class)->only('store', 'update', 'destroy');
-    Route::resource('candidateTrainingAttended', CandidateTrainingAttendedController::class)->only('store', 'update', 'destroy');
-    Route::resource('candidateSkill', CandidateSkillController::class)->only('store', 'update', 'destroy');
-    Route::resource('candidateSocialPlatform', CandidateSocialPlatformController::class)->only('store', 'update', 'destroy');
+    Route::resource('employeeFamilyDetail', EmployeeFamilyDetailController::class)->only('store', 'update', 'destroy');
+    Route::resource('employeeJobHistory', EmployeeJobHistoryController::class)->only('store', 'update', 'destroy');
+    Route::resource('employeeEducationalHistory', EmployeeEducationalHistoryController::class)->only('store', 'update', 'destroy');
+    Route::resource('employeeLanguageProficiency', EmployeeLanguageProficiencyController::class)->only('store', 'update', 'destroy');
+    Route::resource('employeeTrainingAttended', EmployeeTrainingAttendedController::class)->only('store', 'update', 'destroy');
+    Route::resource('employeeSkill', EmployeeSkillController::class)->only('store', 'update', 'destroy');
+    Route::resource('employeeSocialPlatform', EmployeeSocialPlatformController::class)->only('store', 'update', 'destroy');
 
     //workUnit
     Route::resource('directorate', DirectorateController::class)->only('index', 'store', 'update', 'destroy');
@@ -114,15 +118,18 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     //position
     Route::resource('level', LevelController::class)->only('index', 'store', 'update', 'destroy', );
     Route::resource('allowance', AllowanceController::class)->only('index', 'store', 'update', 'destroy', );
-    Route::resource('position', PositionController::class)->only('index', 'store', 'update', 'destroy', 'getSections', 'positionAllowance');
+    Route::resource('position', PositionController::class)->only('index', 'edit', 'store', 'update', 'destroy');
+    Route::get('add-allowances/{position}', [PositionController::class, 'addAllowances'])->name('addAllowances');
     Route::get('get-sections', [PositionController::class, 'getSections'])->name('getSections');
     Route::put('/positions/{position}', [PositionController::class, 'positionAllowance'])->name('positionAllowance');
 
     //Employee
     Route::resource('employee', EmployeeController::class);
     Route::get('/new-employee/{id}', [EmployeeController::class, 'newEmployee'])->name('employee.newEmployee');
+    Route::put('/update-new-employee/{id}', [EmployeeController::class, 'updateNewEmployee'])->name('employee.updateNewEmployee');
 
     Route::resource('employeeCategory', EmployeeCategoryController::class)->only('index', 'store', 'update', 'destroy');
+    Route::resource('contract', ContractController::class)->only('index', 'store', 'update', 'destroy');
 
 
 

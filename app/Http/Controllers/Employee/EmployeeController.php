@@ -9,11 +9,22 @@ use App\Models\Position\Position;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Recruitment\Candidate;
+use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\Employee\EmployeeCategory;
 use App\Models\Recruitment\SelectedCandidate;
+use App\Models\Employee\PersonalData\EmployeeSkill;
+use App\Http\Requests\Employee\StoreEmployeeRequest;
+use App\Http\Requests\Employee\UpdateEmployeeRequest;
 use Illuminate\Contracts\Encryption\DecryptException;
+use App\Http\Requests\Employee\UpdateNewEmployeeRequest;
+use App\Models\Employee\PersonalData\EmployeeJobHistory;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Models\Employee\PersonalData\EmployeeFamilyDetail;
+use App\Models\Employee\PersonalData\EmployeeSocialPlatform;
+use App\Models\Employee\PersonalData\EmployeeTrainingAttended;
+use App\Models\Employee\PersonalData\EmployeeEducationalHistory;
+use App\Models\Employee\PersonalData\EmployeeLanguageProficiency;
 
 class EmployeeController extends Controller
 {
@@ -22,7 +33,11 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $employees = Employee::latest();
+        $employees = Employee::with('employeeCategory')->latest();
+
+        if (! Auth::user()->hasRole('super-admin')) {
+            $employees->where('company_id', Auth::user()->company_id);
+        }
 
         if (request()->ajax()) {
             return DataTables::of($employees)
@@ -36,7 +51,8 @@ class EmployeeController extends Controller
                       <i class="bi bi-three-dots-vertical"></i>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <a class="dropdown-item" href="' . route('employee.edit', $item) . '">Edit</a>
+                     
+                      <a class="dropdown-item" href="' . route('employee.show', $item) . '">Edit</a>
                         <button class="dropdown-item" onclick=" showSweetAlert(' . $item->id . ') ">Hapus</button>
                         <form id="deleteForm_' . $item->id . '"
                           action="' . route('employee.destroy', $item->id) . '" method="POST">
@@ -57,8 +73,18 @@ class EmployeeController extends Controller
                     }
                 })->editColumn('created_at', function ($item) {
                     return '' . Carbon::parse($item->created_at)->translatedFormat('d F Y') . '';
+                })->editColumn('employeeCategory', function ($item) {
+                    return $item->employeeCategory->name;
+                })->editColumn('is_verified', function ($item) {
+                    if ($item->is_verified == 0) {
+                        return '<span class="badge bg-danger">Unverified</span>';
+                    } elseif ($item->is_verified == 1) {
+                        return '<span class="badge bg-success">Verified</span>';
+                    } else {
+                        return '-';
+                    }
                 })
-                ->rawColumns(['action', 'photo'])
+                ->rawColumns(['action', 'photo', 'is_verified', 'employeeCategory'])
                 ->toJson();
         }
 
@@ -70,23 +96,31 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-        $positions = Position::orderBy('name', 'asc')->get();
+        $positions = Position::whereDoesntHave('selectedPositions', function ($query) {
+            $query->where('is_finished', false);
+        })->whereDoesntHave('selectedCandidates', function ($query) {
+            $query->where('is_hire', null);
+        })->whereDoesntHave('selectedCandidates', function ($query) {
+            $query->where('is_approve', null);
+        })->whereDoesntHave('employee', function ($query) {
+            $query->where('date_leaving', null);
+        })->latest()
+            ->get();
+
         $employeeCategories = EmployeeCategory::orderBy('name', 'asc')->get();
+
         return view('pages.employee.create', compact('positions', 'employeeCategories'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreEmployeeRequest $request)
     {
         $data = $request->except('is_hire');
 
         $company_id = Auth::user()->company_id;
 
-        $requestData = array_merge($data, [
-            'company_id' => $company_id,
-        ]);
 
         $file_fields = [
             'photo',
@@ -112,6 +146,10 @@ class EmployeeController extends Controller
             }
         }
 
+        $requestData = array_merge($data, [
+            'company_id' => $company_id,
+        ]);
+
         Employee::create($requestData);
 
         return redirect()->route('employee.index')->with('success', 'Data has been created successfully!');
@@ -122,7 +160,38 @@ class EmployeeController extends Controller
      */
     public function show(Employee $employee)
     {
-        //
+        $selectedPositionId = $employee->position_id;
+
+        $positions = Position::whereDoesntHave('selectedPositions', function ($query) {
+            $query->where('is_finished', false);
+        })->whereDoesntHave('selectedCandidates', function ($query) {
+            $query->where('is_hire', null);
+        })->whereDoesntHave('selectedCandidates', function ($query) {
+            $query->where('is_approve', null);
+        })->whereDoesntHave('employee', function ($query) {
+            $query->where('date_leaving', null);
+        })->OrWhere('id', $selectedPositionId)
+            ->latest()
+            ->get();
+
+        $employeeCategories = EmployeeCategory::orderBy('name', 'asc')->get();
+
+        $retirementDate = Carbon::parse($employee->dob)->addYears(55)->addMonths(3);
+
+        $currentDate = Carbon::now();
+        $diff = $currentDate->diff($retirementDate);
+
+        $remainingYears = $diff->y;  // Whole years
+        $remainingMonths = $diff->m; // Remaining months after whole years
+
+        return view('pages.employee.show', compact(
+            'positions',
+            'employeeCategories',
+            'employee',
+            'retirementDate',
+            'remainingYears',
+            'remainingMonths',
+        ));
     }
 
     /**
@@ -130,15 +199,68 @@ class EmployeeController extends Controller
      */
     public function edit(Employee $employee)
     {
-        //
+        $selectedPositionId = $employee->position_id;
+
+        $positions = Position::whereDoesntHave('selectedPositions', function ($query) {
+            $query->where('is_finished', false);
+        })->whereDoesntHave('selectedCandidates', function ($query) {
+            $query->where('is_hire', null);
+        })->whereDoesntHave('selectedCandidates', function ($query) {
+            $query->where('is_approve', null);
+        })->whereDoesntHave('employee', function ($query) {
+            $query->where('date_leaving', null);
+        })->OrWhere('id', $selectedPositionId)
+            ->latest()
+            ->get();
+
+        $employeeCategories = EmployeeCategory::orderBy('name', 'asc')->get();
+
+        return view('pages.employee.edit', compact('positions', 'employeeCategories', 'employee', 'selectedPositionId'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Employee $employee)
+    public function update(UpdateEmployeeRequest $request, Employee $employee)
     {
-        //
+        $data = $request->all();
+
+        $file_fields = [
+            'photo',
+            'file_cv',
+            'file_ktp',
+            'file_ijazah',
+            'file_kk',
+            'file_skck',
+            'file_vaksin',
+            'file_surat_sehat',
+            'file_sertifikat',
+            'file_sim_a',
+            'file_sim_b',
+            'file_sim_c',
+        ];
+
+        foreach ($file_fields as $file_field) {
+            $path_file = $employee->$file_field;
+
+            if ($request->hasFile($file_field)) {
+                $file = $request->file($file_field);
+                $extension = $file->getClientOriginalExtension();
+                $file_name = $file_field . '_' . $data['name'] . '_' . time() . '.' . $extension;
+
+                $data[$file_field] = $file->storeAs('files/employee/' . $file_field, $file_name, 'public_local');
+
+                if (! empty($path_file)) {
+                    Storage::disk('public_local')->delete($path_file);
+                }
+            } else {
+                $data[$file_field] = $path_file;
+            }
+        }
+
+        $employee->update($data);
+        return redirect()->back()->with('success', 'Employee has been updated successfully!');
+        // return redirect()->route('employee.index')->with('success', 'Employee has been updated successfully!');
     }
 
     /**
@@ -146,7 +268,9 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
-        //
+        $employee->delete();
+
+        return redirect()->back()->with('success', 'Data has been deleted successfully!');
     }
 
     public function newEmployee($id)
@@ -161,8 +285,6 @@ class EmployeeController extends Controller
         }
 
         $candidate = Candidate::find($selectedCandidate->candidate_id);
-
-        // dd($candidate->employee);
 
         if (! $candidate->employee) {
             Employee::create([
@@ -235,11 +357,28 @@ class EmployeeController extends Controller
             $selectedCandidate->save();
         }
 
-
         $positions = Position::where('id', $selectedCandidate->position_id)->latest()->get();
 
         $employeeCategories = EmployeeCategory::latest()->get();
 
         return view('pages.employee.new-employee', compact('selectedCandidate', 'candidate', 'positions', 'employeeCategories'));
+    }
+
+    public function updateNewEmployee(UpdateNewEmployeeRequest $request, $id)
+    {
+        $data = $request->all();
+
+        $candidate = Candidate::findOrFail($id);
+
+        // dd($candidate->employee);
+
+        if ($candidate->employee) {
+
+            $candidate->employee->update($data);
+
+            return redirect()->route('employee.index')->with('success', 'Employee data updated successfully.');
+        } else {
+            return redirect()->route('employee.index')->with('error', 'Employee record not found for the given candidate.');
+        }
     }
 }

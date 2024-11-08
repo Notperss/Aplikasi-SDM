@@ -83,6 +83,6 @@
     }
   </script>
 
-  @include('pages..employee.employee-category.modal-create')
+  @include('pages.employee.employee-category.modal-create')
 
 @endsection

@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="card-body">
-        <table class="table table-striped" id="table1" style="font-size: 85%">
+        <table class="table table-striped" id="position-table" style="font-size: 85%; width: 100%">
           <thead>
             <tr>
               <th>#</th>
@@ -36,7 +36,8 @@
               <th></th>
             </tr>
           </thead>
-          <tbody>
+
+          {{-- <tbody>
             @foreach ($positions as $position)
               <tr>
                 <td class="text-center">{{ $loop->iteration }}</td>
@@ -46,19 +47,7 @@
                 <td>{{ $position->division->code ?? '-' }}</td>
                 <td>{{ $position->department->name ?? '-' }}</td>
                 <td>{{ $position->section->name ?? '-' }}</td>
-                {{-- <td>
-                  @if ($position->section)
-                    {{ $position->section->name }}
-                  @elseif ($position->department)
-                    {{ $position->department->name }}
-                  @elseif ($position->division)
-                    {{ $position->division->name }}
-                  @elseif ($position->directorate)
-                    {{ $position->directorate->name }}
-                  @else
-                    -
-                  @endif
-                </td> --}}
+
                 <td>{{ $position->description }}</td>
                 <td>
                   <div class="d-flex justify-content-end mt-2">
@@ -89,11 +78,15 @@
                 </td>
               </tr>
             @endforeach
-          </tbody>
+          </tbody> --}}
         </table>
       </div>
     </div>
   </section>
+
+
+
+
   <script>
     function showSweetAlert(getId) {
       Swal.fire({
@@ -114,3 +107,74 @@
   @include('pages.position.position.modal-create')
 
 @endsection
+
+@push('after-script')
+  <script>
+    jQuery(document).ready(function($) {
+      $('#position-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ordering: true,
+        pageLength: 10, // Show all records by default
+        lengthMenu: [
+          [10, 25, 50, 100, -1],
+          [10, 25, 50, 100, 'All']
+        ], // Add 'All' option to the length menu
+        ajax: {
+          url: "{{ route('position.index') }}",
+        },
+        columns: [{
+            data: 'DT_RowIndex',
+            name: 'DT_RowIndex',
+            orderable: false,
+            searchable: false,
+            width: '5%',
+          },
+          {
+            data: 'name',
+            name: 'name',
+          },
+          {
+            data: 'level.name',
+            name: 'level.name',
+          },
+          {
+            data: 'division.directorate.name',
+            name: 'division.directorate.name',
+          },
+          {
+            data: 'division.name',
+            name: 'division.name',
+          },
+          {
+            data: 'department',
+            name: 'department',
+            orderable: false,
+            searchable: false,
+          },
+          {
+            data: 'section',
+            name: 'section',
+            orderable: false,
+            searchable: false,
+          },
+          {
+            data: 'description',
+            name: 'description',
+          },
+          {
+            data: 'action',
+            name: 'action',
+            orderable: false,
+            searchable: false,
+            className: 'no-print' // Add this class to exclude the column from printing
+          },
+        ],
+        columnDefs: [{
+          className: 'text-center',
+          targets: '_all'
+        }, ],
+      });
+    });
+  </script>
+@endpush

@@ -27,7 +27,10 @@ class CandidateController extends Controller
      */
     public function index()
     {
-        $candidates = Candidate::latest();
+        $candidates = Candidate::latest()
+            ->when(! Auth::user()->hasRole('super-admin'), function ($query) {
+                $query->where('company_id', Auth::user()->company_id);
+            });
 
         if (request()->ajax()) {
             return DataTables::of($candidates)
@@ -88,10 +91,6 @@ class CandidateController extends Controller
 
         $company_id = Auth::user()->company_id;
 
-        $requestData = array_merge($data, [
-            'company_id' => $company_id,
-        ]);
-
         $file_fields = [
             'photo',
             'file_cv',
@@ -115,6 +114,10 @@ class CandidateController extends Controller
                 $data[$file_field] = $file->storeAs('files/candidate/' . $file_field, $file_name, 'public_local'); // Store the file
             }
         }
+
+        $requestData = array_merge($data, [
+            'company_id' => $company_id,
+        ]);
 
         $candidate = Candidate::create($requestData);
 
@@ -245,40 +248,40 @@ class CandidateController extends Controller
     }
 
 
-    public function additionalDetails(Candidate $candidate)
-    {
-        $familyDetails = CandidateFamilyDetail::where('candidate_id', $candidate->id)->get();
-        $employmentHistories = CandidateEmploymentHistory::where('candidate_id', $candidate->id)->get();
-        $educationalHistories = CandidateEducationalHistory::where('candidate_id', operator: $candidate->id)->get();
-        $languageProficiencies = CandidateLanguageProficiency::where('candidate_id', $candidate->id)->get();
-        $trainingAttendeds = CandidateTrainingAttended::where('candidate_id', $candidate->id)->get();
-        $skills = CandidateSkill::where('candidate_id', $candidate->id)->get();
-        $socialPlatforms = CandidateSocialPlatform::where('candidate_id', $candidate->id)->get();
-        // $candidateDocuments = CandidateDocument::where('candidate_id', $candidate->id)->get();
-        $ijazahDocuments = CandidateDocument::where('candidate_id', $candidate->id)->where('type_document', 'ijazah')->get();
-        $ktpDocuments = CandidateDocument::where('candidate_id', $candidate->id)->where('type_document', 'ktp')->get();
-        $skckDocuments = CandidateDocument::where('candidate_id', $candidate->id)->where('type_document', 'skck')->get();
-        $aktaDocuments = CandidateDocument::where('candidate_id', $candidate->id)->where('type_document', 'akta-kk')->get();
-        $cvDocuments = CandidateDocument::where('candidate_id', $candidate->id)->where('type_document', 'CV')->get();
+    // public function additionalDetails(Candidate $candidate)
+    // {
+    //     $familyDetails = CandidateFamilyDetail::where('candidate_id', $candidate->id)->get();
+    //     $employmentHistories = CandidateEmploymentHistory::where('candidate_id', $candidate->id)->get();
+    //     $educationalHistories = CandidateEducationalHistory::where('candidate_id', operator: $candidate->id)->get();
+    //     $languageProficiencies = CandidateLanguageProficiency::where('candidate_id', $candidate->id)->get();
+    //     $trainingAttendeds = CandidateTrainingAttended::where('candidate_id', $candidate->id)->get();
+    //     $skills = CandidateSkill::where('candidate_id', $candidate->id)->get();
+    //     $socialPlatforms = CandidateSocialPlatform::where('candidate_id', $candidate->id)->get();
+    //     // $candidateDocuments = CandidateDocument::where('candidate_id', $candidate->id)->get();
+    //     $ijazahDocuments = CandidateDocument::where('candidate_id', $candidate->id)->where('type_document', 'ijazah')->get();
+    //     $ktpDocuments = CandidateDocument::where('candidate_id', $candidate->id)->where('type_document', 'ktp')->get();
+    //     $skckDocuments = CandidateDocument::where('candidate_id', $candidate->id)->where('type_document', 'skck')->get();
+    //     $aktaDocuments = CandidateDocument::where('candidate_id', $candidate->id)->where('type_document', 'akta-kk')->get();
+    //     $cvDocuments = CandidateDocument::where('candidate_id', $candidate->id)->where('type_document', 'CV')->get();
 
-        return view('pages.recruitment.candidate.additional-details',
-            compact(
-                'candidate',
-                'familyDetails',
-                'employmentHistories',
-                'educationalHistories',
-                'languageProficiencies',
-                'trainingAttendeds',
-                'skills',
-                'socialPlatforms',
-                'ijazahDocuments',
-                'ktpDocuments',
-                'skckDocuments',
-                'aktaDocuments',
-                'cvDocuments',
-                // 'candidateDocuments',
-            ));
-    }
+    //     return view('pages.recruitment.candidate.additional-details',
+    //         compact(
+    //             'candidate',
+    //             'familyDetails',
+    //             'employmentHistories',
+    //             'educationalHistories',
+    //             'languageProficiencies',
+    //             'trainingAttendeds',
+    //             'skills',
+    //             'socialPlatforms',
+    //             'ijazahDocuments',
+    //             'ktpDocuments',
+    //             'skckDocuments',
+    //             'aktaDocuments',
+    //             'cvDocuments',
+    //             // 'candidateDocuments',
+    //         ));
+    // }
 
     public function uploadDocument(Request $request, $candidate)
     {

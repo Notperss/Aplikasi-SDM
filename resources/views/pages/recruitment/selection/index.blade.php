@@ -13,11 +13,13 @@
         <div class="d-flex justify-content-between align-items-center ">
           <h5 class="fw-normal mb-0 text-body">Daftar Seleksi</h5>
 
-          <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
-            data-bs-target="#modal-form-add-selection">
-            <i class="bi bi-plus-lg"></i>
-            Seleksi
-          </button>
+          @role('staff|super-admin')
+            <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
+              data-bs-target="#modal-form-add-selection">
+              <i class="bi bi-plus-lg"></i>
+              Seleksi
+            </button>
+          @endrole
 
         </div>
       </div>
@@ -107,28 +109,30 @@
                         </a>
                       @endrole
 
-                      <div class="btn-group">
-                        <div class="dropdown">
-                          <button class="btn btn-sm btn-primary dropdown-toggle me-1" type="button"
-                            id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false">
-                            <i class="bi bi-three-dots-vertical"></i>
-                          </button>
-                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="{{ route('selection.edit', $selection) }}">Edit</a>
+                      @role('staff|super-admin')
+                        <div class="btn-group">
+                          <div class="dropdown">
+                            <button class="btn btn-sm btn-primary dropdown-toggle me-1" type="button"
+                              id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"
+                              aria-expanded="false">
+                              <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <a class="dropdown-item" href="{{ route('selection.edit', $selection) }}">Edit</a>
 
-                            <button class="dropdown-item"
-                              onclick="showSweetAlert('{{ $selection->id }}')">Hapus</button>
+                              <button class="dropdown-item"
+                                onclick="showSweetAlert('{{ $selection->id }}')">Hapus</button>
 
-                            <form id="deleteForm_{{ $selection->id }}"
-                              action="{{ route('selection.destroy', $selection->id) }}" method="POST">
-                              @method('DELETE')
-                              @csrf
-                            </form>
+                              <form id="deleteForm_{{ $selection->id }}"
+                                action="{{ route('selection.destroy', $selection->id) }}" method="POST">
+                                @method('DELETE')
+                                @csrf
+                              </form>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    @endif
+                      @endif
+                    @endrole
 
                     <!--APPROVE FOR MANAGER-->
                     @if (

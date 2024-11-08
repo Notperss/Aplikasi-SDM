@@ -27,7 +27,8 @@ class UpdateSelectedCandidateRequest extends FormRequest
             // 'candidates.*.id' => 'required|exists:candidates,id', // Ensure each candidate ID exists in the database
             'name' => 'required|string', // Memastikan ID kandidat ada di database
             'fptk_number' => 'required|string', // Validate that the array of candidates exists and isn't empty
-            'position_id' => ['required', 'exists:positions,id', new PositionExistsAndSelectionNotFinished],
+            // 'position_id' => ['required', 'exists:positions,id', new PositionExistsAndSelectionNotFinished],
+            'position_id' => ['required', 'exists:positions,id'],
             'division_id' => 'required|exists:divisions,id', // Memastikan ID kandidat ada di database
             'interviewer' => 'required|string', // Memastikan ID kandidat ada di database
             'start_selection' => 'nullable|date', // Memastikan ID kandidat ada di database
