@@ -97,33 +97,33 @@
             </tr>
           @endforeach --}}
 
-            @foreach ($selectedCandidates as $candidate)
+            @foreach ($selectedCandidates as $selectedCandidate)
               <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td class="text-center">
-                  @if ($candidate->candidate->photo)
+                  @if ($selectedCandidate->candidate->photo)
                     <div class="fixed-frame">
-                      <img src="{{ asset('storage/' . $candidate->candidate->photo) }}" data-fancybox alt="Icon User"
-                        class="framed-image" style="cursor: pointer">
+                      <img src="{{ asset('storage/' . $selectedCandidate->candidate->photo) }}" data-fancybox
+                        alt="Icon User" class="framed-image" style="cursor: pointer">
                     </div>
                   @else
                     No Image
                   @endif
                 </td>
-                <td>{{ $candidate->candidate->name }}</td>
+                <td>{{ $selectedCandidate->candidate->name }}</td>
                 <td>
-                  {{ $candidate->selection->name ?? '-' }}
+                  {{ $selectedCandidate->selection->name ?? '-' }}
                 </td>
                 <td>
-                  <span class="badge bg-primary">{{ $candidate->position->name ?? '-' }}</span>
+                  <span class="badge bg-primary">{{ $selectedCandidate->position->name ?? '-' }}</span>
                 </td>
                 <td>
-                  {{ $candidate->description ?? '-' }}
+                  {{ $selectedCandidate->description ?? '-' }}
                 </td>
                 <td>
 
-                  @if ($candidate->file_selected_candidate)
-                    <a href="{{ asset('storage/' . $candidate->file_selected_candidate) }}"
+                  @if ($selectedCandidate->file_selected_candidate)
+                    <a href="{{ asset('storage/' . $selectedCandidate->file_selected_candidate) }}"
                       class="btn btn-sm btn-primary" target="_blank">
                       Lihat
                     </a>
@@ -133,27 +133,27 @@
 
                 </td>
                 <td>
-                  @if ($candidate->is_approve === 1)
+                  @if ($selectedCandidate->is_approve === 1)
                     <span class="badge bg-success">Disetujui</span>
-                  @elseif($candidate->is_approve === 0)
+                  @elseif($selectedCandidate->is_approve === 0)
                     <span class="badge bg-danger">Ditolak</span>
                   @else
                     -
                   @endif
                 </td>
                 <td>
-                  @if ($candidate->is_hire === null || auth()->user()->hasRole('super-admin'))
+                  @if ($selectedCandidate->is_hire === null || auth()->user()->hasRole('super-admin'))
                     <div class="btn-group mb-1">
-                      @if ($candidate->is_approve === 1)
+                      @if ($selectedCandidate->is_approve === 1)
                         @role('ka-dep|super-admin')
                           <a class="btn btn-sm btn-info mx-1" title="Tambahkan ke karyawan"
-                            href="{{ route('employee.newEmployee', encrypt($candidate->id)) }}">
+                            href="{{ route('employee.newEmployee', encrypt($selectedCandidate->id)) }}">
                             <i class="bi bi-person-plus-fill"></i>
                           </a>
                         @endrole
                       @endif
 
-                      @if ($candidate->is_approve === null || auth()->user()->hasRole('super-admin'))
+                      @if ($selectedCandidate->is_approve === null || auth()->user()->hasRole('super-admin'))
                         @role('manager|super-admin')
                           <div class="dropdown">
                             <button class="btn btn-sm btn-primary dropdown-toggle me-1" type="button"
@@ -163,26 +163,26 @@
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                               <button class="dropdown-item"
-                                onclick="confirmAction('approve', 'Apakah Anda yakin ingin menyetujui?', {{ $candidate->id }})">
+                                onclick="confirmAction('approve', 'Apakah Anda yakin ingin menyetujui?', {{ $selectedCandidate->id }})">
                                 Approve
                               </button>
 
                               <button class="dropdown-item"
-                                onclick="confirmAction('reject', 'Apakah Anda yakin ingin menolak?', {{ $candidate->id }})">
+                                onclick="confirmAction('reject', 'Apakah Anda yakin ingin menolak?', {{ $selectedCandidate->id }})">
                                 Reject
                               </button>
 
                               <!-- Forms for Approve and Reject actions -->
-                              <form id="approveForm_{{ $candidate->id }}"
-                                action="{{ route('selectedCandidate.updateApprovalStatus', $candidate->id) }}"
+                              <form id="approveForm_{{ $selectedCandidate->id }}"
+                                action="{{ route('selectedCandidate.updateApprovalStatus', $selectedCandidate->id) }}"
                                 method="POST" style="display: none;">
                                 @csrf
                                 @method('patch')
                                 <input type="hidden" name="is_approve" value="1"> <!-- hire value -->
                               </form>
 
-                              <form id="rejectForm_{{ $candidate->id }}"
-                                action="{{ route('selectedCandidate.updateApprovalStatus', $candidate->id) }}"
+                              <form id="rejectForm_{{ $selectedCandidate->id }}"
+                                action="{{ route('selectedCandidate.updateApprovalStatus', $selectedCandidate->id) }}"
                                 method="POST" style="display: none;">
                                 @csrf
                                 @method('patch')

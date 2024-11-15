@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
             'route.permission' => \App\Http\Middleware\RouteMiddleware::class,
+            'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         ]);
         $middleware->appendToGroup('web', 'route.permission');
         //

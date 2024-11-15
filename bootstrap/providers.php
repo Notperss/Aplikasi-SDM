@@ -5,4 +5,5 @@ return [
     Spatie\Permission\PermissionServiceProvider::class,
     Yajra\DataTables\DataTablesServiceProvider::class,
     App\Providers\EventServiceProvider::class,
+    Maatwebsite\Excel\ExcelServiceProvider::class,
 ];

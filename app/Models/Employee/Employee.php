@@ -7,6 +7,9 @@ use App\Models\Recruitment\Candidate;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Employee\EmployeeCategory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Employee\PersonalData\EmployeeKpi;
+use App\Models\Employee\PersonalData\EmployeeDuty;
+use App\Models\Employee\PersonalData\EmployeePhoto;
 use App\Models\Employee\PersonalData\EmployeeSkill;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Employee\PersonalData\EmployeeJobHistory;
@@ -15,7 +18,6 @@ use App\Models\Employee\PersonalData\EmployeeSocialPlatform;
 use App\Models\Employee\PersonalData\EmployeeTrainingAttended;
 use App\Models\Employee\PersonalData\EmployeeEducationalHistory;
 use App\Models\Employee\PersonalData\EmployeeLanguageProficiency;
-use App\Models\Employee\PersonalData\EmployeePhoto;
 
 class Employee extends Model
 {
@@ -158,5 +160,13 @@ class Employee extends Model
     public function contracts()
     {
         return $this->hasMany(Contract::class);
+    }
+    public function kpis()
+    {
+        return $this->hasMany(EmployeeKpi::class);
+    }
+    public function employeeDuties()
+    {
+        return $this->hasMany(EmployeeDuty::class);
     }
 }

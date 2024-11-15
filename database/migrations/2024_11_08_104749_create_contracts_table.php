@@ -21,8 +21,10 @@ return new class extends Migration {
             $table->date('end_date');
             $table->string('duration');
             $table->string('contract_number');
+            $table->integer('contract_sequence_number');
             $table->text('description')->nullable();
             $table->string('file')->nullable();
+            $table->boolean('is_lock')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

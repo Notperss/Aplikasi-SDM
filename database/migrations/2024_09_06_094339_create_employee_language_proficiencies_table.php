@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Recruitment\Candidate;
+use App\Models\Employee\Employee;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -11,9 +11,9 @@ return new class extends Migration {
      */
     public function up() : void
     {
-        Schema::create('candidate_language_proficiencies', function (Blueprint $table) {
+        Schema::create('employee_language_proficiencies', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Candidate::class)->constrained()->onDelete('cascade');
+            $table->foreignIdFor(Employee::class)->constrained()->onDelete('cascade');
             $table->string('language');
             $table->string('speaking');
             $table->string('writing');
@@ -30,6 +30,6 @@ return new class extends Migration {
      */
     public function down() : void
     {
-        Schema::dropIfExists('candidate_language_proficiencies');
+        Schema::dropIfExists('employee_language_proficiencies');
     }
 };

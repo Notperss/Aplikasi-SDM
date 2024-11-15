@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Recruitment\Candidate;
+use App\Models\Employee\Employee;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -11,9 +11,9 @@ return new class extends Migration {
      */
     public function up() : void
     {
-        Schema::create('candidate_social_platforms', function (Blueprint $table) {
+        Schema::create('employee_social_platforms', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Candidate::class)->constrained()->onDelete('cascade');
+            $table->foreignIdFor(Employee::class)->constrained()->onDelete('cascade');
             $table->string('platform');
             $table->string('account_name');
             $table->string('account_link')->nullable();
@@ -27,6 +27,6 @@ return new class extends Migration {
      */
     public function down() : void
     {
-        Schema::dropIfExists('candidate_social_platforms');
+        Schema::dropIfExists('employee_social_platforms');
     }
 };

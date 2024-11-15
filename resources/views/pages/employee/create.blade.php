@@ -173,9 +173,7 @@
                   <option value="KONTRAK" {{ old('work_relationship') == 'KONTRAK' ? 'selected' : '' }}>KONTRAK
                   </option>
                   <option value="TETAP" {{ old('work_relationship') == 'TETAP' ? 'selected' : '' }}>TETAP</option>
-                  <option value="INTERNSHIP" {{ old('work_relationship') == 'INTERNSHIP' ? 'selected' : '' }}>
-                    INTERNSHIP
-                  </option>
+
                 </select>
                 @error('work_relationship')
                   <a style="color: red">
@@ -194,8 +192,7 @@
                   </option>
                   <option value="PART-TIME" {{ old('work_status') == 'PART-TIME' ? 'selected' : '' }}>PART-TIME
                   </option>
-                  <option value="INTERNSHIP" {{ old('work_status') == 'INTERNSHIP' ? 'selected' : '' }}>INTERNSHIP
-                  </option>
+
                 </select>
                 @error('work_status')
                   <a style="color: red">

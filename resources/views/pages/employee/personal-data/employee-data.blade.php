@@ -1,12 +1,15 @@
   <form action="{{ route('employee.update', $employee) }}" method="post" enctype="multipart/form-data">
     @csrf
     @method('put')
+
+
     <div class="row">
 
 
       <div class="col-12">
         <div class="card">
           <div class="card-body">
+
             <div class="row">
               <div class="col-md-6 col-12">
                 <div class="form-group">
@@ -900,6 +903,7 @@
               <button type="submit" class="btn btn-primary me-1 mb-1">Submit</button>
               <a href="{{ route('employee.index') }}" class="btn btn-light-secondary me-1 mb-1">Back</a>
             </div>
+
           </div>
         </div>
       </div>

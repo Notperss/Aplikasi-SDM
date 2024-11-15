@@ -4,6 +4,7 @@ namespace App\Models\WorkUnit;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ManagementAccess\Company;
+use App\Models\Position\Position;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -32,6 +33,11 @@ class Division extends Model
     {
         // 2 parameter (path model, field foreign key)
         return $this->hasMany(Department::class);
+    }
+    public function positions()
+    {
+        // 2 parameter (path model, field foreign key)
+        return $this->hasMany(Position::class);
     }
 
 }

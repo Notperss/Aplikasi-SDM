@@ -26,6 +26,8 @@ use App\Http\Controllers\ManagementAccess\MenuGroupController;
 use App\Http\Controllers\ManagementAccess\PermissionController;
 use App\Http\Controllers\Recruitment\HistorySelectionController;
 use App\Http\Controllers\Recruitment\SelectedCandidateController;
+use App\Http\Controllers\Employee\PersonalData\EmployeeKpiController;
+use App\Http\Controllers\Employee\PersonalData\EmployeeDutyController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeSkillController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeJobHistoryController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeFamilyDetailController;
@@ -106,6 +108,8 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::resource('employeeTrainingAttended', EmployeeTrainingAttendedController::class)->only('store', 'update', 'destroy');
     Route::resource('employeeSkill', EmployeeSkillController::class)->only('store', 'update', 'destroy');
     Route::resource('employeeSocialPlatform', EmployeeSocialPlatformController::class)->only('store', 'update', 'destroy');
+    Route::resource('employeeKpi', EmployeeKpiController::class)->only('store', 'update', 'destroy');
+    Route::resource('employeeDuty', EmployeeDutyController::class)->only('store', 'update', 'destroy');
 
     //workUnit
     Route::resource('directorate', DirectorateController::class)->only('index', 'store', 'update', 'destroy');
@@ -127,9 +131,13 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::resource('employee', EmployeeController::class);
     Route::get('/new-employee/{id}', [EmployeeController::class, 'newEmployee'])->name('employee.newEmployee');
     Route::put('/update-new-employee/{id}', [EmployeeController::class, 'updateNewEmployee'])->name('employee.updateNewEmployee');
+    Route::get('/employee-chart-data/{year}', [EmployeeController::class, 'getEmployeeChartData'])->name('employee-chart-data');
+
 
     Route::resource('employeeCategory', EmployeeCategoryController::class)->only('index', 'store', 'update', 'destroy');
-    Route::resource('contract', ContractController::class)->only('index', 'store', 'update', 'destroy');
+    Route::resource('contract', ContractController::class)->only('index', 'store', 'edit', 'update', 'destroy');
+    Route::post('import-contract', [ContractController::class, 'importContract'])->name('contract.import');
+    Route::put('lock-contract/{id}', [ContractController::class, 'lockContract'])->name('contract.lock');
 
 
 

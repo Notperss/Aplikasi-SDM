@@ -3,8 +3,8 @@
 namespace App\Http\Requests\Employee;
 
 use Illuminate\Validation\Rule;
-use App\Models\Recruitment\Candidate;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Recruitment\SelectedCandidate;
 
 class UpdateNewEmployeeRequest extends FormRequest
 {
@@ -24,7 +24,8 @@ class UpdateNewEmployeeRequest extends FormRequest
 
     public function rules() : array
     {
-        $candidate = Candidate::findOrFail($this->id);
+        $selectedCandidate = SelectedCandidate::findOrFail($this->id);
+        $candidate = $selectedCandidate->candidate;
 
         $employeeId = $candidate->employee;
         // dd($employeeId);

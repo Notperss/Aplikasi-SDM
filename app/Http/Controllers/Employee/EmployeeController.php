@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Employee\Employee;
 use App\Models\Position\Position;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Recruitment\Candidate;
@@ -295,8 +296,6 @@ class EmployeeController extends Controller
 
                 'candidate_id' => $candidate->id,
 
-
-
                 "company_id" => $candidate->company_id ?? null,
                 "name" => $candidate->name ?? null,
                 "photo" => $candidate->photo ?? null,
@@ -347,14 +346,12 @@ class EmployeeController extends Controller
                 "file_ijazah" => $candidate->file_ijazah ?? null,
                 "reference" => $candidate->reference ?? null,
                 "disability" => $candidate->disability ?? null,
-                "is_hire" => $candidate->is_hire ?? null,
-                "is_selection" => $candidate->is_selection ?? null,
+                // "is_hire" => $candidate->is_hire ?? null,
+                // "is_selection" => $candidate->is_selection ?? null,
                 "tag" => $candidate->tag ?? null,
+                "glasses" => $candidate->glasses ?? null,
             ]);
 
-            $selectedCandidate->is_hire = 1;
-
-            $selectedCandidate->save();
         }
 
         $positions = Position::where('id', $selectedCandidate->position_id)->latest()->get();
@@ -368,9 +365,13 @@ class EmployeeController extends Controller
     {
         $data = $request->all();
 
-        $candidate = Candidate::findOrFail($id);
+        $selectedCandidate = SelectedCandidate::findOrFail($id);
 
-        // dd($candidate->employee);
+        $selectedCandidate->is_hire = 1;
+
+        $selectedCandidate->save();
+
+        $candidate = $selectedCandidate->candidate;
 
         if ($candidate->employee) {
 
@@ -380,5 +381,29 @@ class EmployeeController extends Controller
         } else {
             return redirect()->route('employee.index')->with('error', 'Employee record not found for the given candidate.');
         }
+    }
+
+    public function getEmployeeChartData($year)
+    {
+        $companyId = Auth::user()->company_id;
+
+        $employeeActiveData = [];
+        $employeeNonActiveData = [];
+
+        // Populate example data or fetch from database (you would replace this part)
+        for ($month = 1; $month <= 12; $month++) {
+            $employeeActiveData[] = DB::table('employees')->where('company_id', $companyId)->where('employee_status', 'AKTIF')
+                ->whereYear('date_joining', $year)
+                ->whereMonth('date_joining', $month)
+                ->count();
+            $employeeNonActiveData[] = DB::table('employees')->where('company_id', $companyId)->where('employee_status', '!=', 'AKTIF')
+                ->whereYear('date_joining', $year)
+                ->whereMonth('date_joining', $month)
+                ->count();
+        }
+        return response()->json([
+            'employeeActiveData' => $employeeActiveData,
+            'employeeNonActiveData' => $employeeNonActiveData,
+        ]);
     }
 }

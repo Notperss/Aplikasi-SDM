@@ -18,10 +18,13 @@ class Contract extends Model
         'end_date',
         'duration',
         'contract_number',
+        'contract_sequence_number',
         'description',
         'file',
-
+        'is_lock',
     ];
+
+    protected $casts = ['is_lock' => 'boolean'];
 
     public function employee()
     {
@@ -29,6 +32,6 @@ class Contract extends Model
     }
     public function employeeNik()
     {
-        return $this->belongsTo(Employee::class, 'nik_employee');
+        return $this->belongsTo(Employee::class, 'nik_employee', 'nik');
     }
 }

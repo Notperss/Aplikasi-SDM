@@ -2,8 +2,15 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\Employee\Contract;
+use App\Models\Employee\Employee;
+use App\Models\WorkUnit\Division;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Models\ManagementAccess\Company;
 
 class DashboardController extends Controller
 {
@@ -12,7 +19,58 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('pages.dashboard.index');
+        $companyId = Auth::user()->company_id;
+
+        $employees = Employee::all();
+
+
+        // $nextMonthStart = Carbon::now()->startOfMonth()->addMonth(); // Start of next month
+        $nextMonthEnd = Carbon::now()->endOfMonth()->addMonth(); // End of next month
+        $today = Carbon::now();
+
+        $contracts = Contract::where('company_id', $companyId)->orderBy('end_date', 'desc');
+        $contractsIncoming = $contracts->whereBetween('end_date', [$today, $nextMonthEnd])
+            ->get();
+
+        $contractsExpired = Contract::with('employee')
+            ->where('company_id', $companyId)
+            ->where('end_date', '<', $today) // Only contracts with an end date before today
+            ->whereHas('employee', function ($query) {
+                $query->whereNull('date_leaving'); // Only active employees
+            })
+            ->orderBy('end_date', 'asc')
+            ->get();
+
+        $divisions = Division::where('company_id', $companyId)->get();
+
+        $companies = Company::with('directorates')->where('id', $companyId)->orderBy('name', 'asc')->get();
+
+        $currentYear = date('Y');
+        $employeeActiveData = [];
+        $employeeNonActiveData = [];
+
+        // Fetch employee data per month for the current year
+        for ($month = 1; $month <= 12; $month++) {
+            $employeeActiveData[] = DB::table('employees')->where('company_id', $companyId)->where('employee_status', 'AKTIF')
+                ->whereYear('date_joining', $currentYear)
+                ->whereMonth('date_joining', $month)
+                ->count();
+            $employeeNonActiveData[] = DB::table('employees')->where('company_id', $companyId)->where('employee_status', '!=', 'AKTIF')
+                ->whereYear('date_joining', $currentYear)
+                ->whereMonth('date_joining', $month)
+                ->count();
+        }
+
+
+        return view('pages.dashboard.index', compact(
+            'employees',
+            'divisions',
+            'companies',
+            'employeeActiveData',
+            'employeeNonActiveData',
+            'contractsIncoming',
+            'contractsExpired',
+        ));
     }
 
     /**

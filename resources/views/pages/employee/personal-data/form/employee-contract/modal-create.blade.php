@@ -18,18 +18,30 @@
               <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
               <div class="row">
+                <div class="my-2">
+                  <label class="form-label" for="contract_number">No. Kontrak <code>*</code></label>
+                  <input id="contract_number" name="contract_number"
+                    class="form-control @error('contract_number') is-invalid @enderror" required>
+                  @error('contract_number')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div>
+              </div>
+
+              <div class="row">
                 <div class="col-md-6">
+
                   <div class="my-2">
                     <label class="form-label" for="nik_employee">NIK Karyawan</label>
-                    <input id="nik_employee" name="nik_employee"
-                      class="form-control @error('nik_employee') is-invalid @enderror" required>
+                    <input id="nik_employee" name="nik_employee" value="{{ $employee->nik }}"
+                      class="form-control @error('nik_employee') is-invalid @enderror" readonly>
                     @error('nik_employee')
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>
 
                   <div class="my-2">
-                    <label class="form-label" for="start_date">Tanggal Awal</label>
+                    <label class="form-label" for="start_date">Tanggal Awal <code>*</code></label>
                     <input type="date" id="start_date" name="start_date"
                       class="form-control @error('start_date') is-invalid @enderror" required>
                     @error('start_date')
@@ -38,31 +50,30 @@
                   </div>
 
                   <div class="my-2">
-                    <label class="form-label" for="end_date">Tanggal Akhir</label>
+                    <label class="form-label" for="end_date">Tanggal Akhir <code>*</code></label>
                     <input type="date" id="end_date" name="end_date"
                       class="form-control @error('end_date') is-invalid @enderror" required>
                     @error('end_date')
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>
-
                 </div>
 
                 <div class="col-md-6">
                   <div class="my-2">
                     <label class="form-label" for="duration">Durasi</label>
                     <input type="number" id="duration" name="duration"
-                      class="form-control @error('duration') is-invalid @enderror" required>
+                      class="form-control @error('duration') is-invalid @enderror">
                     @error('duration')
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>
 
                   <div class="my-2">
-                    <label class="form-label" for="contract_number">Kontrak Ke-</label>
-                    <input type="number" id="contract_number" name="contract_number"
-                      class="form-control @error('contract_number') is-invalid @enderror" required>
-                    @error('contract_number')
+                    <label class="form-label" for="contract_sequence_number">Kontrak Ke- <code>*</code></label>
+                    <input type="number" id="contract_sequence_number" name="contract_sequence_number"
+                      class="form-control @error('contract_sequence_number') is-invalid @enderror" required>
+                    @error('contract_sequence_number')
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>
