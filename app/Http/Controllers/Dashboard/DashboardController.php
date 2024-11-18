@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Employee\Contract;
 use App\Models\Employee\Employee;
+use App\Models\Position\Position;
 use App\Models\WorkUnit\Division;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -119,5 +120,20 @@ class DashboardController extends Controller
     public function destroy(string $id)
     {
         abort(404);
+    }
+
+    public function getDivisionEmployee($id)
+    {
+
+        $divisionId = Division::findOrFail($id);
+
+
+        $positions = Position::wherehas('employee')->where('division_id', $id)->get();
+
+
+
+
+        return view('pages.dashboard.employeesDivision', compact('positions', 'divisionId'));
+
     }
 }

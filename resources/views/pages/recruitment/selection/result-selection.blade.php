@@ -106,7 +106,27 @@
             </div>
 
             <div class="mb-2">
-              <label for="file_selection" class="form-label">File :</label>
+              <label for="file_fptk" class="form-label">File FPTK :</label>
+              @if ($selection->file_fptk)
+                <a href="{{ asset('storage/' . $selection->file_fptk) }}" target="_blank"
+                  class="text-sm btn btn-sm btn-primary my-2 mx-3">
+                  Lihat File
+                </a>
+              @else
+                <span>-</span>
+              @endif
+
+              @error('file_fptk')
+                <a style="color: red"><small>{{ $message }}</small></a>
+              @enderror
+
+            </div>
+
+            <div class="mb-2">
+              <label for="file_selection" class="form-label">File Seleksi :</label>
+              <input class="form-control @error('file_selection') is-invalid @enderror" accept=".pdf" type="file"
+                id="file_selection" name="file_selection">
+
               @if ($selection->file_selection)
                 <a href="{{ asset('storage/' . $selection->file_selection) }}" target="_blank"
                   class="text-sm btn btn-sm btn-primary mt-3">
@@ -146,13 +166,13 @@
     <div class="card-header">
       <div class="d-flex justify-content-between align-items-center ">
         <h5 class="fw-normal my-3 text-body">History Seleksi</h5>
-        {{-- <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
+        <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
           data-bs-target="#modal-form-history-selection">
           <i class="bi bi-plus-lg"></i>
           History Seleksi
         </button>
         @include('pages.recruitment.selection.modal-history')
-      --}}
+
       </div>
     </div>
     <div class="card-body">
@@ -165,7 +185,7 @@
                 <th>Tanggal</th>
                 <th>Proses</th>
                 <th>Keterangan</th>
-                {{-- <th>Action</th> --}}
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -175,15 +195,15 @@
                   <td>{{ Carbon\Carbon::parse($historySelection->date)->translatedFormat('l, d F Y') ?? '-' }}</td>
                   <td>{{ $historySelection->name_process }}</td>
                   <td>{{ $historySelection->description }}</td>
-                  {{-- <td> <button class="btn btn-danger mx-2"
-                        onclick="deleteHistory('{{ $historySelection->id }}')"><i class="bi bi-trash"></i></button>
+                  <td> <button class="btn btn-danger mx-2" onclick="deleteHistory('{{ $historySelection->id }}')"><i
+                        class="bi bi-trash"></i></button>
 
-                      <form id="historyDeleteForm_{{ $historySelection->id }}"
-                        action="{{ route('historySelection.destroy', $historySelection->id) }}" method="POST">
-                        @method('DELETE')
-                        @csrf
-                      </form>
-                    </td> --}}
+                    <form id="historyDeleteForm_{{ $historySelection->id }}"
+                      action="{{ route('historySelection.destroy', $historySelection->id) }}" method="POST">
+                      @method('DELETE')
+                      @csrf
+                    </form>
+                  </td>
                 </tr>
               @endforeach
             </tbody>
@@ -394,6 +414,21 @@
 
         // Submit the corresponding form
         document.getElementById('closeSelection_' + getId).submit();
+      }
+    });
+  }
+
+  function deleteHistory(getId) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // If the user clicks "Yes, delete it!", submit the corresponding form
+        document.getElementById('historyDeleteForm_' + getId).submit();
       }
     });
   }

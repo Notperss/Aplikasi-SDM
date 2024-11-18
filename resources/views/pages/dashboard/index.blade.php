@@ -212,7 +212,7 @@
                         ->count();
                   @endphp
                   <h6 class="text-muted font-semibold">
-                    {{ $division->code }}</a>
+                    <a href="{{ route('getDivisionEmployee', $division->id) }}"> {{ $division->code }}</a>
                   </h6>
                   <h4 class="font-extrabold mb-0 float-end">
                     {{ $positionsWithEmployeeCount }}
@@ -244,7 +244,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <h6 class="text-muted font-semibold">
-                    {{ $division->code }}</a>
+                    <a href="{{ route('getDivisionEmployee', $division->id) }}"> {{ $division->code }}</a>
                   </h6>
                   @php
                     $positionsWithEmployeeCount = $division->positions

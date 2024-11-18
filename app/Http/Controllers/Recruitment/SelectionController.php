@@ -62,8 +62,8 @@ class SelectionController extends Controller
                 'name' => 'name',
                 // 'dob' => 'dob',
                 'gender' => 'gender',
-                'phone_number' => 'phone_number',
-                'applied_position' => 'applied_position',
+                // 'phone_number' => 'phone_number',
+                // 'applied_position' => 'applied_position',
                 // 'last_educational' => 'last_educational',
                 'study' => 'study',
                 'disability' => 'disability',
@@ -125,8 +125,11 @@ class SelectionController extends Controller
                         return $ageYears . ' Tahun ' . $ageMonths . ' Bulan';
                     }
                     return 'N/A'; // Return 'N/A' if dob is not available
+                })->editColumn('selectionCount', function ($item) {
+
+                    return '<a href="' . route('selection.getCandidateHistory', $item->id) . '">' . $item->selectedCandidates->count() . '</a>';
                 })
-                ->rawColumns(['action', 'photo', 'age'])
+                ->rawColumns(['action', 'photo', 'age', 'selectionCount'])
                 ->toJson();
         }
 
@@ -422,7 +425,14 @@ class SelectionController extends Controller
 
     public function getCandidate(Request $request)
     {
-        $candidates = Candidate::where('is_hire', false)->where('is_selection', false)->orderBy('name', 'asc');
+        // $candidates = Candidate::where('is_hire', false)->where('is_selection', false)->orderBy('name', 'asc');
+        $companyId = Auth::user()->company_id;
+        $isSuperAdmin = Auth::user()->hasRole('super-admin');
+
+        $candidates = Candidate::where('is_hire', false)->where('is_selection', false)
+            ->when(! $isSuperAdmin, function ($query) use ($companyId) {
+                $query->where('company_id', $companyId);
+            })->orderBy('name', 'asc');
 
         if (request()->ajax()) {
 
@@ -430,8 +440,8 @@ class SelectionController extends Controller
                 'name' => 'name',
                 // 'dob' => 'dob',
                 'gender' => 'gender',
-                'phone_number' => 'phone_number',
-                'applied_position' => 'applied_position',
+                // 'phone_number' => 'phone_number',
+                // 'applied_position' => 'applied_position',
                 // 'last_educational' => 'last_educational',
                 'study' => 'study',
                 'disability' => 'disability',
@@ -495,8 +505,11 @@ class SelectionController extends Controller
                         return $ageYears . ' Tahun ' . $ageMonths . ' Bulan';
                     }
                     return 'N/A'; // Return 'N/A' if dob is not available
+                })->editColumn('selectionCount', function ($item) {
+
+                    return '<a href="' . route('selection.getCandidateHistory', $item->id) . '" target="_blank">' . $item->selectedCandidates->count() . '</a>';
                 })
-                ->rawColumns(['action', 'photo', ''])
+                ->rawColumns(['action', 'photo', 'selectionCount'])
                 ->toJson();
         }
     }
@@ -528,6 +541,13 @@ class SelectionController extends Controller
         }
 
         return redirect()->back()->with('error', 'Invalid request. Approval status is missing.');
+    }
+
+    public function getCandidateHistory($id)
+    {
+        $candidate = Candidate::findOrFail($id);
+
+        return view('pages.recruitment.selection.candidate-history-selection', compact('candidate'));
     }
 
     // public function storeHistory(Request $request, $selection)

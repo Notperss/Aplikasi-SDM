@@ -111,10 +111,10 @@
                     @enderror
                   </div>
                   <div class="mb-2">
-                    <label for="file_selection" class="form-label">File</label>
-                    <input class="form-control @error('file_selection') is-invalid @enderror" accept=".pdf"
-                      type="file" id="file_selection" name="file_selection">
-                    @error('file_selection')
+                    <label for="file_fptk" class="form-label">File</label>
+                    <input class="form-control @error('file_fptk') is-invalid @enderror" accept=".pdf" type="file"
+                      id="file_fptk" name="file_fptk">
+                    @error('file_fptk')
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>
@@ -186,12 +186,13 @@
                   <th scope="col">Pelamar</th>
                   <th scope="col">Usia</th>
                   <th scope="col">Jenis Kelamin</th>
-                  <th scope="col">Phone</th>
-                  <th scope="col">Posisi yang dilamar</th>
+                  {{-- <th scope="col">Phone</th>
+                  <th scope="col">Posisi yang dilamar</th> --}}
                   <th scope="col">Pendidikan</th>
                   <th scope="col">Jurusan</th>
                   <th scope="col">Penyandang Disabilitas</th>
                   <th scope="col">Status Perkawinan</th>
+                  <th scope="col">pernah Seleksi</th>
                   <th scope="col">Tag</th>
                   <th scope="col"></th>
                 </tr>
@@ -214,12 +215,12 @@
                       <option value="PEREMPUAN">PEREMPUAN</option>
                     </select>
                   </th>
-                  <th scope="col">
+                  {{-- <th scope="col">
                     <textarea type="text" class="form-control form-control-sm" id="phoneSearch" placeholder="search ..."></textarea>
                   </th>
                   <th scope="col">
                     <textarea type="text" class="form-control form-control-sm" id="appPositionSearch" placeholder="search ..."></textarea>
-                  </th>
+                  </th> --}}
                   <th scope="col">
                     <select type="text" id="educateFilter" class="form-control form-control-sm"
                       style="width: 100%">
@@ -259,8 +260,11 @@
                     </select>
                   </th>
                   <th scope="col" colspan="2">
-                    <textarea type="text" class="form-control form-control-sm" id="tagSearch" placeholder="search ..."></textarea>
+                    <textarea type="text" class="form-control form-control-sm" id="tagSearch" placeholder="search Tag ..."></textarea>
                   </th>
+                  <th scope="col">
+                  </th>
+
 
                 </tr>
               </thead>
@@ -510,8 +514,8 @@
             d.name = $('#nameSearch').val();
             d.age = $('#ageSearch').val();
             d.gender = $('#genderFilter').val();
-            d.phone_number = $('#phoneSearch').val(); // Should match the database column
-            d.applied_position = $('#appPositionSearch').val();
+            // d.phone_number = $('#phoneSearch').val(); // Should match the database column
+            // d.applied_position = $('#appPositionSearch').val();
             d.last_educational = $('#educateFilter').val();
             d.study = $('#studySearch').val();
             d.disability = $('#disabilitySearch').val();
@@ -543,14 +547,14 @@
             data: 'gender',
             name: 'gender'
           },
-          {
-            data: 'phone_number',
-            name: 'phone_number'
-          },
-          {
-            data: 'applied_position',
-            name: 'applied_position'
-          },
+          // {
+          //   data: 'phone_number',
+          //   name: 'phone_number'
+          // },
+          // {
+          //   data: 'applied_position',
+          //   name: 'applied_position'
+          // },
           {
             data: 'last_educational',
             name: 'last_educational'
@@ -566,6 +570,10 @@
           {
             data: 'marital_status',
             name: 'marital_status'
+          },
+          {
+            data: 'selectionCount',
+            name: 'selectionCount'
           },
           {
             data: 'tag',

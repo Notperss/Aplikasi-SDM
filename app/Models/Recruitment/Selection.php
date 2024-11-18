@@ -25,6 +25,7 @@ class Selection extends Model
         'interviewer',
         'description',
         'file_selection',
+        'file_fptk',
         'is_finished',
         'status',
     ];

@@ -64,6 +64,8 @@ Route::group(['middleware' => ['web', 'auth', 'role:super-admin', 'verified',]],
 
 Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::resource('dashboard', DashboardController::class)->only('index', );
+    Route::get('division/{id}', [DashboardController::class, 'getDivisionEmployee'])->name('getDivisionEmployee');
+
     Route::resource('activity-log', ActivityLogController::class)->only('index');
 
     Route::resource('candidate', CandidateController::class);
@@ -76,6 +78,7 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::patch('/selection/{id}/restore', [SelectionController::class, 'restore'])->name('selection.restore');
     Route::patch('selection/{selection}/close', [SelectionController::class, 'closeSelection'])->name('selection.close');
     Route::get('get-candidate', [SelectionController::class, 'getCandidate'])->name('selection.getCandidate');
+    Route::get('candidate-history-selection/{id}', [SelectionController::class, 'getCandidateHistory'])->name('selection.getCandidateHistory');
 
 
     Route::patch('/selection/{id}/update-approval', [SelectionController::class, 'updateApprovalStatus'])->name('selection.updateApprovalStatus');
