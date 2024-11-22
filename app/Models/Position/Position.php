@@ -2,18 +2,20 @@
 
 namespace App\Models\Position;
 
-use App\Models\Employee\Employee;
 use App\Models\WorkUnit\Section;
+use App\Models\Employee\Employee;
 use App\Models\WorkUnit\Division;
 use App\Models\WorkUnit\Department;
 use App\Models\WorkUnit\Directorate;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Recruitment\Candidate;
+use App\Models\Recruitment\Selection;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ManagementAccess\Company;
-use App\Models\Recruitment\Candidate;
 use App\Models\Recruitment\SelectedCandidate;
-use App\Models\Recruitment\Selection;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Employee\PersonalData\EmployeeCareer;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Position extends Model
 {
@@ -29,6 +31,16 @@ class Position extends Model
         'name',
         'description',
     ];
+    public function scopeIsSuperAdmin($query, $isSuperAdmin, $companyId = null)
+    {
+        return $query->when(
+            ! $isSuperAdmin,
+            function ($q) use ($companyId) {
+                $q->where('positions.company_id', $companyId);
+            }
+        );
+    }
+
 
     public function company()
     {
@@ -82,5 +94,9 @@ class Position extends Model
     public function employee()
     {
         return $this->hasOne(Employee::class);
+    }
+    public function careers()
+    {
+        return $this->hasMany(EmployeeCareer::class);
     }
 }

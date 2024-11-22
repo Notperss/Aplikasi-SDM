@@ -69,13 +69,17 @@
 
                       @if ($selection->is_finished)
                         @if ($selection->status)
-                          @if ($selection->is_approve)
+                          @if ($selection->is_approve === 3)
                             <span class="badge bg-primary">Selesai - Disetujui</span><br>
                             <span class="badge bg-primary mt-1">Kandidat Terpilih</span>
                           @elseif ($selection->is_approve === 0)
                             <span class="badge bg-danger">Selesai - Ditolak</span><br>
+                          @elseif ($selection->is_approve === 1)
+                            <span class="badge bg-secondary">Menunggu Persetujuan Kepala Departmen</span><br>
+                          @elseif ($selection->is_approve === 2)
+                            <span class="badge bg-secondary">Menunggu Persetujuan Manager</span><br>
                           @else
-                            <span class="badge bg-info">Pending</span>
+                            <span class="badge bg-secondary">Pending</span>
                           @endif
                         @else
                           <span class="badge bg-primary">Selesai</span><br>
@@ -94,23 +98,18 @@
                       </a>
                     @else
                       -
-                      {{-- @foreach ($selection->SelectedCandidates as $candidate)
-                      {{ $candidate->candidate->name }},
-                    @endforeach --}}
                     @endif
                   </td>
-                  {{-- <td>{{ $selection->status }}</td> --}}
                   <td>
-                    @if ($selection->is_finished == 0 || auth()->user()->hasRole('super-admin'))
-                      @role('ka-dep|super-admin')
-                        <a class="btn btn-sm btn-info mx-1"
-                          href="{{ route('selectedCandidate.resultSelection', $selection) }}">
-                          <i class="bi bi-card-checklist"></i>
-                        </a>
-                      @endrole
+                    <a class="btn btn-sm btn-info mx-1"
+                      href="{{ route('selectedCandidate.resultSelection', $selection) }}">
+                      <i class="bi bi-card-checklist"></i>
+                    </a>
 
-                      @role('staff|super-admin')
-                        <div class="btn-group">
+                    <div class="btn-group">
+
+                      @if ($selection->is_finished == 0 || auth()->user()->hasRole('super-admin'))
+                        @role('staff|ka-si|super-admin')
                           <div class="dropdown">
                             <button class="btn btn-sm btn-primary dropdown-toggle me-1" type="button"
                               id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"
@@ -128,53 +127,77 @@
                                 @method('DELETE')
                                 @csrf
                               </form>
+
+                              {{-- <button class="dropdown-item"
+                                onclick="confirmAction('approve', 'Apakah Anda yakin ingin menyetujui?', {{ $selection->id }})">
+                                Selesai
+                              </button>
+
+                              <form id="approveForm_{{ $selection->id }}"
+                                action="{{ route('selection.updateApprovalStatus', $selection->id) }}" method="POST"
+                                style="display: none;">
+                                @csrf
+                                @method('patch')
+
+                                <input type="hidden" name="is_approve" value="1"> <!-- Approve value -->
+                              </form> --}}
+
                             </div>
                           </div>
-                        </div>
-                      @endif
-                    @endrole
-
-                    <!--APPROVE FOR MANAGER-->
-                    @if (
-                        ($selection->is_finished == 1 && $selection->status == 1 && $selection->is_approve == null) ||
-                            auth()->user()->hasRole('super-admin'))
-                      @role('manager|super-admin')
-                        <div class="dropdown">
-                          <button class="btn btn-sm btn-primary dropdown-toggle me-1" type="button"
-                            id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="bi bi-three-dots-vertical"></i>
-                          </button>
-                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <button class="dropdown-item"
-                              onclick="confirmAction('approve', 'Apakah Anda yakin ingin menyetujui?', {{ $selection->id }})">
-                              Approve
-                            </button>
-
-                            <button class="dropdown-item"
-                              onclick="confirmAction('reject', 'Apakah Anda yakin ingin menolak?', {{ $selection->id }})">
-                              Reject
-                            </button>
-
-                            <!-- Forms for Approve and Reject actions -->
-                            <form id="approveForm_{{ $selection->id }}"
-                              action="{{ route('selection.updateApprovalStatus', $selection->id) }}" method="POST"
-                              style="display: none;">
-                              @csrf
-                              @method('patch')
-                              <input type="hidden" name="is_approve" value="1"> <!-- Approve value -->
-                            </form>
-
-                            <form id="rejectForm_{{ $selection->id }}"
-                              action="{{ route('selection.updateApprovalStatus', $selection->id) }}" method="POST"
-                              style="display: none;">
-                              @csrf
-                              @method('patch')
-                              <input type="hidden" name="is_approve" value="0"> <!-- Reject value -->
-                            </form>
-                          </div>
-                        </div>
+                        @endif
                       @endrole
-                    @endif
+
+
+                      <!--APPROVE FOR MANAGER/KADEP-->
+                      {{-- @if ($selection->is_approve == 1 || auth()->user()->hasRole('super-admin')) --}}
+                      @if (
+                          ($selection->is_approve == 1 && auth()->user()->hasRole('ka-dep')) ||
+                              (($selection->is_approve == 2 && auth()->user()->hasRole('manager')) || Auth::user()->hasRole('super-admin')))
+                        @role('ka-dep|manager|super-admin')
+                          <div class="dropdown">
+                            <button class="btn btn-sm btn-primary dropdown-toggle me-1" type="button"
+                              id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"
+                              aria-expanded="false">
+                              <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                              <button class="dropdown-item"
+                                onclick="confirmAction('approve', 'Apakah Anda yakin ingin menyetujui?', {{ $selection->id }})">
+                                Approve
+                              </button>
+
+                              <button class="dropdown-item"
+                                onclick="confirmAction('reject', 'Apakah Anda yakin ingin menolak?', {{ $selection->id }})">
+                                Reject
+                              </button>
+
+                              <!-- Forms for Approve and Reject actions -->
+                              <form id="approveForm_{{ $selection->id }}"
+                                action="{{ route('selection.updateApprovalStatus', $selection->id) }}" method="POST"
+                                style="display: none;">
+                                @csrf
+                                @method('patch')
+
+                                <input type="hidden" name="is_approve"
+                                  value="{{ $selection->is_approve == 1 ? 2 : 3 }}">
+
+                              </form>
+
+                              <form id="rejectForm_{{ $selection->id }}"
+                                action="{{ route('selection.updateApprovalStatus', $selection->id) }}" method="POST"
+                                style="display: none;">
+                                @csrf
+                                @method('patch')
+                                <input type="hidden" name="is_approve" value="0"> <!-- Reject value -->
+                              </form>
+                            </div>
+
+                          </div>
+                        @endrole
+                      @endif
+                    </div>
 
 
                   </td>

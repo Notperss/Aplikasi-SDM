@@ -118,6 +118,12 @@ class EmployeeDutyController extends Controller
      */
     public function destroy(EmployeeDuty $employeeDuty)
     {
+        $path_file = $employeeDuty->file;
+
+        if ($path_file != null || $path_file != '') {
+            Storage::disk('public_local')->delete($path_file);
+        }
+
         $employeeDuty->delete();
 
         return redirect()->back()->with('success', 'Data has been deleted successfully!.');

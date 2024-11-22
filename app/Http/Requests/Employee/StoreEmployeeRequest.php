@@ -27,8 +27,16 @@ class StoreEmployeeRequest extends FormRequest
             // 'candidate_id' => 'required|integer|exists:candidates,id',
             'position_id' => 'required|integer|exists:positions,id',
             'employee_category_id' => 'required|integer|exists:employee_categories,id',
-            'nik' => 'required|string',
-            'name' => 'required|string|max:255', 'email' => [
+            'nik' => [
+                'required',
+                'string',
+                Rule::unique('employees', 'nik')
+                    ->where(function ($query) {
+                        $query->whereNotIn('employee_status', ['NON-AKTIF', 'RESIGN', 'PENSIUN']);
+                    }),
+            ],
+            'name' => 'required|string|max:255',
+            'email' => [
                 'nullable',
                 'string',
                 'email',

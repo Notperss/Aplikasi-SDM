@@ -16,44 +16,18 @@
 
         <div class="row">
 
-          <div class="col-md-6">
+          <div class="col-md-12">
             <div class="my-2">
               <label class="form-label" for="name">Nama Seleksi</label>
-              <input id="name" name="name" value="{{ old('name', $selection->name) }}"
-                class="form-control @error('name') is-invalid @enderror" readonly>
+              <textarea id="name" name="name" value="{{ old('name', $selection->name) }}"
+                class="form-control @error('name') is-invalid @enderror" rows="3" readonly>{{ old('name', $selection->name) }}</textarea>
               @error('name')
                 <a style="color: red"><small>{{ $message }}</small></a>
               @enderror
             </div>
-            <div class="mb-2">
-              <label class="form-label" for="pic_selection">PIC Divisi Pemohon</label>
-              <input id="pic_selection" name="pic_selection"
-                value="{{ old('pic_selection', $selection->division->name ?? '-') }}"
-                class="form-control @error('pic_selection') is-invalid @enderror" readonly>
-              @error('pic_selection')
-                <a style="color: red"><small>{{ $message }}</small></a>
-              @enderror
-            </div>
-            <div class="mb-2">
-              <label class="form-label" for="interviewer">Pewawancara</label>
-              <textarea id="interviewer" name="interviewer" rows="3"
-                class="form-control @error('interviewer') is-invalid @enderror" readonly> {{ old('interviewer', $selection->interviewer) }} </textarea>
-              @error('interviewer')
-                <a style="color: red"><small>{{ $message }}</small></a>
-              @enderror
-            </div>
           </div>
-          <div class="col-md-6">
 
-            {{-- <div class="my-2">
-              <label class="form-label" for="position_id">Jabatan</label>
-              <input id="position_id" name="position_id"
-                value="{{ implode(', ', old('position_id', $selection->selectedPositions->pluck('name')->toArray() ?? [])) }}"
-                class="form-control @error('position_id') is-invalid @enderror" readonly>
-              @error('position_id')
-                <a style="color: red"><small>{{ $message }}</small></a>
-              @enderror
-            </div> --}}
+          <div class="col-md-6">
 
             <div class="my-2">
               <label class="form-label" for="list-group">Jabatan</label>
@@ -69,6 +43,29 @@
                 @endforelse
               </ul>
               @error('position_id')
+                <a style="color: red"><small>{{ $message }}</small></a>
+              @enderror
+            </div>
+
+          </div>
+          <div class="col-md-6">
+
+            {{-- <div class="my-2">
+              <label class="form-label" for="position_id">Jabatan</label>
+              <input id="position_id" name="position_id"
+                value="{{ implode(', ', old('position_id', $selection->selectedPositions->pluck('name')->toArray() ?? [])) }}"
+                class="form-control @error('position_id') is-invalid @enderror" readonly>
+              @error('position_id')
+                <a style="color: red"><small>{{ $message }}</small></a>
+              @enderror
+            </div> --}}
+
+            <div class="my-2">
+              <label class="form-label" for="pic_selection">Divisi Pemohon</label>
+              <input id="pic_selection" name="pic_selection"
+                value="{{ old('pic_selection', $selection->division->name ?? '-') }}"
+                class="form-control @error('pic_selection') is-invalid @enderror" readonly>
+              @error('pic_selection')
                 <a style="color: red"><small>{{ $message }}</small></a>
               @enderror
             </div>
@@ -96,6 +93,15 @@
           </div>
           <div class="col-md-12">
 
+            <div class="my-2">
+              <label class="form-label" for="interviewer">Pewawancara</label>
+              <textarea id="interviewer" name="interviewer" rows="3"
+                class="form-control @error('interviewer') is-invalid @enderror" readonly> {{ old('interviewer', $selection->interviewer) }} </textarea>
+              @error('interviewer')
+                <a style="color: red"><small>{{ $message }}</small></a>
+              @enderror
+            </div>
+
             <div class="mb-2">
               <label class="form-label" for="description">Keterangan</label>
               <textarea id="description" name="description" rows="5"
@@ -122,7 +128,7 @@
 
             </div>
 
-            <div class="mb-2">
+            {{-- <div class="mb-2">
               <label for="file_selection" class="form-label">File Seleksi :</label>
               <input class="form-control @error('file_selection') is-invalid @enderror" accept=".pdf" type="file"
                 id="file_selection" name="file_selection">
@@ -140,23 +146,27 @@
                 <a style="color: red"><small>{{ $message }}</small></a>
               @enderror
 
-            </div>
+            </div> --}}
           </div>
 
         </div>
 
-        <div class="col-12 d-flex justify-content-end mt-4">
-          <button class="btn btn-primary me-1 mb-1" onclick="closeSelection({{ $selection->id }})">Tutup
-            Seleksi</button>
+        {{-- <div class="col-12 d-flex justify-content-end mt-4">
+          @if (!$selection->is_approve)
+            <button class="btn btn-primary me-1 mb-1" onclick="closeSelection({{ $selection->id }})">Tutup
+              Seleksi</button>
 
-          <form id="closeSelection_{{ $selection->id }}" action="{{ route('selection.close', $selection) }}"
-            method="post" enctype="multipart/form-data">
-            @csrf
-            @method('patch')
-            <input type="hidden" name="selected_option" id="selectedOptionInput_{{ $selection->id }}" value="">
-          </form>
+            <form id="closeSelection_{{ $selection->id }}" action="{{ route('selection.close', $selection) }}"
+              method="post" enctype="multipart/form-data">
+              @csrf
+              @method('patch')
+              <input type="hidden" name="selected_option" id="selectedOptionInput_{{ $selection->id }}"
+                value="">
+            </form>
+          @endif
           <a class="btn btn-light-secondary me-1 mb-1" href="{{ route('selection.index') }}">Cancel</a>
-        </div>
+        </div> --}}
+
       </div>
 
     </div>
@@ -164,16 +174,19 @@
 
   <div class="card">
     <div class="card-header">
-      <div class="d-flex justify-content-between align-items-center ">
-        <h5 class="fw-normal my-3 text-body">History Seleksi</h5>
-        <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
-          data-bs-target="#modal-form-history-selection">
-          <i class="bi bi-plus-lg"></i>
-          History Seleksi
-        </button>
-        @include('pages.recruitment.selection.modal-history')
 
+      <div class="d-flex justify-content-between align-items-center ">
+        <h5 class="fw-normal my-3 text-body">Tahapan Seleksi</h5>
+        @if (!$selection->is_approve)
+          <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
+            data-bs-target="#modal-form-history-selection">
+            <i class="bi bi-plus-lg"></i>
+            Tahapan Seleksi
+          </button>
+          @include('pages.recruitment.selection.modal-history')
+        @endif
       </div>
+
     </div>
     <div class="card-body">
       <div class="row justify-content-center">
@@ -195,14 +208,17 @@
                   <td>{{ Carbon\Carbon::parse($historySelection->date)->translatedFormat('l, d F Y') ?? '-' }}</td>
                   <td>{{ $historySelection->name_process }}</td>
                   <td>{{ $historySelection->description }}</td>
-                  <td> <button class="btn btn-danger mx-2" onclick="deleteHistory('{{ $historySelection->id }}')"><i
-                        class="bi bi-trash"></i></button>
+                  <td>
+                    @if (!$selection->is_approve)
+                      <button class="btn btn-danger mx-2" onclick="deleteHistory('{{ $historySelection->id }}')"><i
+                          class="bi bi-trash"></i></button>
 
-                    <form id="historyDeleteForm_{{ $historySelection->id }}"
-                      action="{{ route('historySelection.destroy', $historySelection->id) }}" method="POST">
-                      @method('DELETE')
-                      @csrf
-                    </form>
+                      <form id="historyDeleteForm_{{ $historySelection->id }}"
+                        action="{{ route('historySelection.destroy', $historySelection->id) }}" method="POST">
+                        @method('DELETE')
+                        @csrf
+                      </form>
+                    @endif
                   </td>
                 </tr>
               @endforeach
@@ -215,11 +231,15 @@
 
   <div class="card">
     <div class="card-header">
+
+      @if (!$selection->is_approve)
+      @endif
       <div class="d-flex justify-content-between align-items-center ">
         <div class="d-flex justify-content-between align-items-center ">
           <h5 class="fw-normal my-3 text-body">Daftar Kandidat</h5>
         </div>
       </div>
+
     </div>
     <div class="card-body">
       <div class="row justify-content-center">
@@ -254,14 +274,14 @@
                   <td>{{ $selectedCandidate->candidate->email }}</td>
                   <td>{{ $selectedCandidate->candidate->phone_number }}</td>
                   {{-- <td>
-              @if ($selectedCandidate->is_approve)
-                <span class="badge bg-primary mt-1">Disetujui</span>
-              @elseif ($selectedCandidate->is_approve === 0)
-                <span class="badge bg-danger mt-1">Ditolak</span>
-              @else
-                -
-              @endif
-            </td> --}}
+                      @if ($selectedCandidate->is_approve)
+                        <span class="badge bg-primary mt-1">Disetujui</span>
+                      @elseif ($selectedCandidate->is_approve === 0)
+                        <span class="badge bg-danger mt-1">Ditolak</span>
+                      @else
+                        -
+                      @endif
+                    </td> --}}
                   <td>
                     @if ($selectedCandidate->position_id)
                       <span class="badge bg-primary">{{ $selectedCandidate->position->name }}</span>
@@ -289,32 +309,32 @@
                               <i class="bi bi-three-dots-vertical"></i>
                             </button>
                             {{-- <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <button class="dropdown-item"
-                          onclick="confirmAction('approve', 'Apakah Anda yakin ingin menyetujui?', {{ $selectedCandidate->id }})">
-                          Approve
-                        </button>
+                              <button class="dropdown-item"
+                                onclick="confirmAction('approve', 'Apakah Anda yakin ingin menyetujui?', {{ $selectedCandidate->id }})">
+                                Approve
+                              </button>
 
-                        <button class="dropdown-item"
-                          onclick="confirmAction('reject', 'Apakah Anda yakin ingin menolak?', {{ $selectedCandidate->id }})">
-                          Reject
-                        </button>
+                              <button class="dropdown-item"
+                                onclick="confirmAction('reject', 'Apakah Anda yakin ingin menolak?', {{ $selectedCandidate->id }})">
+                                Reject
+                              </button>
 
-                        <!-- Forms for Approve and Reject actions -->
-                        <form id="approveForm_{{ $selectedCandidate->id }}"
-                          action="{{ route('selectedCandidate.approve', $selectedCandidate->id) }}" method="POST"
-                          style="display: none;">
-                          @csrf
-                          @method('patch')
-                        </form>
+                              <!-- Forms for Approve and Reject actions -->
+                              <form id="approveForm_{{ $selectedCandidate->id }}"
+                                action="{{ route('selectedCandidate.approve', $selectedCandidate->id) }}" method="POST"
+                                style="display: none;">
+                                @csrf
+                                @method('patch')
+                              </form>
 
-                        <form id="rejectForm_{{ $selectedCandidate->id }}"
-                          action="{{ route('selectedCandidate.reject', $selectedCandidate->id) }}" method="POST"
-                          style="display: none;">
-                          @csrf
-                          @method('patch')
-                        </form>
+                              <form id="rejectForm_{{ $selectedCandidate->id }}"
+                                action="{{ route('selectedCandidate.reject', $selectedCandidate->id) }}" method="POST"
+                                style="display: none;">
+                                @csrf
+                                @method('patch')
+                              </form>
 
-                      </div> --}}
+                            </div> --}}
 
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                               <button class="dropdown-item"
@@ -350,13 +370,71 @@
                         @endrole
                       @endif
 
-
                     </div>
                   </td>
                 </tr>
               @endforeach
             </tbody>
           </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+
+      <h5>Hasil Akhir Seleksi</h5>
+
+    </div>
+    <div class="card-body">
+      <div class="row justify-content-center">
+        <div class="col-md-12">
+
+          <div class="mb-2">
+            <label for="file_selection" class="form-label">Upload File Seleksi</label>
+
+            <div class="input-group">
+              <label class="btn btn-secondary" for="file_selection">Pilih File</label>
+              <input type="text" class="form-control" id="file_name_display" placeholder="No file selected"
+                readonly>
+            </div>
+
+            @if ($selection->file_selection)
+              <a href="{{ asset('storage/' . $selection->file_selection) }}" target="_blank"
+                class="text-sm btn btn-sm btn-primary mt-3">
+                Lihat File
+              </a>
+            @else
+              <span>-</span>
+            @endif
+
+            @error('file_selection')
+              <a style="color: red"><small>{{ $message }}</small></a>
+            @enderror
+
+          </div>
+
+          <div class="col-12 d-flex justify-content-end mt-4">
+            @if (!$selection->is_approve)
+              <button class="btn btn-primary me-1 mb-1" onclick="closeSelection({{ $selection->id }})">Tutup
+                Seleksi</button>
+
+              <form id="closeSelection_{{ $selection->id }}" action="{{ route('selection.close', $selection) }}"
+                method="post" enctype="multipart/form-data">
+                @csrf
+                @method('patch')
+
+                <input class="form-control @error('file_selection') is-invalid @enderror" accept=".pdf"
+                  type="file" id="file_selection" name="file_selection" hidden>
+
+                <input type="hidden" name="selected_option" id="selectedOptionInput_{{ $selection->id }}"
+                  value="">
+              </form>
+            @endif
+            <a class="btn btn-light-secondary me-1 mb-1" href="{{ route('selection.index') }}">Cancel</a>
+          </div>
+
         </div>
       </div>
     </div>
@@ -512,7 +590,26 @@
   }
 </script> --}}
 
+<script>
+  document.getElementById('file_selection').addEventListener('change', function() {
+    const fileInput = this;
+    const fileNameDisplay = document.getElementById('file_name_display');
+
+    if (fileInput.files.length > 0) {
+      fileNameDisplay.value = fileInput.files[0].name;
+    } else {
+      fileNameDisplay.value = "No file selected";
+    }
+  });
+</script>
+
 <style>
+  /* .input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  } */
+
   .fixed-frame {
     position: relative;
     z-index: 10;

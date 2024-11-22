@@ -15,8 +15,12 @@ class AllowanceController extends Controller
      */
     public function index()
     {
+        $companyId = Auth::user()->company_id;
+        $isSuperAdmin = Auth::user()->hasRole('super-admin');
 
-        $allowances = Allowance::where('allowances.company_id', Auth::user()->company_id)
+        $allowances = Allowance::when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('allowances.company_id', $companyId);
+        })
             ->join('levels', 'allowances.level_id', '=', 'levels.id') // Join the levels table
             ->orderBy('type', 'asc') // Order by the levels.name
             ->orderBy('natura', 'asc') // Order by the levels.name
@@ -26,7 +30,9 @@ class AllowanceController extends Controller
             ->get();
 
         // $allowances = Allowance::where('company_id', Auth::user()->company_id)->latest()->get();
-        $levels = Level::where('company_id', Auth::user()->company_id)->latest()->get();
+        $levels = Level::when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('company_id', $companyId);
+        })->latest()->get();
 
         return view('pages.position.allowance.index', compact('allowances', 'levels'));
     }

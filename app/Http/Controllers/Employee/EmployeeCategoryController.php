@@ -14,7 +14,13 @@ class EmployeeCategoryController extends Controller
      */
     public function index()
     {
-        $employeeCategories = EmployeeCategory::where('company_id', Auth::user()->company_id)->latest()->get();
+        $employeeCategories = EmployeeCategory::when(! Auth::user()->hasRole('super-admin'), function ($query) {
+            $query->where('company_id', Auth::user()->company_id);
+        })->latest()->get();
+
+        // if (! Auth::user()->hasRole('super-admin')) {
+        //     $employeeCategories->where('company_id', Auth::user()->company_id);
+        // }
 
         return view('pages.employee.employee-category.index', compact('employeeCategories', ));
     }

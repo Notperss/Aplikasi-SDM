@@ -672,26 +672,15 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="last_educational">Pendidikan Terakhir <code>*</code></label>
-                  <select type="text" id="last_educational" name="last_educational"
-                    class="form-control @error('last_educational') is-invalid @enderror">
-                    <option value="" disabled selected>Choose</option>
-                    <option value="S-3" {{ old('last_educational') == 'S-3' ? 'selected' : '' }}> S-3 </option>
-                    <option value="S-2" {{ old('last_educational') == 'S-2' ? 'selected' : '' }}> S-2 </option>
-                    <option value="S-1" {{ old('last_educational') == 'S-1' ? 'selected' : '' }}> S-1 </option>
-                    <option value="D-4" {{ old('last_educational') == 'D-4' ? 'selected' : '' }}> D-4 </option>
-                    <option value="D-3" {{ old('last_educational') == 'D-3' ? 'selected' : '' }}> D-3 </option>
-                    <option value="D-2" {{ old('last_educational') == 'D-2' ? 'selected' : '' }}> D-2 </option>
-                    <option value="D-1" {{ old('last_educational') == 'D-1' ? 'selected' : '' }}> D-1 </option>
-                    <option value="MA" {{ old('last_educational') == 'MA' ? 'selected' : '' }}> MA </option>
-                    <option value="SMK" {{ old('last_educational') == 'SMK' ? 'selected' : '' }}> SMK </option>
-                    <option value="SMA" {{ old('last_educational') == 'SMA' ? 'selected' : '' }}> SMA </option>
-                    <option value="MTS" {{ old('last_educational') == 'MTS' ? 'selected' : '' }}> MTS </option>
-                    <option value="SMP" {{ old('last_educational') == 'SMP' ? 'selected' : '' }}> SMP </option>
-                    <option value="SD" {{ old('last_educational') == 'SD' ? 'selected' : '' }}> SD </option>
-                  </select>
-                  @error('last_educational')
-                    <a style="color: red"><small>{{ $message }}</small></a>
+                  <label for="nationality">Kewarganegaraan</label>
+                  <input type="text" value="Indonesia" id="nationality"
+                    class="form-control @error('nationality') is-invalid @enderror" name="nationality">
+                  @error('nationality')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
                   @enderror
                 </div>
 
@@ -905,7 +894,7 @@
                   @enderror
                 </div>
 
-                <div class="form-group">
+                {{-- <div class="form-group">
                   <label for="nationality">Kewarganegaraan</label>
                   <input type="text" value="Indonesia" id="nationality"
                     class="form-control @error('nationality') is-invalid @enderror" name="nationality">
@@ -915,6 +904,30 @@
                         {{ $message }}
                       </small>
                     </a>
+                  @enderror
+                </div> --}}
+
+                <div class="form-group">
+                  <label for="last_educational">Pendidikan Terakhir <code>*</code></label>
+                  <select type="text" id="last_educational" name="last_educational"
+                    class="form-control @error('last_educational') is-invalid @enderror">
+                    <option value="" disabled selected>Choose</option>
+                    <option value="S-3" {{ old('last_educational') == 'S-3' ? 'selected' : '' }}> S-3 </option>
+                    <option value="S-2" {{ old('last_educational') == 'S-2' ? 'selected' : '' }}> S-2 </option>
+                    <option value="S-1" {{ old('last_educational') == 'S-1' ? 'selected' : '' }}> S-1 </option>
+                    <option value="D-4" {{ old('last_educational') == 'D-4' ? 'selected' : '' }}> D-4 </option>
+                    <option value="D-3" {{ old('last_educational') == 'D-3' ? 'selected' : '' }}> D-3 </option>
+                    <option value="D-2" {{ old('last_educational') == 'D-2' ? 'selected' : '' }}> D-2 </option>
+                    <option value="D-1" {{ old('last_educational') == 'D-1' ? 'selected' : '' }}> D-1 </option>
+                    <option value="MA" {{ old('last_educational') == 'MA' ? 'selected' : '' }}> MA </option>
+                    <option value="SMK" {{ old('last_educational') == 'SMK' ? 'selected' : '' }}> SMK </option>
+                    <option value="SMA" {{ old('last_educational') == 'SMA' ? 'selected' : '' }}> SMA </option>
+                    <option value="MTS" {{ old('last_educational') == 'MTS' ? 'selected' : '' }}> MTS </option>
+                    <option value="SMP" {{ old('last_educational') == 'SMP' ? 'selected' : '' }}> SMP </option>
+                    <option value="SD" {{ old('last_educational') == 'SD' ? 'selected' : '' }}> SD </option>
+                  </select>
+                  @error('last_educational')
+                    <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror
                 </div>
 
@@ -988,7 +1001,7 @@
 
                 <div class="row">
                   <div class="form-group col-md-6">
-                    <label for="candidate_from">Pelamar Dari</label>
+                    <label for="candidate_from">Pelamar Dari <code>*</code></label>
                     <select type="text" id="candidate_from"
                       class="form-control @error('candidate_from') is-invalid @enderror" name="candidate_from">
                       <option value="" disabled selected>Choose</option>
@@ -1024,6 +1037,20 @@
                   <textarea type="text" id="ktp_address" class="form-control  @error('ktp_address') is-invalid @enderror"
                     name="ktp_address" rows="5">{{ old('ktp_address') }}</textarea>
                   @error('ktp_address')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
+                </div>
+
+                <div class="form-group col-md-3">
+                  <label for="zipcode_ktp">Kode Pos KTP <code>*</code></label>
+                  <input type="text" oninput="this.value = this.value.replace(/\D+/g, '')" id="zipcode_ktp"
+                    value="{{ old('zipcode_ktp') }}"
+                    class="form-control  @error('zipcode_ktp') is-invalid @enderror" name="zipcode_ktp">
+                  @error('zipcode_ktp')
                     <a style="color: red">
                       <small>
                         {{ $message }}

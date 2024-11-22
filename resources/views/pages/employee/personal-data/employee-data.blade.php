@@ -899,10 +899,12 @@
               </div>
             </div>
 
-            <div class="col-12 d-flex justify-content-end mt-4">
-              <button type="submit" class="btn btn-primary me-1 mb-1">Submit</button>
-              <a href="{{ route('employee.index') }}" class="btn btn-light-secondary me-1 mb-1">Back</a>
-            </div>
+            @if (!$employee->is_verified)
+              <div class="col-12 d-flex justify-content-end mt-4">
+                <button type="submit" class="btn btn-primary me-1 mb-1">Submit</button>
+                <a href="{{ route('employee.index') }}" class="btn btn-light-secondary me-1 mb-1">Back</a>
+              </div>
+            @endif
 
           </div>
         </div>

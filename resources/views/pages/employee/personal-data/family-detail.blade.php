@@ -5,12 +5,14 @@
             <div class="d-flex justify-content-between align-items-center ">
               <h4 class="card-title">Data Keluarga</h4>
 
-              <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
-                data-bs-target="#modal-form-add-family-details">
-                <i class="bi bi-plus-lg"></i>
-                Add
-              </button>
-              @include('pages.employee.personal-data.form.family-details.modal-create')
+              @if (!$employee->is_verified)
+                <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
+                  data-bs-target="#modal-form-add-family-details">
+                  <i class="bi bi-plus-lg"></i>
+                  Add
+                </button>
+                @include('pages.employee.personal-data.form.family-details.modal-create')
+              @endif
 
             </div>
 
@@ -55,26 +57,28 @@
                       <td class="text-bold-500">{{ $employeeFamilyDetail->address }}</td>
                       <td class="text-bold-500">
 
-                        <div class="demo-inline-spacing">
+                        @if (!$employee->is_verified)
+                          <div class="demo-inline-spacing">
 
-                          <a data-bs-toggle="modal"
-                            data-bs-target="#modal-form-edit-family-details-{{ $employeeFamilyDetail->id }}"
-                            class="btn btn-sm btn-icon btn-secondary text-white">
-                            <i class="bi bi-pencil-square"></i>
-                          </a>
-                          @include('pages.employee.personal-data.form.family-details.modal-edit')
+                            <a data-bs-toggle="modal"
+                              data-bs-target="#modal-form-edit-family-details-{{ $employeeFamilyDetail->id }}"
+                              class="btn btn-sm btn-icon btn-secondary text-white">
+                              <i class="bi bi-pencil-square"></i>
+                            </a>
+                            @include('pages.employee.personal-data.form.family-details.modal-edit')
 
-                          <a class="btn btn-sm btn-light-danger mx-2"
-                            onclick="deleteFamilyDetail('{{ $employeeFamilyDetail->id }}')"><i
-                              class="bi bi-trash"></i></a>
+                            <a class="btn btn-sm btn-light-danger mx-2"
+                              onclick="deleteFamilyDetail('{{ $employeeFamilyDetail->id }}')"><i
+                                class="bi bi-trash"></i></a>
 
-                          <form id="deleteFamilyDetailForm_{{ $employeeFamilyDetail->id }}"
-                            action="{{ route('employeeFamilyDetail.destroy', $employeeFamilyDetail->id) }}"
-                            method="POST">
-                            @method('DELETE')
-                            @csrf
-                          </form>
-                        </div>
+                            <form id="deleteFamilyDetailForm_{{ $employeeFamilyDetail->id }}"
+                              action="{{ route('employeeFamilyDetail.destroy', $employeeFamilyDetail->id) }}"
+                              method="POST">
+                              @method('DELETE')
+                              @csrf
+                            </form>
+                          </div>
+                        @endif
 
                       </td>
                     </tr>
@@ -129,25 +133,30 @@
                       <td class="text-bold-500">{{ $employeeFamilyDetail->job }}</td>
                       <td class="text-bold-500">{{ $employeeFamilyDetail->address }}</td>
                       <td class="text-bold-500">
-                        <div class="demo-inline-spacing">
 
-                          <a data-bs-toggle="modal"
-                            data-bs-target="#modal-form-edit-family-details-{{ $employeeFamilyDetail->id }}"
-                            class="btn btn-sm btn-icon btn-secondary text-white">
-                            <i class="bi bi-pencil-square"></i>
-                          </a>
-                          @include('pages.employee.personal-data.form.family-details.modal-edit')
+                        @if (!$employee->is_verified)
+                          <div class="demo-inline-spacing">
 
-                          <a class="btn btn-sm btn-light-danger mx-2"
-                            onclick="deleteFamilyDetail('{{ $employeeFamilyDetail->id }}')"><i
-                              class="bi bi-trash"></i></a>
+                            <a data-bs-toggle="modal"
+                              data-bs-target="#modal-form-edit-family-details-{{ $employeeFamilyDetail->id }}"
+                              class="btn btn-sm btn-icon btn-secondary text-white">
+                              <i class="bi bi-pencil-square"></i>
+                            </a>
+                            @include('pages.employee.personal-data.form.family-details.modal-edit')
 
-                          <form id="deleteFamilyDetailForm_{{ $employeeFamilyDetail->id }}"
-                            action="{{ route('employeeFamilyDetail.destroy', $employeeFamilyDetail->id) }}"
-                            method="POST">
-                            @method('DELETE')
-                            @csrf
-                          </form>
+                            <a class="btn btn-sm btn-light-danger mx-2"
+                              onclick="deleteFamilyDetail('{{ $employeeFamilyDetail->id }}')"><i
+                                class="bi bi-trash"></i></a>
+
+                            <form id="deleteFamilyDetailForm_{{ $employeeFamilyDetail->id }}"
+                              action="{{ route('employeeFamilyDetail.destroy', $employeeFamilyDetail->id) }}"
+                              method="POST">
+                              @method('DELETE')
+                              @csrf
+                            </form>
+                          </div>
+                        @endif
+
                       </td>
                     </tr>
                   @empty

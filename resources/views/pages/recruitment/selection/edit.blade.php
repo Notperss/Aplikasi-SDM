@@ -20,39 +20,15 @@
 
             <div class="row">
 
-              <div class="col-md-6">
+              <div class="col-md-12">
                 <div class="my-2">
                   <label class="form-label" for="name">Nama Seleksi <code>*</code></label>
-                  <input id="name" name="name" value="{{ old('name', $selection->name) }}"
-                    class="form-control @error('name') is-invalid @enderror" required>
+                  <textarea id="name" name="name" value="{{ old('name', $selection->name) }}"
+                    class="form-control @error('name') is-invalid @enderror" rows="3" required>{{ old('name', $selection->name) }} </textarea>
                   @error('name')
                     <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror
                 </div>
-                <div class="mb-2">
-                  <label class="form-label" for="division_id">Divisi Pemohon <code>*</code></label>
-                  <select id="division_id" name="division_id" value="{{ old('division_id') }}"
-                    class="form-control choices @error('division_id') is-invalid @enderror" required>
-                    <option value="" selected disabled>Choose</option>
-                    @foreach ($divisions as $division)
-                      <option value="{{ $division->id }}"
-                        {{ old('division_id', $selection->division_id) == $division->id ? 'selected' : '' }}>
-                        {{ $division->name }}
-                      </option>
-                    @endforeach
-                  </select>
-                  @error('division_id')
-                    <a style="color: red"><small>{{ $message }}</small></a>
-                  @enderror
-                </div>
-                {{-- <div class="mb-2">
-                  <label class="form-label" for="interviewer">Pewawancara <code>*</code></label>
-                  <textarea id="interviewer" name="interviewer" rows="3"
-                    class="form-control @error('interviewer') is-invalid @enderror" required>{{ old('interviewer', $selection->interviewer) }} </textarea>
-                  @error('interviewer')
-                    <a style="color: red"><small>{{ $message }}</small></a>
-                  @enderror
-                </div> --}}
               </div>
 
               <div class="col-md-6">
@@ -78,6 +54,35 @@
                   </select>
                   @error('position_id')
                     <div style="color: red"><small>{{ $message }}</small></div>
+                  @enderror
+                </div>
+
+                {{-- <div class="mb-2">
+                  <label class="form-label" for="interviewer">Pewawancara <code>*</code></label>
+                  <textarea id="interviewer" name="interviewer" rows="3"
+                    class="form-control @error('interviewer') is-invalid @enderror" required>{{ old('interviewer', $selection->interviewer) }} </textarea>
+                  @error('interviewer')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div> --}}
+              </div>
+
+              <div class="col-md-6">
+
+                <div class="my-2">
+                  <label class="form-label" for="division_id">Divisi Pemohon <code>*</code></label>
+                  <select id="division_id" name="division_id" value="{{ old('division_id') }}"
+                    class="form-control choices @error('division_id') is-invalid @enderror" required>
+                    <option value="" selected disabled>Choose</option>
+                    @foreach ($divisions as $division)
+                      <option value="{{ $division->id }}"
+                        {{ old('division_id', $selection->division_id) == $division->id ? 'selected' : '' }}>
+                        {{ $division->name }}
+                      </option>
+                    @endforeach
+                  </select>
+                  @error('division_id')
+                    <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror
                 </div>
 
@@ -154,7 +159,7 @@
                 </div>
 
                 <div class="mb-2">
-                  <label for="file_fptk" class="form-label">File</label>
+                  <label for="file_fptk" class="form-label">File FPTK</label>
                   <input class="form-control @error('file_fptk') is-invalid @enderror" accept=".pdf" type="file"
                     id="file_fptk" name="file_fptk">
                   @error('file_fptk')
@@ -189,11 +194,11 @@
   <div class="card">
     <div class="card-header">
       <div class="d-flex justify-content-between align-items-center ">
-        <h5 class="fw-normal my-3 text-body">History Seleksi</h5>
+        <h5 class="fw-normal my-3 text-body">Tahapan Seleksi</h5>
         <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
           data-bs-target="#modal-form-history-selection">
           <i class="bi bi-plus-lg"></i>
-          History Seleksi
+          Tahapan Seleksi
         </button>
         @include('pages.recruitment.selection.modal-history')
       </div>
@@ -301,13 +306,6 @@
       </div>
     </div>
   </div>
-
-
-
-
-
-
-
 
 
 </section>

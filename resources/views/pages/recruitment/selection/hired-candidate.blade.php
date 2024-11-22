@@ -142,17 +142,18 @@
                   @endif
                 </td>
                 <td>
-                  @if ($selectedCandidate->is_hire === null || auth()->user()->hasRole('super-admin'))
+                  @if ($selectedCandidate->is_hire === null)
                     <div class="btn-group mb-1">
-                      @if ($selectedCandidate->is_approve === 1)
-                        @role('ka-dep|super-admin')
-                          <a class="btn btn-sm btn-info mx-1" title="Tambahkan ke karyawan"
-                            href="{{ route('employee.newEmployee', encrypt($selectedCandidate->id)) }}">
-                            <i class="bi bi-person-plus-fill"></i>
-                          </a>
-                        @endrole
-                      @endif
+                      @role('staff|ka-si|super-admin')
+                        <a class="btn btn-sm btn-info mx-1" title="Tambahkan ke karyawan"
+                          href="{{ route('employee.newEmployee', encrypt($selectedCandidate->id)) }}">
+                          <i class="bi bi-person-plus-fill"></i>
+                        </a>
+                      @endrole
+                      {{-- @if ($selectedCandidate->is_approve === 1)
+                    @endif --}}
 
+                      {{--
                       @if ($selectedCandidate->is_approve === null || auth()->user()->hasRole('super-admin'))
                         @role('manager|super-admin')
                           <div class="dropdown">
@@ -192,6 +193,7 @@
                           </div>
                         @endrole
                       @endif
+                      --}}
                     </div>
                   @endif
 

@@ -5,14 +5,14 @@
           <div class="row">
             <div class="d-flex justify-content-between align-items-center ">
               <h4 class="card-title">Seminar/Pelatihan</h4>
-
-              <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
-                data-bs-target="#modal-form-add-training-attended">
-                <i class="bi bi-plus-lg"></i>
-                Add
-              </button>
-              @include('pages.employee.personal-data.form.training-attended.modal-create')
-
+              @if (!$employee->is_verified)
+                <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
+                  data-bs-target="#modal-form-add-training-attended">
+                  <i class="bi bi-plus-lg"></i>
+                  Add
+                </button>
+                @include('pages.employee.personal-data.form.training-attended.modal-create')
+              @endif
             </div>
             <!-- Table with outer spacing -->
             <div class="table-responsive">
@@ -46,29 +46,29 @@
                         @endif
                       </td>
                       <td>
+                        @if (!$employee->is_verified)
+                          <div class="demo-inline-spacing">
 
-                        <div class="demo-inline-spacing">
+                            <a data-bs-toggle="modal"
+                              data-bs-target="#modal-form-edit-training-attended-{{ $employeeTrainingAttended->id }}"
+                              class="btn btn-sm btn-icon btn-secondary text-white">
+                              <i class="bi bi-pencil-square"></i>
+                            </a>
+                            @include('pages.employee.personal-data.form.training-attended.modal-edit')
 
-                          <a data-bs-toggle="modal"
-                            data-bs-target="#modal-form-edit-training-attended-{{ $employeeTrainingAttended->id }}"
-                            class="btn btn-sm btn-icon btn-secondary text-white">
-                            <i class="bi bi-pencil-square"></i>
-                          </a>
-                          @include('pages.employee.personal-data.form.training-attended.modal-edit')
+                            <a class="btn btn-sm btn-light-danger mx-2"
+                              onclick="deleteTrainingAttend('{{ $employeeTrainingAttended->id }}')"><i
+                                class="bi bi-trash"></i></a>
 
-                          <a class="btn btn-sm btn-light-danger mx-2"
-                            onclick="deleteTrainingAttend('{{ $employeeTrainingAttended->id }}')"><i
-                              class="bi bi-trash"></i></a>
+                            <form id="deleteTrainingAttendForm_{{ $employeeTrainingAttended->id }}"
+                              action="{{ route('employeeTrainingAttended.destroy', $employeeTrainingAttended->id) }}"
+                              method="POST">
+                              @method('DELETE')
+                              @csrf
+                            </form>
 
-                          <form id="deleteTrainingAttendForm_{{ $employeeTrainingAttended->id }}"
-                            action="{{ route('employeeTrainingAttended.destroy', $employeeTrainingAttended->id) }}"
-                            method="POST">
-                            @method('DELETE')
-                            @csrf
-                          </form>
-
-                        </div>
-
+                          </div>
+                        @endif
                       </td>
                     </tr>
                   @empty

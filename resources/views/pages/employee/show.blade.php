@@ -8,7 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
 
-  @if (session()->has('success'))
+  {{-- @if (session()->has('success'))
     <script>
       Toastify({
         text: "{{ session('success') }}", // Display success message from session
@@ -19,7 +19,9 @@
         backgroundColor: "#28a745", // Success color
       }).showToast();
     </script>
-  @endif
+  @endif --}}
+
+  <x-validation-errors />
 
   <nav class="navbar navbar-light">
     <div class="container d-block">
@@ -30,7 +32,7 @@
     </div>
   </nav>
 
-  @if ($errors->any())
+  {{-- @if ($errors->any())
     <!-- Toast with Placements -->
     <script>
       @foreach ($errors->all() as $error)
@@ -44,7 +46,7 @@
         }).showToast();
       @endforeach
     </script>
-  @endif
+  @endif --}}
 
 
 
@@ -55,39 +57,43 @@
           <a class="btn btn-primary mt-1 show active" id="v-pills-informasi-dasar-tab" data-bs-toggle="pill"
             href="#v-pills-informasi-dasar" role="tab" aria-controls="v-pills-informasi-dasar"
             aria-selected="true">Informasi Dasar</a>
-          <a class="btn btn-primary mt-1" id="v-pills-data-keluarga-tab" data-bs-toggle="pill"
-            href="#v-pills-data-keluarga" role="tab" aria-controls="v-pills-data-keluarga" aria-selected="false">Data
-            Keluarga</a>
-          <a class="btn btn-primary mt-1" id="v-pills-riwayat-pekerjaan-tab" data-bs-toggle="pill"
-            href="#v-pills-riwayat-pekerjaan" role="tab" aria-controls="v-pills-riwayat-pekerjaan"
-            aria-selected="false">Riwayat Pekerjaan</a>
-          <a class="btn btn-primary mt-1" id="v-pills-riwayat-pendidikan-tab" data-bs-toggle="pill"
-            href="#v-pills-riwayat-pendidikan" role="tab" aria-controls="v-pills-riwayat-pendidikan"
-            aria-selected="false">Riwayat Pendidikan</a>
-          <a class="btn btn-primary mt-1" id="v-pills-kemampuan-bahasa-tab" data-bs-toggle="pill"
-            href="#v-pills-kemampuan-bahasa" role="tab" aria-controls="v-pills-kemampuan-bahasa"
-            aria-selected="false">Kemampuan Bahasa</a>
-          <a class="btn btn-primary mt-1" id="v-pills-seminar-tab" data-bs-toggle="pill" href="#v-pills-seminar"
-            role="tab" aria-controls="v-pills-seminar" aria-selected="false">Seminar/Pelatihan</a>
-          <a class="btn btn-primary mt-1" id="v-pills-keterampilan-tab" data-bs-toggle="pill" href="#v-pills-keterampilan"
-            role="tab" aria-controls="v-pills-keterampilan" aria-selected="false">Keterampilan</a>
-          <a class="btn btn-primary mt-1" id="v-pills-sosial-media-tab" data-bs-toggle="pill" href="#v-pills-sosial-media"
-            role="tab" aria-controls="v-pills-sosial-media" aria-selected="false">Sosial Media</a>
-          <a class="btn btn-primary mt-1" id="v-pills-contract-tab" data-bs-toggle="pill" href="#v-pills-contract"
-            role="tab" aria-controls="v-pills-contract" aria-selected="false">Kontrak</a>
-          <a class="btn btn-primary mt-1" id="v-pills-allowances-tab" data-bs-toggle="pill" href="#v-pills-allowances"
-            role="tab" aria-controls="v-pills-allowances" aria-selected="false">Tunjangan</a>
-          <a class="btn btn-primary mt-1" id="v-pills-attendances-tab" data-bs-toggle="pill" href="#v-pills-attendances"
-            role="tab" aria-controls="v-pills-attendances" aria-selected="false">Absensi</a>
-          <a class="btn btn-primary mt-1" id="v-pills-kpi-tab" data-bs-toggle="pill" href="#v-pills-kpi" role="tab"
-            aria-controls="v-pills-kpi" aria-selected="false">KPI</a>
-          <a class="btn btn-primary mt-1" id="v-pills-dinas-tab" data-bs-toggle="pill" href="#v-pills-dinas"
-            role="tab" aria-controls="v-pills-dinas" aria-selected="false">Dinas/Tugas</a>
-          <a class="btn btn-primary mt-1" id="v-pills-penghargaan-tab" data-bs-toggle="pill"
-            href="#v-pills-penghargaan" role="tab" aria-controls="v-pills-penghargaan"
-            aria-selected="false">Penghargaan</a>
-          <a class="btn btn-primary mt-1" id="v-pills-career-tab" data-bs-toggle="pill" href="#v-pills-career"
-            role="tab" aria-controls="v-pills-career" aria-selected="false">Karir</a>
+          @if ($employee->position_id)
+            <a class="btn btn-primary mt-1" id="v-pills-data-keluarga-tab" data-bs-toggle="pill"
+              href="#v-pills-data-keluarga" role="tab" aria-controls="v-pills-data-keluarga"
+              aria-selected="false">Data Keluarga</a>
+            <a class="btn btn-primary mt-1" id="v-pills-riwayat-pekerjaan-tab" data-bs-toggle="pill"
+              href="#v-pills-riwayat-pekerjaan" role="tab" aria-controls="v-pills-riwayat-pekerjaan"
+              aria-selected="false">Riwayat Pekerjaan</a>
+            <a class="btn btn-primary mt-1" id="v-pills-riwayat-pendidikan-tab" data-bs-toggle="pill"
+              href="#v-pills-riwayat-pendidikan" role="tab" aria-controls="v-pills-riwayat-pendidikan"
+              aria-selected="false">Riwayat Pendidikan</a>
+            <a class="btn btn-primary mt-1" id="v-pills-kemampuan-bahasa-tab" data-bs-toggle="pill"
+              href="#v-pills-kemampuan-bahasa" role="tab" aria-controls="v-pills-kemampuan-bahasa"
+              aria-selected="false">Kemampuan Bahasa</a>
+            <a class="btn btn-primary mt-1" id="v-pills-seminar-tab" data-bs-toggle="pill" href="#v-pills-seminar"
+              role="tab" aria-controls="v-pills-seminar" aria-selected="false">Seminar/Pelatihan</a>
+            <a class="btn btn-primary mt-1" id="v-pills-keterampilan-tab" data-bs-toggle="pill"
+              href="#v-pills-keterampilan" role="tab" aria-controls="v-pills-keterampilan"
+              aria-selected="false">Keterampilan</a>
+            <a class="btn btn-primary mt-1" id="v-pills-sosial-media-tab" data-bs-toggle="pill"
+              href="#v-pills-sosial-media" role="tab" aria-controls="v-pills-sosial-media"
+              aria-selected="false">Sosial Media</a>
+            <a class="btn btn-primary mt-1" id="v-pills-contract-tab" data-bs-toggle="pill" href="#v-pills-contract"
+              role="tab" aria-controls="v-pills-contract" aria-selected="false">Kontrak</a>
+            <a class="btn btn-primary mt-1" id="v-pills-allowances-tab" data-bs-toggle="pill" href="#v-pills-allowances"
+              role="tab" aria-controls="v-pills-allowances" aria-selected="false">Tunjangan</a>
+            <a class="btn btn-primary mt-1" id="v-pills-attendances-tab" data-bs-toggle="pill" href="#v-pills-attendances"
+              role="tab" aria-controls="v-pills-attendances" aria-selected="false">Absensi</a>
+            <a class="btn btn-primary mt-1" id="v-pills-kpi-tab" data-bs-toggle="pill" href="#v-pills-kpi" role="tab"
+              aria-controls="v-pills-kpi" aria-selected="false">KPI</a>
+            <a class="btn btn-primary mt-1" id="v-pills-dinas-tab" data-bs-toggle="pill" href="#v-pills-dinas"
+              role="tab" aria-controls="v-pills-dinas" aria-selected="false">Dinas/Tugas</a>
+            <a class="btn btn-primary mt-1" id="v-pills-penghargaan-tab" data-bs-toggle="pill"
+              href="#v-pills-penghargaan" role="tab" aria-controls="v-pills-penghargaan"
+              aria-selected="false">Penghargaan</a>
+            <a class="btn btn-primary mt-1" id="v-pills-career-tab" data-bs-toggle="pill" href="#v-pills-career"
+              role="tab" aria-controls="v-pills-career" aria-selected="false">Karir</a>
+          @endif
         </div>
       </div>
 
@@ -165,7 +171,8 @@
                   </div>
                   <div class="form-group col-md-6">
                     <label for="position_id">Jabatan</label>
-                    <input type="text" class="form-control" value="{{ $employee->position->name }}" readonly>
+                    <input type="text" class="form-control" value="{{ $employee->position->name ?? '-' }}"
+                      readonly>
                     @error('position_id')
                       <a style="color: red">
                         <small>
@@ -296,6 +303,21 @@
                     <input type="text" value="{{ $remainingYears }} tahun {{ $remainingMonths }} bulan"
                       class="form-control" readonly>
                   </div>
+                  @if ($employee->date_leaving)
+                    <div class="form-group col-md-6">
+                      <label for="date_leaving">Date Of Leaving</label>
+                      <input type="text" id="date_leaving"
+                        value="{{ Carbon\Carbon::parse($employee->date_leaving)->translatedFormat('l, d F Y') }}"
+                        class="form-control @error('date_leaving') is-invalid @enderror" name="date_leaving" readonly>
+                      @error('date_joining')
+                        <a style="color: red">
+                          <small>
+                            {{ $message }}
+                          </small>
+                        </a>
+                      @enderror
+                    </div>
+                  @endif
                 </div>
               </div>
             </div>
@@ -504,47 +526,51 @@
         </div> --}}
 
         <div class="tab-content" id="v-pills-tabContent">
-
-          <div class="tab-pane fade" id="v-pills-data-keluarga" role="tabpanel"
-            aria-labelledby="v-pills-data-keluarga-tab">
-            @include('pages.employee.personal-data.family-detail')
-          </div>
-          <div class="tab-pane fade" id="v-pills-riwayat-pekerjaan" role="tabpanel"
-            aria-labelledby="v-pills-riwayat-pekerjaan-tab">
-            @include('pages.employee.personal-data.job-history-detail')
-          </div>
-          <div class="tab-pane fade" id="v-pills-riwayat-pendidikan" role="tabpanel"
-            aria-labelledby="v-pills-riwayat-pendidikan-tab">
-            @include('pages.employee.personal-data.educational-history-detail')
-          </div>
-          <div class="tab-pane fade" id="v-pills-kemampuan-bahasa" role="tabpanel"
-            aria-labelledby="v-pills-kemampuan-bahasa-tab">
-            @include('pages.employee.personal-data.language-proficiency-detail')
-          </div>
-          <div class="tab-pane fade" id="v-pills-seminar" role="tabpanel" aria-labelledby="v-pills-seminar-tab">
-            @include('pages.employee.personal-data.training-attended-detail')
-          </div>
-          <div class="tab-pane fade" id="v-pills-keterampilan" role="tabpanel"
-            aria-labelledby="v-pills-keterampilan-tab">
-            @include('pages.employee.personal-data.skill-detail')
-          </div>
-          <div class="tab-pane fade" id="v-pills-sosial-media" role="tabpanel"
-            aria-labelledby="v-pills-sosial-media-tab">
-            @include('pages.employee.personal-data.social-platform-detail')
-          </div>
-          <div class="tab-pane fade" id="v-pills-contract" role="tabpanel" aria-labelledby="v-pills-contract-tab">
-            @include('pages.employee.personal-data.employee-contract')
-          </div>
-          <div class="tab-pane fade" id="v-pills-allowances" role="tabpanel" aria-labelledby="v-pills-allowances-tab">
-            @include('pages.employee.personal-data.allowances')
-          </div>
-          <div class="tab-pane fade" id="v-pills-kpi" role="tabpanel" aria-labelledby="v-pills-kpi-tab">
-            @include('pages.employee.personal-data.employee-kpi')
-          </div>
-          <div class="tab-pane fade" id="v-pills-dinas" role="tabpanel" aria-labelledby="v-pills-dinas-tab">
-            @include('pages.employee.personal-data.employee-duty')
-          </div>
-
+          @if ($employee->position_id)
+            <div class="tab-pane fade" id="v-pills-data-keluarga" role="tabpanel"
+              aria-labelledby="v-pills-data-keluarga-tab">
+              @include('pages.employee.personal-data.family-detail')
+            </div>
+            <div class="tab-pane fade" id="v-pills-riwayat-pekerjaan" role="tabpanel"
+              aria-labelledby="v-pills-riwayat-pekerjaan-tab">
+              @include('pages.employee.personal-data.job-history-detail')
+            </div>
+            <div class="tab-pane fade" id="v-pills-riwayat-pendidikan" role="tabpanel"
+              aria-labelledby="v-pills-riwayat-pendidikan-tab">
+              @include('pages.employee.personal-data.educational-history-detail')
+            </div>
+            <div class="tab-pane fade" id="v-pills-kemampuan-bahasa" role="tabpanel"
+              aria-labelledby="v-pills-kemampuan-bahasa-tab">
+              @include('pages.employee.personal-data.language-proficiency-detail')
+            </div>
+            <div class="tab-pane fade" id="v-pills-seminar" role="tabpanel" aria-labelledby="v-pills-seminar-tab">
+              @include('pages.employee.personal-data.training-attended-detail')
+            </div>
+            <div class="tab-pane fade" id="v-pills-keterampilan" role="tabpanel"
+              aria-labelledby="v-pills-keterampilan-tab">
+              @include('pages.employee.personal-data.skill-detail')
+            </div>
+            <div class="tab-pane fade" id="v-pills-sosial-media" role="tabpanel"
+              aria-labelledby="v-pills-sosial-media-tab">
+              @include('pages.employee.personal-data.social-platform-detail')
+            </div>
+            <div class="tab-pane fade" id="v-pills-contract" role="tabpanel" aria-labelledby="v-pills-contract-tab">
+              @include('pages.employee.personal-data.employee-contract')
+            </div>
+            <div class="tab-pane fade" id="v-pills-allowances" role="tabpanel"
+              aria-labelledby="v-pills-allowances-tab">
+              @include('pages.employee.personal-data.allowances')
+            </div>
+            <div class="tab-pane fade" id="v-pills-kpi" role="tabpanel" aria-labelledby="v-pills-kpi-tab">
+              @include('pages.employee.personal-data.employee-kpi')
+            </div>
+            <div class="tab-pane fade" id="v-pills-dinas" role="tabpanel" aria-labelledby="v-pills-dinas-tab">
+              @include('pages.employee.personal-data.employee-duty')
+            </div>
+            <div class="tab-pane fade" id="v-pills-career" role="tabpanel" aria-labelledby="v-pills-career-tab">
+              @include('pages.employee.personal-data.employee-career')
+            </div>
+          @endif
           <div class="tab-pane fade show active" id="v-pills-informasi-dasar" role="tabpanel"
             aria-labelledby="v-pills-informasi-dasar-tab">
             @include('pages.employee.personal-data.employee-data')

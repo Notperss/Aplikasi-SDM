@@ -29,6 +29,7 @@ use App\Http\Controllers\Recruitment\SelectedCandidateController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeKpiController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeDutyController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeSkillController;
+use App\Http\Controllers\Employee\PersonalData\EmployeeCareerController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeJobHistoryController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeFamilyDetailController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeSocialPlatformController;
@@ -113,6 +114,10 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::resource('employeeSocialPlatform', EmployeeSocialPlatformController::class)->only('store', 'update', 'destroy');
     Route::resource('employeeKpi', EmployeeKpiController::class)->only('store', 'update', 'destroy');
     Route::resource('employeeDuty', EmployeeDutyController::class)->only('store', 'update', 'destroy');
+    Route::resource('employeeCareer', EmployeeCareerController::class)->only('store', 'update', 'destroy');
+    Route::get('approval-list', [EmployeeCareerController::class, 'indexApproval'])->name('indexApproval');
+    Route::patch('/{id}/update-approval', [EmployeeCareerController::class, 'updateApprovalStatus'])->name('updateApprovalStatus');
+
 
     //workUnit
     Route::resource('directorate', DirectorateController::class)->only('index', 'store', 'update', 'destroy');
@@ -141,7 +146,9 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::resource('contract', ContractController::class)->only('index', 'store', 'edit', 'update', 'destroy');
     Route::post('import-contract', [ContractController::class, 'importContract'])->name('contract.import');
     Route::put('lock-contract/{id}', [ContractController::class, 'lockContract'])->name('contract.lock');
+    Route::get('export-contract-expired', [ContractController::class, 'contractExport'])->name('contract.exportExpired');
 
+    Route::get('/contracts/expired', [ContractController::class, 'getExpiredContracts'])->name('contracts.expired');
 
 
 });

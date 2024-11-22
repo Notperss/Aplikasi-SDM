@@ -33,7 +33,7 @@ class StoreSelectedCandidateRequest extends FormRequest
         }
 
         return [
-            'name' => 'required|string', // Validate that the array of candidates exists and isn't empty
+            'name' => 'required|string|max:255', // Validate that the array of candidates exists and isn't empty
             'fptk_number' => 'required|string', // Validate that the array of candidates exists and isn't empty
             'candidates' => 'required|array|min:1', // Validate that the array of candidates exists and isn't empty
             'candidates.*.id' => 'required|exists:candidates,id', // Ensure each candidate ID exists in the database
@@ -43,6 +43,7 @@ class StoreSelectedCandidateRequest extends FormRequest
             'start_selection' => 'nullable|date', // Memastikan ID kandidat ada di database
             'end_selection' => 'nullable|date', // Memastikan ID kandidat ada di database
             'file_selection' => 'mimes:pdf|max:512',
+            'description' => 'nullable|string||max:510',
 
         ];
     }

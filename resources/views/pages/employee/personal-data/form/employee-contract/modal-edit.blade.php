@@ -9,7 +9,7 @@
 
         <div class="modal-header">
           <h5 class="modal-title" id="modal-form-edit-contract-{{ $contract->id }}-label">
-            Edit Data Kategori karyawan
+            Edit Data Kontrak
           </h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
         </div>
@@ -32,7 +32,7 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="my-2">
-                    <label class="form-label" for="nik_employee">NIK Karyawan</label>
+                    <label class="form-label" for="nik_employee">NIK Karyawan <code>*</code></label>
                     <input id="nik_employee" name="nik_employee" value="{{ $contract->nik_employee }}"
                       class="form-control @error('nik_employee') is-invalid @enderror" readonly>
                     @error('nik_employee')
@@ -61,7 +61,7 @@
 
                 <div class="col-md-6">
                   <div class="my-2">
-                    <label class="form-label" for="duration">Durasi</label>
+                    <label class="form-label" for="duration">Durasi <code>*</code></label>
                     <input type="number" id="duration" name="duration" value="{{ $contract->duration }}"
                       class="form-control @error('duration') is-invalid @enderror">
                     @error('duration')

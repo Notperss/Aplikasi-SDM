@@ -137,12 +137,12 @@ class SelectedCandidateController extends Controller
     {
 
         $selectedCandidates = $selection->selectedCandidates()->orderBy('position_id', 'desc')->get();
+
         $selectedPositions = $selection->selectedPositions()
             ->where('selection_id', $selection->id)
             ->whereDoesntHave('selectedCandidates', function ($query) use ($selection) {
                 $query->where('selection_id', $selection->id);
             })
-
             ->get();
 
 
@@ -177,7 +177,7 @@ class SelectedCandidateController extends Controller
                 }
                 $query->where('is_finished', true)
                     ->where('status', true)
-                    ->where('is_approve', true);
+                    ->where('is_approve', 3);
             })
             ->orderBy('is_approve', 'desc')
             ->orderBy('created_at', 'asc')
@@ -220,44 +220,44 @@ class SelectedCandidateController extends Controller
     // }
 
 
-    public function updateApprovalStatus(Request $request, $id)
-    {
-        // Find the candidate by ID
-        $selectedCandidate = SelectedCandidate::findOrFail($id);
+    // public function updateApprovalStatus(Request $request, $id)
+    // {
+    //     // Find the candidate by ID
+    //     $selectedCandidate = SelectedCandidate::findOrFail($id);
 
-        // Check the is_approve value and update the candidate status
-        if ($request->has('is_approve')) {
-            $selectedCandidate->is_approve = $request->input('is_approve');
+    //     // Check the is_approve value and update the candidate status
+    //     if ($request->has('is_approve')) {
+    //         $selectedCandidate->is_approve = $request->input('is_approve');
 
-            Candidate::where('id', $selectedCandidate->candidate_id)
-                ->update(['is_selection' => 1, 'is_hire' => 1]);
+    //         Candidate::where('id', $selectedCandidate->candidate_id)
+    //             ->update(['is_selection' => 1, 'is_hire' => 1]);
 
-            if ($selectedCandidate->is_approve == 0) {
-                $selectedCandidate->is_hire = 0;
+    //         if ($selectedCandidate->is_approve == 0) {
+    //             $selectedCandidate->is_hire = 0;
 
-                Candidate::where('id', $selectedCandidate->candidate_id)
-                    ->update(['is_selection' => 0, 'is_hire' => 0]);
-            } else {
-                $selectedCandidate->is_hire = null;
-            }
+    //             Candidate::where('id', $selectedCandidate->candidate_id)
+    //                 ->update(['is_selection' => 0, 'is_hire' => 0]);
+    //         } else {
+    //             $selectedCandidate->is_hire = null;
+    //         }
 
-            $selectedCandidate->save();
+    //         $selectedCandidate->save();
 
-            // Set a success message based on the approval status
-            $message = $selectedCandidate->is_approve ? 'Candidate approved.' : 'Candidate rejected.';
-            return redirect()->back()->with('success', $message);
-        }
-        // // Check the is_approve value and update the candidate status
-        // if ($request->has('is_hire')) {
-        //     $selectedCandidate->is_hire = $request->input('is_hire');
-        //     $selectedCandidate->save();
+    //         // Set a success message based on the approval status
+    //         $message = $selectedCandidate->is_approve ? 'Candidate approved.' : 'Candidate rejected.';
+    //         return redirect()->back()->with('success', $message);
+    //     }
+    //     // // Check the is_approve value and update the candidate status
+    //     // if ($request->has('is_hire')) {
+    //     //     $selectedCandidate->is_hire = $request->input('is_hire');
+    //     //     $selectedCandidate->save();
 
-        //     // Set a success message based on the approval status
-        //     $message = $selectedCandidate->is_hire ? 'Candidate approved.' : 'Candidate rejected.';
-        //     return redirect()->back()->with('success', $message);
-        // }
+    //     //     // Set a success message based on the approval status
+    //     //     $message = $selectedCandidate->is_hire ? 'Candidate approved.' : 'Candidate rejected.';
+    //     //     return redirect()->back()->with('success', $message);
+    //     // }
 
-        return redirect()->back()->with('error', 'Invalid request. Approval status is missing.');
-    }
+    //     return redirect()->back()->with('error', 'Invalid request. Approval status is missing.');
+    // }
 
 }

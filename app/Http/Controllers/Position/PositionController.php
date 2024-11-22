@@ -22,7 +22,12 @@ class PositionController extends Controller
      */
     public function index()
     {
-        $positions = Position::where('positions.company_id', Auth::user()->company_id)
+        $companyId = Auth::user()->company_id;
+        $isSuperAdmin = Auth::user()->hasRole('super-admin');
+
+        $positions = Position::when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('positions.company_id', $companyId);
+        })
             ->join('levels', 'positions.level_id', '=', 'levels.id') // Join the levels table
             ->join('divisions', 'positions.division_id', '=', 'divisions.id') // Join the divisions table
             ->join('directorates', 'divisions.directorate_id', '=', 'directorates.id') // Join the directorates table via divisions
@@ -33,13 +38,29 @@ class PositionController extends Controller
             ->select('positions.*'); // Select positions columns only;
 
 
-        $levels = Level::where('company_id', Auth::user()->company_id)->latest()->get();
-        $directorates = Directorate::where('company_id', Auth::user()->company_id)->latest()->get();
-        $divisions = Division::where('company_id', Auth::user()->company_id)->latest()->get();
-        $departments = Department::where('company_id', Auth::user()->company_id)->latest()->get();
-        $sections = Section::where('company_id', Auth::user()->company_id)->latest()->get();
+        $levels = Level::when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('company_id', $companyId);
+        })->latest()->get();
 
-        $allowances = Allowance::where('company_id', Auth::user()->company_id)->latest()->get();
+        $directorates = Directorate::when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('company_id', $companyId);
+        })->latest()->get();
+
+        $divisions = Division::when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('company_id', $companyId);
+        })->latest()->get();
+
+        $departments = Department::when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('company_id', $companyId);
+        })->latest()->get();
+
+        $sections = Section::when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('company_id', $companyId);
+        })->latest()->get();
+
+        $allowances = Allowance::when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('company_id', $companyId);
+        })->latest()->get();
 
 
         if (request()->ajax()) {
@@ -72,10 +93,10 @@ class PositionController extends Controller
                 })
 
                 ->editColumn('department', function ($position) {
-                    return $position->department->name;
+                    return $position->department->name ?? '-';
                 })
                 ->editColumn('section', function ($position) {
-                    return $position->section->name;
+                    return $position->section->name ?? '-';
                 })
 
                 ->rawColumns(['action',])
@@ -193,11 +214,25 @@ class PositionController extends Controller
     public function edit(Position $position)
     {
 
-        $levels = Level::where('company_id', Auth::user()->company_id)->latest()->get();
-        $directorates = Directorate::where('company_id', Auth::user()->company_id)->latest()->get();
-        $divisions = Division::where('company_id', Auth::user()->company_id)->latest()->get();
-        $departments = Department::where('company_id', Auth::user()->company_id)->latest()->get();
-        $sections = Section::where('company_id', Auth::user()->company_id)->latest()->get();
+        $companyId = Auth::user()->company_id;
+        $isSuperAdmin = Auth::user()->hasRole('super-admin');
+
+        $levels = Level::when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('company_id', $companyId);
+        })->latest()->get();
+        $directorates = Directorate::when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('company_id', $companyId);
+        })->latest()->get();
+        $divisions = Division::when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('company_id', $companyId);
+        })->latest()->get();
+        $departments = Department::when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('company_id', $companyId);
+        })->latest()->get();
+        $sections = Section::when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('company_id', $companyId);
+        })->latest()->get();
+
         return view('pages.position.position.edit', compact(
             'position',
             'levels',

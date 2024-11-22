@@ -17,41 +17,19 @@
             <div class="col-md-11"> <!-- Make form smaller with col-md-6 and center it -->
 
               <div class="row">
-
-                <div class="col-md-6">
+                <div class="col-md-12">
                   <div class="my-2">
                     <label class="form-label" for="name">Nama Seleksi <code>*</code></label>
-                    <input id="name" name="name" value="{{ old('name') }}"
-                      class="form-control @error('name') is-invalid @enderror" required>
+                    <textarea id="name" name="name" value="{{ old('name') }}"
+                      class="form-control @error('name') is-invalid @enderror" rows="3" required> {{ old('name') }} </textarea>
                     @error('name')
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>
-                  <div class="mb-2">
-                    <label class="form-label" for="division_id">Divisi Pemohon <code>*</code></label>
-                    <select id="division_id" name="division_id" value="{{ old('division_id') }}"
-                      class="form-control choices @error('division_id') is-invalid @enderror" required>
-                      <option value="" selected disabled>Choose</option>
-                      @foreach ($divisions as $division)
-                        <option value="{{ $division->id }}" {{ old('division_id') == $division->id ? 'selected' : '' }}>
-                          {{ $division->name }}
-                        </option>
-                      @endforeach
-                    </select>
-                    @error('division_id')
-                      <a style="color: red"><small>{{ $message }}</small></a>
-                    @enderror
-                  </div>
-                  {{-- <div class="mb-2">
-                    <label class="form-label" for="interviewer">Pewawancara <code>*</code></label>
-                    <textarea id="interviewer" name="interviewer" value="{{ old('interviewer') }}"
-                      class="form-control @error('interviewer') is-invalid @enderror" rows="3" required> </textarea>
-                    @error('interviewer')
-                      <a style="color: red"><small>{{ $message }}</small></a>
-                    @enderror
-                  </div> --}}
                 </div>
+
                 <div class="col-md-6">
+
                   <div class="my-2">
                     <label class="form-label" for="position_id">Jabatan <code>*</code></label>
                     <select id="position_id" name="position_id[]"
@@ -67,6 +45,36 @@
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>
+
+                  {{-- <div class="mb-2">
+                    <label class="form-label" for="interviewer">Pewawancara <code>*</code></label>
+                    <textarea id="interviewer" name="interviewer" value="{{ old('interviewer') }}"
+                      class="form-control @error('interviewer') is-invalid @enderror" rows="3" required> </textarea>
+                    @error('interviewer')
+                      <a style="color: red"><small>{{ $message }}</small></a>
+                    @enderror
+                  </div> --}}
+                </div>
+                <div class="col-md-6">
+
+                  <div class="my-2">
+                    <label class="form-label" for="division_id">Divisi Pemohon <code>*</code></label>
+                    <select id="division_id" name="division_id" value="{{ old('division_id') }}"
+                      class="form-control choices @error('division_id') is-invalid @enderror" required>
+                      <option value="" selected disabled>Choose</option>
+                      @foreach ($divisions as $division)
+                        <option value="{{ $division->id }}"
+                          {{ old('division_id') == $division->id ? 'selected' : '' }}>
+                          {{ $division->name }}
+                        </option>
+                      @endforeach
+                    </select>
+                    @error('division_id')
+                      <a style="color: red"><small>{{ $message }}</small></a>
+                    @enderror
+                  </div>
+
+
                   <div class="my-2">
                     <label class="form-label" for="start_selection">Tgl Mulai Seleksi</label>
                     <input type="date" id="start_selection" name="start_selection"
@@ -111,7 +119,7 @@
                     @enderror
                   </div>
                   <div class="mb-2">
-                    <label for="file_fptk" class="form-label">File</label>
+                    <label for="file_fptk" class="form-label">File FPTK</label>
                     <input class="form-control @error('file_fptk') is-invalid @enderror" accept=".pdf" type="file"
                       id="file_fptk" name="file_fptk">
                     @error('file_fptk')
@@ -301,7 +309,7 @@
 
                           </td>
                         </tr>
-                      @endforeach --}}
+                @endforeach --}}
               </tbody>
             </table>
           </div>

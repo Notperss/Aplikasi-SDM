@@ -283,61 +283,61 @@ class CandidateController extends Controller
     //         ));
     // }
 
-    public function uploadDocument(Request $request, $candidate)
-    {
-        // Validate the PDF and other fields
-        $data = $request->validate([
-            'file' => 'mimes:pdf|max:512', // Max file size: 2MB
-            'type_document' => 'required|max:255', // Type of document
-            // 'candidate_id' => 'required|exists:candidates,id', // Ensure candidate exists
-            'candidate_name' => 'required|max:255', // Candidate name
-        ], [
-            'file.mimes' => 'File harus berupa PDF.',
-            'file.max' => 'Ukuran file maksimal adalah 500KB.',
-        ]);
+    // public function uploadDocument(Request $request, $candidate)
+    // {
+    //     // Validate the PDF and other fields
+    //     $data = $request->validate([
+    //         'file' => 'mimes:pdf|max:512', // Max file size: 2MB
+    //         'type_document' => 'required|max:255', // Type of document
+    //         // 'candidate_id' => 'required|exists:candidates,id', // Ensure candidate exists
+    //         'candidate_name' => 'required|max:255', // Candidate name
+    //     ], [
+    //         'file.mimes' => 'File harus berupa PDF.',
+    //         'file.max' => 'Ukuran file maksimal adalah 500KB.',
+    //     ]);
 
-        // Fetch the existing document (if any)
-        $candidateDocument = CandidateDocument::where('candidate_id', $candidate)
-            ->where('type_document', $data['type_document'])
-            ->first();
+    //     // Fetch the existing document (if any)
+    //     $candidateDocument = CandidateDocument::where('candidate_id', $candidate)
+    //         ->where('type_document', $data['type_document'])
+    //         ->first();
 
-        $path_file = $candidateDocument ? $candidateDocument->file : null; // Get the existing file path if it exists
+    //     $path_file = $candidateDocument ? $candidateDocument->file : null; // Get the existing file path if it exists
 
-        // Check if a new file is uploaded
-        if ($request->hasFile('file')) {
-            $extension = $request->file('file')->getClientOriginalExtension();
-            $filename = $data['type_document'] . '_' . $data['candidate_name'] . '_' . time() . '.' . $extension;
+    //     // Check if a new file is uploaded
+    //     if ($request->hasFile('file')) {
+    //         $extension = $request->file('file')->getClientOriginalExtension();
+    //         $filename = $data['type_document'] . '_' . $data['candidate_name'] . '_' . time() . '.' . $extension;
 
-            // Upload and store the new file in the 'kandidat_[type_document]' directory using the 'public_local' disk
-            $data['file'] = $request->file('file')->storeAs('kandidat_' . $data['type_document'], $filename, 'public_local');
+    //         // Upload and store the new file in the 'kandidat_[type_document]' directory using the 'public_local' disk
+    //         $data['file'] = $request->file('file')->storeAs('kandidat_' . $data['type_document'], $filename, 'public_local');
 
-            // If the old file exists, delete it
-            if ($path_file) {
-                Storage::disk('public_local')->delete($path_file);
-            }
+    //         // If the old file exists, delete it
+    //         if ($path_file) {
+    //             Storage::disk('public_local')->delete($path_file);
+    //         }
 
-            // Set the new file path in the data array
-            $path_file = $data['file'];
-        }
+    //         // Set the new file path in the data array
+    //         $path_file = $data['file'];
+    //     }
 
-        // Check if the document exists; if it does, update; if not, create a new document
-        if ($candidateDocument) {
-            $candidateDocument->update([
-                'file' => $path_file, // Update with the new file path
-                'type_document' => $data['type_document'],
-                // 'candidate_name' => $data['candidate_name'],
-            ]);
-        } else {
-            // If the document does not exist, create a new entry
-            CandidateDocument::create([
-                'candidate_id' => $candidate,
-                'file' => $path_file,
-                'type_document' => $data['type_document'],
-                // 'candidate_name' => $data['candidate_name'],
-            ]);
-        }
+    //     // Check if the document exists; if it does, update; if not, create a new document
+    //     if ($candidateDocument) {
+    //         $candidateDocument->update([
+    //             'file' => $path_file, // Update with the new file path
+    //             'type_document' => $data['type_document'],
+    //             // 'candidate_name' => $data['candidate_name'],
+    //         ]);
+    //     } else {
+    //         // If the document does not exist, create a new entry
+    //         CandidateDocument::create([
+    //             'candidate_id' => $candidate,
+    //             'file' => $path_file,
+    //             'type_document' => $data['type_document'],
+    //             // 'candidate_name' => $data['candidate_name'],
+    //         ]);
+    //     }
 
-        // Return success message
-        return back()->with('success', 'Candidate document has been uploaded or updated successfully!');
-    }
+    //     // Return success message
+    //     return back()->with('success', 'Candidate document has been uploaded or updated successfully!');
+    // }
 }

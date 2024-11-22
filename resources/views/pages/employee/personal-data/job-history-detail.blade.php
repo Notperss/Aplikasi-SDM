@@ -5,12 +5,14 @@
             <div class="d-flex justify-content-between align-items-center ">
               <h4 class="card-title">Riwayat Pekerjaan</h4>
 
-              <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
-                data-bs-target="#modal-form-add-job-history">
-                <i class="bi bi-plus-lg"></i>
-                Add
-              </button>
-              @include('pages.employee.personal-data.form.job-history.modal-create')
+              @if (!$employee->is_verified)
+                <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
+                  data-bs-target="#modal-form-add-job-history">
+                  <i class="bi bi-plus-lg"></i>
+                  Add
+                </button>
+                @include('pages.employee.personal-data.form.job-history.modal-create')
+              @endif
 
             </div>
             <!-- Table with outer spacing -->
@@ -62,25 +64,26 @@
                         @endif
                       </td>
                       <td>
+                        @if (!$employee->is_verified)
+                          <div class="demo-inline-spacing">
+                            <a data-bs-toggle="modal"
+                              data-bs-target="#modal-form-edit-job-history-{{ $employeeJobHistory->id }}"
+                              class="btn btn-icon btn-sm btn-secondary text-white">
+                              <i class="bi bi-pencil-square"></i>
+                            </a>
+                            @include('pages.employee.personal-data.form.job-history.modal-edit')
 
-                        <div class="demo-inline-spacing">
-                          <a data-bs-toggle="modal"
-                            data-bs-target="#modal-form-edit-job-history-{{ $employeeJobHistory->id }}"
-                            class="btn btn-icon btn-sm btn-secondary text-white">
-                            <i class="bi bi-pencil-square"></i>
-                          </a>
-                          @include('pages.employee.personal-data.form.job-history.modal-edit')
+                            <a class="btn btn-sm btn-light-danger mx-2"
+                              onclick="deleteJobHistory('{{ $employeeJobHistory->id }}')"><i
+                                class="bi bi-trash"></i></a>
 
-                          <a class="btn btn-sm btn-light-danger mx-2"
-                            onclick="deleteJobHistory('{{ $employeeJobHistory->id }}')"><i class="bi bi-trash"></i></a>
-
-                          <form id="deleteJobHistoryForm_{{ $employeeJobHistory->id }}"
-                            action="{{ route('employeeJobHistory.destroy', $employeeJobHistory) }}" method="POST">
-                            @method('DELETE')
-                            @csrf
-                          </form>
-                        </div>
-
+                            <form id="deleteJobHistoryForm_{{ $employeeJobHistory->id }}"
+                              action="{{ route('employeeJobHistory.destroy', $employeeJobHistory) }}" method="POST">
+                              @method('DELETE')
+                              @csrf
+                            </form>
+                          </div>
+                        @endif
                       </td>
                     </tr>
                   @empty

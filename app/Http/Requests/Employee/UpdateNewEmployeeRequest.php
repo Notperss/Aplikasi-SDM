@@ -32,20 +32,35 @@ class UpdateNewEmployeeRequest extends FormRequest
         return [
             'company_id' => 'nullable|integer|exists:companies,id',
             'candidate_id' => 'required|integer|exists:candidates,id',
-            'position_id' => 'required|integer|exists:positions,id',
+            'position_id' => 'nullable|integer|exists:positions,id',
             'employee_category_id' => 'required|integer|exists:employee_categories,id',
-            'nik' => 'required|string',
-            'name' => 'required|string|max:255', 'email' => [
+            'nik' => [
+                'required',
+                'string',
+                Rule::unique('employees', 'nik')
+                    ->ignore($employeeId)
+                    ->where(function ($query) {
+                        $query->whereNotIn('employee_status', ['NON-AKTIF', 'RESIGN', 'PENSIUN']);
+                    }),
+            ],
+            'name' => 'required|string|max:255',
+            'email' => [
                 'nullable',
                 'string',
                 'email',
-                Rule::unique('employees', 'email')->ignore($employeeId),
+                Rule::unique('employees', 'email')->ignore($employeeId)->where(function ($query) {
+                    $query->whereNull('deleted_at');
+                }),
             ],
             'phone_number1' => 'required|string|max:15',
             'ktp_address' => 'required|string|max:255',
             'current_address' => 'required|string|max:255',
-            'ktp_number' => ['required', 'digits:16', Rule::unique('employees', 'ktp_number')->ignore($employeeId),],
-            'kk_number' => ['nullable', 'digits:16', Rule::unique('employees', 'kk_number')->ignore($employeeId),],
+            'ktp_number' => ['required', 'digits:16', Rule::unique('employees', 'ktp_number')->ignore($employeeId)->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),],
+            'kk_number' => ['nullable', 'digits:16', Rule::unique('employees', 'kk_number')->ignore($employeeId)->where(function ($query) {
+                $query->whereNull('deleted_at');
+            }),],
             // 'kk_number' => 'nullable|digits:16|unique:candidates,kk_number',
             'last_educational' => 'required|string|max:100',
             'study' => 'required|string|max:100',
@@ -69,9 +84,13 @@ class UpdateNewEmployeeRequest extends FormRequest
             'bpjs_naker_number' => 'nullable|string|max:20',
             'zipcode_ktp' => 'nullable|string|max:10',
             'phone_number2' => 'nullable|string|max:15',
-            'npwp_number' => ['nullable', 'string', 'max:20', Rule::unique('employees', 'npwp_number')->ignore($employeeId)],
+            'npwp_number' => ['nullable', 'string', 'max:20', Rule::unique('employees', 'npwp_number')->ignore($employeeId)->where(function ($query) {
+                $query->whereNull('deleted_at');
+            })],
             'glasses' => 'nullable|boolean',
-            'paspor_number' => ['nullable', 'string', Rule::unique('employees', 'paspor_number')->ignore($employeeId)],
+            'paspor_number' => ['nullable', 'string', Rule::unique('employees', 'paspor_number')->ignore($employeeId)->where(function ($query) {
+                $query->whereNull('deleted_at');
+            })],
             'file_kk' => 'nullable|mimes:pdf|max:512',
             'file_ktp' => 'nullable|mimes:pdf|max:512',
             'file_cv' => 'nullalble|mimes:pdf|max:512',

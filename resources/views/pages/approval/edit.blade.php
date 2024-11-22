@@ -34,7 +34,7 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="my-2">
-                  <label class="form-label" for="nik_employee">NIK Karyawan <code>*</code></label>
+                  <label class="form-label" for="nik_employee">NIK Karyawan</label>
                   <input id="nik_employee" name="nik_employee" value="{{ $contract->nik_employee }}"
                     class="form-control @error('nik_employee') is-invalid @enderror" readonly>
                   @error('nik_employee')
@@ -63,7 +63,7 @@
 
               <div class="col-md-6">
                 <div class="my-2">
-                  <label class="form-label" for="duration">Durasi <code>*</code></label>
+                  <label class="form-label" for="duration">Durasi</label>
                   <input type="number" id="duration" name="duration" value="{{ $contract->duration }}"
                     class="form-control @error('duration') is-invalid @enderror">
                   @error('duration')

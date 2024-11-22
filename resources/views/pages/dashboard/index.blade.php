@@ -386,81 +386,63 @@
       </div>
     </div>
 
+
     <div class="col-12">
       <div class="card">
         <div class="card-header">
-          <h4>Kontrak Sudah Berakhir</h4>
+
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="fw-normal mb-0 text-body">Daftar Kontrak Sudah Berakhir</h5>
+
+            <div class="row">
+              <!-- Export Button -->
+              <a id="export-contracts-button" class="btn btn-outline-primary block mb-1"
+                href="{{ route('contract.exportExpired') }}">
+                Export Kontrak
+              </a>
+
+              <!-- Dropdown for Selecting Month -->
+              <div class="col-md-5">
+                <label for="month-select-contract">Pilih Bulan</label>
+                <select id="month-select-contract" class="form-control">
+                  @foreach (range(1, 12) as $month)
+                    <option value="{{ $month }}" {{ $month == date('n') ? 'selected' : '' }}>
+                      {{ DateTime::createFromFormat('!m', $month)->format('F') }}
+                    </option>
+                  @endforeach
+                </select>
+              </div>
+
+              <!-- Dropdown for Selecting Year -->
+              <div class="col-md-5">
+                <label for="year-select-contract">Pilih Tahun</label>
+                <select id="year-select-contract" class="form-control">
+                  @for ($year = 2015; $year <= date('Y'); $year++)
+                    <option value="{{ $year }}" {{ $year == date('Y') ? 'selected' : '' }}>
+                      {{ $year }}
+                    </option>
+                  @endfor
+                </select>
+              </div>
+
+              <!-- Reset Button -->
+              <div class="col-md-2 my-4">
+                <button id="reset-filters" class="btn btn-secondary ">Reset</button>
+              </div>
+
+            </div>
+          </div>
+
         </div>
         <div class="card-body" style="word-break: break-all">
-          <div class="container">
-            <table class="table" id="table1" style="font-size: 80%">
-              <thead>
-                <tr>
-                  <th scope="col" style="width: 5%">#</th>
-                  <th scope="col"></th>
-                  <th scope="col">NIK</th>
-                  <th scope="col">Nama</th>
-                  <th scope="col">No. Kontrak</th>
-                  <th scope="col">Tgl Mulai</th>
-                  <th scope="col">Tgl Berakhir</th>
-                  <th scope="col">Durasi</th>
-                  <th scope="col">Kontrak Ke- </th>
-                  {{-- <th scope="col">Direktorat</th> --}}
-                  <th scope="col">Divisi</th>
-                </tr>
-              </thead>
-              <tbody>
-                @forelse ($contractsExpired as $contract)
-                  <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>
-                      @if ($contract->employee->photo)
-                        <div class="fixed-frame">
-                          <img src="{{ asset('storage/' . $contract->employee->photo) }}" data-fancybox
-                            alt="Icon User" class="framed-image" style="cursor: pointer">
-                        </div>
-                      @else
-                        <div class="fixed-frame">
-                          No Image
-                        </div>
-                      @endif
-                    </td>
-                    <td>
-                      {{ $contract->employee->nik ?? 'N/A' }}
-                    </td>
-                    <td>
-                      {{ $contract->employee->name ?? 'N/A' }}
-                    </td>
-                    <td>
-                      {{ $contract->contract_number ?? 'N/A' }}
-                    </td>
-                    <td>
-                      {{ Carbon\Carbon::parse($contract->start_date)->translatedFormat('d-m-Y') ?? 'N/A' }}
-                    </td>
-                    <td>
-                      {{ Carbon\Carbon::parse($contract->end_date)->translatedFormat('d-m-Y') ?? 'N/A' }}
-                    </td>
-                    <td>
-                      {{ $contract->duration ?? 'N/A' }} Bulan
-                    </td>
-                    <td>
-                      {{ $contract->contract_sequence_number ?? 'N/A' }}
-                    </td>
-                    {{-- <td>{{ $contract->employee->position->directorate->code ?? 'N/A' }}</td> --}}
-                    <td>{{ $contract->employee->position->division->code ?? 'N/A' }}</td>
-
-                  </tr>
-                @empty
-                  <tr>
-                    <td class="text-center" colspan="9">No data available in table</td>
-                  </tr>
-                @endforelse
-              </tbody>
-            </table>
+          <div id="contracts-list">
+            @include('pages.dashboard.contract-expired-list', ['contractsExpired' => $contractsExpired])
           </div>
         </div>
       </div>
+
     </div>
+
   </div>
 
 </div>
@@ -619,6 +601,86 @@
 </script> --}}
 
 <script>
+  // document.addEventListener('DOMContentLoaded', () => {
+  //   const monthSelect = document.getElementById('month-select-contract');
+  //   const yearSelect = document.getElementById('year-select-contract');
+  //   const contractsList = document.getElementById('contracts-list');
+
+  //   function fetchFilteredContracts() {
+  //     const month = monthSelect.value;
+  //     const year = yearSelect.value;
+
+  //     fetch(`/contracts/expired?month=${month}&year=${year}`)
+  //       .then(response => response.text())
+  //       .then(html => {
+  //         contractsList.innerHTML = html;
+  //       })
+  //       .catch(error => console.error('Error fetching filtered contracts:', error));
+  //   }
+
+  //   monthSelect.addEventListener('change', fetchFilteredContracts);
+  //   yearSelect.addEventListener('change', fetchFilteredContracts);
+  // });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const monthSelect = document.getElementById('month-select-contract');
+    const yearSelect = document.getElementById('year-select-contract');
+    const contractsList = document.getElementById('contracts-list');
+    const resetButton = document.getElementById('reset-filters');
+    const exportButton = document.getElementById('export-contracts-button'); // Add this line
+
+    // Function to fetch filtered contracts based on selected month and year
+    function fetchFilteredContracts() {
+      const month = monthSelect.value;
+      const year = yearSelect.value;
+
+      const url = `{{ route('contracts.expired') }}?month=${month}&year=${year}`;
+
+      fetch(url)
+        .then(response => response.text())
+        .then(html => {
+          contractsList.innerHTML = html; // Update the contracts list with the fetched data
+        })
+        .catch(error => console.error('Error fetching filtered contracts:', error));
+    }
+
+    // Function to update the export button's href dynamically
+    const updateExportHref = () => {
+      const selectedMonth = monthSelect.value;
+      const selectedYear = yearSelect.value;
+      const baseHref =
+        "{{ route('contract.exportExpired') }}"; // This should be replaced with the correct server-side route
+      exportButton.href = `${baseHref}?month=${selectedMonth}&year=${selectedYear}`; // Update export button href
+    };
+
+    // Function to reset filters to current month and year
+    function resetFilters() {
+      monthSelect.value = new Date().getMonth() + 1; // Reset to current month (1-based)
+      yearSelect.value = new Date().getFullYear(); // Reset to current year
+      fetchFilteredContracts(); // Fetch the unfiltered data for the current month and year
+    }
+
+    // Add event listeners for changing month and year
+    monthSelect.addEventListener('change', () => {
+      fetchFilteredContracts(); // Fetch data when month changes
+      updateExportHref(); // Update export button URL when month changes
+    });
+
+    yearSelect.addEventListener('change', () => {
+      fetchFilteredContracts(); // Fetch data when year changes
+      updateExportHref(); // Update export button URL when year changes
+    });
+
+    // Add event listener for reset button
+    resetButton.addEventListener('click', resetFilters);
+
+    // Initial fetch to load contracts with default values
+    fetchFilteredContracts();
+    updateExportHref(); // Initialize export button href on page load
+  });
+</script>
+
+<script>
   document.addEventListener('DOMContentLoaded', function() {
     // Data passed from the controller
     var employeeActiveData = @json($employeeActiveData);
@@ -711,8 +773,6 @@
     });
   });
 </script>
-
-
 
 <script>
   Fancybox.bind("[data-fancybox]", {

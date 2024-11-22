@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Employee;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Exports\ContractExport;
 use App\Imports\ImportContract;
 use App\Models\Employee\Contract;
 use App\Http\Controllers\Controller;
@@ -20,7 +21,13 @@ class ContractController extends Controller
      */
     public function index()
     {
-        $contracts = Contract::with('employee')->where('company_id', Auth::user()->company_id)->latest();
+        $contracts = Contract::when(! Auth::user()->hasRole('super-admin'), function ($query) {
+            $query->where('company_id', Auth::user()->company_id);
+        })->with('employee')->orderBy('created_at', 'desc');
+
+        // if (! Auth::user()->hasRole('super-admin')) {
+        //     $contracts->where('company_id', Auth::user()->company_id);
+        // }
 
 
         if (request()->ajax()) {
@@ -205,5 +212,27 @@ class ContractController extends Controller
         }
 
 
+    }
+
+    public function contractExport()
+    {
+        return Excel::download(
+            new ContractExport,
+            'contracts_expired_' . request('year', now()->year) . '_' . request('month', now()->month) . '.xlsx'
+        );
+    }
+
+    public function getExpiredContracts(Request $request)
+    {
+        $month = $request->get('month', date('n'));
+        $year = $request->get('year', date('Y'));
+
+        $contractsExpired = Contract::when($month, fn ($query) => $query->whereMonth('end_date', $month))
+            ->when($year, fn ($query) => $query->whereYear('end_date', $year))
+            ->whereHas('employee', function ($query) {
+                $query->whereNull('date_leaving'); // Only active employees
+            })->get();
+
+        return view('pages.dashboard.contract-expired-list', compact('contractsExpired'));
     }
 }

@@ -34,48 +34,51 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $employees = Employee::with('employeeCategory')->latest();
+        $employees = Employee::with('employeeCategory')->when(! Auth::user()->hasRole('super-admin'), function ($query) {
+            $query->where('company_id', Auth::user()->company_id);
+        })->where('employee_status', 'AKTIF')->whereNotNull('nik')->latest();
 
-        if (! Auth::user()->hasRole('super-admin')) {
-            $employees->where('company_id', Auth::user()->company_id);
-        }
+        // if (! Auth::user()->hasRole('super-admin')) {
+        //     $employees->where('company_id', Auth::user()->company_id);
+        // }
 
         if (request()->ajax()) {
             return DataTables::of($employees)
                 ->addIndexColumn()
                 ->addColumn('action', function ($item) {
                     return '
-                    <div class="btn-group mb-1">
-                  <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton"
-                      data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <i class="bi bi-three-dots-vertical"></i>
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                     
-                      <a class="dropdown-item" href="' . route('employee.show', $item) . '">Edit</a>
-                        <button class="dropdown-item" onclick=" showSweetAlert(' . $item->id . ') ">Hapus</button>
-                        <form id="deleteForm_' . $item->id . '"
-                          action="' . route('employee.destroy', $item->id) . '" method="POST">
-                          ' . method_field('delete') . csrf_field() . '
-                        </form>
+                <div class="btn-group mb-1">
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        
+                            <a class="dropdown-item" href="' . route('employee.show', $item) . '">' . ($item->is_verified ? 'Lihat' : 'Edit') . '</a>
+                            <button class="dropdown-item" onclick=" showSweetAlert(' . $item->id . ') " ' . ($item->is_verified ? 'hidden' : '') . '>Hapus</button>
+                            <form id="deleteForm_' . $item->id . '"
+                            action="' . route('employee.destroy', $item->id) . '" method="POST">
+                            ' . method_field('delete') . csrf_field() . '
+                            </form>
+                        </div>
                     </div>
-                  </div>
                 </div>
                     ';
                 })->editColumn('photo', function ($item) {
                     if ($item->photo) {
-                        return ' <div class="fixed-frame">
+                        return '
+                <div class="fixed-frame">
                     <img src="' . asset('storage/' . $item->photo) . '" data-fancybox alt="Icon User"
-                      class="framed-image" style="cursor: pointer">
-                  </div>';
+                    class="framed-image" style="cursor: pointer">
+                </div>';
                     } else {
                         return 'No Image';
                     }
                 })->editColumn('created_at', function ($item) {
                     return '' . Carbon::parse($item->created_at)->translatedFormat('d F Y') . '';
                 })->editColumn('employeeCategory', function ($item) {
-                    return $item->employeeCategory->name;
+                    return $item->employeeCategory->name ?? '-';
                 })->editColumn('is_verified', function ($item) {
                     if ($item->is_verified == 0) {
                         return '<span class="badge bg-danger">Unverified</span>';
@@ -118,10 +121,11 @@ class EmployeeController extends Controller
      */
     public function store(StoreEmployeeRequest $request)
     {
-        $data = $request->except('is_hire');
+        $data = $request->except('is_hire', 'position_id');
+
+        // dd($request->position_id);
 
         $company_id = Auth::user()->company_id;
-
 
         $file_fields = [
             'photo',
@@ -151,7 +155,21 @@ class EmployeeController extends Controller
             'company_id' => $company_id,
         ]);
 
-        Employee::create($requestData);
+        $employee = Employee::create($requestData);
+
+        if ($employee) {
+            $careerData = [
+                'employee_id' => $employee->id,
+                'position_id' => $request->position_id ?? null,
+                'start_date' => $employee->date_joining ?? now(),
+                'placement' => $employee->position->division->name ?? null,
+                'type' => null,
+                'description' => 'Karyawan Baru' ?? null,
+            ];
+
+            $employee->employeeCareers()->create($careerData);
+        }
+
 
         return redirect()->route('employee.index')->with('success', 'Data has been created successfully!');
     }
@@ -291,11 +309,9 @@ class EmployeeController extends Controller
             Employee::create([
                 // "nik" => 000000,
 
-                'position_id' => $selectedCandidate->position_id,
+                'position_id' => null,
                 'date_joining' => now(),
-
                 'candidate_id' => $candidate->id,
-
                 "company_id" => $candidate->company_id ?? null,
                 "name" => $candidate->name ?? null,
                 "photo" => $candidate->photo ?? null,
@@ -350,6 +366,7 @@ class EmployeeController extends Controller
                 // "is_selection" => $candidate->is_selection ?? null,
                 "tag" => $candidate->tag ?? null,
                 "glasses" => $candidate->glasses ?? null,
+                "zipcode_ktp" => $candidate->zipcode_ktp ?? null,
             ]);
 
         }
@@ -374,6 +391,16 @@ class EmployeeController extends Controller
         $candidate = $selectedCandidate->candidate;
 
         if ($candidate->employee) {
+            $careerData = [
+                'employee_id' => $candidate->employee->id,
+                'position_id' => $selectedCandidate->position_id ?? null,
+                'start_date' => $data['date_joining'] ?? now(),
+                'placement' => $selectedCandidate->position->division->name ?? null,
+                'type' => null,
+                'description' => 'Karyawan Baru' ?? null,
+            ];
+
+            $candidate->employee->employeeCareers()->create($careerData);
 
             $candidate->employee->update($data);
 
@@ -382,21 +409,26 @@ class EmployeeController extends Controller
             return redirect()->route('employee.index')->with('error', 'Employee record not found for the given candidate.');
         }
     }
-
     public function getEmployeeChartData($year)
     {
         $companyId = Auth::user()->company_id;
+        $isSuperAdmin = Auth::user()->hasRole('super-admin');
 
         $employeeActiveData = [];
         $employeeNonActiveData = [];
 
         // Populate example data or fetch from database (you would replace this part)
         for ($month = 1; $month <= 12; $month++) {
-            $employeeActiveData[] = DB::table('employees')->where('company_id', $companyId)->where('employee_status', 'AKTIF')
+            $employeeActiveData[] = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
+                $query->where('company_id', $companyId);
+            })->where('employee_status', 'AKTIF')
                 ->whereYear('date_joining', $year)
                 ->whereMonth('date_joining', $month)
                 ->count();
-            $employeeNonActiveData[] = DB::table('employees')->where('company_id', $companyId)->where('employee_status', '!=', 'AKTIF')
+
+            $employeeNonActiveData[] = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
+                $query->where('company_id', $companyId);
+            })->where('employee_status', '!=', 'AKTIF')
                 ->whereYear('date_joining', $year)
                 ->whereMonth('date_joining', $month)
                 ->count();

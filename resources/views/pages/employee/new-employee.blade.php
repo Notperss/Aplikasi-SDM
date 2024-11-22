@@ -121,8 +121,7 @@
               </div>
               <div class="form-group col-md-6">
                 <label for="position_id">Jabatan <code>*</code></label>
-                <select name="position_id" id="position_id"
-                  class="form-control choices  @error('position_id') is-invalid @enderror">
+                <select id="position_id" class="form-control  @error('position_id') is-invalid @enderror" disabled>
                   <option value="" disabled selected>Choose</option>
                   @foreach ($positions as $position)
                     <option value="{{ $position->id }}"

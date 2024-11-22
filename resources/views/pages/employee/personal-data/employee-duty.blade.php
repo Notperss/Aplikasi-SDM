@@ -5,14 +5,14 @@
           <div class="row">
             <div class="d-flex justify-content-between align-items-center ">
               <h4 class="card-title">Dinas/Tugas</h4>
-
-              <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
-                data-bs-target="#modal-form-add-duty">
-                <i class="bi bi-plus-lg"></i>
-                Add
-              </button>
-              @include('pages.employee.personal-data.form.employee-duty.modal-create')
-
+              @if (!$employee->is_verified)
+                <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
+                  data-bs-target="#modal-form-add-duty">
+                  <i class="bi bi-plus-lg"></i>
+                  Add
+                </button>
+                @include('pages.employee.personal-data.form.employee-duty.modal-create')
+              @endif
             </div>
             <!-- Table with outer spacing -->
             <div class="table-responsive">

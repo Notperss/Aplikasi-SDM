@@ -161,6 +161,13 @@ class SelectionController extends Controller
             $data['file_selection'] = $file->storeAs('files/selection/file_selection', $file_name, 'public_local'); // Store the file
         }
 
+        if ($request->hasFile('file_fptk')) {
+            $file = $request->file('file_fptk'); // Get the file from the request
+            $extension = $file->getClientOriginalExtension(); // Get the file extension
+            $file_name = 'file_fptk_' . $data['name'] . '_' . time() . '.' . $extension; // Construct the file name
+            $data['file_fptk'] = $file->storeAs('files/fptk/file_fptk', $file_name, 'public_local'); // Store the file
+        }
+
         $requestData = array_merge($data, [
             'company_id' => $company_id,
         ]);
@@ -198,18 +205,29 @@ class SelectionController extends Controller
      */
     public function edit(Selection $selection)
     {
+        $companyId = Auth::user()->company_id;
+        $isSuperAdmin = Auth::user()->hasRole('super-admin');
+
+
         $selectedPositionIds = $selection->selectedPositions->pluck('id')->toArray();
-        $positions = Position::whereDoesntHave('selectedPositions')
+        $positions = Position::when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('company_id', $companyId);
+        })->whereDoesntHave('selectedPositions')
             ->orWhereIn('id', $selectedPositionIds)
             ->orderBy('name', 'asc')
             ->get();
 
-        // $positions = Position::latest()->get();
 
-        $divisions = Division::orderBy('name', 'asc')->get();
+        $divisions = Division::when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('company_id', $companyId);
+        })->orderBy('name', 'asc')->get();
 
-        $candidates = Candidate::where('is_hire', false)->where('is_selection', false)->orderBy('name', 'asc')->get();
+        $candidates = Candidate::when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('company_id', $companyId);
+        })->where('is_hire', false)->where('is_selection', false)->orderBy('name', 'asc')->get();
+
         $dataCount = $selection->selectedCandidates()->count();
+
         return view('pages.recruitment.selection.edit', compact('selection', 'positions', 'candidates', 'selectedPositionIds', 'dataCount', 'divisions'));
         // return view('pages.recruitment.selection.edit', compact('selection', 'positions', 'candidates', 'dataCount', 'divisions'));
 
@@ -222,6 +240,7 @@ class SelectionController extends Controller
     {
         $data = $request->except('position_id');
         $path_selection = $selection->file_selection;
+        $path_fptk = $selection->file_fptk;
 
         if ($request->hasFile('file_selection')) {
             $file = $request->file('file_selection');
@@ -234,6 +253,19 @@ class SelectionController extends Controller
             }
         } else {
             $data['file_selection'] = $path_selection;
+        }
+
+        if ($request->hasFile('file_fptk')) {
+            $file = $request->file('file_fptk');
+            $extension = $file->getClientOriginalExtension();
+            $file_name = 'file_fptk_' . $data['name'] . '_' . time() . '.' . $extension; // Construct the file name
+            $data['file_fptk'] = $file->storeAs('files/fptk/file_fptk', $file_name, 'public_local'); // Store the file
+            // delete fptk
+            if ($path_fptk != null || $path_fptk != '') {
+                Storage::disk('public_local')->delete($path_fptk);
+            }
+        } else {
+            $data['file_fptk'] = $path_fptk;
         }
         $selection->update($data);
         $selection->selectedPositions()->sync($request->input('position_id') ?? []);
@@ -358,6 +390,15 @@ class SelectionController extends Controller
 
     public function closeSelection(Selection $selection, Request $request)
     {
+        $request->validate([
+            'selected_option' => 'required',
+            'file_selection' => 'nullable|mimes:pdf|max:2048',
+        ], [
+            'selected_option.required' => 'Wajib diisi.',
+            'file_selection.mimes' => 'File seleksi harus berupa PDF.',
+            'file_selection.max' => 'Ukuran file seleksi tidak boleh lebih dari 2MB.',
+        ]);
+
         // Check if the selection exists
         if (! $selection) {
             return redirect()->route('selection.index')->with('error', 'Selection has failed to close.');
@@ -403,10 +444,29 @@ class SelectionController extends Controller
             }
         }
 
-        // Update selection status
+        $path_selection = $selection->file_selection;
+
+        if ($request->hasFile('file_selection')) {
+            $file = $request->file('file_selection');
+            $extension = $file->getClientOriginalExtension();
+            $file_name = 'file_selection_' . time() . '.' . $extension; // Construct the file name
+            $new_file_path = $file->storeAs('files/file_selection', $file_name, 'public_local'); // Store the file
+
+            // Delete the old file if it exists
+            if (! empty($path_selection)) {
+                Storage::disk('public_local')->delete($path_selection);
+            }
+
+            // Update the file path
+            $path_selection = $new_file_path;
+        }
+
+        // Update the selection status
         $selection->update([
             'status' => $request->selected_option,
+            'file_selection' => $path_selection, // Use the updated file path or keep the old one
             'is_finished' => true,
+            'is_approve' => 1,
         ]);
 
         return redirect()->route('selection.index')->with('success', 'Selection has closed.');
@@ -425,7 +485,6 @@ class SelectionController extends Controller
 
     public function getCandidate(Request $request)
     {
-        // $candidates = Candidate::where('is_hire', false)->where('is_selection', false)->orderBy('name', 'asc');
         $companyId = Auth::user()->company_id;
         $isSuperAdmin = Auth::user()->hasRole('super-admin');
 

@@ -136,6 +136,7 @@ class Candidate extends Model
         'file_vaksin', //
         'file_surat_sehat', //
 
+        'zipcode_ktp',
         'latitude_ktp',
         'latitude_domisili',
         'longitude_ktp',

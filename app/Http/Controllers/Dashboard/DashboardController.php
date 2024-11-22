@@ -21,30 +21,42 @@ class DashboardController extends Controller
     public function index()
     {
         $companyId = Auth::user()->company_id;
+        $isSuperAdmin = Auth::user()->hasRole('super-admin');
 
-        $employees = Employee::all();
+        // $employees = Employee::all();
 
 
         // $nextMonthStart = Carbon::now()->startOfMonth()->addMonth(); // Start of next month
         $nextMonthEnd = Carbon::now()->endOfMonth()->addMonth(); // End of next month
         $today = Carbon::now();
 
-        $contracts = Contract::where('company_id', $companyId)->orderBy('end_date', 'desc');
+        $contracts = Contract::when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('company_id', $companyId);
+        })->where('company_id', $companyId)->orderBy('end_date', 'desc');
+
         $contractsIncoming = $contracts->whereBetween('end_date', [$today, $nextMonthEnd])
             ->get();
 
-        $contractsExpired = Contract::with('employee')
-            ->where('company_id', $companyId)
-            ->where('end_date', '<', $today) // Only contracts with an end date before today
+        $contractsExpired = Contract::with('employee')->when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('company_id', $companyId);
+        })
+            // ->where('end_date', '<', $today) // Only contracts with an end date before today
+            ->whereYear('end_date', Carbon::now()->year)
+            ->whereMonth('end_date', Carbon::now()->month)
             ->whereHas('employee', function ($query) {
                 $query->whereNull('date_leaving'); // Only active employees
             })
+            ->orderBy('employee_id', 'asc')
             ->orderBy('end_date', 'asc')
             ->get();
 
-        $divisions = Division::where('company_id', $companyId)->get();
+        $divisions = Division::when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('company_id', $companyId);
+        })->get();
 
-        $companies = Company::with('directorates')->where('id', $companyId)->orderBy('name', 'asc')->get();
+        $companies = Company::with('directorates')->when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('id', $companyId);
+        })->orderBy('name', 'asc')->get();
 
         $currentYear = date('Y');
         $employeeActiveData = [];
@@ -52,19 +64,22 @@ class DashboardController extends Controller
 
         // Fetch employee data per month for the current year
         for ($month = 1; $month <= 12; $month++) {
-            $employeeActiveData[] = DB::table('employees')->where('company_id', $companyId)->where('employee_status', 'AKTIF')
+            $employeeActiveData[] = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
+                $query->where('company_id', $companyId);
+            })->where('employee_status', 'AKTIF')
                 ->whereYear('date_joining', $currentYear)
                 ->whereMonth('date_joining', $month)
                 ->count();
-            $employeeNonActiveData[] = DB::table('employees')->where('company_id', $companyId)->where('employee_status', '!=', 'AKTIF')
+            $employeeNonActiveData[] = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
+                $query->where('company_id', $companyId);
+            })->where('employee_status', '!=', 'AKTIF')
                 ->whereYear('date_joining', $currentYear)
                 ->whereMonth('date_joining', $month)
                 ->count();
         }
 
-
         return view('pages.dashboard.index', compact(
-            'employees',
+            // 'employees',
             'divisions',
             'companies',
             'employeeActiveData',
@@ -124,16 +139,10 @@ class DashboardController extends Controller
 
     public function getDivisionEmployee($id)
     {
-
         $divisionId = Division::findOrFail($id);
-
 
         $positions = Position::wherehas('employee')->where('division_id', $id)->get();
 
-
-
-
         return view('pages.dashboard.employeesDivision', compact('positions', 'divisionId'));
-
     }
 }

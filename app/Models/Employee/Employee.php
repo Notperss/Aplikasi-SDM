@@ -11,6 +11,7 @@ use App\Models\Employee\PersonalData\EmployeeKpi;
 use App\Models\Employee\PersonalData\EmployeeDuty;
 use App\Models\Employee\PersonalData\EmployeePhoto;
 use App\Models\Employee\PersonalData\EmployeeSkill;
+use App\Models\Employee\PersonalData\EmployeeCareer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Employee\PersonalData\EmployeeJobHistory;
 use App\Models\Employee\PersonalData\EmployeeFamilyDetail;
@@ -168,5 +169,9 @@ class Employee extends Model
     public function employeeDuties()
     {
         return $this->hasMany(EmployeeDuty::class);
+    }
+    public function employeeCareers()
+    {
+        return $this->hasMany(EmployeeCareer::class)->orderBy('is_approve', 'desc')->latest();
     }
 }

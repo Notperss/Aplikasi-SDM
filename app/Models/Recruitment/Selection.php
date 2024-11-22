@@ -27,6 +27,7 @@ class Selection extends Model
         'file_selection',
         'file_fptk',
         'is_finished',
+        'is_approve',
         'status',
     ];
 

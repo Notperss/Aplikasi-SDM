@@ -649,7 +649,7 @@
 
                 <div class="row">
                   <div class="form-group col-md-6">
-                    <label for="candidate_from">Pelamar Dari</label>
+                    <label for="candidate_from">Pelamar Dari <code>*</code></label>
                     <select type="text" id="candidate_from"
                       class="form-control @error('candidate_from') is-invalid @enderror" name="candidate_from">
                       <option value="" disabled selected>Choose</option>

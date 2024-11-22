@@ -269,52 +269,15 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="last_educational">Pendidikan Terakhir <code>*</code></label>
-                  <select type="text" id="last_educational" name="last_educational"
-                    class="form-control @error('last_educational') is-invalid @enderror">
-                    <option value="" disabled selected>Choose</option>
-                    <option value="S-3"
-                      {{ old('last_educational', $candidate->last_educational) == 'S-3' ? 'selected' : '' }}> S-3
-                    </option>
-                    <option value="S-2"
-                      {{ old('last_educational', $candidate->last_educational) == 'S-2' ? 'selected' : '' }}> S-2
-                    </option>
-                    <option value="S-1"
-                      {{ old('last_educational', $candidate->last_educational) == 'S-1' ? 'selected' : '' }}> S-1
-                    </option>
-                    <option value="D-4"
-                      {{ old('last_educational', $candidate->last_educational) == 'D-4' ? 'selected' : '' }}> D-4
-                    </option>
-                    <option value="D-3"
-                      {{ old('last_educational', $candidate->last_educational) == 'D-3' ? 'selected' : '' }}> D-3
-                    </option>
-                    <option value="D-2"
-                      {{ old('last_educational', $candidate->last_educational) == 'D-2' ? 'selected' : '' }}> D-2
-                    </option>
-                    <option value="D-1"
-                      {{ old('last_educational', $candidate->last_educational) == 'D-1' ? 'selected' : '' }}> D-1
-                    </option>
-                    <option value="MA"
-                      {{ old('last_educational', $candidate->last_educational) == 'MA' ? 'selected' : '' }}> MA
-                    </option>
-                    <option value="SMK"
-                      {{ old('last_educational', $candidate->last_educational) == 'SMK' ? 'selected' : '' }}> SMK
-                    </option>
-                    <option value="SMA"
-                      {{ old('last_educational', $candidate->last_educational) == 'SMA' ? 'selected' : '' }}> SMA
-                    </option>
-                    <option value="MTS"
-                      {{ old('last_educational', $candidate->last_educational) == 'MTS' ? 'selected' : '' }}> MTS
-                    </option>
-                    <option value="SMP"
-                      {{ old('last_educational', $candidate->last_educational) == 'SMP' ? 'selected' : '' }}> SMP
-                    </option>
-                    <option value="SD"
-                      {{ old('last_educational', $candidate->last_educational) == 'SD' ? 'selected' : '' }}> SD
-                    </option>
-                  </select>
-                  @error('last_educational')
-                    <a style="color: red"><small>{{ $message }}</small></a>
+                  <label for="nationality">Kewarganegaraan</label>
+                  <input type="text" value="{{ old('nationality', $candidate->nationality) }}" id="nationality"
+                    class="form-control @error('nationality') is-invalid @enderror" name="nationality">
+                  @error('nationality')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
                   @enderror
                 </div>
 
@@ -399,6 +362,7 @@
                     </a>
                   @enderror
                 </div>
+
                 <div class="form-group">
                   <label for="dob">Tanggal Lahir <code>*</code></label>
                   <input type="date" id="dob" name="dob" value="{{ old('dob', $candidate->dob) }}"
@@ -411,6 +375,7 @@
                     </a>
                   @enderror
                 </div>
+
                 <div class="row">
                   <div class="form-group col-md-6">
                     <label for="gender">Jenis Kelamin <code>*</code></label>
@@ -459,6 +424,7 @@
                     @enderror
                   </div>
                 </div>
+
                 <div class="row">
                   <div class="form-group col-md-6">
                     <label for="height">Tinggi (cm)</label>
@@ -487,6 +453,7 @@
                     @enderror
                   </div>
                 </div>
+
                 <div class="form-group">
                   <label for="marital_status">Status Perkawinan <code>*</code></label>
                   <select id="marital_status" name="marital_status"
@@ -515,6 +482,7 @@
                     </span>
                   @enderror
                 </div>
+
                 <div class="form-group">
                   <label for="religion">Agama</label>
                   <select id="religion" name="religion"
@@ -543,18 +511,57 @@
                     </span>
                   @enderror
                 </div>
+
                 <div class="form-group">
-                  <label for="nationality">Kewarganegaraan</label>
-                  <input type="text" value="{{ old('nationality', $candidate->nationality) }}" id="nationality"
-                    class="form-control @error('nationality') is-invalid @enderror" name="nationality">
-                  @error('nationality')
-                    <a style="color: red">
-                      <small>
-                        {{ $message }}
-                      </small>
-                    </a>
+                  <label for="last_educational">Pendidikan Terakhir <code>*</code></label>
+                  <select type="text" id="last_educational" name="last_educational"
+                    class="form-control @error('last_educational') is-invalid @enderror">
+                    <option value="" disabled selected>Choose</option>
+                    <option value="S-3"
+                      {{ old('last_educational', $candidate->last_educational) == 'S-3' ? 'selected' : '' }}> S-3
+                    </option>
+                    <option value="S-2"
+                      {{ old('last_educational', $candidate->last_educational) == 'S-2' ? 'selected' : '' }}> S-2
+                    </option>
+                    <option value="S-1"
+                      {{ old('last_educational', $candidate->last_educational) == 'S-1' ? 'selected' : '' }}> S-1
+                    </option>
+                    <option value="D-4"
+                      {{ old('last_educational', $candidate->last_educational) == 'D-4' ? 'selected' : '' }}> D-4
+                    </option>
+                    <option value="D-3"
+                      {{ old('last_educational', $candidate->last_educational) == 'D-3' ? 'selected' : '' }}> D-3
+                    </option>
+                    <option value="D-2"
+                      {{ old('last_educational', $candidate->last_educational) == 'D-2' ? 'selected' : '' }}> D-2
+                    </option>
+                    <option value="D-1"
+                      {{ old('last_educational', $candidate->last_educational) == 'D-1' ? 'selected' : '' }}> D-1
+                    </option>
+                    <option value="MA"
+                      {{ old('last_educational', $candidate->last_educational) == 'MA' ? 'selected' : '' }}> MA
+                    </option>
+                    <option value="SMK"
+                      {{ old('last_educational', $candidate->last_educational) == 'SMK' ? 'selected' : '' }}> SMK
+                    </option>
+                    <option value="SMA"
+                      {{ old('last_educational', $candidate->last_educational) == 'SMA' ? 'selected' : '' }}> SMA
+                    </option>
+                    <option value="MTS"
+                      {{ old('last_educational', $candidate->last_educational) == 'MTS' ? 'selected' : '' }}> MTS
+                    </option>
+                    <option value="SMP"
+                      {{ old('last_educational', $candidate->last_educational) == 'SMP' ? 'selected' : '' }}> SMP
+                    </option>
+                    <option value="SD"
+                      {{ old('last_educational', $candidate->last_educational) == 'SD' ? 'selected' : '' }}> SD
+                    </option>
+                  </select>
+                  @error('last_educational')
+                    <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror
                 </div>
+
                 <div class="form-group">
                   <label for="study">Jurusan <code>*</code></label>
                   <input type="text" value="{{ old('study', $candidate->study) }}" id="study"
@@ -567,6 +574,7 @@
                     </a>
                   @enderror
                 </div>
+
                 <div class="form-group">
                   <label for="ethnic">Suku Bangsa</label>
                   <input type="text" value="{{ old('ethnic', $candidate->ethnic) }}" id="ethnic"
@@ -629,7 +637,7 @@
 
                 <div class="row">
                   <div class="form-group col-md-6">
-                    <label for="candidate_from">Pelamar Dari</label>
+                    <label for="candidate_from">Pelamar Dari <code>*</code></label>
                     <select type="text" value="{{ old('candidate_from') }}" id="candidate_from"
                       class="form-control @error('candidate_from') is-invalid @enderror" name="candidate_from">
                       <option value="" disabled>Choose</option>
@@ -674,6 +682,21 @@
                     </a>
                   @enderror
                 </div>
+
+                <div class="form-group col-md-3">
+                  <label for="zipcode_ktp">Kode Pos KTP <code>*</code></label>
+                  <input type="text" oninput="this.value = this.value.replace(/\D+/g, '')" id="zipcode_ktp"
+                    value="{{ old('zipcode_ktp', $candidate->zipcode_ktp) }}"
+                    class="form-control  @error('zipcode_ktp') is-invalid @enderror" name="zipcode_ktp">
+                  @error('zipcode_ktp')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
+                </div>
+
                 <div class="row">
                   <!-- Latitude and Longitude for Alamat KTP -->
                   <div class="form-group col-md-5">
