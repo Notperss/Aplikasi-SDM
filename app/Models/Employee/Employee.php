@@ -5,6 +5,7 @@ namespace App\Models\Employee;
 use App\Models\Position\Position;
 use App\Models\Recruitment\Candidate;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ManagementAccess\Company;
 use App\Models\Employee\EmployeeCategory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Employee\PersonalData\EmployeeKpi;
@@ -109,6 +110,10 @@ class Employee extends Model
     ];
 
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
     public function position()
     {
         return $this->belongsTo(Position::class);

@@ -137,6 +137,29 @@
                 <p class="mb-0" style="font-size: 70%"> * Dimensi Foto 4x6</p>
                 <p class="mb-0" style="font-size: 70%"> * Pastikan Foto Wajah Terlihat Jelas</p> --}}
               </div>
+
+              <div class="d-flex justify-content-center align-items-center flex-column mt-3">
+                <div class="btn-group mb-1">
+                  <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton"
+                      data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Cetak
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      <a class="dropdown-item" href="#" id="printBiodata">Biodata</a>
+                      <a class="dropdown-item" href="#" id="printFormulir">Formulir Pemutakhiran</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div id="biodataContent" style="display: none;">
+                @include('pages.employee.print.biodata')
+              </div>
+              <div id="formulirContent" style="display: none;">
+                @include('pages.employee.print.formulir')
+              </div>
+
             </div>
           </div>
 
@@ -717,5 +740,45 @@
     Fancybox.bind("[data-fancybox]", {
       // Your custom options
     });
+  </script>
+
+  <script>
+    // Print Biodata
+    document.getElementById('printBiodata').addEventListener('click', function(e) {
+      e.preventDefault();
+      printContent('biodataContent');
+    });
+
+    // Print Formulir Pemutakhiran
+    document.getElementById('printFormulir').addEventListener('click', function(e) {
+      e.preventDefault();
+      printContent('formulirContent');
+    });
+
+    // Function to Print Content
+    function printContent(contentId) {
+      const content = document.getElementById(contentId).innerHTML;
+
+      // Open a new window for the print preview
+      const printWindow = window.open('', '_blank');
+      printWindow.document.open();
+      printWindow.document.write(`
+        <html>
+            <head>
+                <title>Print</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                    }
+                </style>
+            </head>
+            <body>
+                ${content}
+            </body>
+        </html>
+    `);
+      printWindow.document.close();
+      printWindow.print();
+    }
   </script>
 @endsection

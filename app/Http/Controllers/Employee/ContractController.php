@@ -227,7 +227,10 @@ class ContractController extends Controller
         $month = $request->get('month', date('n'));
         $year = $request->get('year', date('Y'));
 
-        $contractsExpired = Contract::when($month, fn ($query) => $query->whereMonth('end_date', $month))
+        $contractsExpired = Contract::when(! Auth::user()->hasRole('super-admin'), function ($query) {
+            $query->where('company_id', Auth::user()->company_id);
+        })
+            ->when($month, fn ($query) => $query->whereMonth('end_date', $month))
             ->when($year, fn ($query) => $query->whereYear('end_date', $year))
             ->whereHas('employee', function ($query) {
                 $query->whereNull('date_leaving'); // Only active employees

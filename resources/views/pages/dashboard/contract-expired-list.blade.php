@@ -1,4 +1,4 @@
-<table class="table" id="table1" style="font-size: 80%">
+<table class="table" id="table10" style="font-size: 80%">
   <thead>
     <tr>
       <th scope="col" style="width: 5%">#</th>

@@ -32,7 +32,7 @@ class DashboardController extends Controller
 
         $contracts = Contract::when(! $isSuperAdmin, function ($query) use ($companyId) {
             $query->where('company_id', $companyId);
-        })->where('company_id', $companyId)->orderBy('end_date', 'desc');
+        })->orderBy('end_date', 'desc');
 
         $contractsIncoming = $contracts->whereBetween('end_date', [$today, $nextMonthEnd])
             ->get();
