@@ -4,16 +4,20 @@ namespace App\Http\Controllers\Employee;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Exports\AttendanceExport;
 use App\Models\Employee\Employee;
 use App\Models\Position\Position;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Recruitment\Candidate;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\Employee\EmployeeCategory;
 use App\Models\Recruitment\SelectedCandidate;
+use App\Models\Employee\PersonalData\Attendance;
+use App\Models\Employee\PersonalData\EmployeePhoto;
 use App\Models\Employee\PersonalData\EmployeeSkill;
 use App\Http\Requests\Employee\StoreEmployeeRequest;
 use App\Http\Requests\Employee\UpdateEmployeeRequest;
@@ -438,4 +442,64 @@ class EmployeeController extends Controller
             'employeeNonActiveData' => $employeeNonActiveData,
         ]);
     }
+
+    public function getEmployeeAttendances(Request $request)
+    {
+        $month = $request->get('month', date('n'));
+        $year = $request->get('year', date('Y'));
+        $nik = $request->nik;
+
+        $employeeAttendances = Attendance::query()
+            ->when($month, fn ($query) => $query->whereMonth('date', $month))
+            ->when($year, fn ($query) => $query->whereYear('date', $year))
+            ->when($nik, fn ($query) => $query->where('nik', $nik)) // Fixed condition
+            ->get();
+
+        // $employeeName = $employeeAttendances->first()?->employee->name ?? 'Unknown';
+
+        return view('pages.employee.personal-data.form.employee-attendance.employee-attendance', compact('employeeAttendances', ));
+    }
+
+    public function attendanceExport()
+    {
+        return Excel::download(
+            new AttendanceExport,
+            'absensi_' . request('name', 'unknown') . '_' . request('year', now()->year) . '_' . request('month', now()->month) . '.xlsx'
+        );
+    }
+
+    public function uploadPhoto(Request $request)
+    {
+        $request->validate([
+            'employee_id' => 'required|exists:employees,id',
+            'position_id' => 'nullable|exists:positions,id',
+            'company_id' => 'nullable|exists:companies,id',
+            'main_photo' => 'nullable|boolean', // Ensure it's a boolean value
+            'file_path' => 'required|file|max:5120', // Allow any file type with max size 5MB
+        ], [
+            'employee_id.required' => 'Karyawan harus dipilih.',
+            'employee_id.exists' => 'Karyawan yang dipilih tidak valid.',
+            'position_id.exists' => 'Posisi yang dipilih tidak valid.',
+            'company_id.required' => 'Perusahaan harus dipilih.',
+            'company_id.exists' => 'Perusahaan yang dipilih tidak valid.',
+            'main_photo.boolean' => 'Foto utama harus berupa nilai boolean.',
+            'file_path.file' => 'File harus berupa file yang valid.',
+            'file_path.max' => 'Ukuran file tidak boleh lebih dari 5MB.',
+        ]);
+
+        $data = $request->all();
+
+        if ($request->hasFile('file_path')) {
+            $file = $request->file('file_path'); // Get the file from the request
+            $extension = $file->getClientOriginalExtension(); // Get the file extension
+            $file_name = 'file_path_' . $request['name'] . '_' . time() . '.' . $extension; // Construct the file name
+            $data['file_path'] = $file->storeAs('files/employee/file_path', $file_name, 'public_local'); // Store the file
+        }
+
+        EmployeePhoto::create($data);
+
+        // Redirect back with success message
+        return redirect()->back()->with('success', 'Data has been created successfully!');
+    }
+
 }

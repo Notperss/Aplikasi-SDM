@@ -22,6 +22,7 @@ class EmployeeFamilyDetail extends Model
         'dob_family',
         'is_in_kk',
         'is_bpjs',
+        'emergency_contact',
     ];
 
     protected $casts = ['is_in_kk' => 'boolean', 'is_bpjs' => 'boolean'];

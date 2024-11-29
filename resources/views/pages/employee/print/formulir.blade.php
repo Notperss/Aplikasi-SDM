@@ -1,10 +1,14 @@
-<div style="padding: 20px; font-family: Arial, sans-serif; border: 1px solid #ddd; border-radius: 5px;">
+<div style="padding: 5px; font-family: Arial, sans-serif; border: 1px solid #ddd; border-radius: 5px;">
   <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px; font-family: Arial, sans-serif;">
     <!-- Header Section -->
     <tr>
       <td style="width: 20%; text-align: center; border: 1px solid #ddd; padding: 10px;">
-        <img src="{{ asset('storage/' . $employee->company->logo) }}" alt="Company Logo"
-          style="width: 50px; object-fit: contain;">
+        @if ($employee->company && $employee->company->logo)
+          <img src="{{ asset('storage/' . $employee->company->logo) }}" alt="Company Logo"
+            style="width: 50px; object-fit: contain;">
+        @else
+          <span>No Logo Available</span>
+        @endif
       </td>
       <td
         style="width: 60%; text-align: center; font-size: 18px; font-weight: bold; border: 1px solid #ddd; padding: 10px; background-color: #c7c3c3;">
@@ -125,7 +129,7 @@
       </tr>
     </thead>
     <tbody>
-      @forelse ($employee->educationalHistories as $education)
+      @forelse ($employee->educationalHistories->take(5) as $education)
         <tr>
           <td style="border: 1px solid #ddd;">{{ $education->school_level ?? '' }}</td>
           <td style="border: 1px solid #ddd;">{{ $education->school_name ?? '' }}</td>
@@ -133,8 +137,29 @@
           <td style="border: 1px solid #ddd;">{{ $education->year_to ?? '' }}</td>
         </tr>
       @empty
-        <td class="text-bold-500" style="text-align: center" colspan="4">-</td>
+        {{-- @for ($i = 0; $i < 3; $i++)
+          <tr>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+          </tr>
+        @endfor --}}
       @endforelse
+
+
+
+      @if ($employee->educationalHistories->count() < 5)
+        @for ($i = 0; $i < 5 - $employee->educationalHistories->count(); $i++)
+          <tr>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+          </tr>
+        @endfor
+      @endif
+
     </tbody>
   </table>
 
@@ -147,8 +172,12 @@
         </th>
       </tr>
       <tr>
-        <th colspan="5" style=" text-align: left; border: 1px solid #ddd; background-color: #ffffff;">
+        <th colspan="3" style=" text-align: left; border: 1px solid #ddd; background-color: #ffffff;">
           Status Perkawinan : {{ $employee->marital_status }}
+        </th>
+        <th colspan="2" style=" text-align: left; border: 1px solid #ddd; background-color: #ffffff;">
+          Jumlah Anak :
+          {{ $employee->familyDetails->where('emergency_contact', 0)->where('relation', 'ANAK')->count() }}
         </th>
       </tr>
       <tr>
@@ -160,7 +189,7 @@
       </tr>
     </thead>
     <tbody>
-      @forelse ($employee->familyDetails as $family)
+      @forelse ($employee->familyDetails->where('emergency_contact', 0)->take(5) as $family)
         <tr>
           <td style="border: 1px solid #ddd;">{{ $family->name }}</td>
           <td style="border: 1px solid #ddd;">
@@ -172,15 +201,38 @@
               -
             @endif
           </td>
-          <td style="border: 1px solid #ddd;">{{ $family->relationship }}</td>
+          <td style="border: 1px solid #ddd;">{{ $family->relation }}</td>
           <td style="border: 1px solid #ddd;">
-            {{ Carbon\Carbon::parse($family->dob)->translatedFormat('d M Y') }}
+            {{ Carbon\Carbon::parse($family->dob_family)->translatedFormat('d M Y') }}
           </td>
-          <td style="border: 1px solid #ddd;">{{ $family->occupation }}</td>
+          <td style="border: 1px solid #ddd;">{{ $family->job }}</td>
         </tr>
       @empty
-        <td class="text-bold-500" style="text-align: center" colspan="4">-</td>
+        {{-- @for ($i = 0; $i < 3; $i++)
+          <tr>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+          </tr>
+        @endfor --}}
       @endforelse
+
+
+      @if ($employee->familyDetails->where('emergency_contact', 0)->count() < 5)
+        {{-- Add 2 empty rows if there are no family details with relation < 3 --}}
+        @for ($i = 0; $i < 5 - $employee->familyDetails->where('emergency_contact', 0)->count(); $i++)
+          <tr>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+          </tr>
+        @endfor
+      @endif
+
     </tbody>
   </table>
 
@@ -200,7 +252,7 @@
       </tr>
     </thead>
     <tbody>
-      @forelse ($employee->jobHistories as $job)
+      @forelse ($employee->jobHistories->take(4) as $job)
         <tr>
           <td style="border: 1px solid #ddd;">{{ $job->company_name }}</td>
           <td style="border: 1px solid #ddd;">{{ $job->position }}</td>
@@ -208,8 +260,28 @@
           <td style="border: 1px solid #ddd;">{{ $job->year_to }}</td>
         </tr>
       @empty
-        <td class="text-bold-500" style="text-align: center" colspan="4">-</td>
+        {{-- @for ($i = 0; $i < 2; $i++)
+          <tr>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+          </tr>
+        @endfor --}}
       @endforelse
+
+      @if ($employee->jobHistories->count() < 4)
+        {{-- Add 2 empty rows if there are no family details with relation < 3 --}}
+        @for ($i = 0; $i < 4 - $employee->jobHistories->count(); $i++)
+          <tr>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+          </tr>
+        @endfor
+      @endif
     </tbody>
   </table>
 
@@ -217,7 +289,7 @@
   <table style="width: 100%; border-collapse: collapse;">
     <thead>
       <tr>
-        <th colspan="3" style=" text-align: left; border: 1px solid #ddd; background-color: #c7c3c3;">
+        <th colspan="4" style=" text-align: left; border: 1px solid #ddd; background-color: #c7c3c3;">
           Informasi Kontak Darurat
         </th>
       </tr>
@@ -225,34 +297,54 @@
         <th style="border: 1px solid #ddd;">Nama</th>
         <th style="border: 1px solid #ddd;">Hubungan</th>
         <th style="border: 1px solid #ddd;">No. Telepon</th>
+        <th style="border: 1px solid #ddd;">Alamat</th>
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td style="border: 1px solid #ddd;">{{ 'nama blablablab' }}</td>
-        <td style="border: 1px solid #ddd;">{{ 'saudara' }}</td>
-        <td style="border: 1px solid #ddd;">{{ '0867824638764' }}</td>
-      </tr>
-      {{-- @foreach ($employee->emergencyContacts as $contact)
+      @forelse ($employee->familyDetails->where('emergency_contact', 1)->take(1) as $emergencyContact)
         <tr>
-          <td style="border: 1px solid #ddd;">{{ $contact->name }}</td>
-          <td style="border: 1px solid #ddd;">{{ $contact->relationship }}</td>
-          <td style="border: 1px solid #ddd;">{{ $contact->phone }}</td>
+          <td style="border: 1px solid #ddd;">{{ $emergencyContact->name }}</td>
+          <td style="border: 1px solid #ddd;">{{ $emergencyContact->relation }}</td>
+          <td style="border: 1px solid #ddd;">{{ $emergencyContact->phone_number }}</td>
+          <td style="border: 1px solid #ddd;">{{ $emergencyContact->address }}</td>
         </tr>
-      @endforeach --}}
+      @empty
+        {{-- @for ($i = 0; $i < 3; $i++)
+          <tr>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+          </tr>
+        @endfor --}}
+      @endforelse
+
+
+      @if ($employee->familyDetails->where('emergency_contact', 1)->count() < 1)
+        {{-- Add 2 empty rows if there are no family details with relation < 3 --}}
+        @for ($i = 0; $i < 1 - $employee->familyDetails->where('emergency_contact', 0)->count(); $i++)
+          <tr>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+          </tr>
+        @endfor
+      @endif
     </tbody>
 
   </table>
 
   <table
-    style="width: 100%; border-collapse: collapse; margin-top: 20px; font-family: Arial, sans-serif; border: 1px solid #ddd;">
+    style="width: 100%; border-collapse: collapse; margin-top: 5px; font-family: Arial, sans-serif; border: 1px solid #ddd;">
     <tr>
-      <td style="padding: 20px; text-align: left;">
+      <td style="text-align: left;">
         <p>Formulir data karyawan ini telah diisi sesuai dengan data yang sebenarnya. <br>
           Jakarta,
         </p>
 
-        <div style="margin-top: 60px; text-align: left; line-height: 1;">
+        <div style="margin-top: 40px; text-align: left; line-height: 1;">
           <p style="margin: 0; font-weight: bold;">{{ $employee->name }}</p>
           <div style="border-bottom: 1px solid #000; width: 200px;"></div>
           <p style="margin: 0;">{{ $employee->nik }}</p>

@@ -7,9 +7,11 @@ use App\Models\Recruitment\Candidate;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ManagementAccess\Company;
 use App\Models\Employee\EmployeeCategory;
+use App\Models\Employee\PersonalData\Attendance;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Employee\PersonalData\EmployeeKpi;
 use App\Models\Employee\PersonalData\EmployeeDuty;
+use App\Models\Employee\PersonalData\EmployeeAward;
 use App\Models\Employee\PersonalData\EmployeePhoto;
 use App\Models\Employee\PersonalData\EmployeeSkill;
 use App\Models\Employee\PersonalData\EmployeeCareer;
@@ -132,11 +134,11 @@ class Employee extends Model
     }
     public function jobHistories()
     {
-        return $this->hasMany(EmployeeJobHistory::class)->orderBy('year_from', 'desc');
+        return $this->hasMany(EmployeeJobHistory::class)->orderBy('year_to', 'desc');
     }
     public function educationalHistories()
     {
-        return $this->hasMany(EmployeeEducationalHistory::class)->orderBy('year_from', 'desc');
+        return $this->hasMany(EmployeeEducationalHistory::class)->orderBy('year_to', 'asc');
     }
     public function languageProficiencies()
     {
@@ -165,7 +167,7 @@ class Employee extends Model
     }
     public function contracts()
     {
-        return $this->hasMany(Contract::class);
+        return $this->hasMany(Contract::class)->orderBy('end_date', 'desc');
     }
     public function kpis()
     {
@@ -178,5 +180,13 @@ class Employee extends Model
     public function employeeCareers()
     {
         return $this->hasMany(EmployeeCareer::class)->orderBy('is_approve', 'desc')->latest();
+    }
+    public function employeeAwards()
+    {
+        return $this->hasMany(EmployeeAward::class);
+    }
+    public function employeeAttendances()
+    {
+        return $this->hasMany(Attendance::class, 'nik', 'nik');
     }
 }

@@ -17,7 +17,7 @@
               <input type="hidden" name="employee_id" value="{{ $employee->id }}">
 
               <div class="col-6 mb-1">
-                <label class="form-label" for="relation">Hubungan Keluarga</label>
+                <label class="form-label" for="relation">Hubungan Keluarga <code>*</code></label>
                 <select type="text" id="relation" name="relation"
                   class="form-control @error('relation') is-invalid @enderror" required>
                   <option value="" disabled selected>Choose</option>
@@ -38,7 +38,7 @@
               </div>
 
               <div class="col-6 mb-1">
-                <label class="form-label" for="gender">Jenis kelamin</label>
+                <label class="form-label" for="gender">Jenis kelamin <code>*</code></label>
                 <select type="text" id="gender" name="gender"
                   class="form-control @error('gender') is-invalid @enderror" required>
                   <option value="" disabled selected>Choose</option>
@@ -56,7 +56,7 @@
             </div>
 
             <div class="col-12 mb-1">
-              <label class="form-label" for="name">Nama</label>
+              <label class="form-label" for="name">Nama <code>*</code></label>
               <input type="text" id="name" name="name"
                 class="form-control @error('name') is-invalid @enderror" required />
               @error('name')
@@ -69,7 +69,7 @@
             </div>
 
             <div class="col-12 mb-1">
-              <label class="form-label" for="dob_family">Tanggal Lahir</label>
+              <label class="form-label" for="dob_family">Tanggal Lahir <code>*</code></label>
               <input type="date" id="dob_family" name="dob_family" value="{{ old('dob_family') }}"
                 class="form-control flatpickr-no-config @error('dob_family') is-invalid @enderror"
                 placeholder="Select date..">
@@ -99,7 +99,7 @@
             <div class="col-12 mb-1">
               <label class="form-label" for="job">Pekerjaan Terakhir</label>
               <input type="text" id="job" name="job"
-                class="form-control @error('job') is-invalid @enderror" required />
+                class="form-control @error('job') is-invalid @enderror" />
               @error('job')
                 <a style="color: red">
                   <small>
@@ -112,7 +112,7 @@
             <div class="col-12 mb-1">
               <label class="form-label" for="education">Pendidikan Terakhir</label>
               <select type="text" id="education" name="education"
-                class="form-control choices @error('education') is-invalid @enderror" required>
+                class="form-control choices @error('education') is-invalid @enderror">
                 <option value="" disabled selected>Choose</option>
                 <option value="S-3"> S-3 </option>
                 <option value="S-2"> S-2 </option>
@@ -138,7 +138,7 @@
             </div>
 
             <div class="col-12 mb-1">
-              <label class="form-label" for="address">Alamat</label>
+              <label class="form-label" for="address">Alamat <code>*</code></label>
               <textarea type="text" id="address" name="address" class="form-control @error('address') is-invalid @enderror"
                 rows="3" required></textarea>
               @error('address')
@@ -171,7 +171,7 @@
               </div>
             </div>
 
-            <div class="row mt-2" id="bpjs-field">
+            {{-- <div class="row mt-2" id="bpjs-field">
               <div class="col-8">
                 <label for="is_bpjs">BPJS</label>
               </div>
@@ -190,7 +190,7 @@
                   </label>
                 </div>
               </div>
-            </div>
+            </div> --}}
 
           </div>
         </div>
@@ -203,7 +203,8 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-<script>
+
+{{-- <script>
   $(document).ready(function() {
     // Initially hide the BPJS field
     $('#bpjs-field').hide();
@@ -224,4 +225,4 @@
     // Trigger the change event on page load to handle any pre-selected value
     $('input[name="is_in_kk"]:checked').trigger('change');
   });
-</script>
+</script> --}}

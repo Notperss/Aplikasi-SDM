@@ -88,11 +88,15 @@
               aria-controls="v-pills-kpi" aria-selected="false">KPI</a>
             <a class="btn btn-primary mt-1" id="v-pills-dinas-tab" data-bs-toggle="pill" href="#v-pills-dinas"
               role="tab" aria-controls="v-pills-dinas" aria-selected="false">Dinas/Tugas</a>
-            <a class="btn btn-primary mt-1" id="v-pills-penghargaan-tab" data-bs-toggle="pill"
-              href="#v-pills-penghargaan" role="tab" aria-controls="v-pills-penghargaan"
-              aria-selected="false">Penghargaan</a>
+            <a class="btn btn-primary mt-1" id="v-pills-award-tab" data-bs-toggle="pill" href="#v-pills-award"
+              role="tab" aria-controls="v-pills-award" aria-selected="false">Penghargaan</a>
             <a class="btn btn-primary mt-1" id="v-pills-career-tab" data-bs-toggle="pill" href="#v-pills-career"
               role="tab" aria-controls="v-pills-career" aria-selected="false">Karir</a>
+            <a class="btn btn-primary mt-1" id="v-pills-kontak-darurat-tab" data-bs-toggle="pill"
+              href="#v-pills-kontak-darurat" role="tab" aria-controls="v-pills-kontak-darurat"
+              aria-selected="false">Kontak Darurat</a>
+            <a class="btn btn-primary mt-1" id="v-pills-photo-tab" data-bs-toggle="pill" href="#v-pills-photo"
+              role="tab" aria-controls="v-pills-photo" aria-selected="false">Photo</a>
           @endif
         </div>
       </div>
@@ -592,6 +596,20 @@
             </div>
             <div class="tab-pane fade" id="v-pills-career" role="tabpanel" aria-labelledby="v-pills-career-tab">
               @include('pages.employee.personal-data.employee-career')
+            </div>
+            <div class="tab-pane fade" id="v-pills-award" role="tabpanel" aria-labelledby="v-pills-award-tab">
+              @include('pages.employee.personal-data.employee-award')
+            </div>
+            <div class="tab-pane fade" id="v-pills-attendances" role="tabpanel"
+              aria-labelledby="v-pills-attendances-tab">
+              @include('pages.employee.personal-data.employee-attendance')
+            </div>
+            <div class="tab-pane fade" id="v-pills-kontak-darurat" role="tabpanel"
+              aria-labelledby="v-pills-kontak-darurat-tab">
+              @include('pages.employee.personal-data.emergency-contact')
+            </div>
+            <div class="tab-pane fade" id="v-pills-photo" role="tabpanel" aria-labelledby="v-pills-photo-tab">
+              @include('pages.employee.personal-data.photo-employee')
             </div>
           @endif
           <div class="tab-pane fade show active" id="v-pills-informasi-dasar" role="tabpanel"

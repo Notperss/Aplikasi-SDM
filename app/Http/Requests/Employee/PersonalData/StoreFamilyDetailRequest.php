@@ -23,13 +23,13 @@ class StoreFamilyDetailRequest extends FormRequest
         return [
             'employee_id' => ['required', 'integer', 'exists:employees,id'],
             'relation' => ['required', 'string', 'max:255'],
-            'gender' => ['required', 'in:LAKI-LAKI,PEREMPUAN'], // Enum for gender validation
+            'gender' => ['nullable', 'in:LAKI-LAKI,PEREMPUAN'], // Enum for gender validation
             'name' => ['required', 'string', 'max:255'],
             'education' => ['nullable', 'string', 'max:255'], // Can be nullable if it's optional
             'job' => ['nullable', 'string', 'max:255'],
-            'phone_number' => ['required', 'string', 'min:10', 'max:15', 'regex:/^[0-9]+$/'], // Only numbers allowed
+            'phone_number' => ['nullable', 'string', 'min:8', 'max:15', 'regex:/^[0-9]+$/'], // Only numbers allowed
             'address' => ['required', 'string', 'max:500'],
-            'dob_family' => ['required', 'date', 'before:today'], // Valid date and must be in the past
+            'dob_family' => ['nullable', 'date', 'before:today'], // Valid date and must be in the past
             'is_in_kk' => ['nullable', 'boolean'], // Valid date and must be in the past
         ];
     }

@@ -44,7 +44,7 @@
         <tr>
           <td><strong>Usia</strong></td>
           <td><strong>:</strong></td>
-          <td>{{ Carbon\Carbon::parse($employee->dob)->age }}</td>
+          <td>{{ Carbon\Carbon::parse($employee->dob)->age }} Tahun</td>
         </tr>
         <tr>
           <td><strong>Tanggal Bekerja</strong></td>
@@ -54,8 +54,15 @@
         <tr>
           <td><strong>Masa Kerja</strong></td>
           <td><strong>:</strong></td>
-          <td>1 January 2020</td>
+          <td>
+            @php
+              $dateJoining = Carbon\Carbon::parse($employee->date_joining);
+              $masaKerja = $dateJoining->diff(Carbon\Carbon::now());
+            @endphp
+            {{ $masaKerja->y }} tahun {{ $masaKerja->m }} bulan
+          </td>
         </tr>
+
         <tr>
           <td><strong>Status Karyawan</strong></td>
           <td><strong>:</strong></td>
@@ -76,7 +83,7 @@
 
   </div>
 
-  <div style="padding: 20px; font-family: Arial, sans-serif; margin-top: 10px;">
+  <div style="font-family: Arial, sans-serif; margin-top: 10px; margin-right: 10px; margin-left: 10px;">
 
     <table style="width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; font-size: 14px;">
       <thead>
@@ -105,10 +112,10 @@
         @endphp
         @foreach ($educational as $education)
           <tr>
-            <td style="padding: 10px; border: 1px solid #ddd;">{{ $education->school_level ?? '' }}</td>
-            <td style="padding: 10px; border: 1px solid #ddd;">{{ $education->school_name ?? '' }}</td>
-            <td style="padding: 10px; border: 1px solid #ddd;">{{ $education->study ?? '' }}</td>
-            <td style="padding: 10px; border: 1px solid #ddd;">{{ $education->year_to ?? '' }}</td>
+            <td style="padding: 5px; border: 1px solid #ddd;">{{ $education->school_level ?? '' }}</td>
+            <td style="padding: 5px; border: 1px solid #ddd;">{{ $education->school_name ?? '' }}</td>
+            <td style="padding: 5px; border: 1px solid #ddd;">{{ $education->study ?? '' }}</td>
+            <td style="padding: 5px; border: 1px solid #ddd;">{{ $education->year_to ?? '' }}</td>
           </tr>
         @endforeach
       </tbody>

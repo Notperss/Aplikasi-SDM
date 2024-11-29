@@ -39,6 +39,7 @@
 
                     $sortedFamilyDetails = $employee->familyDetails
                         ->whereIn('relation', $orderedRelations)
+                        ->where('emergency_contact', 0)
                         ->sortBy(function ($employeeFamilyDetail) use ($orderedRelations) {
                             return array_search($employeeFamilyDetail->relation, $orderedRelations);
                         });
@@ -115,6 +116,7 @@
 
                     $sortedFamilyDetails = $employee->familyDetails
                         ->where('is_in_kk', true)
+                        ->where('emergency_contact', 0)
                         ->whereIn('relation', $orderedRelations)
                         ->sortBy(function ($employeeFamilyDetail) use ($orderedRelations) {
                             return array_search($employeeFamilyDetail->relation, $orderedRelations);

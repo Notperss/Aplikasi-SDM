@@ -16,6 +16,10 @@ class EmployeePhoto extends Model
         'file_path',
     ];
 
+    protected $casts = [
+        'main_photo' => 'boolean',
+    ];
+
     public function employee()
     {
         return $this->belongsTo(Employee::class);

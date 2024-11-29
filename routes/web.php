@@ -28,6 +28,7 @@ use App\Http\Controllers\Recruitment\HistorySelectionController;
 use App\Http\Controllers\Recruitment\SelectedCandidateController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeKpiController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeDutyController;
+use App\Http\Controllers\Employee\PersonalData\EmployeeAwardController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeSkillController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeCareerController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeJobHistoryController;
@@ -115,6 +116,7 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::resource('employeeKpi', EmployeeKpiController::class)->only('store', 'update', 'destroy');
     Route::resource('employeeDuty', EmployeeDutyController::class)->only('store', 'update', 'destroy');
     Route::resource('employeeCareer', EmployeeCareerController::class)->only('store', 'update', 'destroy');
+    Route::resource('employeeAward', EmployeeAwardController::class)->only('store', 'update', 'destroy');
     Route::get('approval-list', [EmployeeCareerController::class, 'indexApproval'])->name('indexApproval');
     Route::patch('/{id}/update-approval', [EmployeeCareerController::class, 'updateApprovalStatus'])->name('updateApprovalStatus');
 
@@ -140,6 +142,9 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::get('/new-employee/{id}', [EmployeeController::class, 'newEmployee'])->name('employee.newEmployee');
     Route::put('/update-new-employee/{id}', [EmployeeController::class, 'updateNewEmployee'])->name('employee.updateNewEmployee');
     Route::get('/employee-chart-data/{year}', [EmployeeController::class, 'getEmployeeChartData'])->name('employee-chart-data');
+    Route::get('/employee-attendance', [EmployeeController::class, 'getEmployeeAttendances'])->name('employee.attendances');
+    Route::get('export-attendance', [EmployeeController::class, 'attendanceExport'])->name('export.attendanceEmployee');
+    Route::post('upload-photo', [EmployeeController::class, 'uploadPhoto'])->name('employee.uploadPhoto');
 
 
     Route::resource('employeeCategory', EmployeeCategoryController::class)->only('index', 'store', 'update', 'destroy');
