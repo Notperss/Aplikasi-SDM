@@ -3,7 +3,7 @@
 @section('content')
 
 @section('breadcrumb')
-  <x-breadcrumb title="Persetujuan" page="Karyawan" active="Persetujuan" route="{{ route('approval.index') }}" />
+  <x-breadcrumb title="Persetujuan" page="Karyawan" active="Persetujuan" route="{{ route('indexApproval') }}" />
 @endsection
 
 <section class="section">
@@ -13,6 +13,12 @@
         <div class="d-flex justify-content-between align-items-center ">
           <h5 class="fw-normal mb-0 text-body">Daftar Persetujuan</h5>
 
+          <!-- Button trigger for basic modal -->
+          {{-- <button type="button" class="btn btn-outline-primary block" data-bs-toggle="modal"
+            data-bs-target="#import-approval">
+            Import Persetujuan
+          </button> --}}
+
         </div>
       </div>
       <div class="card-body">
@@ -21,9 +27,13 @@
             <tr>
               <th>#</th>
               <th></th>
-              <th>NIK</th>
-              <th>Nama Lengkap</th>
+              <th>Nama Karyawan</th>
+              <th>Tanggal</th>
+              {{-- <th>Tanggal Akhir</th> --}}
+              <th>Penempatan</th>
               <th>Jabatan</th>
+              <th>Tipe Karir</th>
+              <th>Status</th>
               <th>Keterangan</th>
               <th>File</th>
               <th></th>
@@ -37,8 +47,7 @@
     </div>
   </section>
 
-  {{--
-  <script>
+  {{-- <script>
     function showSweetAlert(getId) {
       Swal.fire({
         title: 'Are you sure?',
@@ -88,7 +97,7 @@
             [10, 25, 50, 100, 'All']
           ], // Add 'All' option to the length menu
           ajax: {
-            url: "{{ route('approval.index') }}",
+            url: "{{ route('indexApproval') }}",
           },
           columns: [{
               data: 'DT_RowIndex',
@@ -98,16 +107,40 @@
               width: '5%',
             },
             {
-              data: 'employee_career_id',
-              name: 'employee_career_id',
+              data: 'employee.name',
+              name: 'employee.name',
             },
             {
-              data: 'selected_candidate_id',
-              name: 'selected_candidate_id',
+              data: 'start_date',
+              name: 'start_date',
+            },
+            // {
+            //   data: 'end_date',
+            //   name: 'end_date',
+            // },
+            {
+              data: 'placement',
+              name: 'placement',
+            },
+            {
+              data: 'position.name',
+              name: 'position.name',
+            },
+            {
+              data: 'type',
+              name: 'type',
             },
             {
               data: 'is_approve',
               name: 'is_approve',
+            },
+            {
+              data: 'description',
+              name: 'description',
+            },
+            {
+              data: 'file',
+              name: 'file',
             },
             {
               data: 'action',

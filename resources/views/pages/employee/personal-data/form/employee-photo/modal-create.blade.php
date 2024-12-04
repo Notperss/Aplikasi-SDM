@@ -3,7 +3,7 @@
   aria-labelledby="modal-form-add-employee-photo-label" aria-hidden="true" style="display: none;">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form action="{{ route('employee.uploadPhoto') }}" method="post" enctype="multipart/form-data">
+      <form action="{{ route('employeePhoto.store') }}" method="post" enctype="multipart/form-data">
         @csrf
 
         <div class="modal-header">

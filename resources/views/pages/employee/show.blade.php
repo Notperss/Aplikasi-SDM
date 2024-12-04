@@ -109,7 +109,10 @@
               <div class="d-flex justify-content-center align-items-center flex-column">
 
                 <!-- Image Preview -->
-                <img src="{{ asset($employee->photo ? 'storage/' . $employee->photo : 'storage/img/2.jpg') }}"
+                @php
+                  $mainPhoto = $employee->employeePhotos->where('main_photo', true)->first();
+                @endphp
+                <img src="{{ asset($mainPhoto ? 'storage/' . $mainPhoto->file_path : 'storage/img/2.jpg') }}"
                   alt="user-avatar" class="d-block rounded" width="230px" data-fancybox id="uploadedAvatar"
                   style="cursor: pointer" />
 

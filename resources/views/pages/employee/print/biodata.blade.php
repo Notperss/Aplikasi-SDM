@@ -4,7 +4,7 @@
   <div style="display: flex; margin-top: 20px; margin-left: 20px">
     <!-- Photo Section -->
     <div style="margin-right: 20px;">
-      <img src="{{ asset('storage/' . $employee->photo) }}" alt="Employee Photo"
+      <img src="{{ asset($mainPhoto ? 'storage/' . $mainPhoto->file_path : 'storage/img/2.jpg') }}" alt="Employeehoto"
         style="width: 150px;  object-fit: cover; border: 1px solid #ddd; border-radius: 5px;">
     </div>
 

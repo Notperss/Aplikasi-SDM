@@ -1,7 +1,6 @@
 <!-- Modals add menu -->
-<div id="modal-form-edit-training-attended-{{ $employeeTrainingAttended->id }}" class="modal fade" tabindex="-1"
-  aria-labelledby="modal-form-edit-training-attended-{{ $employeeTrainingAttended->id }}-label" aria-hidden="true"
-  style="display: none;">
+<div id="modal-form-edit-training-attended-{{ $employeeTrainingAttended->id }}" class="modal fade"
+  aria-labelledby="modal-form-edit-training-attended-{{ $employeeTrainingAttended->id }}-label" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <form action="{{ route('employeeTrainingAttended.update', $employeeTrainingAttended) }}" method="post"
@@ -19,8 +18,8 @@
         <div class="card-body">
           <div class="row justify-content-center">
             <div class="col-md-12"> <!-- Make form smaller with col-md-6 and center it -->
-              <input type="hidden" name="employee_id" value="{{ $employee->id }}">
-              <input type="hidden" name="name" value="{{ $employee->name }}">
+              {{-- <input type="hidden" name="employee_id" value="{{ $employee->id }}">
+              <input type="hidden" name="name" value="{{ $employee->name }}"> --}}
 
               <div class="mb-2">
                 <label class="form-label" for="training_name">Nama Seminar/Pelatihan</label>

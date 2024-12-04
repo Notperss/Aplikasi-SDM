@@ -65,6 +65,7 @@ class Employee extends Model
         'date_leaving',////
 
         'is_verified',////
+        'is_approve',////
 
         'ethnic', //
         'blood_type',//
@@ -154,7 +155,7 @@ class Employee extends Model
     }
     public function Skills()
     {
-        return $this->hasMany(EmployeeSkill::class);
+        return $this->hasMany(EmployeeSkill::class)->latest();
     }
     public function SocialsPlatform()
     {
@@ -171,11 +172,11 @@ class Employee extends Model
     }
     public function kpis()
     {
-        return $this->hasMany(EmployeeKpi::class);
+        return $this->hasMany(EmployeeKpi::class)->latest();
     }
     public function employeeDuties()
     {
-        return $this->hasMany(EmployeeDuty::class);
+        return $this->hasMany(EmployeeDuty::class)->latest();
     }
     public function employeeCareers()
     {
@@ -183,10 +184,16 @@ class Employee extends Model
     }
     public function employeeAwards()
     {
-        return $this->hasMany(EmployeeAward::class);
+        return $this->hasMany(EmployeeAward::class)->latest();
     }
     public function employeeAttendances()
     {
         return $this->hasMany(Attendance::class, 'nik', 'nik');
+    }
+
+    public function getPhotoUrlAttribute()
+    {
+        $mainPhoto = $this->employeePhotos->where('main_photo', true)->first();
+        return $mainPhoto ? asset('storage/' . $mainPhoto->file_path) : asset('images/default-avatar.png');
     }
 }

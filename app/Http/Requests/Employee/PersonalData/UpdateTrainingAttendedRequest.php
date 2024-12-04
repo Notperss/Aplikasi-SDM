@@ -22,7 +22,7 @@ class UpdateTrainingAttendedRequest extends FormRequest
     public function rules() : array
     {
         return [
-            'employee_id' => 'required|exists:employees,id',
+            // 'employee_id' => 'required|exists:employees,id',
             'training_name' => 'required|string|max:255',
             'organizer_name' => 'required|string|max:255',
             'year' => 'required|digits:4|integer|min:1900|max:' . date('Y'),

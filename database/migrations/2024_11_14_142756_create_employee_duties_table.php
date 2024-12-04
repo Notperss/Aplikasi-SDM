@@ -16,7 +16,8 @@ return new class extends Migration {
             $table->foreignIdFor(Employee::class)->constrained()->cascadeOnDelete();
             $table->string('nik_employee')->nullable();
             $table->string('name_duty');
-            $table->date('date_duty');
+            $table->date('start_date');
+            $table->date('end_date');
             $table->string('location');
             $table->string('file')->nullable();
             $table->timestamps();

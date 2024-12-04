@@ -21,13 +21,24 @@ class StoreTrainingAttendedRequest extends FormRequest
      */
     public function rules() : array
     {
+        if ($this->has('employees')) {
+            // Decode the JSON string into an array
+            $employees = json_decode($this->input('employees'), true);
+
+            // Replace the 'employees' input with the decoded array for validation
+            $this->merge([
+                'employees' => $employees,
+            ]);
+        }
         return [
-            'employee_id' => 'required|exists:employees,id',
+            'employee_id' => 'nullable|exists:employees,id',
             'training_name' => 'required|string|max:255',
             'organizer_name' => 'required|string|max:255',
             'year' => 'required|digits:4|integer|min:1900|max:' . date('Y'),
             'city' => 'nullable|max:255',
             'file_sertifikat' => 'nullable|mimes:pdf,jpeg,jpg,png|max:2048',
+            'employees' => $this->has('employees') ? 'required|array' : 'nullable',
+            'employees.*' => 'exists:employees,id', // Validate employee IDs exist in the database
         ];
     }
 

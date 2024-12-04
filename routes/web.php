@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\Approval\ApprovalController;
 use App\Http\Controllers\Position\LevelController;
 use App\Http\Controllers\WorkUnit\SectionController;
 use App\Http\Controllers\Employee\ContractController;
@@ -29,6 +30,7 @@ use App\Http\Controllers\Recruitment\SelectedCandidateController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeKpiController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeDutyController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeAwardController;
+use App\Http\Controllers\Employee\PersonalData\EmployeePhotoController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeSkillController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeCareerController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeJobHistoryController;
@@ -110,13 +112,15 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::resource('employeeJobHistory', EmployeeJobHistoryController::class)->only('store', 'update', 'destroy');
     Route::resource('employeeEducationalHistory', EmployeeEducationalHistoryController::class)->only('store', 'update', 'destroy');
     Route::resource('employeeLanguageProficiency', EmployeeLanguageProficiencyController::class)->only('store', 'update', 'destroy');
-    Route::resource('employeeTrainingAttended', EmployeeTrainingAttendedController::class)->only('store', 'update', 'destroy');
+    Route::resource('employeeTrainingAttended', EmployeeTrainingAttendedController::class)->only('index', 'edit', 'store', 'update', 'destroy');
     Route::resource('employeeSkill', EmployeeSkillController::class)->only('store', 'update', 'destroy');
     Route::resource('employeeSocialPlatform', EmployeeSocialPlatformController::class)->only('store', 'update', 'destroy');
-    Route::resource('employeeKpi', EmployeeKpiController::class)->only('store', 'update', 'destroy');
-    Route::resource('employeeDuty', EmployeeDutyController::class)->only('store', 'update', 'destroy');
+    Route::resource('employeeKpi', EmployeeKpiController::class)->only('index', 'edit', 'store', 'update', 'destroy');
+    Route::resource('employeeDuty', EmployeeDutyController::class)->only('index', 'edit', 'store', 'update', 'destroy');
     Route::resource('employeeCareer', EmployeeCareerController::class)->only('store', 'update', 'destroy');
-    Route::resource('employeeAward', EmployeeAwardController::class)->only('store', 'update', 'destroy');
+    Route::resource('employeeAward', EmployeeAwardController::class)->only('index', 'edit', 'store', 'update', 'destroy');
+    Route::resource('employeePhoto', EmployeePhotoController::class)->only('store', 'update', 'destroy');
+
     Route::get('approval-list', [EmployeeCareerController::class, 'indexApproval'])->name('indexApproval');
     Route::patch('/{id}/update-approval', [EmployeeCareerController::class, 'updateApprovalStatus'])->name('updateApprovalStatus');
 
@@ -156,6 +160,7 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::get('/contracts/expired', [ContractController::class, 'getExpiredContracts'])->name('contracts.expired');
 
 
+    Route::resource('approval', ApprovalController::class)->only('index', 'store', 'update', 'destroy', );
 });
 
 

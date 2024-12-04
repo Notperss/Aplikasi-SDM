@@ -14,8 +14,10 @@ class EmployeeDuty extends Model
         'employee_id',
         'nik_employee',
         'name_duty',
-        'date_duty',
+        'start_date',
+        'end_date',
         'location',
+        'description',
         'file',
     ];
 

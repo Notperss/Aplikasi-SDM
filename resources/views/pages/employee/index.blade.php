@@ -32,8 +32,8 @@
             <th>NIK</th>
             <th>Nama</th>
             <th>Kategori Karyawan</th>
-            <th>Email</th>
-            <th>Phone</th>
+            <th>Jabatan</th>
+            <th>Divisi</th>
             <th>Status</th>
             <th></th>
           </tr>
@@ -88,12 +88,12 @@
             searchable: false,
           },
           {
-            data: 'email',
-            name: 'email',
+            data: 'position',
+            name: 'position',
           },
           {
-            data: 'phone_number1',
-            name: 'phone_number1',
+            data: 'division',
+            name: 'division',
           },
           {
             data: 'is_verified',

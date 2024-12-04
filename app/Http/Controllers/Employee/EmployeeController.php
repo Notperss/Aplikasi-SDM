@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Employee;
 
 use Carbon\Carbon;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Exports\AttendanceExport;
 use App\Models\Employee\Employee;
@@ -70,10 +71,12 @@ class EmployeeController extends Controller
                 </div>
                     ';
                 })->editColumn('photo', function ($item) {
-                    if ($item->photo) {
+                    $mainPhoto = $item->employeePhotos->where('main_photo', true)->first();
+
+                    if ($mainPhoto) {
                         return '
                 <div class="fixed-frame">
-                    <img src="' . asset('storage/' . $item->photo) . '" data-fancybox alt="Icon User"
+                    <img src="' . asset('storage/' . $mainPhoto->file_path) . '" data-fancybox alt="Icon User"
                     class="framed-image" style="cursor: pointer">
                 </div>';
                     } else {
@@ -83,6 +86,10 @@ class EmployeeController extends Controller
                     return '' . Carbon::parse($item->created_at)->translatedFormat('d F Y') . '';
                 })->editColumn('employeeCategory', function ($item) {
                     return $item->employeeCategory->name ?? '-';
+                })->editColumn('position', function ($item) {
+                    return $item->position->name ?? '-';
+                })->editColumn('division', function ($item) {
+                    return $item->position->division->name ?? '-';
                 })->editColumn('is_verified', function ($item) {
                     if ($item->is_verified == 0) {
                         return '<span class="badge bg-danger">Unverified</span>';
@@ -159,7 +166,9 @@ class EmployeeController extends Controller
             'company_id' => $company_id,
         ]);
 
-        $employee = Employee::create($requestData);
+        $employeeData = Arr::except($requestData, ['photo']);
+
+        $employee = Employee::create($employeeData);
 
         if ($employee) {
             $careerData = [
@@ -172,6 +181,11 @@ class EmployeeController extends Controller
             ];
 
             $employee->employeeCareers()->create($careerData);
+
+            $employee->employeePhotos()->create([
+                'file_path' => $data['photo'],
+                'main_photo' => true,
+            ]);
         }
 
 
@@ -318,7 +332,7 @@ class EmployeeController extends Controller
                 'candidate_id' => $candidate->id,
                 "company_id" => $candidate->company_id ?? null,
                 "name" => $candidate->name ?? null,
-                "photo" => $candidate->photo ?? null,
+                // "photo" => $candidate->photo ?? null,
                 "email" => $candidate->email ?? null,
                 "phone_number1" => $candidate->phone_number ?? null,
                 "ktp_address" => $candidate->ktp_address ?? null,
@@ -406,6 +420,11 @@ class EmployeeController extends Controller
 
             $candidate->employee->employeeCareers()->create($careerData);
 
+            $candidate->employee->employeePhotos()->create([
+                'file_path' => $candidate->photo,
+                'main_photo' => true,
+            ]);
+
             $candidate->employee->update($data);
 
             return redirect()->route('employee.index')->with('success', 'Employee data updated successfully.');
@@ -468,38 +487,38 @@ class EmployeeController extends Controller
         );
     }
 
-    public function uploadPhoto(Request $request)
-    {
-        $request->validate([
-            'employee_id' => 'required|exists:employees,id',
-            'position_id' => 'nullable|exists:positions,id',
-            'company_id' => 'nullable|exists:companies,id',
-            'main_photo' => 'nullable|boolean', // Ensure it's a boolean value
-            'file_path' => 'required|file|max:5120', // Allow any file type with max size 5MB
-        ], [
-            'employee_id.required' => 'Karyawan harus dipilih.',
-            'employee_id.exists' => 'Karyawan yang dipilih tidak valid.',
-            'position_id.exists' => 'Posisi yang dipilih tidak valid.',
-            'company_id.required' => 'Perusahaan harus dipilih.',
-            'company_id.exists' => 'Perusahaan yang dipilih tidak valid.',
-            'main_photo.boolean' => 'Foto utama harus berupa nilai boolean.',
-            'file_path.file' => 'File harus berupa file yang valid.',
-            'file_path.max' => 'Ukuran file tidak boleh lebih dari 5MB.',
-        ]);
+    // public function uploadPhoto(Request $request)
+    // {
+    //     $request->validate([
+    //         'employee_id' => 'required|exists:employees,id',
+    //         'position_id' => 'nullable|exists:positions,id',
+    //         'company_id' => 'nullable|exists:companies,id',
+    //         'main_photo' => 'nullable|boolean', // Ensure it's a boolean value
+    //         'file_path' => 'required|file|max:5120', // Allow any file type with max size 5MB
+    //     ], [
+    //         'employee_id.required' => 'Karyawan harus dipilih.',
+    //         'employee_id.exists' => 'Karyawan yang dipilih tidak valid.',
+    //         'position_id.exists' => 'Posisi yang dipilih tidak valid.',
+    //         'company_id.required' => 'Perusahaan harus dipilih.',
+    //         'company_id.exists' => 'Perusahaan yang dipilih tidak valid.',
+    //         'main_photo.boolean' => 'Foto utama harus berupa nilai boolean.',
+    //         'file_path.file' => 'File harus berupa file yang valid.',
+    //         'file_path.max' => 'Ukuran file tidak boleh lebih dari 5MB.',
+    //     ]);
 
-        $data = $request->all();
+    //     $data = $request->all();
 
-        if ($request->hasFile('file_path')) {
-            $file = $request->file('file_path'); // Get the file from the request
-            $extension = $file->getClientOriginalExtension(); // Get the file extension
-            $file_name = 'file_path_' . $request['name'] . '_' . time() . '.' . $extension; // Construct the file name
-            $data['file_path'] = $file->storeAs('files/employee/file_path', $file_name, 'public_local'); // Store the file
-        }
+    //     if ($request->hasFile('file_path')) {
+    //         $file = $request->file('file_path'); // Get the file from the request
+    //         $extension = $file->getClientOriginalExtension(); // Get the file extension
+    //         $file_name = 'file_path_' . $request['name'] . '_' . time() . '.' . $extension; // Construct the file name
+    //         $data['file_path'] = $file->storeAs('files/employee/file_path', $file_name, 'public_local'); // Store the file
+    //     }
 
-        EmployeePhoto::create($data);
+    //     EmployeePhoto::create($data);
 
-        // Redirect back with success message
-        return redirect()->back()->with('success', 'Data has been created successfully!');
-    }
+    //     // Redirect back with success message
+    //     return redirect()->back()->with('success', 'Data has been created successfully!');
+    // }
 
 }

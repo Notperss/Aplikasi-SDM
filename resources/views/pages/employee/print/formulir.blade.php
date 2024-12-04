@@ -15,7 +15,7 @@
         FORMULIR PEMUTAKHIRAN DATA KARYAWAN
       </td>
       <td rowspan="2" style="width: 20%; text-align: center; border: 1px solid #ddd; padding: 10px;">
-        <img src="{{ asset('storage/' . $employee->photo) }}" alt="Employee Photo"
+        <img src="{{ asset($mainPhoto ? 'storage/' . $mainPhoto->file_path : 'storage/img/2.jpg') }}" alt="pshoto"
           style="width: 100px; object-fit: cover; border-radius: 5px;">
       </td>
     </tr>
@@ -49,7 +49,6 @@
       </td>
     </tr>
   </table>
-
 
   <!-- Informasi Data Personal -->
   <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px;">
@@ -129,7 +128,7 @@
       </tr>
     </thead>
     <tbody>
-      @forelse ($employee->educationalHistories->take(5) as $education)
+      @forelse ($employee->educationalHistories as $education)
         <tr>
           <td style="border: 1px solid #ddd;">{{ $education->school_level ?? '' }}</td>
           <td style="border: 1px solid #ddd;">{{ $education->school_name ?? '' }}</td>
@@ -189,7 +188,7 @@
       </tr>
     </thead>
     <tbody>
-      @forelse ($employee->familyDetails->where('emergency_contact', 0)->take(5) as $family)
+      @forelse ($employee->familyDetails->where('emergency_contact', 0) as $family)
         <tr>
           <td style="border: 1px solid #ddd;">{{ $family->name }}</td>
           <td style="border: 1px solid #ddd;">
@@ -252,7 +251,7 @@
       </tr>
     </thead>
     <tbody>
-      @forelse ($employee->jobHistories->take(4) as $job)
+      @forelse ($employee->jobHistories as $job)
         <tr>
           <td style="border: 1px solid #ddd;">{{ $job->company_name }}</td>
           <td style="border: 1px solid #ddd;">{{ $job->position }}</td>
@@ -301,7 +300,7 @@
       </tr>
     </thead>
     <tbody>
-      @forelse ($employee->familyDetails->where('emergency_contact', 1)->take(1) as $emergencyContact)
+      @forelse ($employee->familyDetails->where('emergency_contact', 1) as $emergencyContact)
         <tr>
           <td style="border: 1px solid #ddd;">{{ $emergencyContact->name }}</td>
           <td style="border: 1px solid #ddd;">{{ $emergencyContact->relation }}</td>

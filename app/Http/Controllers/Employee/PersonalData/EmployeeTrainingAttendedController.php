@@ -3,8 +3,13 @@
 namespace App\Http\Controllers\Employee\PersonalData;
 
 use Illuminate\Http\Request;
+use App\Models\Employee\Employee;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Yajra\DataTables\Facades\DataTables;
 use App\Models\Employee\PersonalData\EmployeeTrainingAttended;
 use App\Http\Requests\Employee\PersonalData\StoreTrainingAttendedRequest;
 use App\Http\Requests\Employee\PersonalData\UpdateTrainingAttendedRequest;
@@ -17,7 +22,55 @@ class EmployeeTrainingAttendedController extends Controller
      */
     public function index()
     {
-        abort(404);
+
+        $employeeTrainingAttended = EmployeeTrainingAttended::with('employee')
+            ->when(! Auth::user()->hasRole('super-admin'), function ($query) {
+                $query->whereHas('employee', function ($query) {
+                    $query->where('company_id', Auth::user()->company_id);
+                });
+            })
+            ->latest();
+
+        if (request()->ajax()) {
+            return DataTables::of($employeeTrainingAttended)
+                ->addIndexColumn()
+                ->addColumn('action', function ($item) {
+                    return '
+                <div class="btn-group mb-1">
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        
+                            <a class="dropdown-item" href="' . route('employeeTrainingAttended.edit', $item) . '">Edit</a>
+                            
+                            <button class="dropdown-item" onclick="deleteTrainingAttend(' . $item->id . ')">Hapus</button>
+                            <form id="deleteTrainingAttendForm_' . $item->id . '"
+                                action="' . route('employeeTrainingAttended.destroy', $item->id) . '"
+                                method="POST">
+                                ' . method_field('delete') . csrf_field() . '
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            ';
+                })->editColumn('file', function ($item) {
+                    if ($item->file_sertifikat) {
+                        return '<a class="btn btn-sm btn-primary" href="' . asset('storage/' . $item->file_sertifikat) . '" target="_blank" > Lihat </a>';
+                    } else {
+                        return '<span> - </span>';
+                    }
+                })
+                ->rawColumns(['action', 'file'])
+                ->toJson();
+        }
+
+        // $employees = Employee::where('employee_status', 'AKTIF')->where('is_verified', true)->orderBy('name', 'asc')->get();
+        $employees = Employee::with('position', 'position.division')->where('employee_status', 'AKTIF')->orderBy('name', 'asc')->get();
+
+        return view('pages.employee.training-attended.index', compact('employeeTrainingAttended', 'employees'));
     }
 
     /**
@@ -33,18 +86,67 @@ class EmployeeTrainingAttendedController extends Controller
      */
     public function store(StoreTrainingAttendedRequest $request)
     {
-        $data = $request->all();
 
-        if ($request->hasFile('file_sertifikat')) {
-            $file = $request->file('file_sertifikat'); // Get the file from the request
-            $extension = $file->getClientOriginalExtension(); // Get the file extension
-            $file_name = 'file_sertifikat_' . $data['name'] . '_' . time() . '.' . $extension; // Construct the file name
-            $data['file_sertifikat'] = $file->storeAs('files/employee/file_sertifikat', $file_name, 'public_local'); // Store the file
+        // Start a database transaction
+        DB::beginTransaction();
 
+        try {
+            // Handle file upload for certificate (if present)
+            $file_path = null;  // Initialize file path variable
+
+            if ($request->hasFile('file_sertifikat')) {
+                $file = $request->file('file_sertifikat');
+                $extension = $file->getClientOriginalExtension();
+                $file_name = 'file_sertifikat_pelatihan_' . time() . '.' . $extension; // Generate a unique file name
+                $file_path = $file->storeAs('files/employee/file_sertifikat_pelatihan', $file_name, 'public_local');
+            }
+
+            if ($request->employees) {
+                // Loop through employees to create training records
+                foreach ($request->employees as $employeeData) {
+                    // Ensure employeeData is the employee ID
+                    $employeeId = $employeeData['id'];
+
+                    // Create the training record for each employee
+                    EmployeeTrainingAttended::create([
+                        'employee_id' => $employeeId, // Use employee ID
+                        'training_name' => $request->training_name,
+                        'organizer_name' => $request->organizer_name,
+                        'city' => $request->city,
+                        'year' => $request->year,
+                        'file_sertifikat' => $file_path, // Attach file path if the certificate is uploaded
+                    ]);
+                }
+            } else {
+                // Create the training record for each employee
+                EmployeeTrainingAttended::create([
+                    'employee_id' => $request->employee_id, // Use employee ID
+                    'training_name' => $request->training_name,
+                    'organizer_name' => $request->organizer_name,
+                    'city' => $request->city,
+                    'year' => $request->year,
+                    'file_sertifikat' => $file_path, // Attach file path if the certificate is uploaded
+                ]);
+            }
+
+            // Commit the transaction
+            DB::commit();
+
+            // Redirect with a success message
+            return redirect()->back()
+                ->with('success', 'Data seminar/pelatihan berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            // Rollback the transaction if something goes wrong
+            DB::rollback();
+
+            // Log the error for debugging
+            Log::error('Error storing training: ' . $e->getMessage());
+
+            // Redirect back with an error message
+            return redirect()->back()
+                ->withInput($request->all())
+                ->withErrors(['error' => 'Terjadi kesalahan saat menyimpan data.']);
         }
-
-        EmployeeTrainingAttended::create($data);
-        return redirect()->back()->with('success', 'Data has been created successfully!');
     }
 
     /**
@@ -60,7 +162,7 @@ class EmployeeTrainingAttendedController extends Controller
      */
     public function edit(EmployeeTrainingAttended $employeeTrainingAttended)
     {
-        abort(404);
+        return view('pages.employee.training-attended.edit', compact('employeeTrainingAttended'));
     }
 
     /**
@@ -74,8 +176,8 @@ class EmployeeTrainingAttendedController extends Controller
         if ($request->hasFile('file_sertifikat')) {
             $file = $request->file('file_sertifikat');
             $extension = $file->getClientOriginalExtension();
-            $file_name = 'file_sertifikat_' . $data['name'] . '_' . time() . '.' . $extension; // Construct the file name
-            $data['file_sertifikat'] = $file->storeAs('files/employee/file_sertifikat', $file_name, 'public_local'); // Store the file
+            $file_name = 'file_sertifikat_pelatihan_' . time() . '.' . $extension; // Construct the file name
+            $data['file_sertifikat'] = $file->storeAs('files/employee/file_sertifikat_pelatihan', $file_name, 'public_local'); // Store the file
             // delete sertifikat
             if ($path_sertifikat != null || $path_sertifikat != '') {
                 Storage::disk('public_local')->delete($path_sertifikat);

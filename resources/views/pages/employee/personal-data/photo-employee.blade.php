@@ -18,21 +18,40 @@
            <div class="row gallery">
 
              @forelse ($employee->employeePhotos as $employeePhoto)
-               <div class="col-6 col-sm-6 col-lg-3 mt-2 mt-md-0 mb-md-0 mb-2 position-relative">
-                 <a href="#">
-                   <img class="w-100 active" alt="img"
+               <div class="col-6 col-sm-6 col-lg-3 mt-2 mt-md-0 mb-md-0 mb-2 text-center position-relative">
+                 <hr>
+                 <a href="{{ asset($employeePhoto->file_path ? 'storage/' . $employeePhoto->file_path : 'storage/img/2.jpg') }}"
+                   data-fancybox>
+                   <img class="w-100 active mb-2" alt="img"
                      src="{{ asset($employeePhoto->file_path ? 'storage/' . $employeePhoto->file_path : 'storage/img/2.jpg') }}">
                  </a>
-                 <!-- Delete Icon -->
-                 {{-- <form method="POST" action="{{ route('employee.destroy', $employeePhoto->id) }}"
-                   class="position-absolute top-0 end-0">
-                   @csrf
-                   @method('DELETE')
-                   <button type="submit" class="btn btn-danger btn-sm p-1 m-1 rounded-circle"
-                     style="font-size: 0.8rem;">
-                     &times;
-                   </button>
-                 </form> --}}
+
+                 <!-- Action Buttons -->
+                 <div class="d-flex justify-content-around mb-4">
+                   <!-- Set as Main Photo Button -->
+                   @if (!$employeePhoto->main_photo)
+                     <form method="POST" action="{{ route('employeePhoto.update', $employeePhoto->id) }} ">
+                       @csrf
+                       @method('put')
+                       <button type="submit" class="btn btn-success btn-sm"
+                         onclick="return confirm('Are you sure you want to set this photo as main photo?');">
+                         Set as Main Photo
+                       </button>
+                     </form>
+                   @else
+                     <span class="text-success small">Main Photo</span>
+                   @endif
+
+                   <!-- Delete Button -->
+                   <form method="POST" action="{{ route('employeePhoto.destroy', $employeePhoto->id) }}">
+                     @csrf
+                     @method('DELETE')
+                     <button type="submit" class="btn btn-danger btn-sm"
+                       onclick="return confirm('Are you sure you want to delete this photo?');">
+                       Delete
+                     </button>
+                   </form>
+                 </div>
                </div>
              @empty
                <p>No photos available.</p>

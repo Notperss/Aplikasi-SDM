@@ -21,8 +21,10 @@
                   <tr>
                     <th>#</th>
                     <th>Dinas/Tugas</th>
-                    <th>Tanggal</th>
+                    <th>Tgl Mulai</th>
+                    <th>Tgl Selesai</th>
                     <th>Tempat</th>
+                    <th>Keterangan</th>
                     <th>File</th>
                     <th></th>
                   </tr>
@@ -33,8 +35,11 @@
                       <td class="text-bold-500">{{ $loop->iteration }}</td>
                       <td class="text-bold-500">{{ $employeeDuty->name_duty }}</td>
                       <td class="text-bold-500">
-                        {{ Carbon\Carbon::parse($employeeDuty->date_duty)->translatedFormat('l, d F Y') }}</td>
+                        {{ Carbon\Carbon::parse($employeeDuty->start_date)->translatedFormat('d M Y') }}</td>
+                      <td class="text-bold-500">
+                        {{ Carbon\Carbon::parse($employeeDuty->end_date)->translatedFormat('d M Y') }}</td>
                       <td class="text-bold-500">{{ $employeeDuty->location }}</td>
+                      <td class="text-bold-500">{{ $employeeDuty->description }}</td>
                       <td class="text-bold-500">
                         @if ($employeeDuty->file)
                           <a href="{{ Storage::url($employeeDuty->file) }}" target="_blank">

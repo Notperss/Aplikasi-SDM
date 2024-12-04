@@ -1,9 +1,10 @@
 @extends('layouts.app')
-@section('title', 'Karyawan')
+@section('title', 'Karyawan Baru')
 @section('content')
 
 @section('breadcrumb')
-  <x-breadcrumb title="Data Diri Karyawan" page="Karyawan" active="Karyawan" route="{{ route('employee.index') }}" />
+  <x-breadcrumb title="Data Diri Karyawan Baru" page="Karyawan" active="Karyawan Baru"
+    route="{{ route('employee.index') }}" />
 @endsection
 
 <section class="section">
@@ -31,12 +32,11 @@
             </label>
 
             <!-- Upload Icon and Input -->
-            <label for="uploadImage" class="mt-2 btn btn-sm btn-primary" style="cursor: pointer;">
-              {{-- <i class="bi bi-upload" style="font-size: 24px; color: rgba(0, 128, 255, 0.974);"></i> --}}
+            {{-- <label for="uploadImage" class="mt-2 btn btn-sm btn-primary" style="cursor: pointer;">
               <span> Upload</span>
               <input type="file" id="uploadImage" value="{{ old('photo', $candidate->photo) }}" name="photo"
                 accept=".jpg, .jpeg, .png" style="display: none;" onchange="previewImage(event)" />
-            </label>
+            </label> --}}
 
             <!-- Display validation error message -->
             @if ($errors->has('photo'))
@@ -716,7 +716,7 @@
 
                 <div class="row">
                   <div class="form-group col-md-6">
-                    <label for="candidate_from">Pelamar Dari</label>
+                    <label for="candidate_from">Pelamar Dari <code>*</code></label>
                     <select type="text" id="candidate_from"
                       class="form-control @error('candidate_from') is-invalid @enderror" name="candidate_from">
                       <option value="" disabled selected>Choose</option>
@@ -767,7 +767,7 @@
                 <div class="form-group col-md-3">
                   <label for="zipcode_ktp">Kode Pos KTP <code>*</code></label>
                   <input type="text" oninput="this.value = this.value.replace(/\D+/g, '')" id="zipcode_ktp"
-                    value="{{ old('zipcode_ktp', $candidate->zipcode) }}"
+                    value="{{ old('zipcode_ktp', $candidate->zipcode_ktp) }}"
                     class="form-control  @error('zipcode_ktp') is-invalid @enderror" name="zipcode_ktp">
                   @error('zipcode_ktp')
                     <a style="color: red">

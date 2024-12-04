@@ -29,14 +29,25 @@
                 @enderror
               </div>
 
-              <div class="mb-2">
-                <label class="form-label" for="date_duty">Tanggal <code>*</code></label>
-                <input id="date_duty" type="date" name="date_duty"
-                  value="{{ old('date_duty', $employeeDuty->date_duty) }}"
-                  class="form-control @error('date_duty') is-invalid @enderror">
-                @error('date_duty')
-                  <a style="color: red"><small>{{ $message }}</small></a>
-                @enderror
+              <div class="row mb-2">
+                <div class="col-md-6">
+                  <label class="form-label" for="start_date">Tanggal Mulai <code>*</code></label>
+                  <input id="start_date" type="date" name="start_date"
+                    value="{{ old('start_date', $employeeDuty->start_date) }}"
+                    class="form-control @error('start_date') is-invalid @enderror">
+                  @error('start_date')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="end_date">Tanggal Selesai <code>*</code></label>
+                  <input id="end_date" type="date" name="end_date"
+                    value="{{ old('end_date', $employeeDuty->end_date) }}"
+                    class="form-control @error('end_date') is-invalid @enderror">
+                  @error('end_date')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div>
               </div>
 
               <div class="mb-2">
@@ -44,6 +55,14 @@
                 <input id="location" name="location" value="{{ old('location', $employeeDuty->location) }}"
                   class="form-control @error('location') is-invalid @enderror" required>
                 @error('location')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div>
+
+              <div class="mb-2">
+                <label class="form-label" for="description">Keterangan</label>
+                <textarea id="description" name="description" class="form-control @error('description') is-invalid @enderror">{{ old('description', $employeeDuty->description) }} </textarea>
+                @error('description')
                   <a style="color: red"><small>{{ $message }}</small></a>
                 @enderror
               </div>

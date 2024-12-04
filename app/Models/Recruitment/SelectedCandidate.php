@@ -2,6 +2,7 @@
 
 namespace App\Models\Recruitment;
 
+use App\Models\Approval\Approval;
 use App\Models\Position\Position;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +18,8 @@ class SelectedCandidate extends Model
         'selection_id',
         'file_selected_candidate',
         'description',
+        'is_approve',
+        'is_hire',
     ];
 
     public function candidate()
@@ -32,4 +35,10 @@ class SelectedCandidate extends Model
     {
         return $this->belongsTo(Selection::class);
     }
+    public function approval()
+    {
+        return $this->hasOne(Approval::class);
+    }
+
+
 }
