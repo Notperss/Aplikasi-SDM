@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Employee;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Exports\ContractExport;
+use App\Exports\ContractExportExpired;
 use App\Imports\ImportContract;
 use App\Models\Employee\Contract;
 use App\Http\Controllers\Controller;
@@ -13,22 +13,41 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use App\Http\Requests\Employee\StoreContractRequest;
+use App\Exports\ContractExport;
 
 class ContractController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $contracts = Contract::when(! Auth::user()->hasRole('super-admin'), function ($query) {
             $query->where('company_id', Auth::user()->company_id);
         })->with('employee')->orderBy('created_at', 'desc');
 
-        // if (! Auth::user()->hasRole('super-admin')) {
-        //     $contracts->where('company_id', Auth::user()->company_id);
-        // }
+        // Apply date range filter
+        if ($request->filled(['start_date', 'end_date'])) {
+            $contracts->whereBetween('end_date', [$request->start_date, $request->end_date]);
+        }
 
+        // Apply additional filters
+        if ($request->filled('filter_type')) {
+            $currentDate = now();
+            switch ($request->filter_type) {
+                case 'before_end':
+                    $contracts->where('end_date', '>', $currentDate);
+                    break;
+
+                case 'incoming_end':
+                    $contracts->whereBetween('end_date', [$currentDate, $currentDate->copy()->addDays(60)]);
+                    break;
+
+                case 'ended':
+                    $contracts->where('end_date', '<', $currentDate);
+                    break;
+            }
+        }
 
         if (request()->ajax()) {
             return DataTables::of($contracts)
@@ -214,10 +233,10 @@ class ContractController extends Controller
 
     }
 
-    public function contractExport()
+    public function ContractExportExpired()
     {
         return Excel::download(
-            new ContractExport,
+            new ContractExportExpired,
             'contracts_expired_' . request('year', now()->year) . '_' . request('month', now()->month) . '.xlsx'
         );
     }
@@ -226,10 +245,12 @@ class ContractController extends Controller
     {
         $month = $request->get('month', date('n'));
         $year = $request->get('year', date('Y'));
+        $today = Carbon::now();
 
         $contractsExpired = Contract::when(! Auth::user()->hasRole('super-admin'), function ($query) {
             $query->where('company_id', Auth::user()->company_id);
         })
+            ->when($today, fn ($query) => $query->where('end_date', '<', $today))
             ->when($month, fn ($query) => $query->whereMonth('end_date', $month))
             ->when($year, fn ($query) => $query->whereYear('end_date', $year))
             ->whereHas('employee', function ($query) {
@@ -238,4 +259,17 @@ class ContractController extends Controller
 
         return view('pages.dashboard.contract-expired-list', compact('contractsExpired'));
     }
+
+    public function contractExport(Request $request)
+    {
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+        $filterType = $request->get('filter_type');
+
+        // return (new ContractExport($startDate, $endDate, $filterType))->download('contracts.xlsx');
+
+        return Excel::download(new ContractExport($startDate, $endDate, $filterType), 'contracts.xlsx');
+
+    }
+
 }

@@ -6,12 +6,14 @@
             <div class="d-flex justify-content-between align-items-center ">
               <h4 class="card-title">KPI</h4>
 
-              <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
-                data-bs-target="#modal-form-add-kpi">
-                <i class="bi bi-plus-lg"></i>
-                Add
-              </button>
-              @include('pages.employee.personal-data.form.kpi.modal-create')
+              {{-- @if (!$employee->is_verified)
+                <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
+                  data-bs-target="#modal-form-add-kpi">
+                  <i class="bi bi-plus-lg"></i>
+                  Add
+                </button>
+                @include('pages.employee.personal-data.form.kpi.modal-create')
+              @endif --}}
 
             </div>
             <!-- Table with outer spacing -->
@@ -31,7 +33,7 @@
                   @forelse ($employee->kpis as $employeeKpi)
                     <tr>
                       <td class="text-bold-500">{{ $loop->iteration }}</td>
-                      <td class="text-bold-500">{{ $employeeKpi->year }}</td>
+                      <td class="text-bold-500">{{ $employeeKpi->kpi_date }}</td>
                       <td class="text-bold-500">{{ $employeeKpi->grade }}</td>
                       <td class="text-bold-500">
                         @if ($employeeKpi->contract_recommendation)

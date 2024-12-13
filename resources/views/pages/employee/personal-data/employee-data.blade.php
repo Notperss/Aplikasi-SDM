@@ -154,7 +154,7 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="glasses">Kacatama</label>
+                  <label for="glasses">Kacamata</label>
                   <select type="text" id="glasses" class="form-control @error('glasses') is-invalid @enderror"
                     name="glasses">
                     {{-- <option value="" disabled selected>Choose</option> --}}

@@ -15,14 +15,14 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(Company::class)->nullable()->constrained()->onDelete('restrict');
             $table->string('name');
-            $table->date('dob');
-            $table->string('pob');
-            $table->string('email');
-            $table->string('phone_number');
+            $table->date('dob')->nullable();
+            $table->string('pob')->nullable();
+            $table->string('email')->nullable();
+            $table->string('phone_number')->nullable();
             $table->string('photo')->nullable();
-            $table->text('ktp_address');
-            $table->text('current_address');
-            // $table->string('npwp_number');
+            $table->text('ktp_address')->nullable();
+            $table->text('current_address')->nullable();
+            // $table->string('npwp_number')->nullable();
             $table->string('ktp_number')->nullable();
             $table->string('kk_number')->nullable();
             $table->string('religion')->nullable();
@@ -33,7 +33,7 @@ return new class extends Migration {
             $table->boolean('glasses')->nullable();
 
 
-            $table->enum('gender', ['LAKI-LAKI', 'PEREMPUAN']);
+            $table->enum('gender', ['LAKI-LAKI', 'PEREMPUAN'])->nullable();
             $table->date('date_applied')->nullable();
 
             $table->text('tag')->nullable();

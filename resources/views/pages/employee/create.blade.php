@@ -11,6 +11,8 @@
     @csrf
     <div class="row">
 
+      <input type="hidden" value="NON-AKTIF" name="employee_status" hidden>
+
       <div class="col-12 col-lg-4">
         <div class="card-body mb-2">
           <div class="d-flex justify-content-center align-items-center flex-column">
@@ -145,7 +147,7 @@
                   </a>
                 @enderror
               </div>
-              <div class="form-group col-md-6">
+              {{-- <div class="form-group col-md-6">
                 <label for="employee_status">Status Karyawan <code>*</code></label>
                 <select type="text" id="employee_status"
                   class="form-control choices @error('employee_status') is-invalid @enderror" name="employee_status">
@@ -163,7 +165,7 @@
                     </small>
                   </a>
                 @enderror
-              </div>
+              </div> --}}
               <div class="form-group col-md-6">
                 <label for="work_relationship">Hubungan Kerja <code>*</code></label>
                 <select type="text" id="work_relationship"

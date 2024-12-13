@@ -14,15 +14,74 @@
   <div class="card">
     <div class="card-header">
       <div class="d-flex justify-content-between align-items-center ">
-        <h5 class="fw-normal mb-0 text-body">Daftar Karyawan</h5>
-        @can('employee.store')
-        @endcan
+        <h5 class="fw-normal mb-0 text-body">Daftar Karyawan Aktif</h5>
         <a href="{{ route('employee.create') }}" class="btn btn-primary btn-md">
           <i class="bi bi-plus-lg"></i>
           Karyawan</a>
       </div>
+
+
+
+      <div class="d-flex justify-content-between align-items-center my-2">
+        <div>
+          <label for="start-date" class="me-2">Start Date:</label>
+          <input type="date" id="start-date" class="form-control form-control-sm" placeholder="Start Date"
+            style="width: 150px; display: inline-block;">
+
+          <label for="end-date" class="me-2">End Date:</label>
+          <input type="date" id="end-date" class="form-control form-control-sm" placeholder="End Date"
+            style="width: 150px; display: inline-block;">
+
+          <label for="employee-status" class="me-2">Status:</label>
+          <select id="employee-status" class="form-select form-select-sm" style="width: 200px; display: inline-block;">
+            <option value="">Semua</option>
+            <option value="AKTIF">Aktif</option>
+            <option value="NONAKTIF">Nonaktif</option>
+          </select>
+
+          <button id="filter-date" class="btn btn-primary btn-sm ms-2">Filter</button>
+        </div>
+        <a href="{{ route('employee.export', ['start_date' => request('start_date'), 'end_date' => request('end_date')]) }}"
+          class="btn btn-success btn-md" id="export-button">
+          Export
+        </a>
+      </div>
+
+
+      {{-- <div class="d-flex justify-content-between align-items-center my-2">
+        <div class="d-flex gap-2">
+          <div>
+            Status:
+            <select id="employee-status" class="form-select form-select-sm" style="width: 150px;">
+              <option value="">Semua</option>
+              <option value="AKTIF">Aktif</option>
+              <option value="NONAKTIF">Nonaktif</option>
+            </select>
+          </div>
+          Dari :
+          <input type="date" id="start-date" class="form-control form-control-sm" placeholder="Start Date"
+            style="width: 150px;">
+          Sampai :
+          <input type="date" id="end-date" class="form-control form-control-sm" placeholder="End Date"
+            style="width: 150px;">
+          <button id="filter-date" class="btn btn-primary btn-sm d-flex align-items-center">
+            <i class="bi bi-funnel me-1"></i> Filter
+          </button>
+        </div>
+
+
+
+        <a href="{{ route('employee.export', ['start_date' => request('start_date'), 'end_date' => request('end_date')]) }}"
+          class="btn btn-success btn-md d-flex align-items-center">
+          Export
+        </a>
+      </div> --}}
+
     </div>
     <div class="card-body">
+
+
+
 
       <table class="table table-striped" id="table-employee" style="font-size: 85%">
         <thead>
@@ -48,7 +107,7 @@
 </section>
 
 @push('after-script')
-  <script>
+  {{-- <script>
     jQuery(document).ready(function($) {
       $('#table-employee').DataTable({
         processing: true,
@@ -113,6 +172,103 @@
         }, ],
       });
     });
+  </script> --}}
+
+  <script>
+    jQuery(document).ready(function($) {
+      const table = $('#table-employee').DataTable({
+        processing: true,
+        serverSide: true,
+        ordering: true,
+        pageLength: 10,
+        lengthMenu: [
+          [10, 25, 50, 100, -1],
+          [10, 25, 50, 100, 'All']
+        ],
+        ajax: {
+          url: "{{ route('employee.index') }}",
+          data: function(d) {
+            d.start_date = $('#start-date').val();
+            d.end_date = $('#end-date').val();
+            d.employee_status = $('#employee-status').val();
+          }
+        },
+        columns: [{
+            data: 'DT_RowIndex',
+            name: 'DT_RowIndex',
+            orderable: false,
+            searchable: false,
+            width: '5%'
+          },
+          {
+            data: 'photo',
+            name: 'photo'
+          },
+          {
+            data: 'nik',
+            name: 'nik'
+          },
+          {
+            data: 'name',
+            name: 'name'
+          },
+          {
+            data: 'employeeCategory',
+            name: 'employeeCategory',
+            orderable: false,
+            searchable: false
+          },
+          {
+            data: 'position',
+            name: 'position',
+            orderable: false,
+            searchable: false
+          },
+          {
+            data: 'division',
+            name: 'division',
+            orderable: false,
+            searchable: false
+          },
+          {
+            data: 'is_verified',
+            name: 'is_verified'
+          },
+          {
+            data: 'action',
+            name: 'action',
+            orderable: false,
+            searchable: false,
+            className: 'no-print'
+          }
+        ],
+        columnDefs: [{
+          className: 'text-center',
+          targets: '_all'
+        }]
+      });
+
+      // Reload table on filter button click
+      $('#filter-date').on('click', function() {
+        table.ajax.reload();
+
+        // Update export button URL
+        const startDate = $('#start-date').val();
+        const endDate = $('#end-date').val();
+        const employeeStatus = $('#employee-status').val();
+
+        let exportUrl = "{{ route('employee.export') }}";
+        const params = [];
+
+        if (startDate) params.push(`start_date=${startDate}`);
+        if (endDate) params.push(`end_date=${endDate}`);
+        if (employeeStatus) params.push(`employee_status=${employeeStatus}`);
+
+        if (params.length) exportUrl += `?${params.join('&')}`;
+
+        $('.btn-success').attr('href', exportUrl);
+      });
+    });
   </script>
 @endpush
 
@@ -175,3 +331,8 @@
 {{-- @include('pages.recruitment.employee.modal-create') --}}
 
 @endsection
+
+
+{{-- 
+- carreer after cmnp and before, change at print personal data
+--}}

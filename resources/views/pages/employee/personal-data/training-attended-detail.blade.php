@@ -23,7 +23,7 @@
                     <th>Pelatihan/Seminar</th>
                     <th>Penyelenggara</th>
                     <th>Tempat/Kota</th>
-                    <th>Tahun</th>
+                    <th>Tanggal</th>
                     <th>File</th>
                     <th></th>
                   </tr>
@@ -35,7 +35,7 @@
                       <td class="text-bold-500">{{ $employeeTrainingAttended->training_name }}</td>
                       <td class="text-bold-500">{{ $employeeTrainingAttended->organizer_name }}</td>
                       <td class="text-bold-500">{{ $employeeTrainingAttended->city }}</td>
-                      <td class="text-bold-500">{{ $employeeTrainingAttended->year }}</td>
+                      <td class="text-bold-500">{{ $employeeTrainingAttended->training_date }}</td>
                       <td class="text-bold-500">
                         @if ($employeeTrainingAttended->file_sertifikat)
                           <a href="{{ Storage::url($employeeTrainingAttended->file_sertifikat) }}" target="_blank">

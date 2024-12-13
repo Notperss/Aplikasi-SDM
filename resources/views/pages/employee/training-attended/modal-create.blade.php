@@ -45,10 +45,11 @@
                 </div>
 
                 <div class="col-md-6">
-                  <label class="form-label" for="year">Tahun</label>
-                  <input id="year" name="year" maxlength="4" value="{{ old('year') }}"
-                    class="form-control @error('year') is-invalid @enderror">
-                  @error('year')
+                  <label class="form-label" for="training_date">Tanggal</label>
+                  <input type="date" id="training_date" name="training_date" maxlength="4"
+                    value="{{ old('training_date') }}"
+                    class="form-control @error('training_date') is-invalid @enderror">
+                  @error('training_date')
                     <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror
                 </div>
@@ -223,6 +224,9 @@
         ],
         ajax: {
           url: "{{ route('employee.index') }}",
+          data: function(d) {
+            d.employee_status = 'AKTIF';
+          },
         },
         columns: [{
             data: 'DT_RowIndex',

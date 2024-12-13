@@ -14,14 +14,15 @@
         <div class="card-body">
           <div class="row justify-content-center">
             <div class="col-md-12"> <!-- Make form smaller with col-md-6 and center it -->
-              <input type="hidden" name="employee_id" value="{{ $employee->id }}">
-              <input type="hidden" name="name" value="{{ $employee->name }}">
+              <input type="hidden" name="contract_id" value="{{ $contract->id ?? $employee->id }}">
+              <input type="hidden" name="employee_id" value="{{ $contract->employee->id ?? $employee->id }}">
+              <input type="hidden" name="name" value="{{ $contract->employee->name ?? $employee->name }}">
 
               <div class="col-6 mb-2">
-                <label class="form-label" for="year">Tahun <code>*</code></label>
-                <input id="year" name="year" maxlength="4" value="{{ old('year') }}"
-                  class="form-control @error('year') is-invalid @enderror">
-                @error('year')
+                <label class="form-label" for="kpi_date">Tanggal <code>*</code></label>
+                <input type="date" id="kpi_date" name="kpi_date" maxlength="4" value="{{ old('kpi_date') }}"
+                  class="form-control @error('kpi_date') is-invalid @enderror">
+                @error('kpi_date')
                   <a style="color: red"><small>{{ $message }}</small></a>
                 @enderror
               </div>

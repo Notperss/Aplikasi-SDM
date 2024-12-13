@@ -61,7 +61,7 @@ class StoreEmployeeRequest extends FormRequest
             'dob' => 'required|date|before:today',
             'gender' => 'required|string|in:LAKI-LAKI,PEREMPUAN',
             'blood_type' => 'nullable|string|max:3',
-            'employee_status' => 'required|string|max:50',
+            // 'employee_status' => 'required|string|max:50',
             'work_status' => 'required|string|max:50',
             'work_relationship' => 'required|string|max:50',
             'date_joining' => 'required|date',

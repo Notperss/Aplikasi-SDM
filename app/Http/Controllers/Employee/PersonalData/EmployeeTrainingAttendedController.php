@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Employee\PersonalData;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Exports\TrainingExport;
 use App\Models\Employee\Employee;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\Employee\PersonalData\EmployeeTrainingAttended;
@@ -20,9 +23,8 @@ class EmployeeTrainingAttendedController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-
         $employeeTrainingAttended = EmployeeTrainingAttended::with('employee')
             ->when(! Auth::user()->hasRole('super-admin'), function ($query) {
                 $query->whereHas('employee', function ($query) {
@@ -30,6 +32,11 @@ class EmployeeTrainingAttendedController extends Controller
                 });
             })
             ->latest();
+
+        if ($request->filled(['start_date', 'end_date'])) {
+            $employeeTrainingAttended->whereBetween('training_date', [$request->start_date, $request->end_date]);
+        }
+
 
         if (request()->ajax()) {
             return DataTables::of($employeeTrainingAttended)
@@ -62,10 +69,14 @@ class EmployeeTrainingAttendedController extends Controller
                     } else {
                         return '<span> - </span>';
                     }
+                })->editColumn('training_date', function ($item) {
+                    return $item->training_date ? Carbon::parse($item->training_date)->translatedFormat('d M Y') : ' ';
                 })
-                ->rawColumns(['action', 'file'])
+                ->rawColumns(['action', 'file', 'training_date'])
                 ->toJson();
         }
+
+        // dd($request->all());
 
         // $employees = Employee::where('employee_status', 'AKTIF')->where('is_verified', true)->orderBy('name', 'asc')->get();
         $employees = Employee::with('position', 'position.division')->where('employee_status', 'AKTIF')->orderBy('name', 'asc')->get();
@@ -113,7 +124,7 @@ class EmployeeTrainingAttendedController extends Controller
                         'training_name' => $request->training_name,
                         'organizer_name' => $request->organizer_name,
                         'city' => $request->city,
-                        'year' => $request->year,
+                        'training_date' => $request->training_date,
                         'file_sertifikat' => $file_path, // Attach file path if the certificate is uploaded
                     ]);
                 }
@@ -124,7 +135,7 @@ class EmployeeTrainingAttendedController extends Controller
                     'training_name' => $request->training_name,
                     'organizer_name' => $request->organizer_name,
                     'city' => $request->city,
-                    'year' => $request->year,
+                    'training_date' => $request->training_date,
                     'file_sertifikat' => $file_path, // Attach file path if the certificate is uploaded
                 ]);
             }
@@ -201,5 +212,15 @@ class EmployeeTrainingAttendedController extends Controller
         }
         $employeeTrainingAttended->delete();
         return redirect()->back()->with('success', 'Data has been deleted successfully!');
+    }
+
+    public function trainingExport(Request $request)
+    {
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+
+        return Excel::download(new TrainingExport($startDate, $endDate), 'TrainingExports.xlsx');
+
+
     }
 }

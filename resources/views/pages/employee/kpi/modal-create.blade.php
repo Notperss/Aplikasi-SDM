@@ -220,6 +220,9 @@
         ],
         ajax: {
           url: "{{ route('employee.index') }}",
+          data: function(d) {
+            d.employee_status = 'AKTIF';
+          },
         },
         columns: [{
             data: 'DT_RowIndex',

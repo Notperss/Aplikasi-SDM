@@ -2,6 +2,7 @@
 
 namespace App\Models\Employee\PersonalData;
 
+use App\Models\Approval\Approval;
 use App\Models\Employee\Employee;
 use App\Models\Position\Position;
 use Illuminate\Database\Eloquent\Model;
@@ -35,5 +36,9 @@ class EmployeeCareer extends Model
     public function position()
     {
         return $this->belongsTo(Position::class);
+    }
+    public function approval()
+    {
+        return $this->hasOne(Approval::class);
     }
 }

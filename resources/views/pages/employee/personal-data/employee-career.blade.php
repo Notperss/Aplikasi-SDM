@@ -40,16 +40,16 @@
                       </td>
                       <td class="text-bold-500">
                         @if ($employeeCareer->is_approve)
-                          @if ($employeeCareer->end_date)
-                            {{ Carbon\Carbon::parse($employeeCareer->end_date)->translatedFormat('l, d F Y') }}
+                          @if ($employeeCareer->position_id)
+                            {{ $employeeCareer->end_date ? Carbon\Carbon::parse($employeeCareer->end_date)->translatedFormat('l, d F Y') : 'Sekarang' }}
                           @else
-                            Sekarang
+                            -
                           @endif
                         @endif
                       </td>
-                      <td class="text-bold-500">{{ $employeeCareer->placement }}</td>
-                      <td class="text-bold-500">{{ $employeeCareer->position->name }}</td>
-                      <td class="text-bold-500">{{ $employeeCareer->type }}</td>
+                      <td class="text-bold-500">{{ $employeeCareer->placement ?? '' }}</td>
+                      <td class="text-bold-500">{{ $employeeCareer->position->name ?? '' }}</td>
+                      <td class="text-bold-500">{{ $employeeCareer->type ?? '' }}</td>
                       <td class="text-bold-500">
                         @if ($employeeCareer->is_approve)
                           <span class="badge bg-success">Disetujui</span>

@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Employee\PersonalData;
 
 use Carbon\Carbon;
+use App\Exports\AwardExport;
 use Illuminate\Http\Request;
 use App\Models\Employee\Employee;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\Employee\PersonalData\EmployeeAward;
@@ -18,7 +20,7 @@ class EmployeeAwardController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $employeeAward = EmployeeAward::with('employee')
             ->when(! Auth::user()->hasRole('super-admin'), function ($query) {
@@ -27,6 +29,10 @@ class EmployeeAwardController extends Controller
                 });
             })
             ->latest();
+
+        if ($request->filled(['start_date', 'end_date'])) {
+            $employeeAward->whereBetween('date_award', [$request->start_date, $request->end_date]);
+        }
 
         if (request()->ajax()) {
             return DataTables::of($employeeAward)
@@ -231,5 +237,15 @@ class EmployeeAwardController extends Controller
         $employeeAward->delete();
 
         return redirect()->back()->with('success', 'Data has been deleted successfully!.');
+    }
+
+    public function awardExport(Request $request)
+    {
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+
+        return Excel::download(new AwardExport($startDate, $endDate), 'PenghargaanExport.xlsx');
+
+
     }
 }

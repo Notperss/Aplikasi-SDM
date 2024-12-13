@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(Employee::class)->nullable()->constrained()->onDelete('cascade');
             $table->string('nik_employee')->nullable();
-            $table->year('year');
+            $table->date('kpi_date');
             $table->string('grade');
             $table->boolean('contract_recommendation')->nullable()->default(null);
             $table->string('file')->nullable();

@@ -40,22 +40,22 @@
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div> --}}
-
-                  <div class="form-group">
-                    <label class="form-label" for="placement">Penempatan <code>*</code></label>
-                    <input id="placement" name="placement" value="{{ old('placement', $employeeCareer->placement) }}"
-                      class="form-control @error('placement') is-invalid @enderror" required>
-                    @error('placement')
-                      <a style="color: red"><small>{{ $message }}</small></a>
-                    @enderror
+                  <div id="positionFieldss" class="form-group">
+                    <div class="form-group">
+                      <label class="form-label" for="placement">Penempatan <code>*</code></label>
+                      <input id="placements" name="placement" value="{{ old('placement', $employeeCareer->placement) }}"
+                        class="form-control @error('placement') is-invalid @enderror" required>
+                      @error('placement')
+                        <a style="color: red"><small>{{ $message }}</small></a>
+                      @enderror
+                    </div>
                   </div>
                 </div>
 
                 <div class="col-md-6">
-
                   <div class="form-group">
-                    <label class="form-label" class="form-label" for="type">Tipe Karir <code>*</code></label>
-                    <select id="type" name="type" value="{{ old('type') }}"
+                    <label class="form-label" for="type">Tipe Karir <code>*</code></label>
+                    <select id="types" name="type" value="{{ old('type', $employeeCareer->type) }}"
                       class="form-control @error('type') is-invalid @enderror" required>
                       <option value="" selected disabled>Choose</option>
                       <option value="PROMOSI" {{ old('type', $employeeCareer->type) == 'PROMOSI' ? 'selected' : '' }}>
@@ -67,8 +67,7 @@
                       <option value="MUTASI" {{ old('type', $employeeCareer->type) == 'MUTASI' ? 'selected' : '' }}>
                         MUTASI</option>
                       <option value="NON-AKTIF"
-                        {{ old('type', $employeeCareer->type) == 'NON-AKTIF' ? 'selected' : '' }}>
-                        NON-AKTIF</option>
+                        {{ old('type', $employeeCareer->type) == 'NON-AKTIF' ? 'selected' : '' }}>NON-AKTIF</option>
                       <option value="RESIGN" {{ old('type', $employeeCareer->type) == 'RESIGN' ? 'selected' : '' }}>
                         RESIGN</option>
                       <option value="PENSIUN" {{ old('type', $employeeCareer->type) == 'PENSIUN' ? 'selected' : '' }}>
@@ -79,9 +78,10 @@
                     @enderror
                   </div>
 
-                  <div class="form-group">
-                    <label class="form-label" for="position_id">Jabatan </label>
-                    <select name="position_id" id="position_id"
+                  <!-- Wrap the Jabatan field in a div with id="positionField" -->
+                  <div id="positionFields" class="form-group">
+                    <label class="form-label" for="position_id">Jabatan</label>
+                    <select name="position_id" id="position_ids"
                       class="form-control @error('position_id') is-invalid @enderror">
                       <option value="" disabled selected>Choose</option>
                       @foreach ($positions as $position)
@@ -89,18 +89,14 @@
                           {{ old('position_id', $employeeCareer->position_id) == $position->id ? 'selected' : '' }}>
                           {{ $position->name }}</option>
                       @endforeach
-                      {{-- @foreach ($positions as $position)
-                        <option value="{{ $position->id }}"
-                          {{ old('position_id', $employee->position_id) == $position->id ? 'selected' : '' }}>
-                          {{ $position->name }}</option>
-                      @endforeach --}}
                     </select>
                     @error('position_id')
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>
-
                 </div>
+
+
               </div>
 
               <div class="row">
@@ -141,3 +137,33 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const typeField = document.getElementById('types');
+    const positionFieldContainer = document.getElementById('positionFields');
+    const positionFieldContainers = document.getElementById('positionFieldss');
+    const positionField = document.getElementById('position_ids');
+    const placementsField = document.getElementById('placements');
+
+    function togglePositionField() {
+      const selectedValue = typeField.value;
+      // Hide the "Jabatan" field if the selected value is "NON-AKTIF", "RESIGN", or "PENSIUN"
+      if (['NON-AKTIF', 'RESIGN', 'PENSIUN'].includes(selectedValue)) {
+        positionFieldContainer.style.display = 'none';
+        positionFieldContainers.style.display = 'none';
+        positionField.value = ''; // Reset the position field value
+        placementsField.value = ''; // Reset the position field value
+      } else {
+        positionFieldContainer.style.display = 'block';
+        positionFieldContainers.style.display = 'block';
+      }
+    }
+
+    // Attach event listener to detect changes
+    typeField.addEventListener('change', togglePositionField);
+
+    // Initial toggle on page load
+    togglePositionField();
+  });
+</script>

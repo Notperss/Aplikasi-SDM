@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Employee\PersonalData;
 
+use Carbon\Carbon;
+use App\Exports\KpiExport;
 use Illuminate\Http\Request;
 use App\Models\Employee\Employee;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\Employee\PersonalData\EmployeeKpi;
@@ -18,15 +21,19 @@ class EmployeeKpiController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $employeeKpi = EmployeeKpi::with('employee')
+        $employeeKpi = EmployeeKpi::with('employee', 'contract')
             ->when(! Auth::user()->hasRole('super-admin'), function ($query) {
                 $query->whereHas('employee', function ($query) {
                     $query->where('company_id', Auth::user()->company_id);
                 });
             })
             ->latest();
+
+        if ($request->filled(['start_date', 'end_date'])) {
+            $employeeKpi->whereBetween('kpi_date', [$request->start_date, $request->end_date]);
+        }
 
         if (request()->ajax()) {
             return DataTables::of($employeeKpi)
@@ -65,7 +72,9 @@ class EmployeeKpiController extends Controller
                     } else {
                         return '<span class="badge bg-danger">Kontrak Tidak Diperpanjang</span>';
                     }
-                })->rawColumns(['action', 'file', 'contract_recommendation'])
+                })->editColumn('kpi_date', function ($item) {
+                    return $item->kpi_date ? Carbon::parse($item->kpi_date)->translatedFormat('d M Y') : ' ';
+                })->rawColumns(['action', 'file', 'contract_recommendation', 'kpi_date'])
                 ->toJson();
         }
 
@@ -88,6 +97,7 @@ class EmployeeKpiController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
 
         if ($request->has('employees')) {
             // Decode the JSON string into an array
@@ -100,8 +110,10 @@ class EmployeeKpiController extends Controller
         }
 
         $request->validate([
-            'year' => 'required|integer',
+            // 'year' => 'required|integer',
+            'kpi_date' => 'nullable|date',
             'grade' => 'required',
+            'contract_id' => 'required',
             'contract_recommendation' => 'required|boolean',
             'file' => 'nullable|file|mimes:pdf',
             'employees' => $request->has('employees') ? 'required|array' : 'nullable',
@@ -136,7 +148,7 @@ class EmployeeKpiController extends Controller
                     // Create the training record for each employee
                     EmployeeKpi::create([
                         'employee_id' => $employeeId, // Use employee ID
-                        'year' => $request->year,
+                        'kpi_date' => $request->kpi_date,
                         'grade' => $request->grade,
                         'contract_recommendation' => $request->contract_recommendation,
                         'file' => $file_path, // Attach file path if the certificate is uploaded
@@ -146,7 +158,8 @@ class EmployeeKpiController extends Controller
                 // Create the training record for each employee
                 EmployeeKpi::create([
                     'employee_id' => $request->employee_id, // Use employee ID
-                    'year' => $request->year,
+                    'contract_id' => $request->contract_id, // Use employee ID
+                    'kpi_date' => $request->kpi_date,
                     'grade' => $request->grade,
                     'contract_recommendation' => $request->contract_recommendation,
                     'file' => $file_path, // Attach file path if the certificate is uploaded
@@ -195,7 +208,8 @@ class EmployeeKpiController extends Controller
     public function update(Request $request, EmployeeKpi $employeeKpi)
     {
         $request->validate([
-            'year' => 'required|integer',
+            // 'year' => 'required|integer',
+            'kpi_date' => 'nullable|date',
             'grade' => 'required',
             'contract_recommendation' => 'required|boolean',
             'file' => 'nullable|file|mimes:pdf',
@@ -244,5 +258,15 @@ class EmployeeKpiController extends Controller
         $employeeKpi->delete();
 
         return redirect()->back()->with('success', 'Data has been deleted successfully!.');
+    }
+
+    public function kpiExport(Request $request)
+    {
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+
+        return Excel::download(new KpiExport($startDate, $endDate), 'KpiExport.xlsx');
+
+
     }
 }

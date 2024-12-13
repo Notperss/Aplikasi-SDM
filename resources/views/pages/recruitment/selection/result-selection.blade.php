@@ -178,12 +178,14 @@
       <div class="d-flex justify-content-between align-items-center ">
         <h5 class="fw-normal my-3 text-body">Tahapan Seleksi</h5>
         @if (!$selection->is_approve)
-          <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
-            data-bs-target="#modal-form-history-selection">
-            <i class="bi bi-plus-lg"></i>
-            Tahapan Seleksi
-          </button>
-          @include('pages.recruitment.selection.modal-history')
+          @role(['staff', 'ka-si', 'super-admin'])
+            <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
+              data-bs-target="#modal-form-history-selection">
+              <i class="bi bi-plus-lg"></i>
+              Tahapan Seleksi
+            </button>
+            @include('pages.recruitment.selection.modal-history')
+          @endrole
         @endif
       </div>
 
@@ -417,20 +419,22 @@
 
           <div class="col-12 d-flex justify-content-end mt-4">
             @if (!$selection->is_approve)
-              <button class="btn btn-primary me-1 mb-1" onclick="closeSelection({{ $selection->id }})">Tutup
-                Seleksi</button>
+              @role(['staff', 'ka-si', 'super-admin'])
+                <button class="btn btn-primary me-1 mb-1" onclick="closeSelection({{ $selection->id }})">Tutup
+                  Seleksi</button>
 
-              <form id="closeSelection_{{ $selection->id }}" action="{{ route('selection.close', $selection) }}"
-                method="post" enctype="multipart/form-data">
-                @csrf
-                @method('patch')
+                <form id="closeSelection_{{ $selection->id }}" action="{{ route('selection.close', $selection) }}"
+                  method="post" enctype="multipart/form-data">
+                  @csrf
+                  @method('patch')
 
-                <input class="form-control @error('file_selection') is-invalid @enderror" accept=".pdf"
-                  type="file" id="file_selection" name="file_selection" hidden>
+                  <input class="form-control @error('file_selection') is-invalid @enderror" accept=".pdf"
+                    type="file" id="file_selection" name="file_selection" hidden>
 
-                <input type="hidden" name="selected_option" id="selectedOptionInput_{{ $selection->id }}"
-                  value="">
-              </form>
+                  <input type="hidden" name="selected_option" id="selectedOptionInput_{{ $selection->id }}"
+                    value="">
+                </form>
+              @endrole
             @endif
             <a class="btn btn-light-secondary me-1 mb-1" href="{{ route('selection.index') }}">Cancel</a>
           </div>

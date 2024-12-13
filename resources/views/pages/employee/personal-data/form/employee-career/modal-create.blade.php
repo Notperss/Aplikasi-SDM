@@ -36,20 +36,21 @@
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div> --}}
-
-                  <div class="form-group">
-                    <label class="form-label" for="placement">Penempatan</label>
-                    <input id="placement" name="placement" value="{{ old('placement') }}"
-                      class="form-control @error('placement') is-invalid @enderror">
-                    @error('placement')
-                      <a style="color: red"><small>{{ $message }}</small></a>
-                    @enderror
+                  <div class="form-group" id="placementField">
+                    <div class="form-group">
+                      <label class="form-label" for="placement">Penempatan</label>
+                      <input id="placement" name="placement" value="{{ old('placement') }}"
+                        class="form-control @error('placement') is-invalid @enderror">
+                      @error('placement')
+                        <a style="color: red"><small>{{ $message }}</small></a>
+                      @enderror
+                    </div>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label class="form-label" class="form-label" for="type">Tipe Karir <code>*</code></label>
+                    <label class="form-label" for="type">Tipe Karir <code>*</code></label>
                     <select id="type" name="type" value="{{ old('type') }}"
                       class="form-control @error('type') is-invalid @enderror" required>
                       <option value="" selected disabled>Choose</option>
@@ -66,7 +67,7 @@
                     @enderror
                   </div>
 
-                  <div class="form-group">
+                  <div class="form-group" id="positionField">
                     <label class="form-label" for="position_id">Jabatan</label>
                     <select name="position_id" id="position_id"
                       class="form-control @error('position_id') is-invalid @enderror">
@@ -76,17 +77,15 @@
                           {{ old('position_id') == $position->id ? 'selected' : '' }}>
                           {{ $position->name }}</option>
                       @endforeach
-                      {{-- @foreach ($positions as $position)
-                        <option value="{{ $position->id }}"
-                          {{ old('position_id', $employee->position_id) == $position->id ? 'selected' : '' }}>
-                          {{ $position->name }}</option>
-                      @endforeach --}}
                     </select>
                     @error('position_id')
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>
                 </div>
+
+
+
               </div>
 
               <div class="row">
@@ -122,3 +121,33 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const typeField = document.getElementById('type');
+    const positionFieldContainer = document.getElementById('positionField');
+    const placementFieldContainer = document.getElementById('placementField');
+    const positionField = document.getElementById('position_id');
+    const placementField = document.getElementById('placement');
+
+    function togglePositionField() {
+      const selectedValue = typeField.value;
+      // Hide the "Jabatan" field if the selected value is "NON-AKTIF", "RESIGN", or "PENSIUN"
+      if (['NON-AKTIF', 'RESIGN', 'PENSIUN'].includes(selectedValue)) {
+        positionFieldContainer.style.display = 'none';
+        placementFieldContainer.style.display = 'none';
+        // Reset the value of the "Jabatan" field
+        placementField.value = '';
+        positionField.value = '';
+      } else {
+        positionFieldContainer.style.display = 'block';
+        placementFieldContainer.style.display = 'block';
+      }
+    }
+
+    // Attach event listener to detect changes
+    typeField.addEventListener('change', togglePositionField);
+
+    // Initial toggle on page load
+    togglePositionField();
+  });
+</script>

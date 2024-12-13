@@ -2,7 +2,6 @@
 
 namespace App\Exports;
 
-use Carbon\Carbon;
 use App\Models\Employee\Contract;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
@@ -10,32 +9,51 @@ use Maatwebsite\Excel\Concerns\FromView;
 
 class ContractExport implements FromView
 {
+    protected $startDate;
+    protected $endDate;
+    protected $filterType;
+
+    public function __construct($startDate, $endDate, $filterType)
+    {
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
+        $this->filterType = $filterType;
+    }
+
     public function view() : View
     {
-        $companyId = Auth::user()->company_id;
-        $isSuperAdmin = Auth::user()->hasRole('super-admin');
+        $query = Contract::query()->when(! Auth::user()->hasRole('super-admin'), function ($query) {
+            $query->where('company_id', Auth::user()->company_id);
+        })->orderBy('employee_id', 'asc')->orderBy('contract_sequence_number', 'asc');
 
-        $selectedYear = request('year', Carbon::now()->year);
-        $selectedMonth = request('month', Carbon::now()->month);
+        // Apply date range filter
+        if ($this->startDate && $this->endDate) {
+            $query->whereBetween('end_date', [$this->startDate, $this->endDate]);
+        }
 
-        // Validate year and month inputs
-        request()->validate([
-            'year' => 'nullable|integer|min:2015|max:' . Carbon::now()->year,
-            'month' => 'nullable|integer|min:1|max:12',
+        // Apply additional filters
+        if ($this->filterType) {
+            $currentDate = now();
+            switch ($this->filterType) {
+                case 'before_end':
+                    $query->where('end_date', '>', $currentDate);
+                    break;
+
+                case 'incoming_end':
+                    $query->whereBetween('end_date', [$currentDate, $currentDate->copy()->addDays(60)]);
+                    break;
+
+                case 'ended':
+                    $query->where('end_date', '<', $currentDate);
+                    break;
+            }
+        }
+
+        $contracts = $query->get();
+
+        // Return the view with the filtered data
+        return view('pages.employee.contract.export', [
+            'contracts' => $contracts,
         ]);
-
-        $contractsExpired = Contract::with(['employee.position.division'])
-            ->when(! $isSuperAdmin, function ($query) use ($companyId) {
-                $query->where('company_id', $companyId);
-            })
-            ->whereYear('end_date', $selectedYear)
-            ->whereMonth('end_date', $selectedMonth)
-            ->whereHas('employee', function ($query) {
-                $query->whereNull('date_leaving');
-            })
-            ->orderBy('end_date', 'asc')
-            ->get();
-
-        return view('pages.employee.contract.export', compact('contractsExpired', 'selectedYear', 'selectedMonth'));
     }
 }

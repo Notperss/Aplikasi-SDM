@@ -4,6 +4,7 @@ namespace App\Exports;
 
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\FromView;
 use App\Models\Employee\PersonalData\Attendance;
 
@@ -24,6 +25,9 @@ class AttendanceExport implements FromView
         ]);
 
         $employeeAttendances = Attendance::query()
+            ->when(! Auth::user()->hasRole('super-admin'), function ($query) {
+                $query->where('company_id', Auth::user()->company_id);
+            })
             ->when($selectedMonth, fn ($query) => $query->whereMonth('date', $selectedMonth))
             ->when($selectedYear, fn ($query) => $query->whereYear('date', $selectedYear))
             ->when($nik, fn ($query) => $query->where('nik', $nik)) // Fixed condition

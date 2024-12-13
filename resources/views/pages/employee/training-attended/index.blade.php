@@ -17,6 +17,25 @@
           Add
         </button>
       </div>
+
+      <div class="d-flex justify-content-between align-items-center my-2">
+        <div>
+          <label for="start-date" class="me-2">Start Date:</label>
+          <input type="date" id="start-date" class="form-control form-control-sm" placeholder="Start Date"
+            style="width: 150px; display: inline-block;">
+
+          <label for="end-date" class="me-2">End Date:</label>
+          <input type="date" id="end-date" class="form-control form-control-sm" placeholder="End Date"
+            style="width: 150px; display: inline-block;">
+
+          <button id="filter-date" class="btn btn-primary btn-sm ms-2">Filter</button>
+        </div>
+        <a href="{{ route('employeeTrainingAttended.export', ['start_date' => request('start_date'), 'end_date' => request('end_date')]) }}"
+          class="btn btn-success btn-md" id="export-button">
+          Export
+        </a>
+      </div>
+
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -29,7 +48,7 @@
               <th>Pelatihan/Seminar</th>
               <th>Penyelenggara</th>
               <th>Tempat/Kota</th>
-              <th>Tahun</th>
+              <th>Tanggal</th>
               <th>File</th>
               <th style="width: 13%"></th>
             </tr>
@@ -113,7 +132,7 @@
 </script>
 
 @push('after-script')
-<script>
+{{-- <script>
   jQuery(document).ready(function($) {
     $('#table-training').DataTable({
       processing: true,
@@ -161,8 +180,8 @@
           name: 'city',
         },
         {
-          data: 'year',
-          name: 'year',
+          data: 'training_date',
+          name: 'training_date',
         },
         {
           data: 'file',
@@ -180,6 +199,99 @@
         className: 'text-center',
         targets: '_all'
       }, ],
+    });
+  });
+</script> --}}
+
+<script>
+  jQuery(document).ready(function($) {
+    const table = $('#table-training').DataTable({
+      processing: true,
+      serverSide: true,
+      ordering: true,
+      pageLength: 10,
+      lengthMenu: [
+        [10, 25, 50, 100, -1],
+        [10, 25, 50, 100, 'All']
+      ],
+      ajax: {
+        url: "{{ route('employeeTrainingAttended.index') }}",
+        data: function(d) {
+          d.start_date = $('#start-date').val();
+          d.end_date = $('#end-date').val();
+        },
+      },
+      columns: [{
+          data: 'DT_RowIndex',
+          name: 'DT_RowIndex',
+          orderable: false,
+          searchable: false,
+          width: '5%'
+        },
+        {
+          data: 'employee.nik',
+          name: 'employee.nik',
+          orderable: false,
+          searchable: false,
+        },
+        {
+          data: 'employee.name',
+          name: 'employee.name',
+          orderable: false,
+          searchable: false,
+        },
+        {
+          data: 'training_name',
+          name: 'training_name'
+        },
+        {
+          data: 'organizer_name',
+          name: 'organizer_name'
+        },
+        {
+          data: 'city',
+          name: 'city'
+        },
+        {
+          data: 'training_date',
+          name: 'training_date'
+        },
+        {
+          data: 'file',
+          name: 'file',
+          orderable: false,
+          searchable: false,
+        },
+        {
+          data: 'action',
+          name: 'action',
+          orderable: false,
+          searchable: false,
+          className: 'no-print'
+        },
+      ],
+      columnDefs: [{
+        className: 'text-center',
+        targets: '_all'
+      }],
+    });
+
+    // Reload table on filter button click
+    $('#filter-date').on('click', function() {
+      table.ajax.reload();
+
+      // Update export button URL
+      const startDate = $('#start-date').val();
+      const endDate = $('#end-date').val();
+      let exportUrl = "{{ route('employeeTrainingAttended.export') }}";
+      const params = [];
+
+      if (startDate) params.push(`start_date=${startDate}`);
+      if (endDate) params.push(`end_date=${endDate}`);
+
+      if (params.length) exportUrl += `?${params.join('&')}`;
+
+      $('#export-button').attr('href', exportUrl);
     });
   });
 </script>

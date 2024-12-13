@@ -113,16 +113,26 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::resource('employeeEducationalHistory', EmployeeEducationalHistoryController::class)->only('store', 'update', 'destroy');
     Route::resource('employeeLanguageProficiency', EmployeeLanguageProficiencyController::class)->only('store', 'update', 'destroy');
     Route::resource('employeeTrainingAttended', EmployeeTrainingAttendedController::class)->only('index', 'edit', 'store', 'update', 'destroy');
+    Route::get('employeeTrainingAttended/export', [EmployeeTrainingAttendedController::class, 'trainingExport'])->name('employeeTrainingAttended.export');
+
     Route::resource('employeeSkill', EmployeeSkillController::class)->only('store', 'update', 'destroy');
     Route::resource('employeeSocialPlatform', EmployeeSocialPlatformController::class)->only('store', 'update', 'destroy');
     Route::resource('employeeKpi', EmployeeKpiController::class)->only('index', 'edit', 'store', 'update', 'destroy');
+    Route::get('employeeKpi/export', [EmployeeKpiController::class, 'kpiExport'])->name('employeeKpi.export');
+
     Route::resource('employeeDuty', EmployeeDutyController::class)->only('index', 'edit', 'store', 'update', 'destroy');
+    Route::get('employeeDuty/export', [EmployeeDutyController::class, 'dutyExport'])->name('employeeDuty.export');
+
     Route::resource('employeeCareer', EmployeeCareerController::class)->only('store', 'update', 'destroy');
     Route::resource('employeeAward', EmployeeAwardController::class)->only('index', 'edit', 'store', 'update', 'destroy');
+    Route::get('employeeAward/export', [EmployeeAwardController::class, 'awardExport'])->name('employeeAward.export');
+
     Route::resource('employeePhoto', EmployeePhotoController::class)->only('store', 'update', 'destroy');
 
     Route::get('approval-list', [EmployeeCareerController::class, 'indexApproval'])->name('indexApproval');
     Route::patch('/{id}/update-approval', [EmployeeCareerController::class, 'updateApprovalStatus'])->name('updateApprovalStatus');
+    Route::get('/export-employees', [EmployeeController::class, 'exportEmployees'])->name('employee.export');
+
 
 
     //workUnit
@@ -149,13 +159,17 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::get('/employee-attendance', [EmployeeController::class, 'getEmployeeAttendances'])->name('employee.attendances');
     Route::get('export-attendance', [EmployeeController::class, 'attendanceExport'])->name('export.attendanceEmployee');
     Route::post('upload-photo', [EmployeeController::class, 'uploadPhoto'])->name('employee.uploadPhoto');
+    Route::patch('/employee/{employee}/verified', [EmployeeController::class, 'verify'])->name('employee.verified');
+    Route::patch('/employee/{employee}/unverified', [EmployeeController::class, 'unverified'])->name('employee.unverified');
+
 
 
     Route::resource('employeeCategory', EmployeeCategoryController::class)->only('index', 'store', 'update', 'destroy');
     Route::resource('contract', ContractController::class)->only('index', 'store', 'edit', 'update', 'destroy');
     Route::post('import-contract', [ContractController::class, 'importContract'])->name('contract.import');
     Route::put('lock-contract/{id}', [ContractController::class, 'lockContract'])->name('contract.lock');
-    Route::get('export-contract-expired', [ContractController::class, 'contractExport'])->name('contract.exportExpired');
+    Route::get('export-contract-expired', [ContractController::class, 'contractExportExpired'])->name('contract.exportExpired');
+    Route::get('export-contract', [ContractController::class, 'contractExport'])->name('contract.export');
 
     Route::get('/contracts/expired', [ContractController::class, 'getExpiredContracts'])->name('contracts.expired');
 

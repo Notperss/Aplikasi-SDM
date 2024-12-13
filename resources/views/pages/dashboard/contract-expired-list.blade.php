@@ -11,6 +11,8 @@
       <th scope="col">Durasi</th>
       <th scope="col">Kontrak Ke- </th>
       <th scope="col">Divisi</th>
+      <th scope="col" class="text-center">KPI</th>
+      <th scope="col"></th>
     </tr>
   </thead>
   <tbody>
@@ -51,11 +53,50 @@
           {{ $contract->contract_sequence_number ?? 'N/A' }}
         </td>
         <td>{{ $contract->employee->position->division->code ?? 'N/A' }}</td>
+        <td class="text-center">
+          @if ($contract->contractKpi)
+            {{ $contract->contractKpi->grade }} <br>
+            @if ($contract->contractKpi->contract_recommendation)
+              <span class="badge bg-success">Kontrak Di Perpanjang</span>
+            @else
+              <span class="badge bg-danger">Kontrak tidak diperpanjang</span>
+            @endif
+          @else
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+              data-bs-target="#modal-form-add-kpi">
+              <i class="bi bi-plus-lg"></i>
+              KPI
+            </button>
+            @include('pages.employee.personal-data.form.kpi.modal-create')
+          @endif
+        </td>
+        <td>
+          @php
+            // Fetch the latest contract for the employee
+            $latestContract = $contract
+                ->where('employee_id', $contract->employee->id)
+                ->orderBy('start_date', 'desc')
+                ->first();
+          @endphp
+
+          @if ($latestContract && $latestContract->start_date >= now())
+            {{-- @if ($latestContract->start_date > now()) --}}
+            <p>Kontrak diperbarui</p>
+          @else
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+              data-bs-target="#modal-form-add-contract">
+              <i class="bi bi-plus-lg"></i>
+              Kontrak
+            </button>
+            @include('pages.employee.personal-data.form.employee-contract.modal-create')
+          @endif
+
+        </td>
 
       </tr>
     @empty
       <tr>
-        <td class="text-center" colspan="10">No data available in table</td>
+        <td class="text-center" colspan="12">No data available in table</td>
       </tr>
     @endforelse
   </tbody>

@@ -15,7 +15,7 @@
           <div class="row justify-content-center">
             <div class="col-md-11"> <!-- Make form smaller with col-md-6 and center it -->
 
-              <input type="hidden" name="employee_id" value="{{ $employee->id }}">
+              <input type="hidden" name="employee_id" value="{{ $employee->id ?? $contract->employee->id }}">
 
               <div class="row">
                 <div class="my-2">
@@ -33,7 +33,8 @@
 
                   <div class="my-2">
                     <label class="form-label" for="nik_employee">NIK Karyawan <code>*</code></label>
-                    <input id="nik_employee" name="nik_employee" value="{{ $employee->nik }}"
+                    <input id="nik_employee" name="nik_employee"
+                      value="{{ $employee->nik ?? $contract->employee->nik }}"
                       class="form-control @error('nik_employee') is-invalid @enderror" readonly>
                     @error('nik_employee')
                       <a style="color: red"><small>{{ $message }}</small></a>

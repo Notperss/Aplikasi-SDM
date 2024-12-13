@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Employee\PersonalData;
 
 use Carbon\Carbon;
+use App\Exports\DutyExport;
 use Illuminate\Http\Request;
 use App\Models\Employee\Employee;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\Employee\PersonalData\EmployeeDuty;
@@ -18,7 +20,7 @@ class EmployeeDutyController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $employeeDuty = EmployeeDuty::with('employee')
             ->when(! Auth::user()->hasRole('super-admin'), function ($query) {
@@ -27,6 +29,10 @@ class EmployeeDutyController extends Controller
                 });
             })
             ->latest();
+
+        if ($request->filled(['start_date', 'end_date'])) {
+            $employeeDuty->whereBetween('end_date', [$request->start_date, $request->end_date]);
+        }
 
         if (request()->ajax()) {
             return DataTables::of($employeeDuty)
@@ -99,6 +105,7 @@ class EmployeeDutyController extends Controller
         $request->validate([
             'name_duty' => 'required|string|max:255',
             'start_date' => 'required|date',
+            'end_date' => 'nullable|date',
             'location' => 'required|string|max:255',
             'file' => 'nullable|file|mimes:pdf',
             'employees' => $request->has('employees') ? 'required|array' : 'nullable',
@@ -134,6 +141,7 @@ class EmployeeDutyController extends Controller
                         'employee_id' => $employeeId, // Use employee ID
                         'name_duty' => $request->name_duty,
                         'start_date' => $request->start_date,
+                        'end_date' => $request->end_date,
                         'location' => $request->location,
                         'description' => $request->description,
                         'file' => $file_path, // Attach file path if the certificate is uploaded
@@ -145,6 +153,7 @@ class EmployeeDutyController extends Controller
                     'employee_id' => $request->employee_id, // Use employee ID
                     'name_duty' => $request->name_duty,
                     'start_date' => $request->start_date,
+                    'end_date' => $request->end_date,
                     'location' => $request->location,
                     'description' => $request->description,
                     'file' => $file_path, // Attach file path if the certificate is uploaded
@@ -195,6 +204,7 @@ class EmployeeDutyController extends Controller
         $request->validate([
             'name_duty' => 'required|string|max:255',
             'start_date' => 'required|date',
+            'end_date' => 'nullable|date',
             'location' => 'required|string|max:255',
             'file' => 'nullable|file|mimes:pdf',
         ], [
@@ -241,5 +251,15 @@ class EmployeeDutyController extends Controller
         $employeeDuty->delete();
 
         return redirect()->back()->with('success', 'Data has been deleted successfully!.');
+    }
+
+    public function dutyExport(Request $request)
+    {
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
+
+        return Excel::download(new DutyExport($startDate, $endDate), 'DinasExport.xlsx');
+
+
     }
 }

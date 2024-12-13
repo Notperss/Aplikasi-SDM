@@ -1,6 +1,6 @@
 <table>
   <thead>
-    {{-- <tr>
+    <tr>
       <th colspan="13" scope="col" style="text-align: center;">SPKWT BERAKHIR</th>
     </tr>
 
@@ -10,7 +10,7 @@
         {{ Carbon\Carbon::parse($selectedYear . '-' . $selectedMonth . '-01')->translatedFormat('F') }}
         {{ $selectedYear }}
       </th>
-    </tr> --}}
+    </tr>
 
     <tr>
       <th scope="col" style="background: #7ae4fe; font-weight:bold;width: 5;text-align: center;">#</th>
@@ -30,22 +30,21 @@
       </th>
       <th scope="col" style="background: #7ae4fe; font-weight:bold; width: 20;text-align: center;">TANGGAL AKHIR
       </th>
-      <th scope="col" style="background: #7ae4fe; font-weight:bold; width: 20;text-align: center;">KPI
-      </th>
+      <th scope="col" style="background: #7ae4fe; font-weight:bold; width: 30;text-align: center;">AKUMULASI MASA
+        KERJA</th>
+      <th scope="col" style="background: #7ae4fe; font-weight:bold; width: 30;text-align: center;">KPI</th>
       <th scope="col" style="background: #7ae4fe; font-weight:bold; width: 30;text-align: center;">REKOMENDASI
         KONTRAK</th>
-      {{-- <th scope="col" style="background: #7ae4fe; font-weight:bold; width: 30;text-align: center;">AKUMULASI MASA
-        KERJA</th> --}}
     </tr>
   </thead>
   <tbody>
     @php
-      $contractsByDivision = $contracts->groupBy('employee.position.division.name');
+      $contractsByDivision = $contractsExpired->groupBy('employee.position.division.name');
     @endphp
 
     @foreach ($contractsByDivision as $division => $contracts)
       <tr>
-        <td colspan="15" style="font-weight: 600" class="float-left">{{ $loop->iteration }}.
+        <td colspan="13" style="font-weight: 600" class="float-left">{{ $loop->iteration }}.
           {{ $division ?? 'Unknown Division' }}</td>
       </tr>
       @foreach ($contracts as $contract)
@@ -62,18 +61,18 @@
                 $ageMonths = $dob->diffInMonths($now) % 12;
             }
 
-            // $accumulatedDurationInMonths = $contract
-            //     ->where('employee_id', $contract->employee->id)
-            //     ->whereYear('end_date', '<=', $selectedYear) // Include only contracts up to the current one
-            //     ->whereMonth('end_date', '<=', $selectedMonth) // Include only contracts up to the current one
-            //     ->sum('duration');
+            $accumulatedDurationInMonths = $contract
+                ->where('employee_id', $contract->employee->id)
+                ->whereYear('end_date', '<=', $selectedYear) // Include only contracts up to the current one
+                ->whereMonth('end_date', '<=', $selectedMonth) // Include only contracts up to the current one
+                ->sum('duration');
 
             // Convert months to years and months
-            // $years = intdiv($accumulatedDurationInMonths, 12); // Full years
-            // $months = $accumulatedDurationInMonths % 12; // Remaining months
+            $years = intdiv($accumulatedDurationInMonths, 12); // Full years
+            $months = $accumulatedDurationInMonths % 12; // Remaining months
 
-            // // Format as "X Tahun Y Bulan"
-            // $accumulatedDuration = ($years > 0 ? $years . ' Tahun ' : '') . ($months > 0 ? $months . ' Bulan' : '');
+            // Format as "X Tahun Y Bulan"
+            $accumulatedDuration = ($years > 0 ? $years . ' Tahun ' : '') . ($months > 0 ? $months . ' Bulan' : '');
 
           @endphp
           <td>{{ $contract->employee->name }}</td>
@@ -89,6 +88,7 @@
             {{ Carbon\Carbon::parse($contract->start_date)->translatedFormat('d-m-Y') }}</td>
           <td>
             {{ Carbon\Carbon::parse($contract->end_date)->translatedFormat('d-m-Y') }}</td>
+          <td>{{ $accumulatedDuration }}</td>
           <td>{{ $contract->contractKpi->grade ?? '-' }}</td>
           @if (isset($contract->contractKpi->contract_recommendation) && $contract->contractKpi->contract_recommendation == 1)
             <td style="background-color: #86e07b"> Kontrak Diperpanjang</td>
@@ -97,8 +97,6 @@
           @else
             <td>-</td>
           @endif
-
-
         </tr>
       @endforeach
     @endforeach

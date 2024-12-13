@@ -142,13 +142,13 @@
             <td style="border: 1px solid #ddd;">
 
               {{ Carbon\Carbon::parse($career->start_date)->translatedFormat('d M Y') }} -
-              @if ($career->end_date)
-                {{ Carbon\Carbon::parse($career->end_date)->translatedFormat('l, d F Y') }}
-              @else
-                Sekarang
+
+              @if ($career->position_id)
+                {{ $career->end_date ? Carbon\Carbon::parse($career->end_date)->translatedFormat('l, d F Y') : 'Sekarang' }}
               @endif
+
             </td>
-            <td style="border: 1px solid #ddd;">{{ $career->position->name ?? '' }}</td>
+            <td style="border: 1px solid #ddd;">{{ $career->position->name ?? ($career->type ?? '') }}</td>
             <td style="border: 1px solid #ddd;">{{ $career->placement ?? '' }}</td>
           </tr>
         @endforeach

@@ -25,7 +25,7 @@ class UpdateTrainingAttendedRequest extends FormRequest
             // 'employee_id' => 'required|exists:employees,id',
             'training_name' => 'required|string|max:255',
             'organizer_name' => 'required|string|max:255',
-            'year' => 'required|digits:4|integer|min:1900|max:' . date('Y'),
+            // 'year' => 'required|digits:4|integer|min:1900|max:' . date('Y'),
             'city' => 'nullable|max:255',
             'file_sertifikat' => 'nullable|mimes:pdf,jpeg,jpg,png|max:2048',
         ];

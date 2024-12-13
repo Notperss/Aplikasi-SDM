@@ -2,6 +2,7 @@
 
 namespace App\Models\Employee;
 
+use App\Models\Employee\PersonalData\EmployeeKpi;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -33,5 +34,9 @@ class Contract extends Model
     public function employeeNik()
     {
         return $this->belongsTo(Employee::class, 'nik_employee', 'nik');
+    }
+    public function contractKpi()
+    {
+        return $this->hasOne(EmployeeKpi::class);
     }
 }

@@ -15,7 +15,7 @@ class EmployeeTrainingAttended extends Model
         'employee_id',
         'training_name',
         'organizer_name',
-        'year',
+        'training_date',
         'city',
         'file_sertifikat',
     ];

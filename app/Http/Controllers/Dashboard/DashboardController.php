@@ -27,7 +27,7 @@ class DashboardController extends Controller
 
 
         // $nextMonthStart = Carbon::now()->startOfMonth()->addMonth(); // Start of next month
-        $nextMonthEnd = Carbon::now()->endOfMonth()->addMonth(); // End of next month
+        $nextMonthEnd = Carbon::now()->endOfMonth()->addMonths(2); // End of next month
         $today = Carbon::now();
 
         $contracts = Contract::when(! $isSuperAdmin, function ($query) use ($companyId) {
@@ -40,7 +40,7 @@ class DashboardController extends Controller
         $contractsExpired = Contract::with('employee')->when(! $isSuperAdmin, function ($query) use ($companyId) {
             $query->where('company_id', $companyId);
         })
-            // ->where('end_date', '<', $today) // Only contracts with an end date before today
+            ->where('end_date', '<', $today) // Only contracts with an end date before today
             ->whereYear('end_date', Carbon::now()->year)
             ->whereMonth('end_date', Carbon::now()->month)
             ->whereHas('employee', function ($query) {
@@ -65,17 +65,26 @@ class DashboardController extends Controller
         // Fetch employee data per month for the current year
         for ($month = 1; $month <= 12; $month++) {
             $employeeActiveData[] = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
-                $query->where('company_id', $companyId);
-            })->where('employee_status', 'AKTIF')
-                ->whereYear('date_joining', $currentYear)
-                ->whereMonth('date_joining', $month)
+                $query->where('employees.company_id', $companyId);
+            })->where('employees.employee_status', 'AKTIF')->join('positions', 'employees.position_id', '=', 'positions.id')
+                ->whereYear('employees.date_joining', $currentYear)
+                ->whereMonth('employees.date_joining', $month)
                 ->count();
+
             $employeeNonActiveData[] = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
-                $query->where('company_id', $companyId);
-            })->where('employee_status', '!=', 'AKTIF')
-                ->whereYear('date_joining', $currentYear)
-                ->whereMonth('date_joining', $month)
+                $query->where('employees.company_id', $companyId);
+            })->where('employees.employee_status', '!=', 'AKTIF')->join('positions', 'employees.position_id', '=', 'positions.id')
+                ->whereYear('employees.date_joining', $currentYear)
+                ->whereMonth('employees.date_joining', $month)
                 ->count();
+
+
+            // $employeeNonActiveData[] = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
+            //     $query->where('company_id', $companyId);
+            // })->where('employee_status', '!=', 'AKTIF')
+            //     ->whereYear('date_joining', $currentYear)
+            //     ->whereMonth('date_joining', $month)
+            //     ->count();
         }
 
         return view('pages.dashboard.index', compact(
@@ -141,7 +150,13 @@ class DashboardController extends Controller
     {
         $divisionId = Division::findOrFail($id);
 
-        $positions = Position::wherehas('employee')->where('division_id', $id)->get();
+        $positions = Position::whereHas('employee', function ($query) {
+            $query
+                ->where('employee_status', 'AKTIF')
+                ->when(! Auth::user()->hasRole('super-admin'), function ($query) {
+                    $query->where('company_id', Auth::user()->company_id);
+                });
+        })->where('division_id', $id)->get();
 
         return view('pages.dashboard.employeesDivision', compact('positions', 'divisionId'));
     }

@@ -4,18 +4,20 @@ namespace App\Http\Controllers\Recruitment;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\Approval\Approval;
 use App\Models\Position\Position;
 use App\Models\WorkUnit\Division;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Recruitment\Candidate;
 use App\Models\Recruitment\Selection;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\Recruitment\HistorySelection;
 use App\Models\Recruitment\SelectedCandidate;
 use App\Http\Requests\Recruitment\StoreSelectedCandidateRequest;
 use App\Http\Requests\Recruitment\UpdateSelectedCandidateRequest;
-use App\Models\Recruitment\HistorySelection;
 
 class SelectionController extends Controller
 {
@@ -575,32 +577,46 @@ class SelectionController extends Controller
 
     public function updateApprovalStatus(Request $request, $id)
     {
+        $request->validate([
+            'is_approve' => 'required|in:0,1,2,3',
+        ]);
+
         $selection = Selection::findOrFail($id);
 
-        if ($request->has('is_approve')) {
+        DB::transaction(function () use ($selection, $request) {
             $selection->is_approve = $request->input('is_approve');
             $selection->save();
 
-            if ($selection->is_approve == 0) {
-                // Reset selected candidates and their main candidate records if rejected
+            if ($selection->is_approve == 3) {
                 foreach ($selection->selectedCandidates as $selectedCandidate) {
                     if ($selectedCandidate->position_id) {
-                        $selectedCandidate->is_approve = 0;
-                        $selectedCandidate->is_hire = 0;
-                        $selectedCandidate->save();
+                        Approval::create([
+                            'selected_candidate_id' => $selectedCandidate->id,
+                            'employee_career_id' => null,
+                            'position_id' => $selectedCandidate->position_id,
+                            'is_approve' => null,
+                            'description' => 'Karyawan Baru',
+                        ]);
                     }
+                }
+            } elseif ($selection->is_approve == 0) {
+                foreach ($selection->selectedCandidates as $selectedCandidate) {
+                    $selectedCandidate->update([
+                        'is_approve' => 0,
+                        'is_hire' => 0,
+                    ]);
 
                     Candidate::where('id', $selectedCandidate->candidate_id)
                         ->update(['is_selection' => 0, 'is_hire' => 0]);
                 }
             }
+        });
 
-            $message = $selection->is_approve ? 'Selection approved.' : 'Selection rejected.';
-            return redirect()->back()->with('success', $message);
-        }
+        $message = $selection->is_approve ? 'Selection successfully approved.' : 'Selection successfully rejected.';
 
-        return redirect()->back()->with('error', 'Invalid request. Approval status is missing.');
+        return redirect()->back()->with('success', $message);
     }
+
 
     public function getCandidateHistory($id)
     {

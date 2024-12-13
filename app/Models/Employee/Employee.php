@@ -2,6 +2,7 @@
 
 namespace App\Models\Employee;
 
+use App\Models\Approval\Approval;
 use App\Models\Position\Position;
 use App\Models\Recruitment\Candidate;
 use Illuminate\Database\Eloquent\Model;
@@ -70,6 +71,7 @@ class Employee extends Model
         'ethnic', //
         'blood_type',//
         'candidate_from', //
+        'reference', //
 
         'marital_status', //
 
@@ -151,7 +153,7 @@ class Employee extends Model
     }
     public function TrainingAttendeds()
     {
-        return $this->hasMany(EmployeeTrainingAttended::class)->orderBy('year', 'desc');
+        return $this->hasMany(EmployeeTrainingAttended::class)->orderBy('training_date', 'desc');
     }
     public function Skills()
     {
@@ -180,7 +182,7 @@ class Employee extends Model
     }
     public function employeeCareers()
     {
-        return $this->hasMany(EmployeeCareer::class)->orderBy('is_approve', 'desc')->latest();
+        return $this->hasMany(EmployeeCareer::class)->orderBy('is_approve', 'asc')->latest();
     }
     public function employeeAwards()
     {
@@ -189,6 +191,11 @@ class Employee extends Model
     public function employeeAttendances()
     {
         return $this->hasMany(Attendance::class, 'nik', 'nik');
+    }
+
+    public function approvals()
+    {
+        return $this->hasMany(Approval::class);
     }
 
     public function getPhotoUrlAttribute()

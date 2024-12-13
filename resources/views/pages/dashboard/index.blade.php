@@ -193,6 +193,219 @@
     </div>
   </div>
 
+  <div class="row">
+    <h5>Persetujuan Pending</h5>
+    <div class="col-6 col-lg-2 col-md-6">
+      <div class="card">
+        <div class="card-body px-4 py-4-5">
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
+              <div class=" mb-2" style="background-color: #fff">
+
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              <h6 class="text-muted font-semibold">Karyawan Baru</h6>
+              <h4 class="font-extrabold mb-0">
+                @role('super-admin')
+                  {{ DB::table('approvals')->whereNotNull('selected_candidate_id')->whereNull('is_approve')->count() }}
+                @else
+                  {{ DB::table('approvals')->whereNotNull('selected_candidate_id')->whereNull('is_approve')->where('company_id', auth()->user()->company_id)->count() }}
+                @endrole
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6">
+      <div class="card">
+        <div class="card-body px-4 py-4-5">
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
+              <div class=" mb-2" style="background-color: #953b3bcc">
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              <h6 class="text-muted font-semibold">Buka Verifikasi</h6>
+              <h4 class="font-extrabold mb-0">
+                @role('super-admin')
+                  {{ DB::table('approvals')->whereNotNull('employee_id')->whereNull('is_approve')->count() }}
+                @else
+                  {{ DB::table('approvals')->whereNotNull('employee_id')->whereNull('is_approve')->where('company_id', auth()->user()->company_id)->count() }}
+                @endrole
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6">
+      <div class="card">
+        <div class="card-body px-4 py-4-5">
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
+              <div class=" mb-2" style="background-color: #314299ec">
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              <h6 class="text-muted font-semibold">Promosi</h6>
+              <h4 class="font-extrabold mb-0">
+                @role('super-admin')
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'PROMOSI')->count() }}
+                @else
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'PROMOSI')->where('company_id', auth()->user()->company_id)->count() }}
+                @endrole
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6">
+      <div class="card">
+        <div class="card-body px-4 py-4-5">
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
+              <div class=" mb-2" style="background-color: #57a042cc">
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              <h6 class="text-muted font-semibold">Demosi</h6>
+              <h4 class="font-extrabold mb-0">
+                @role('super-admin')
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'DEMOSI')->count() }}
+                @else
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'DEMOSI')->where('company_id', auth()->user()->company_id)->count() }}
+                @endrole
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6">
+      <div class="card">
+        <div class="card-body px-4 py-4-5">
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
+              <div class=" mb-2" style="background-color: #7b20a2cc">
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              <h6 class="text-muted font-semibold">Mutasi</h6>
+              <h4 class="font-extrabold mb-0">
+                @role('super-admin')
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'MUTASI')->count() }}
+                @else
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'MUTASI')->where('company_id', auth()->user()->company_id)->count() }}
+                @endrole
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6">
+      <div class="card">
+        <div class="card-body px-4 py-4-5">
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
+              <div class=" mb-2" style="background-color: #b4237fcc">
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              <h6 class="text-muted font-semibold">Rotasi</h6>
+              <h4 class="font-extrabold mb-0">
+                @role('super-admin')
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'ROTASI')->count() }}
+                @else
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'ROTASI')->where('company_id', auth()->user()->company_id)->count() }}
+                @endrole
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6">
+      <div class="card">
+        <div class="card-body px-4 py-4-5">
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
+              <div class=" mb-2" style="background-color: #b4a623cc">
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              <h6 class="text-muted font-semibold">Pensiun</h6>
+              <h4 class="font-extrabold mb-0">
+                @role('super-admin')
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'PENSIUN')->count() }}
+                @else
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'PENSIUN')->where('company_id', auth()->user()->company_id)->count() }}
+                @endrole
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6">
+      <div class="card">
+        <div class="card-body px-4 py-4-5">
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
+              <div class=" mb-2" style="background-color: #2b0f70cc">
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              <h6 class="text-muted font-semibold">Resign</h6>
+              <h4 class="font-extrabold mb-0">
+                @role('super-admin')
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'RESIGN')->count() }}
+                @else
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'RESIGN')->where('company_id', auth()->user()->company_id)->count() }}
+                @endrole
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6">
+      <div class="card">
+        <div class="card-body px-4 py-4-5">
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
+              <div class=" mb-2" style="background-color: #8e0321cc">
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              <h6 class="text-muted font-semibold">Non-Aktif</h6>
+              <h4 class="font-extrabold mb-0">
+                @role('super-admin')
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'NON-AKTIF')->count() }}
+                @else
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'NON-AKTIF')->where('company_id', auth()->user()->company_id)->count() }}
+                @endrole
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
   @foreach ($companies as $company)
     <div class="row">
       <h5>Karyawan {{ $company->name }}</h5>
@@ -205,17 +418,23 @@
               <div class="row">
                 <div class="col-md-12">
                   @php
-                    $positionsWithEmployeeCount = $division->positions
-                        ->filter(function ($position) {
-                            return $position->employee !== null;
+                    $positionsWithActiveEmployeeCount = $division
+                        ->positions()
+                        ->whereHas('employee', function ($query) {
+                            $query
+                                ->where('employee_status', 'AKTIF')
+                                ->when(!Auth::user()->hasRole('super-admin'), function ($query) {
+                                    $query->where('company_id', Auth::user()->company_id);
+                                });
                         })
                         ->count();
+
                   @endphp
                   <h6 class="text-muted font-semibold">
                     <a href="{{ route('getDivisionEmployee', $division->id) }}"> {{ $division->code }}</a>
                   </h6>
                   <h4 class="font-extrabold mb-0 float-end">
-                    {{ $positionsWithEmployeeCount }}
+                    {{ $positionsWithActiveEmployeeCount }}
                   </h4>
                 </div>
               </div>
@@ -309,78 +528,95 @@
           <h4>Kontrak Berakhir Bulan Depan</h4>
         </div>
         <div class="card-body" style="word-break: break-all">
-          <div class="container">
-            <div class="table-responsive">
-              <table class="table" id="table3" style="font-size: 80%">
-                <thead>
+          <div class="table-responsive">
+            <table class="table" id="table3" style="font-size: 80%">
+              <thead>
+                <tr>
+                  <th scope="col" style="width: 5%">#</th>
+                  <th scope="col"></th>
+                  <th scope="col">NIK</th>
+                  <th scope="col">Nama</th>
+                  <th scope="col">No. Kontrak</th>
+                  <th scope="col">Tgl Mulai</th>
+                  <th scope="col">Tgl Berakhir</th>
+                  <th scope="col">Durasi</th>
+                  <th scope="col">Kontrak Ke- </th>
+                  <th scope="col">Divisi</th>
+                  <th scope="col" class="text-center">KPI</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach ($contractsIncoming as $contract)
                   <tr>
-                    <th scope="col" style="width: 5%">#</th>
-                    <th scope="col"></th>
-                    <th scope="col">NIK</th>
-                    <th scope="col">Nama</th>
-                    <th scope="col">No. Kontrak</th>
-                    <th scope="col">Tgl Mulai</th>
-                    <th scope="col">Tgl Berakhir</th>
-                    <th scope="col">Durasi</th>
-                    <th scope="col">Kontrak Ke- </th>
-                    <th scope="col">Divisi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach ($contractsIncoming as $contract)
-                    <tr>
-                      <td>{{ $loop->iteration }}</td>
+                    <td>{{ $loop->iteration }}</td>
 
-                      <td>
-                        @if ($contract->employee->photo)
-                          <div class="fixed-frame">
-                            <img src="{{ asset('storage/' . $contract->employee->photo) }}" data-fancybox
-                              alt="Icon User" class="framed-image" style="cursor: pointer">
-                          </div>
+                    <td>
+                      @if ($contract->employee->photo)
+                        <div class="fixed-frame">
+                          <img src="{{ asset('storage/' . $contract->employee->photo) }}" data-fancybox
+                            alt="Icon User" class="framed-image" style="cursor: pointer">
+                        </div>
+                      @else
+                        <div class="fixed-frame">
+                          No Image
+                        </div>
+                      @endif
+                    </td>
+
+                    <td>
+                      {{ $contract->employee->nik ?? 'N/A' }}
+                    </td>
+
+                    <td>
+                      {{ $contract->employee->name ?? 'N/A' }}
+                    </td>
+
+                    <td>
+                      {{ $contract->contract_number ?? 'N/A' }}
+                    </td>
+
+                    <td>
+                      {{ Carbon\Carbon::parse($contract->start_date)->translatedFormat('d-m-Y') ?? 'N/A' }}
+                    </td>
+
+                    <td>
+                      {{ Carbon\Carbon::parse($contract->end_date)->translatedFormat('d-m-Y') ?? 'N/A' }}
+                    </td>
+
+                    <td>
+                      {{ $contract->duration ?? 'N/A' }} Bulan
+                    </td>
+
+                    <td>
+                      {{ $contract->contract_sequence_number ?? 'N/A' }}
+                    </td>
+
+                    <td>
+                      {{ $contract->employee->position->division->code ?? 'N/A' }}
+                    </td>
+
+                    <td class="text-center">
+                      @if ($contract->contractKpi)
+                        {{ $contract->contractKpi->grade }} <br>
+                        @if ($contract->contractKpi->contract_recommendation)
+                          <span class="badge bg-success">Kontrak Di Perpanjang</span>
                         @else
-                          <div class="fixed-frame">
-                            No Image
-                          </div>
+                          <span class="badge bg-danger">Kontrak tidak diperpanjang</span>
                         @endif
-                      </td>
+                      @else
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                          data-bs-target="#modal-form-add-kpi">
+                          <i class="bi bi-plus-lg"></i>
+                          KPI
+                        </button>
+                        @include('pages.employee.personal-data.form.kpi.modal-create')
+                      @endif
+                    </td>
 
-                      <td>
-                        {{ $contract->employee->nik ?? 'N/A' }}
-                      </td>
-
-                      <td>
-                        {{ $contract->employee->name ?? 'N/A' }}
-                      </td>
-
-                      <td>
-                        {{ $contract->contract_number ?? 'N/A' }}
-                      </td>
-
-                      <td>
-                        {{ Carbon\Carbon::parse($contract->start_date)->translatedFormat('d-m-Y') ?? 'N/A' }}
-                      </td>
-
-                      <td>
-                        {{ Carbon\Carbon::parse($contract->end_date)->translatedFormat('d-m-Y') ?? 'N/A' }}
-                      </td>
-
-                      <td>
-                        {{ $contract->duration ?? 'N/A' }} Bulan
-                      </td>
-
-                      <td>
-                        {{ $contract->contract_sequence_number ?? 'N/A' }}
-                      </td>
-
-                      <td>
-                        {{ $contract->employee->position->division->code ?? 'N/A' }}
-                      </td>
-
-                    </tr>
-                  @endforeach
-                </tbody>
-              </table>
-            </div>
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

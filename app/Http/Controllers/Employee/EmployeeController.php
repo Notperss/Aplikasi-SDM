@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Employee;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
+use App\Exports\EmployeeExport;
 use App\Exports\AttendanceExport;
+use App\Models\Approval\Approval;
 use App\Models\Employee\Employee;
 use App\Models\Position\Position;
 use Illuminate\Support\Facades\DB;
@@ -37,11 +39,26 @@ class EmployeeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $employees = Employee::with('employeeCategory')->when(! Auth::user()->hasRole('super-admin'), function ($query) {
-            $query->where('company_id', Auth::user()->company_id);
-        })->where('employee_status', 'AKTIF')->whereNotNull('nik')->latest();
+        $employees = Employee::with('employeeCategory')
+            ->when(! Auth::user()->hasRole('super-admin'), function ($query) {
+                $query->where('company_id', Auth::user()->company_id);
+            })
+            ->when($request->filled(['employee_status']), function ($query) use ($request) {
+                if ($request->employee_status === 'NONAKTIF') {
+                    $query->where('employee_status', '!=', 'AKTIF');
+                } else {
+                    $query->where('employee_status', $request->employee_status);
+                }
+            })
+            ->whereNotNull('nik')
+            ->when($request->filled(['start_date', 'end_date']), function ($query) use ($request) {
+                $query->whereBetween('date_joining', [$request->start_date, $request->end_date]);
+            })
+            ->latest();
+
+
 
         // if (! Auth::user()->hasRole('super-admin')) {
         //     $employees->where('company_id', Auth::user()->company_id);
@@ -51,26 +68,60 @@ class EmployeeController extends Controller
             return DataTables::of($employees)
                 ->addIndexColumn()
                 ->addColumn('action', function ($item) {
+                    $verifiedRoute = route('employee.verified', $item);
+                    $unverifiedRoute = route('employee.unverified', $item);
+                    $showRoute = route('employee.show', $item);
+                    $deleteRoute = route('employee.destroy', $item);
+
+                    $isVerified = $item->is_verified;
+                    $deleteFormId = "deleteForm_{$item->id}";
+                    $canVerify = auth()->user()->hasAnyRole(['super-admin', 'manager', 'ka-dep']); // Check user roles
+    
                     return '
-                <div class="btn-group mb-1">
-                    <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="bi bi-three-dots-vertical"></i>
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        
-                            <a class="dropdown-item" href="' . route('employee.show', $item) . '">' . ($item->is_verified ? 'Lihat' : 'Edit') . '</a>
-                            <button class="dropdown-item" onclick=" showSweetAlert(' . $item->id . ') " ' . ($item->is_verified ? 'hidden' : '') . '>Hapus</button>
-                            <form id="deleteForm_' . $item->id . '"
-                            action="' . route('employee.destroy', $item->id) . '" method="POST">
-                            ' . method_field('delete') . csrf_field() . '
-                            </form>
-                        </div>
-                    </div>
+        <div class="btn-group mb-1">
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    ' . ($canVerify ? '
+                    <!-- Verified Form -->
+                    <form id="verifiedForm_' . $item->id . '" action="' . $verifiedRoute . '" method="POST" style="display: none;">
+                        ' . csrf_field() . method_field('PATCH') . '
+                    </form>
+                    <a class="dropdown-item" href="javascript:void(0);"
+                        onclick="document.getElementById(\'verifiedForm_' . $item->id . '\').submit();"
+                        ' . ($isVerified ? 'hidden' : '') . '>Verified</a>
+                    ' : '') . '
+
+                    <!-- Unverified Form -->
+                    <form id="unverifiedForm_' . $item->id . '" action="' . $unverifiedRoute . '" method="POST" style="display: none;">
+                        ' . csrf_field() . method_field('PATCH') . '
+                    </form>
+                    <a class="dropdown-item" href="javascript:void(0);"
+                        onclick="document.getElementById(\'unverifiedForm_' . $item->id . '\').submit();"
+                        ' . (! $isVerified
+                        ? 'hidden'
+                        : ($item->approvals->where('description', 'Buka Verifikasi')->whereNull('is_approve')->first()
+                            ? 'hidden'
+                            : '')) . '
+                        >Unverified</a>
+                    
+                    <!-- View/Edit -->
+                    <a class="dropdown-item" href="' . $showRoute . '">' . ($isVerified ? 'Lihat' : 'Edit') . '</a>
+
+                    <!-- Delete -->
+                    ' . (! $isVerified ? '
+                    <button class="dropdown-item" onclick="showSweetAlert(' . $item->id . ')">Hapus</button>
+                    <form id="' . $deleteFormId . '" action="' . $deleteRoute . '" method="POST" style="display: none;">
+                        ' . csrf_field() . method_field('DELETE') . '
+                    </form>' : '') . '
                 </div>
-                    ';
-                })->editColumn('photo', function ($item) {
+            </div>
+        </div>';
+                })
+                ->editColumn('photo', function ($item) {
                     $mainPhoto = $item->employeePhotos->where('main_photo', true)->first();
 
                     if ($mainPhoto) {
@@ -91,13 +142,25 @@ class EmployeeController extends Controller
                 })->editColumn('division', function ($item) {
                     return $item->position->division->name ?? '-';
                 })->editColumn('is_verified', function ($item) {
+                    // Initialize variables
+                    $verified = '-';
+                    $isRequest = '';
+
+                    // Determine verification badge
                     if ($item->is_verified == 0) {
-                        return '<span class="badge bg-danger">Unverified</span>';
+                        $verified = '<span class="badge bg-danger">Unverified</span> <br>';
                     } elseif ($item->is_verified == 1) {
-                        return '<span class="badge bg-success">Verified</span>';
-                    } else {
-                        return '-';
+                        $verified = '<span class="badge bg-success">Verified</span> <br>';
                     }
+
+                    // Check for 'Buka Verifikasi' approval request
+                    if ($item->approvals->where('description', 'Buka Verifikasi')->whereNull('is_approve')->first()) {
+                        $isRequest = '<span class="badge bg-secondary">Request Pending</span>';
+                    }
+
+                    // Return the concatenated result
+                    return $verified . ' ' . $isRequest;
+
                 })
                 ->rawColumns(['action', 'photo', 'is_verified', 'employeeCategory'])
                 ->toJson();
@@ -132,7 +195,7 @@ class EmployeeController extends Controller
      */
     public function store(StoreEmployeeRequest $request)
     {
-        $data = $request->except('is_hire', 'position_id');
+        $data = $request->except('is_hire', );
 
         // dd($request->position_id);
 
@@ -171,21 +234,38 @@ class EmployeeController extends Controller
         $employee = Employee::create($employeeData);
 
         if ($employee) {
+            Approval::create([
+                'company_id' => $employee->company_id,
+
+                // 'selected_candidate_id' =>null,
+                // 'employee_career_id' => null,
+                'employee_id' => $employee->id,
+                'position_id' => $employee->position_id,
+                'description' => 'Karyawan Baru',
+                'is_approve' => null,
+            ]);
+        }
+
+        if ($employee) {
             $careerData = [
                 'employee_id' => $employee->id,
                 'position_id' => $request->position_id ?? null,
                 'start_date' => $employee->date_joining ?? now(),
                 'placement' => $employee->position->division->name ?? null,
                 'type' => null,
+                'is_approve' => 1,
                 'description' => 'Karyawan Baru' ?? null,
             ];
 
             $employee->employeeCareers()->create($careerData);
 
-            $employee->employeePhotos()->create([
-                'file_path' => $data['photo'],
-                'main_photo' => true,
-            ]);
+            if (isset($data['photo'])) {
+                $employee->employeePhotos()->create([
+                    'file_path' => $data['photo'],
+                    'main_photo' => true,
+                ]);
+            }
+
         }
 
 
@@ -327,7 +407,7 @@ class EmployeeController extends Controller
             Employee::create([
                 // "nik" => 000000,
 
-                'position_id' => null,
+                'position_id' => $selectedCandidate->position_id,
                 'date_joining' => now(),
                 'candidate_id' => $candidate->id,
                 "company_id" => $candidate->company_id ?? null,
@@ -416,14 +496,17 @@ class EmployeeController extends Controller
                 'placement' => $selectedCandidate->position->division->name ?? null,
                 'type' => null,
                 'description' => 'Karyawan Baru' ?? null,
+                'is_approve' => true,
             ];
 
             $candidate->employee->employeeCareers()->create($careerData);
 
-            $candidate->employee->employeePhotos()->create([
-                'file_path' => $candidate->photo,
-                'main_photo' => true,
-            ]);
+            if ($candidate->photo) {
+                $candidate->employee->employeePhotos()->create([
+                    'file_path' => $candidate->photo,
+                    'main_photo' => true,
+                ]);
+            }
 
             $candidate->employee->update($data);
 
@@ -485,6 +568,48 @@ class EmployeeController extends Controller
             new AttendanceExport,
             'absensi_' . request('name', 'unknown') . '_' . request('year', now()->year) . '_' . request('month', now()->month) . '.xlsx'
         );
+    }
+
+    public function verify(Employee $employee, Request $request)
+    {
+        if ($employee->is_verified) {
+            return redirect()->back()->with('error', 'Employee is already verified.');
+        }
+
+        $employee->update(['is_verified' => true]);
+
+        return redirect()->back()->with('success', 'Employee has been successfully verified.');
+    }
+
+    public function unverified(Employee $employee, Request $request)
+    {
+        if (! $employee->is_verified) {
+            return redirect()->back()->with('error', 'Employee is already verified.');
+        }
+
+        // $employee->update(['is_verified' => false]);
+
+        if ($employee) {
+            Approval::create([
+                // 'selected_candidate_id' =>null,
+                'company_id' => $employee->company_id,
+                'employee_id' => $employee->id,
+                'position_id' => $employee->position_id,
+                'description' => 'Buka Verifikasi',
+                'is_approve' => null,
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Request to unverified employee has been successfully submitted.');
+    }
+
+    public function exportEmployees(Request $request)
+    {
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+        $employeeStatus = $request->get('employee_status');
+
+        return Excel::download(new EmployeeExport($startDate, $endDate, $employeeStatus), 'employees.xlsx');
     }
 
     // public function uploadPhoto(Request $request)

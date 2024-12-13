@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Employee\PersonalData;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\Approval\Approval;
 use App\Models\Employee\Employee;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -72,7 +73,18 @@ class EmployeeCareerController extends Controller
         //     'position_id' => $request->position_id,
         // ]);
 
-        EmployeeCareer::create($data);
+        $employeeCareer = EmployeeCareer::create($data);
+
+        if ($employeeCareer) {
+            Approval::create([
+                'company_id' => $employeeCareer->employee->company_id,
+                'selected_candidate_id' => null,
+                'employee_career_id' => $employeeCareer->id,
+                'position_id' => $employeeCareer->position_id,
+                'is_approve' => null,
+                'description' => $employeeCareer->type,
+            ]);
+        }
 
         // Redirect back with success message
         return redirect()->back()->with('success', 'Data has been created successfully!');
@@ -137,6 +149,15 @@ class EmployeeCareerController extends Controller
             }
         } else {
             $data['file'] = $path_file;
+        }
+
+        if ($employeeCareer->position_id) {
+            $employeeCareer->approval->update([
+                // 'selected_candidate_id' => null,
+                // 'employee_career_id' => $employeeCareer->id,
+                'position_id' => $data['position_id'],
+                // 'is_approve' => null,
+            ]);
         }
 
         // $employee = Employee::findOrFail($employeeCareer->employee_id);
