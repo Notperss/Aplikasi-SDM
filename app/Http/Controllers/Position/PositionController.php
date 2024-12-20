@@ -62,6 +62,10 @@ class PositionController extends Controller
             $query->where('company_id', $companyId);
         })->latest()->get();
 
+        //  <a href="' . route('addAllowances', $position) . '"
+        //         class="btn btn-sm btn-icon btn-light-primary" title="tunjangan">
+        //         <i class="bi bi-wallet-fill"></i>
+        //     </a>
 
         if (request()->ajax()) {
             return DataTables::of($positions)
@@ -69,10 +73,7 @@ class PositionController extends Controller
                 ->addColumn('action', function ($position) {
                     return '
         <div class="d-flex justify-content-end mt-2">
-            <a href="' . route('addAllowances', $position) . '"
-                class="btn btn-sm btn-icon btn-light-primary" title="tunjangan">
-                <i class="bi bi-wallet-fill"></i>
-            </a>
+           
 
             <a href="' . route('position.edit', $position) . '"
                 class="btn btn-sm btn-icon btn-secondary text-white mx-2" title="edit">
@@ -185,6 +186,7 @@ class PositionController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'directorate_id' => 'required',
+            'division_id' => 'required',
             'level_id' => 'required',
         ], [
             // Custom error messages
@@ -252,6 +254,7 @@ class PositionController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'directorate_id' => 'required',
+            'division_id' => 'required',
             'level_id' => 'required',
         ], [
             // Custom error messages

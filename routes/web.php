@@ -1,12 +1,18 @@
 <?php
 
+use App\Exports\AgeExport;
+use App\Exports\GenderExport;
+use App\Exports\PositionExport;
+use App\Exports\EducationalExport;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Route;
+use App\Exports\EmployeeCategoryExport;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActivityLogController;
-use App\Http\Controllers\Approval\ApprovalController;
 use App\Http\Controllers\Position\LevelController;
 use App\Http\Controllers\WorkUnit\SectionController;
+use App\Http\Controllers\Approval\ApprovalController;
 use App\Http\Controllers\Employee\ContractController;
 use App\Http\Controllers\Employee\EmployeeController;
 use App\Http\Controllers\Position\PositionController;
@@ -69,6 +75,7 @@ Route::group(['middleware' => ['web', 'auth', 'role:super-admin', 'verified',]],
 Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::resource('dashboard', DashboardController::class)->only('index', );
     Route::get('division/{id}', [DashboardController::class, 'getDivisionEmployee'])->name('getDivisionEmployee');
+    // Route::get('/filter-data-approvals', [DashboardController::class, 'filterData'])->name('filter.approval');
 
     Route::resource('activity-log', ActivityLogController::class)->only('index');
 
@@ -175,6 +182,36 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
 
 
     Route::resource('approval', ApprovalController::class)->only('index', 'store', 'update', 'destroy', );
+
+
+    Route::get('/export-directorates', function () {
+        $directorates = App\Models\WorkUnit\Directorate::with('divisions.positions.employee')->get();
+        return Excel::download(new GenderExport($directorates), 'JenisKelaminExport.xlsx');
+    });
+
+    Route::get('/export-employees-categories', function () {
+        return Excel::download(new EmployeeCategoryExport(), 'KategoriKaryawanExport.xlsx');
+    });
+
+    Route::get('/export-positions', function () {
+        return Excel::download(new PositionExport(), 'JabatanExport.xlsx');
+    });
+
+    Route::get('/export-ages', function () {
+        return Excel::download(new AgeExport(), 'UsiaExport.xlsx');
+    });
+
+    Route::get('/export-educational', function () {
+        $directorates = App\Models\WorkUnit\Directorate::with(['divisions.positions.employee'])->get();
+        return Excel::download(new EducationalExport($directorates), 'educationExport.xlsx');
+    });
+
+    // Route::get('/export-positions', function () {
+    //     $directorates = App\Models\WorkUnit\Directorate::with(['divisions.positions.employee'])->get();
+    //     return Excel::download(new PositionExport($directorates), 'educationExport.xlsx');
+    // });
+
+
 });
 
 

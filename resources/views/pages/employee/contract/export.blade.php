@@ -25,15 +25,18 @@
       <th scope="col" style="background: #7ae4fe; font-weight:bold; width: 30;text-align: center;">DIVISI</th>
       <th scope="col" style="background: #7ae4fe; font-weight:bold; width: 20;text-align: center;">TMT MASUK KERJA
       </th>
+      <th scope="col" style="background: #7ae4fe; font-weight:bold; width: 15;text-align: center;">DURASI</th>
       <th scope="col" style="background: #7ae4fe; font-weight:bold; width: 15;text-align: center;">KONTRAK KE</th>
       <th scope="col" style="background: #7ae4fe; font-weight:bold; width: 20;text-align: center;">TANGGAL MULAI
       </th>
       <th scope="col" style="background: #7ae4fe; font-weight:bold; width: 20;text-align: center;">TANGGAL AKHIR
       </th>
-      <th scope="col" style="background: #7ae4fe; font-weight:bold; width: 20;text-align: center;">KPI
+      <th scope="col" style="background: #7ae4fe; font-weight:bold; width: 7;text-align: center;">KPI
       </th>
       <th scope="col" style="background: #7ae4fe; font-weight:bold; width: 30;text-align: center;">REKOMENDASI
         KONTRAK</th>
+      <th scope="col" style="background: #7ae4fe; font-weight:bold; width: 30;text-align: center;">AKUMULASI MASA
+        KERJA</th>
       {{-- <th scope="col" style="background: #7ae4fe; font-weight:bold; width: 30;text-align: center;">AKUMULASI MASA
         KERJA</th> --}}
     </tr>
@@ -84,7 +87,8 @@
           <td>{{ $contract->employee->position->name }}</td>
           <td>{{ $contract->employee->position->division->name }}</td>
           <td>{{ Carbon\Carbon::parse($contract->employee->date_joining)->translatedFormat('d-m-Y') }}</td>
-          <td>{{ $contract->contract_sequence_number }}</td>
+          <td style="text-align: center">{{ $contract->duration }}</td>
+          <td style="text-align: center">{{ $contract->contract_sequence_number }}</td>
           <td>
             {{ Carbon\Carbon::parse($contract->start_date)->translatedFormat('d-m-Y') }}</td>
           <td>
@@ -97,6 +101,22 @@
           @else
             <td>-</td>
           @endif
+          @php
+            $accumulatedDurationInMonths = $contract
+                ->where('employee_id', $contract->employee->id)
+                ->where('contract_sequence_number', '<=', $contract->contract_sequence_number) // Include only contracts up to the current one
+                // ->whereMonth('end_date', '<=', $contract->end_date) // Include only contracts up to the current one
+                ->sum('duration');
+
+            $years = intdiv($accumulatedDurationInMonths, 12); // Full years
+            $months = $accumulatedDurationInMonths % 12; // Remaining months
+
+            // Format as "X Tahun Y Bulan"
+            $accumulatedDuration = ($years > 0 ? $years . ' Tahun ' : '') . ($months > 0 ? $months . ' Bulan' : '');
+
+          @endphp
+
+          <td>{{ $accumulatedDuration }}</td>
 
 
         </tr>

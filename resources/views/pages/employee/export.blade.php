@@ -10,6 +10,7 @@
       <th style="width: 30;">Jabatan</th>
       <th style="width: 30;">Divisi</th>
       <th style="width: 30;">TMT Masuk</th>
+      <th style="width: 30;">TMT Keluar</th>
 
       <th style="width: 30;">Hubungan Kerja</th>
       <th style="width: 30;">Tipe Waktu Pekerjaan</th>
@@ -38,6 +39,7 @@
       <th style="width: 30;">SIM A</th>
       <th style="width: 30;">SIM B</th>
       <th style="width: 30;">SIM C</th>
+      <th style="width: 30;">Akumulasi Masa Kerja</th>
       <th style="width: 30;">Masa Pensiun</th>
       <th style="width: 30;">Sisa Tahun Menuju pensiun</th>
       <th style="width: 30;">Keterangan Keluar</th>
@@ -69,6 +71,7 @@
         <td>{{ $employee->position->name ?? '-' }}</td>
         <td>{{ $employee->position->division->name ?? '-' }}</td>
         <td>{{ $employee->date_joining ? \Carbon\Carbon::parse($employee->date_joining)->format('d-m-Y') : '-' }}</td>
+        <td>{{ $employee->date_leaving ? \Carbon\Carbon::parse($employee->date_leaving)->format('d-m-Y') : '-' }}</td>
 
 
         <td>{{ $employee->work_relationship ?? '-' }}</td>
@@ -104,6 +107,7 @@
         <td>{{ $employee->sim_a ?? '-' }}</td>
         <td>{{ $employee->sim_b ?? '-' }}</td>
         <td>{{ $employee->sim_c ?? '-' }}</td>
+        <td>{{ $employee->accumulatedWorkTenure() ?? '-' }}</td>
         <td>{{ $retirementDate->translatedFormat('l, d F Y') }}</td>
         <td>{{ $remainingYears }} tahun {{ $remainingMonths }} bulan</td>
         <td>

@@ -29,13 +29,15 @@
                   </tr>
                 </thead>
                 <tbody>
-                  @forelse ($employee->trainingAttendeds as $employeeTrainingAttended)
+                  @forelse ($employee->trainingAttendeds->where('is_certificated',0) as $employeeTrainingAttended)
                     <tr>
                       <td class="text-bold-500">{{ $loop->iteration }}</td>
                       <td class="text-bold-500">{{ $employeeTrainingAttended->training_name }}</td>
                       <td class="text-bold-500">{{ $employeeTrainingAttended->organizer_name }}</td>
                       <td class="text-bold-500">{{ $employeeTrainingAttended->city }}</td>
-                      <td class="text-bold-500">{{ $employeeTrainingAttended->training_date }}</td>
+                      <td class="text-bold-500">
+                        {{ Carbon\Carbon::parse($employeeTrainingAttended->training_date)->translatedFormat('d M Y') }}
+                      </td>
                       <td class="text-bold-500">
                         @if ($employeeTrainingAttended->file_sertifikat)
                           <a href="{{ Storage::url($employeeTrainingAttended->file_sertifikat) }}" target="_blank">

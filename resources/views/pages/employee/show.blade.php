@@ -74,20 +74,20 @@
               role="tab" aria-controls="v-pills-seminar" aria-selected="false">Seminar/Pelatihan</a>
             <a class="btn btn-primary mt-1" id="v-pills-keterampilan-tab" data-bs-toggle="pill"
               href="#v-pills-keterampilan" role="tab" aria-controls="v-pills-keterampilan"
-              aria-selected="false">Keterampilan</a>
+              aria-selected="false">Sertifikasi</a>
             <a class="btn btn-primary mt-1" id="v-pills-sosial-media-tab" data-bs-toggle="pill"
               href="#v-pills-sosial-media" role="tab" aria-controls="v-pills-sosial-media"
               aria-selected="false">Sosial Media</a>
             <a class="btn btn-primary mt-1" id="v-pills-contract-tab" data-bs-toggle="pill" href="#v-pills-contract"
               role="tab" aria-controls="v-pills-contract" aria-selected="false">Kontrak</a>
-            <a class="btn btn-primary mt-1" id="v-pills-allowances-tab" data-bs-toggle="pill" href="#v-pills-allowances"
+            {{-- <a class="btn btn-primary mt-1" id="v-pills-allowances-tab" data-bs-toggle="pill" href="#v-pills-allowances"
               role="tab" aria-controls="v-pills-allowances" aria-selected="false">Tunjangan</a>
             <a class="btn btn-primary mt-1" id="v-pills-attendances-tab" data-bs-toggle="pill" href="#v-pills-attendances"
-              role="tab" aria-controls="v-pills-attendances" aria-selected="false">Absensi</a>
+              role="tab" aria-controls="v-pills-attendances" aria-selected="false">Absensi</a> --}}
             <a class="btn btn-primary mt-1" id="v-pills-kpi-tab" data-bs-toggle="pill" href="#v-pills-kpi" role="tab"
-              aria-controls="v-pills-kpi" aria-selected="false">KPI</a>
-            <a class="btn btn-primary mt-1" id="v-pills-dinas-tab" data-bs-toggle="pill" href="#v-pills-dinas"
-              role="tab" aria-controls="v-pills-dinas" aria-selected="false">Dinas/Tugas</a>
+              aria-controls="v-pills-kpi" aria-selected="false">Penilaian Kerja</a>
+            {{-- <a class="btn btn-primary mt-1" id="v-pills-dinas-tab" data-bs-toggle="pill" href="#v-pills-dinas"
+              role="tab" aria-controls="v-pills-dinas" aria-selected="false">Dinas/Tugas</a> --}}
             <a class="btn btn-primary mt-1" id="v-pills-award-tab" data-bs-toggle="pill" href="#v-pills-award"
               role="tab" aria-controls="v-pills-award" aria-selected="false">Penghargaan</a>
             <a class="btn btn-primary mt-1" id="v-pills-career-tab" data-bs-toggle="pill" href="#v-pills-career"
@@ -578,7 +578,7 @@
             </div>
             <div class="tab-pane fade" id="v-pills-keterampilan" role="tabpanel"
               aria-labelledby="v-pills-keterampilan-tab">
-              @include('pages.employee.personal-data.skill-detail')
+              @include('pages.employee.personal-data.training-certificate')
             </div>
             <div class="tab-pane fade" id="v-pills-sosial-media" role="tabpanel"
               aria-labelledby="v-pills-sosial-media-tab">

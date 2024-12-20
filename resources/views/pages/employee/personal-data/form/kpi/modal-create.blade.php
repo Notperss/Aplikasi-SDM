@@ -7,7 +7,7 @@
         @csrf
 
         <div class="modal-header">
-          <h5 class="modal-title" id="modal-form-add-kpi-label">Tambah Data KPI</h5>
+          <h5 class="modal-title" id="modal-form-add-kpi-label">Tambah Data PK</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
         </div>
 
@@ -18,8 +18,8 @@
               <input type="hidden" name="employee_id" value="{{ $contract->employee->id ?? $employee->id }}">
               <input type="hidden" name="name" value="{{ $contract->employee->name ?? $employee->name }}">
 
-              <div class="col-6 mb-2">
-                <label class="form-label" for="kpi_date">Tanggal <code>*</code></label>
+              <div class="col-12 mb-2">
+                <label class="form-label" for="kpi_date">Tanggal PK <code>*</code></label>
                 <input type="date" id="kpi_date" name="kpi_date" maxlength="4" value="{{ old('kpi_date') }}"
                   class="form-control @error('kpi_date') is-invalid @enderror">
                 @error('kpi_date')

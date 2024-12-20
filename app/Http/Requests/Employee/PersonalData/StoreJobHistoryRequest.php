@@ -24,17 +24,19 @@ class StoreJobHistoryRequest extends FormRequest
         return [
             'employee_id' => 'required|integer|exists:employees,id',
             'company_name' => 'required|string|max:255',
-            'company_type' => 'string|max:100',
-            'direct_supervisor' => 'string|max:255',
+            'company_type' => 'nullable|string|max:100',
+            'direct_supervisor' => 'nullable|string|max:255',
             // 'address' => 'required|string|max:255',
             // 'phone_number' => 'required|string|max:15',
-            'year_from' => 'required|integer|min:1900|max:' . date('Y'),
-            'year_to' => 'nullable|integer|min:1900|max:' . date('Y'),
+            'year_from' => 'required|string|max:255',
+            'year_to' => 'nullable|string|max:255',
+            // 'year_from' => 'required|integer|min:1900|max:' . date('Y'),
+            // 'year_to' => 'nullable|integer|min:1900|max:' . date('Y'),
             'position' => 'required|string|max:255',
-            'salary' => 'required|numeric|min:0',
-            'reason' => 'required|string|max:255',
-            'job_description' => 'string|max:1000',
-            'file' => 'mimes:pdf|max:512',
+            'salary' => 'nullable|numeric|min:0',
+            'reason' => 'nullable|string|max:255',
+            'job_description' => 'nullable|string|max:1000',
+            'file' => 'nullable|mimes:pdf|max:512',
         ];
     }
 

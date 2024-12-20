@@ -20,7 +20,7 @@
               <div class="col-md-6 col-12">
 
                 <div class="form-group">
-                  <label class="form-label" for="directorate_{{ $position->id }}">Direktorat</label>
+                  <label class="form-label" for="directorate_{{ $position->id }}">Direktorat <code>*</code></label>
                   <select id="directorate_{{ $position->id }}" name="directorate_id"
                     class="form-control @error('directorate_id') is-invalid @enderror" required>
                     <option value="" disabled>Choose</option>
@@ -36,7 +36,7 @@
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label" for="division_{{ $position->id }}">Divisi</label>
+                  <label class="form-label" for="division_{{ $position->id }}">Divisi <code>*</code></label>
                   <select id="division_{{ $position->id }}" name="division_id"
                     class="form-control @error('division_id') is-invalid @enderror">
                     <option value="" disabled>Choose</option>
@@ -90,7 +90,7 @@
               <div class="col-md-6 col-12">
 
                 <div class="form-group">
-                  <label class="form-label" for="level_id">Level</label>
+                  <label class="form-label" for="level_id">Level <code>*</code></label>
                   <select id="level_id" name="level_id"
                     class="form-control choices @error('level_id') is-invalid @enderror" required>
                     <option value="" disabled selected>Choose</option>
@@ -107,7 +107,7 @@
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label" for="name">Nama Jabatan</label>
+                  <label class="form-label" for="name">Nama Jabatan <code>*</code></label>
                   <input id="name" name="name" value="{{ $position->name }}"
                     class="form-control @error('name') is-invalid @enderror" required>
                   @error('name')

@@ -2,14 +2,15 @@
 
 namespace App\Models\Employee;
 
+use Carbon\Carbon;
 use App\Models\Approval\Approval;
 use App\Models\Position\Position;
 use App\Models\Recruitment\Candidate;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ManagementAccess\Company;
 use App\Models\Employee\EmployeeCategory;
-use App\Models\Employee\PersonalData\Attendance;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Employee\PersonalData\Attendance;
 use App\Models\Employee\PersonalData\EmployeeKpi;
 use App\Models\Employee\PersonalData\EmployeeDuty;
 use App\Models\Employee\PersonalData\EmployeeAward;
@@ -137,11 +138,11 @@ class Employee extends Model
     }
     public function jobHistories()
     {
-        return $this->hasMany(EmployeeJobHistory::class)->orderBy('year_to', 'desc');
+        return $this->hasMany(EmployeeJobHistory::class)->latest();
     }
     public function educationalHistories()
     {
-        return $this->hasMany(EmployeeEducationalHistory::class)->orderBy('year_to', 'asc');
+        return $this->hasMany(EmployeeEducationalHistory::class)->orderBy('year_to', 'desc');
     }
     public function languageProficiencies()
     {
@@ -203,4 +204,25 @@ class Employee extends Model
         $mainPhoto = $this->employeePhotos->where('main_photo', true)->first();
         return $mainPhoto ? asset('storage/' . $mainPhoto->file_path) : asset('images/default-avatar.png');
     }
+
+    public function accumulatedWorkTenure()
+    {
+
+        if ($this->date_joining) {
+            $dateOfJoining = Carbon::parse($this->date_joining);
+            $endDate = $this->date_leaving ? Carbon::parse($this->date_leaving) : Carbon::now();
+            $difference = $dateOfJoining->diff($endDate);
+
+            return sprintf(
+                '%d Tahun, %d Bulan, %d Hari',
+                $difference->y,
+                $difference->m,
+                $difference->d
+            );
+        }
+
+        return 'Date of joining not available';
+    }
+
+
 }

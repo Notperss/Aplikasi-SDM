@@ -18,7 +18,7 @@
               <input type="hidden" name="name" value="{{ $employee->name }}">
 
               <div class="mb-2">
-                <label class="form-label" for="company_name">Nama Perusahaan</label>
+                <label class="form-label" for="company_name">Nama Perusahaan <code>*</code></label>
                 <input id="company_name" name="company_name"
                   class="form-control @error('company_name') is-invalid @enderror" required>
                 @error('company_name')
@@ -27,7 +27,7 @@
               </div>
 
               <div class="mb-2">
-                <label class="form-label" for="position">Posisi / Jabatan</label>
+                <label class="form-label" for="position">Posisi / Jabatan <code>*</code></label>
                 <input id="position" name="position" class="form-control @error('position') is-invalid @enderror"
                   required>
                 @error('position')
@@ -49,17 +49,20 @@
               <div class="mb-2">
                 <label class="form-label" for="direct_supervisor">Nama Atasan Langsung</label>
                 <input type="text" id="direct_supervisor" name="direct_supervisor"
-                  class="form-control @error('direct_supervisor') is-invalid @enderror" required />
+                  class="form-control @error('direct_supervisor') is-invalid @enderror" />
                 @error('direct_supervisor')
                   <a style="color: red"><small>{{ $message }}</small></a>
                 @enderror
               </div>
               <div class="row">
                 <div class="col-md-6 mb-2">
-                  <label for="year_from">Tahun Masuk</label>
-                  <input type="text" oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="4"
+                  <label for="year_from">Tahun Masuk <code>*</code></label>
+
+                  <input type="text" id="year_from" name="year_from"
+                    class="form-control @error('year_from') is-invalid @enderror" required />
+                  {{-- <input type="text" oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="4"
                     id="year" name="year_from" value="{{ old('year_from') }}"
-                    class="form-control  @error('year_from') is-invalid @enderror" />
+                    class="form-control  @error('year_from') is-invalid @enderror" required /> --}}
                   @error('year_from')
                     <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror
@@ -67,9 +70,11 @@
 
                 <div class="col-md-6 mb-2">
                   <label class="form-label" for="year_to">Tahun Keluar</label>
-                  <input type="text" oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="4"
+                  <input type="text" id="year_to" name="year_to"
+                    class="form-control @error('year_to') is-invalid @enderror" />
+                  {{-- <input type="text" oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="4"
                     id="year_to" name="year_to" value="{{ old('year_to') }}"
-                    class="form-control  @error('year_to') is-invalid @enderror" />
+                    class="form-control  @error('year_to') is-invalid @enderror" /> --}}
                   @error('year_to')
                     <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror
@@ -93,8 +98,7 @@
 
               <div class="mb-2">
                 <label class="form-label" for="reason">Alasan Keluar/Resign</label>
-                <textarea id="reason" name="reason" class="form-control @error('reason') is-invalid @enderror" rows="2"
-                  required></textarea>
+                <textarea id="reason" name="reason" class="form-control @error('reason') is-invalid @enderror" rows="2"></textarea>
                 @error('reason')
                   <a style="color: red"><small>{{ $message }}</small></a>
                 @enderror

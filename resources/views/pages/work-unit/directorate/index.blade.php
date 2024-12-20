@@ -39,10 +39,12 @@
                 <td>{{ $directorate->code }}</td>
                 <td>{{ $directorate->name }}</td>
                 <td>
-                  @if ($directorate->is_non)
+                  @if ($directorate->is_non == 1)
                     <span class="badge bg-light-primary">Direktorat</span>
+                  @elseif ($directorate->is_non == 2)
+                    <span class="badge bg-light-info">Non-Direktorat</span>
                   @else
-                    <span class="badge bg-light-warning">Non-Direktorat</span>
+                    <span class="badge bg-light-warning">Lain-lain</span>
                   @endif
                 </td>
                 <td>

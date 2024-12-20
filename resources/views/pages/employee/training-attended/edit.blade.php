@@ -52,7 +52,7 @@
             </div>
 
             <div class="col-3 mb-2">
-              <label class="form-label" for="training_date">Tahun</label>
+              <label class="form-label" for="training_date">Tanggal</label>
               <input type="date" id="training_date" name="training_date" maxlength="4"
                 value="{{ old('training_date', $employeeTrainingAttended->training_date) }}"
                 class="form-control @error('training_date') is-invalid @enderror">

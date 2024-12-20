@@ -31,6 +31,7 @@ class EmployeeTrainingAttendedController extends Controller
                     $query->where('company_id', Auth::user()->company_id);
                 });
             })
+            ->where('is_certificated', 0)
             ->latest();
 
         if ($request->filled(['start_date', 'end_date'])) {
@@ -126,6 +127,7 @@ class EmployeeTrainingAttendedController extends Controller
                         'city' => $request->city,
                         'training_date' => $request->training_date,
                         'file_sertifikat' => $file_path, // Attach file path if the certificate is uploaded
+                        'is_certificated' => $request->is_certificated, // Attach file path if the certificate is uploaded
                     ]);
                 }
             } else {
@@ -137,6 +139,7 @@ class EmployeeTrainingAttendedController extends Controller
                     'city' => $request->city,
                     'training_date' => $request->training_date,
                     'file_sertifikat' => $file_path, // Attach file path if the certificate is uploaded
+                    'is_certificated' => $request->is_certificated, // Attach file path if the certificate is uploaded
                 ]);
             }
 

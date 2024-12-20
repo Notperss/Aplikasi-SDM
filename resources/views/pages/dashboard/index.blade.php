@@ -193,8 +193,8 @@
     </div>
   </div>
 
-  <div class="row">
-    <h5>Persetujuan Pending</h5>
+  {{-- <div class="row">
+    <h5>Data karyawan Perbulan</h5>
     <div class="col-6 col-lg-2 col-md-6">
       <div class="card">
         <div class="card-body px-4 py-4-5">
@@ -208,9 +208,9 @@
               <h6 class="text-muted font-semibold">Karyawan Baru</h6>
               <h4 class="font-extrabold mb-0">
                 @role('super-admin')
-                  {{ DB::table('approvals')->whereNotNull('selected_candidate_id')->whereNull('is_approve')->count() }}
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('selected_candidate_id')->whereNull('approvals.is_approve')->whereMonth('employee_careers.start_date', now()->month)->count() }}
                 @else
-                  {{ DB::table('approvals')->whereNotNull('selected_candidate_id')->whereNull('is_approve')->where('company_id', auth()->user()->company_id)->count() }}
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('selected_candidate_id')->whereNull('approvals.is_approve')->whereMonth('employee_careers.start_date', now()->month)->where('approvals.company_id', auth()->user()->company_id)->count() }}
                 @endrole
               </h4>
             </div>
@@ -231,9 +231,9 @@
               <h6 class="text-muted font-semibold">Buka Verifikasi</h6>
               <h4 class="font-extrabold mb-0">
                 @role('super-admin')
-                  {{ DB::table('approvals')->whereNotNull('employee_id')->whereNull('is_approve')->count() }}
+                  {{ DB::table('approvals')->whereNotNull('employee_id')->where('is_approve', 1)->whereMonth('created_at', now()->month)->count() }}
                 @else
-                  {{ DB::table('approvals')->whereNotNull('employee_id')->whereNull('is_approve')->where('company_id', auth()->user()->company_id)->count() }}
+                  {{ DB::table('approvals')->whereNotNull('employee_id')->where('is_approve', 1)->whereMonth('created_at', now()->month)->where('company_id', auth()->user()->company_id)->count() }}
                 @endrole
               </h4>
             </div>
@@ -404,6 +404,335 @@
     </div>
 
 
+  </div> --}}
+
+  {{-- <div class="col-12 mb-4 text-center">
+    <div class="col-md-4 mx-auto">
+      <form method="GET" action="{{ route('dashboard.index') }}">
+        <div class="d-flex justify-content-between align-items-center">
+          <select name="month" class="form-control w-48" onchange="this.form.submit()">
+            @for ($i = 1; $i <= 12; $i++)
+              <option value="{{ $i }}" {{ $i == $selectedMonth ? 'selected' : '' }}>
+                {{ Carbon\Carbon::create()->month($i)->format('F') }}
+              </option>
+            @endfor
+          </select>
+
+          <select name="year" class="form-control w-48" onchange="this.form.submit()">
+            @for ($i = Carbon\Carbon::now()->year - 5; $i <= Carbon\Carbon::now()->year + 5; $i++)
+              <option value="{{ $i }}" {{ $i == $selectedYear ? 'selected' : '' }}>
+                {{ $i }}
+              </option>
+            @endfor
+          </select>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <h5 class="col-12 mb-4 text-center text-primary">Data Karyawan Perbulan</h5>
+
+    <div class="col-6 col-lg-2 col-md-6 mb-4">
+      <div class="card shadow-sm border-light rounded">
+        <div class="card-body text-center">
+          <h6 class="text-muted font-semibold">Karyawan Baru</h6>
+          <h4 class="font-extrabold mb-0">{{ $data['karyawan_baru'] }}</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6 mb-4">
+      <div class="card shadow-sm border-light rounded">
+        <div class="card-body text-center">
+          <h6 class="text-muted font-semibold">Buka Verifikasi</h6>
+          <h4 class="font-extrabold mb-0">{{ $data['buka_verifikasi'] }}</h4>
+        </div>
+      </div>
+    </div>
+
+    @foreach ($data['categories'] as $label => $count)
+      <div class="col-6 col-lg-2 col-md-6 mb-4">
+        <div class="card shadow-sm border-light rounded">
+          <div class="card-body text-center">
+            <h6 class="text-muted font-semibold">{{ $label }}</h6>
+            <h4 class="font-extrabold mb-0">{{ $count }}</h4>
+          </div>
+        </div>
+      </div>
+    @endforeach
+  </div>
+
+  <div class="row">
+    <h5 class="col-12 mb-4 text-center text-primary">Data Karyawan Pertahun</h5>
+
+    <div class="col-6 col-lg-2 col-md-6 mb-4">
+      <div class="card shadow-sm border-light rounded">
+        <div class="card-body text-center">
+          <h6 class="text-muted font-semibold">Karyawan Baru</h6>
+          <h4 class="font-extrabold mb-0">{{ $data['karyawan_baru'] }}</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6 mb-4">
+      <div class="card shadow-sm border-light rounded">
+        <div class="card-body text-center">
+          <h6 class="text-muted font-semibold">Buka Verifikasi</h6>
+          <h4 class="font-extrabold mb-0">{{ $data['buka_verifikasi'] }}</h4>
+        </div>
+      </div>
+    </div>
+
+    @foreach ($data['categories'] as $label => $count)
+      <div class="col-6 col-lg-2 col-md-6 mb-4">
+        <div class="card shadow-sm border-light rounded">
+          <div class="card-body text-center">
+            <h6 class="text-muted font-semibold">{{ $label }}</h6>
+            <h4 class="font-extrabold mb-0">{{ $count }}</h4>
+          </div>
+        </div>
+      </div>
+    @endforeach
+  </div> --}}
+
+  {{-- <div class="col-12 mb-4 text-center">
+    <div class="col-md-4 mx-auto">
+      <form method="GET" action="{{ route('dashboard.index') }}">
+        <div class="d-flex justify-content-between align-items-center">
+          <select name="month" class="form-control w-48" onchange="this.form.submit()">
+            @for ($i = 1; $i <= 12; $i++)
+              <option value="{{ $i }}" {{ $i == $selectedMonth ? 'selected' : '' }}>
+                {{ Carbon\Carbon::create()->month($i)->format('F') }}
+              </option>
+            @endfor
+          </select>
+
+          <select name="year" class="form-control w-48" onchange="this.form.submit()">
+            @for ($i = Carbon\Carbon::now()->year - 5; $i <= Carbon\Carbon::now()->year + 5; $i++)
+              <option value="{{ $i }}" {{ $i == $selectedYear ? 'selected' : '' }}>
+                {{ $i }}
+              </option>
+            @endfor
+          </select>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <h5 class="col-12 mb-4 text-center text-primary">Data Karyawan Perbulan</h5>
+
+    <div class="col-6 col-lg-2 col-md-6 mb-4">
+      <div class="card shadow-sm border-light rounded">
+        <div class="card-body text-center">
+          <h6 class="text-muted font-semibold">Karyawan Baru</h6>
+          <h4 class="font-extrabold mb-0">{{ $data['karyawan_baru'] }}</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6 mb-4">
+      <div class="card shadow-sm border-light rounded">
+        <div class="card-body text-center">
+          <h6 class="text-muted font-semibold">Buka Verifikasi</h6>
+          <h4 class="font-extrabold mb-0">{{ $data['buka_verifikasi'] }}</h4>
+        </div>
+      </div>
+    </div>
+
+    @foreach ($data['categories'] as $label => $count)
+      <div class="col-6 col-lg-2 col-md-6 mb-4">
+        <div class="card shadow-sm border-light rounded">
+          <div class="card-body text-center">
+            <h6 class="text-muted font-semibold">{{ $label }}</h6>
+            <h4 class="font-extrabold mb-0">{{ $count }}</h4>
+          </div>
+        </div>
+      </div>
+    @endforeach
+  </div>
+
+  <div class="row">
+    <h5 class="col-12 mb-4 text-center text-primary">Data Karyawan Pertahun</h5>
+
+    <div class="col-6 col-lg-2 col-md-6 mb-4">
+      <div class="card shadow-sm border-light rounded">
+        <div class="card-body text-center">
+          <h6 class="text-muted font-semibold">Karyawan Baru</h6>
+          <h4 class="font-extrabold mb-0">{{ $data['karyawan_baru'] }}</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6 mb-4">
+      <div class="card shadow-sm border-light rounded">
+        <div class="card-body text-center">
+          <h6 class="text-muted font-semibold">Buka Verifikasi</h6>
+          <h4 class="font-extrabold mb-0">{{ $data['buka_verifikasi'] }}</h4>
+        </div>
+      </div>
+    </div>
+
+    @foreach ($data['categories'] as $label => $count)
+      <div class="col-6 col-lg-2 col-md-6 mb-4">
+        <div class="card shadow-sm border-light rounded">
+          <div class="card-body text-center">
+            <h6 class="text-muted font-semibold">{{ $label }}</h6>
+            <h4 class="font-extrabold mb-0">{{ $count }}</h4>
+          </div>
+        </div>
+      </div>
+    @endforeach
+  </div> --}}
+
+  <div class="col-12 mb-4 text-center">
+    <div class="col-md-4 mx-auto">
+      <form id="filterForm" method="GET" action="{{ route('dashboard.index') }}">
+        <div class="d-flex justify-content-between align-items-center">
+          <select name="month" class="form-control w-48" onchange="this.form.submit()">
+            @for ($i = 1; $i <= 12; $i++)
+              <option value="{{ $i }}" {{ $i == $selectedMonth ? 'selected' : '' }}>
+                {{ Carbon\Carbon::create()->month($i)->format('F') }}
+              </option>
+            @endfor
+          </select>
+
+          <select name="year" class="form-control w-48" onchange="this.form.submit()">
+            @for ($i = Carbon\Carbon::now()->year - 5; $i <= Carbon\Carbon::now()->year + 5; $i++)
+              <option value="{{ $i }}" {{ $i == $selectedYear ? 'selected' : '' }}>
+                {{ $i }}
+              </option>
+            @endfor
+          </select>
+
+          <!-- Reset Button -->
+          <button type="button" class="btn btn-secondary" onclick="resetFilters()">Reset</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <h5 class="col-12 mb-4 text-center text-primary">
+      Data Karyawan Perbulan
+      ({{ \Carbon\Carbon::create()->month((int) $selectedMonth)->locale('id')->translatedFormat('F') }} -
+      {{ $selectedYear }} )
+    </h5>
+
+
+    <div class="col-6 col-lg-2 col-md-6 mb-4">
+      <div class="card shadow-sm border-light rounded">
+        <div class="card-body text-center">
+          <h6 class="text-muted font-semibold">Karyawan Baru</h6>
+          <h4 class="font-extrabold mb-0">{{ $dataPerMonth['karyawan_baru'] }}</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6 mb-4">
+      <div class="card shadow-sm border-light rounded">
+        <div class="card-body text-center">
+          <h6 class="text-muted font-semibold">Buka Verifikasi</h6>
+          <h4 class="font-extrabold mb-0">{{ $dataPerMonth['buka_verifikasi'] }}</h4>
+        </div>
+      </div>
+    </div>
+
+    @foreach ($dataPerMonth['categories'] as $label => $count)
+      <div class="col-6 col-lg-2 col-md-6 mb-4">
+        <div class="card shadow-sm border-light rounded">
+          <div class="card-body text-center">
+            <h6 class="text-muted font-semibold">{{ $label }}</h6>
+            <h4 class="font-extrabold mb-0">{{ $count }}</h4>
+          </div>
+        </div>
+      </div>
+    @endforeach
+  </div>
+
+  <div class="row">
+    <h5 class="col-12 mb-4 text-center text-primary">Data Karyawan Pertahun ({{ $selectedYear }})</h5>
+
+    <div class="col-6 col-lg-2 col-md-6 mb-4">
+      <div class="card shadow-sm border-light rounded">
+        <div class="card-body text-center">
+          <h6 class="text-muted font-semibold">Karyawan Baru</h6>
+          <h4 class="font-extrabold mb-0">{{ $dataPerYear['karyawan_baru'] }}</h4>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6 mb-4">
+      <div class="card shadow-sm border-light rounded">
+        <div class="card-body text-center">
+          <h6 class="text-muted font-semibold">Buka Verifikasi</h6>
+          <h4 class="font-extrabold mb-0">{{ $dataPerYear['buka_verifikasi'] }}</h4>
+        </div>
+      </div>
+    </div>
+
+    @foreach ($dataPerYear['categories'] as $label => $count)
+      <div class="col-6 col-lg-2 col-md-6 mb-4">
+        <div class="card shadow-sm border-light rounded">
+          <div class="card-body text-center">
+            <h6 class="text-muted font-semibold">{{ $label }}</h6>
+            <h4 class="font-extrabold mb-0">{{ $count }}</h4>
+          </div>
+        </div>
+      </div>
+    @endforeach
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        {{-- <div class="card-header">
+          <h5 class="card-title">Horizontal Navs</h5>
+        </div> --}}
+        <div class="card-body">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <a class="nav-link active" id="employee-tab" data-bs-toggle="tab" href="#employee" role="tab"
+                aria-controls="employee" aria-selected="true">Karyawan</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="gender-tab" data-bs-toggle="tab" href="#gender" role="tab"
+                aria-controls="gender" aria-selected="true">Jenis Kelamin</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="educational-tab" data-bs-toggle="tab" href="#educational" role="tab"
+                aria-controls="educational" aria-selected="false">Pendidikan</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="position-tab" data-bs-toggle="tab" href="#position" role="tab"
+                aria-controls="position" aria-selected="false">Level Jabatan</a>
+            </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="age-tab" data-bs-toggle="tab" href="#age" role="tab"
+                aria-controls="age" aria-selected="false">Usia</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="employee" role="tabpanel" aria-labelledby="employee-tab">
+              @include('pages.dashboard.table.employee-categories')
+            </div>
+            <div class="tab-pane fade show" id="gender" role="tabpanel" aria-labelledby="gender-tab">
+              @include('pages.dashboard.table.gender')
+            </div>
+            <div class="tab-pane fade" id="educational" role="tabpanel" aria-labelledby="educational-tab">
+              @include('pages.dashboard.table.educational')
+            </div>
+            <div class="tab-pane fade" id="position" role="tabpanel" aria-labelledby="position-tab">
+              @include('pages.dashboard.table.position')
+            </div>
+            <div class="tab-pane fade" id="age" role="tabpanel" aria-labelledby="age-tab">
+              @include('pages.dashboard.table.age')
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   @foreach ($companies as $company)
@@ -542,7 +871,7 @@
                   <th scope="col">Durasi</th>
                   <th scope="col">Kontrak Ke- </th>
                   <th scope="col">Divisi</th>
-                  <th scope="col" class="text-center">KPI</th>
+                  <th scope="col" class="text-center">PK</th>
                 </tr>
               </thead>
               <tbody>
@@ -607,7 +936,7 @@
                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
                           data-bs-target="#modal-form-add-kpi">
                           <i class="bi bi-plus-lg"></i>
-                          KPI
+                          PK
                         </button>
                         @include('pages.employee.personal-data.form.kpi.modal-create')
                       @endif
@@ -1048,6 +1377,21 @@
     /* Optional: ensure the image corners match the frame */
   }
 </style>
+
+<script>
+  function resetFilters() {
+    // Get the current month and year
+    const currentMonth = {{ Carbon\Carbon::now()->month }};
+    const currentYear = {{ Carbon\Carbon::now()->year }};
+
+    // Set the dropdown values to the current month and year
+    document.querySelector('select[name="month"]').value = currentMonth;
+    document.querySelector('select[name="year"]').value = currentYear;
+
+    // Submit the form to reload the page with the default values
+    document.getElementById('filterForm').submit();
+  }
+</script>
 
 
 @endsection

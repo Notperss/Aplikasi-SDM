@@ -115,10 +115,12 @@
         {
           data: 'employee.nik',
           name: 'employee.nik',
+          orderable: false,
         },
         {
           data: 'employee.name',
           name: 'employee.name',
+          orderable: false,
         },
         {
           data: 'name_duty',
@@ -143,6 +145,8 @@
         {
           data: 'file',
           name: 'file',
+          orderable: false,
+          searchable: false,
         },
         {
           data: 'action',

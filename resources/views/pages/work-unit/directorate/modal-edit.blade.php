@@ -41,10 +41,12 @@
                 <select id="is_non" name="is_non" class="form-control @error('is_non') is-invalid @enderror"
                   required>
                   <option value="" disabled selected>Choose</option>
+                  <option value="2" {{ old('is_non', $directorate->is_non) == '2' ? 'selected' : '' }}>
+                    Non-Direktorat </option>
                   <option value="1" {{ old('is_non', $directorate->is_non) == '1' ? 'selected' : '' }}>Direktorat
                   </option>
                   <option value="0" {{ old('is_non', $directorate->is_non) == '0' ? 'selected' : '' }}>
-                    Non-Direktorat</option>
+                    Lain-lain</option>
                 </select>
                 @error('is_non')
                   <a style="color: red"><small>{{ $message }}</small></a>

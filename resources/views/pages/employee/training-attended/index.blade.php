@@ -232,13 +232,11 @@
           data: 'employee.nik',
           name: 'employee.nik',
           orderable: false,
-          searchable: false,
         },
         {
           data: 'employee.name',
           name: 'employee.name',
           orderable: false,
-          searchable: false,
         },
         {
           data: 'training_name',

@@ -59,6 +59,6 @@ class Selection extends Model
     }
     public function historySelections()
     {
-        return $this->hasMany(HistorySelection::class);
+        return $this->hasMany(HistorySelection::class)->orderBy('date', 'asc');
     }
 }

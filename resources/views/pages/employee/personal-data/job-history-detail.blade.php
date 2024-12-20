@@ -21,7 +21,7 @@
                 <thead>
                   <tr>
                     <th>Nama Perusahaan</th>
-                    <th>Posisi </th>
+                    <th>Jabatan </th>
                     <th>Atasan</th>
                     <th style="text-align: center;">
                       <div>Lama Bekerja</div>

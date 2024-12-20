@@ -23,7 +23,7 @@
               <input type="hidden" name="name" value="{{ $employee->name }}">
 
               <div class="mb-2">
-                <label class="form-label" for="school_level">Jenjang</label>
+                <label class="form-label" for="school_level">Jenjang <code>*</code></label>
                 <select type="text" id="school_level" name="school_level"
                   class="form-control choices @error('school_level') is-invalid @enderror" required>
                   <option value="" disabled selected>Choose</option>
@@ -73,7 +73,7 @@
               </div>
 
               <div class="mb-2">
-                <label class="form-label" for="school_name">Institusi</label>
+                <label class="form-label" for="school_name">Institusi/Nama Sekolah <code>*</code></label>
                 <input id="school_name" name="school_name" value="{{ $employeeEducationalHistory->school_name }}"
                   class="form-control @error('school_name') is-invalid @enderror" required>
                 @error('school_name')
@@ -84,7 +84,7 @@
               <div class="mb-2">
                 <label class="form-label" for="study">Jurusan</label>
                 <input type="text" id="study" name="study" value="{{ $employeeEducationalHistory->study }}"
-                  class="form-control @error('study') is-invalid @enderror" required />
+                  class="form-control @error('study') is-invalid @enderror" />
                 @error('study')
                   <a style="color: red"><small>{{ $message }}</small></a>
                 @enderror
@@ -92,7 +92,7 @@
 
               <div class="row">
                 <div class="col-md-6 mb-2">
-                  <label class="form-label" for="graduate">Lulus/Tidak</label>
+                  <label class="form-label" for="graduate">Lulus/Tidak Lulus</label>
                   <select type="text" id="graduate" name="graduate"
                     class="form-control @error('graduate') is-invalid @enderror" required>
                     <option value="" disabled selected>Choose</option>
@@ -123,10 +123,11 @@
 
               <div class="row">
                 <div class="col-md-6 mb-2">
-                  <label for="year_from">Tahun Masuk</label>
+                  <label for="year_from">Tahun Masuk <code>*</code></label>
                   <input type="text" value="{{ $employeeEducationalHistory->year_from }}"
                     oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="4" id="year" name="year_from"
-                    value="{{ old('year_from') }}" class="form-control  @error('year_from') is-invalid @enderror" />
+                    value="{{ old('year_from') }}" class="form-control  @error('year_from') is-invalid @enderror"
+                    required />
                   @error('year_from')
                     <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror

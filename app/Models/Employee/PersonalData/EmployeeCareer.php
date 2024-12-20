@@ -23,6 +23,8 @@ class EmployeeCareer extends Model
         'description',
         'is_approve',
         'file_career',
+        'cmnp_career',
+        'position_name',
     ];
 
     protected $casts = [

@@ -36,7 +36,8 @@
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div> --}}
-                  <div class="form-group" id="placementField">
+
+                  {{-- <div class="form-group" id="placementField">
                     <div class="form-group">
                       <label class="form-label" for="placement">Penempatan</label>
                       <input id="placement" name="placement" value="{{ old('placement') }}"
@@ -45,7 +46,23 @@
                         <a style="color: red"><small>{{ $message }}</small></a>
                       @enderror
                     </div>
+                  </div> --}}
+
+                  <div class="form-group" id="positionField">
+                    <label class="form-label" for="position_id">Jabatan</label>
+                    <select name="position_id" id="position_id"
+                      class="form-control @error('position_id') is-invalid @enderror">
+                      <option value="" disabled selected>Choose</option>
+                      @foreach ($positions as $position)
+                        <option value="{{ $position->id }}" {{ old('position_id') == $position->id ? 'selected' : '' }}>
+                          {{ $position->name }}</option>
+                      @endforeach
+                    </select>
+                    @error('position_id')
+                      <a style="color: red"><small>{{ $message }}</small></a>
+                    @enderror
                   </div>
+
                 </div>
 
                 <div class="col-md-6">
@@ -67,18 +84,12 @@
                     @enderror
                   </div>
 
-                  <div class="form-group" id="positionField">
-                    <label class="form-label" for="position_id">Jabatan</label>
-                    <select name="position_id" id="position_id"
-                      class="form-control @error('position_id') is-invalid @enderror">
-                      <option value="" disabled selected>Choose</option>
-                      @foreach ($positions as $position)
-                        <option value="{{ $position->id }}"
-                          {{ old('position_id') == $position->id ? 'selected' : '' }}>
-                          {{ $position->name }}</option>
-                      @endforeach
-                    </select>
-                    @error('position_id')
+
+                  <div class="form-group">
+                    <label for="file_career" class="form-label">File</label>
+                    <input class="form-control @error('file_career') is-invalid @enderror" accept=".pdf" type="file"
+                      id="file_career" name="file_career">
+                    @error('file_career')
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
                   </div>
@@ -89,14 +100,14 @@
               </div>
 
               <div class="row">
-                <div class="my-2">
+                {{-- <div class="form-group">
                   <label for="file_career" class="form-label">File</label>
                   <input class="form-control @error('file_career') is-invalid @enderror" accept=".pdf" type="file"
                     id="file_career" name="file_career">
                   @error('file_career')
                     <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror
-                </div>
+                </div> --}}
 
                 <div class="form-group">
                   <label class="form-label" for="description">Deskripsi</label>

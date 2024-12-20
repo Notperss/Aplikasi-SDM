@@ -116,15 +116,17 @@
   <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px;">
     <thead>
       <tr>
-        <th colspan="4" style="text-align: left; border: 1px solid #ddd; background-color: #c7c3c3;">
+        <th colspan="5" style="text-align: left; border: 1px solid #ddd; background-color: #c7c3c3;">
           Informasi Pendidikan
         </th>
       </tr>
       <tr>
         <th style="border: 1px solid #ddd;">Jenjang</th>
         <th style="border: 1px solid #ddd;">Nama Sekolah/Universitas</th>
-        <th style="border: 1px solid #ddd;">Bidang Studi</th>
-        <th style="border: 1px solid #ddd;">Tahun Lulus</th>
+        {{-- <th style="border: 1px solid #ddd;">Bidang Studi</th> --}}
+        <th style="border: 1px solid #ddd;">Tahun Mulai</th>
+        <th style="border: 1px solid #ddd;">Tahun Selesai</th>
+        <th style="border: 1px solid #ddd;">Lulus/Tidak</th>
       </tr>
     </thead>
     <tbody>
@@ -132,8 +134,10 @@
         <tr>
           <td style="border: 1px solid #ddd;">{{ $education->school_level ?? '' }}</td>
           <td style="border: 1px solid #ddd;">{{ $education->school_name ?? '' }}</td>
-          <td style="border: 1px solid #ddd;">{{ $education->study ?? '' }}</td>
+          {{-- <td style="border: 1px solid #ddd;">{{ $education->study ?? '' }}</td> --}}
           <td style="border: 1px solid #ddd;">{{ $education->year_to ?? '' }}</td>
+          <td style="border: 1px solid #ddd;">{{ $education->year_from ?? '' }}</td>
+          <td style="border: 1px solid #ddd;">{{ $education->graduate ?? '' }}</td>
         </tr>
       @empty
         {{-- @for ($i = 0; $i < 3; $i++)
@@ -151,6 +155,7 @@
       @if ($employee->educationalHistories->count() < 5)
         @for ($i = 0; $i < 5 - $employee->educationalHistories->count(); $i++)
           <tr>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
             <td style="border: 1px solid #ddd;">&nbsp;</td>
             <td style="border: 1px solid #ddd;">&nbsp;</td>
             <td style="border: 1px solid #ddd;">&nbsp;</td>
@@ -235,6 +240,113 @@
     </tbody>
   </table>
 
+  <!-- Pengalaman Kerja CMNP rehire -->
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px;">
+    <thead>
+      <tr>
+        <th colspan="4" style=" text-align: left; border: 1px solid #ddd; background-color: #c7c3c3;">
+          Riwayat Pangkat/Jabatan
+        </th>
+      </tr>
+      <tr>
+        <th style="border: 1px solid #ddd;">Jabatan</th>
+        <th style="border: 1px solid #ddd;">Penempatan</th>
+        <th style="border: 1px solid #ddd;">Efektif Tanggal</th>
+      </tr>
+    </thead>
+    <tbody>
+      @forelse ($employee->employeeCareers->where('cmnp_career', 0) as $career)
+        <tr>
+          <td style="border: 1px solid #ddd;">{{ $career->position->name ?? '' }}</td>
+          <td style="border: 1px solid #ddd;">{{ $career->position->division->name ?? '' }}</td>
+          <td style="border: 1px solid #ddd;">
+            {{ $career->start_date ? Carbon\Carbon::parse($career->start_date)->translatedFormat('d M y') : '' }}
+            -
+            {{ $career->end_date ? Carbon\Carbon::parse($career->end_date)->translatedFormat('d M y') : 'Sekarang' }}
+          </td>
+        </tr>
+      @empty
+        {{-- @for ($i = 0; $i < 2; $i++)
+          <tr>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+          </tr>
+        @endfor --}}
+      @endforelse
+      <tr>
+        <td colspan="4" style="border: 1px solid #ffffff; background-color: #c7c3c3; padding: 3px"></td>
+      </tr>
+      @forelse ($employee->employeeCareers->where('cmnp_career', 1) as $career)
+        <tr>
+          <td style="border: 1px solid #ddd;">{{ $career->position_name ?? '' }}</td>
+          <td style="border: 1px solid #ddd;">{{ $career->placement ?? '' }}</td>
+          <td style="border: 1px solid #ddd;">
+            {{ $career->start_date ? Carbon\Carbon::parse($career->start_date)->translatedFormat('d M y') : '' }}
+            -
+            {{ $career->end_date ? Carbon\Carbon::parse($career->end_date)->translatedFormat('d M y') : '' }}</td>
+        </tr>
+      @empty
+      @endforelse
+
+      @if ($employee->employeeCareers->count() < 5)
+        {{-- Add 2 empty rows if there are no family details with relation < 3 --}}
+        @for ($i = 0; $i < 5 - $employee->employeeCareers->count(); $i++)
+          <tr>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+          </tr>
+        @endfor
+      @endif
+    </tbody>
+  </table>
+
+  <!-- Pengalaman Kerja CMNP -->
+  {{-- <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px;">
+    <thead>
+      <tr>
+        <th colspan="4" style=" text-align: left; border: 1px solid #ddd; background-color: #c7c3c3;">
+          Riwayat Kerja CMNP
+        </th>
+      </tr>
+      <tr>
+        <th style="border: 1px solid #ddd;">Jabatan</th>
+        <th style="border: 1px solid #ddd;">Penempatan</th>
+        <th style="border: 1px solid #ddd;">Tahun Masuk</th>
+        <th style="border: 1px solid #ddd;">Tahun Keluar</th>
+      </tr>
+    </thead>
+    <tbody>
+      @forelse ($employee->employeeCareers->where('cmnp_career', 1) as $career)
+        <tr>
+          <td style="border: 1px solid #ddd;">{{ $career->position_name ?? '' }}</td>
+          <td style="border: 1px solid #ddd;">{{ $career->placement ?? '' }}</td>
+          <td style="border: 1px solid #ddd;">
+            {{ $career->start_date ? Carbon\Carbon::parse($career->start_date)->translatedFormat('d M y') : '' }}</td>
+          <td style="border: 1px solid #ddd;">
+            {{ $career->end_date ? Carbon\Carbon::parse($career->end_date)->translatedFormat('d M y') : '' }}</td>
+        </tr>
+      @empty
+        
+      @endforelse
+
+      @if ($employee->employeeCareers->where('cmnp_career', 1)->count() < 5)
+        @for ($i = 0; $i < 5 - $employee->employeeCareers->where('cmnp_career', 1)->count(); $i++)
+          <tr>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            <td style="border: 1px solid #ddd;">&nbsp;</td>
+          </tr>
+        @endfor
+      @endif
+    </tbody>
+  </table> --}}
+
   <!-- Pengalaman Kerja -->
   <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px;">
     <thead>
@@ -245,7 +357,7 @@
       </tr>
       <tr>
         <th style="border: 1px solid #ddd;">Perusahaan</th>
-        <th style="border: 1px solid #ddd;">Posisi</th>
+        <th style="border: 1px solid #ddd;">Jabatan/Posisi</th>
         <th style="border: 1px solid #ddd;">Tahun Masuk</th>
         <th style="border: 1px solid #ddd;">Tahun Keluar</th>
       </tr>

@@ -227,7 +227,9 @@
             },
             {
               data: 'file',
-              name: 'file'
+              name: 'file',
+              orderable: false,
+              searchable: false,
             }
           ],
           columnDefs: [{

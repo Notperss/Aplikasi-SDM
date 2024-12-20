@@ -89,6 +89,7 @@
           <td>
             {{ Carbon\Carbon::parse($contract->end_date)->translatedFormat('d-m-Y') }}</td>
           <td>{{ $accumulatedDuration }}</td>
+          {{-- <td>{{ $contract->employee->accumulatedWorkTenure() }}</td> --}}
           <td>{{ $contract->contractKpi->grade ?? '-' }}</td>
           @if (isset($contract->contractKpi->contract_recommendation) && $contract->contractKpi->contract_recommendation == 1)
             <td style="background-color: #86e07b"> Kontrak Diperpanjang</td>
@@ -97,6 +98,7 @@
           @else
             <td>-</td>
           @endif
+
         </tr>
       @endforeach
     @endforeach

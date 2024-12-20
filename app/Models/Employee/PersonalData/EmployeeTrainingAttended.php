@@ -18,6 +18,7 @@ class EmployeeTrainingAttended extends Model
         'training_date',
         'city',
         'file_sertifikat',
+        'is_certificated',
     ];
 
     public function employee()

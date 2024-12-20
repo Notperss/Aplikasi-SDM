@@ -10,7 +10,7 @@
 
         <div class="modal-header">
           <h5 class="modal-title" id="modal-form-edit-training-attended-{{ $employeeTrainingAttended->id }}-label">
-            Edit Data Pengalaman Kerja
+            Edit Data Seminar/Pelatihan
           </h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
         </div>
@@ -61,7 +61,7 @@
               </div>
 
               <div class="mb-2">
-                <label for="file_sertifikat" class="form-label">File Setifikat</label>
+                <label for="file_sertifikat" class="form-label">File Sertifikat</label>
                 <input class="form-control" accept=".pdf" type="file" id="file_sertifikat"
                   @error('file_sertifikat') is-invalid @enderror name="file_sertifikat">
                 @error('file_sertifikat')

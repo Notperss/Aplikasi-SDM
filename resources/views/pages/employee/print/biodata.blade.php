@@ -66,7 +66,7 @@
         <tr>
           <td><strong>Status Karyawan</strong></td>
           <td><strong>:</strong></td>
-          <td>{{ $employee->employee_status }}</td>
+          <td>{{ $employee->work_relationship }}</td>
         </tr>
         <tr>
           <td><strong>Jenis Kelamin</strong></td>
@@ -95,13 +95,14 @@
       <tr>
         <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Tingkat
           Pendidikan</th>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Institusi</th>
+        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Institusi/Nama
+          Sekolah</th>
         <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Bidang Studi
         </th>
         <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Tahun Lulus</th>
       </tr>
       <tbody>
-        @php
+        {{-- @php
           // Filter educational histories by specific levels
           $educational = $employee->educationalHistories->whereIn('school_level', ['S-1', 'S-2', 'S-3']);
 
@@ -110,7 +111,8 @@
               $educational = collect([$employee->educationalHistories->sortByDesc('year_to')->first()]);
           }
         @endphp
-        @foreach ($educational as $education)
+        @foreach ($educational as $education) --}}
+        @foreach ($employee->educationalHistories as $education)
           <tr>
             <td style="padding: 5px; border: 1px solid #ddd;">{{ $education->school_level ?? '' }}</td>
             <td style="padding: 5px; border: 1px solid #ddd;">{{ $education->school_name ?? '' }}</td>
@@ -130,10 +132,12 @@
         </th>
       </tr>
       <tr>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center; width: 30%">
           Efektif Tanggal</th>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Jabatan</th>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Penempatan
+        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center; width: 25%">
+          Jabatan</th>
+        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center;width: 45%">
+          Penempatan
         </th>
       </tr>
       <tbody>
@@ -144,12 +148,13 @@
               {{ Carbon\Carbon::parse($career->start_date)->translatedFormat('d M Y') }} -
 
               @if ($career->position_id)
-                {{ $career->end_date ? Carbon\Carbon::parse($career->end_date)->translatedFormat('l, d F Y') : 'Sekarang' }}
+                {{ $career->end_date ? Carbon\Carbon::parse($career->end_date)->translatedFormat('d M Y') : 'Sekarang' }}
               @endif
 
             </td>
             <td style="border: 1px solid #ddd;">{{ $career->position->name ?? ($career->type ?? '') }}</td>
-            <td style="border: 1px solid #ddd;">{{ $career->placement ?? '' }}</td>
+            <td style="border: 1px solid #ddd;">{{ $career->placement ?? ($career->position->division->name ?? '') }}
+            </td>
           </tr>
         @endforeach
       </tbody>
@@ -160,7 +165,87 @@
       </thead>
       <tr>
         <th colspan="4" style="border: 1px solid #ddd; background-color: #969696; text-align: center">
-          Pendidikan Non Formal: Kursus/Pelatihan
+
+        </th>
+      </tr>
+      {{-- <tr>
+        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+          Efektif Tanggal</th>
+        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Jabatan</th>
+        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Penempatan
+        </th>
+      </tr> --}}
+      <tr>
+        <th style="border: 1px solid #ddd; text-align: center; width: 30%">
+        </th>
+        <th style="border: 1px solid #ddd; text-align: center; width: 25%">
+        </th>
+        <th style="border: 1px solid #ddd; text-align: center;width: 45%">
+        </th>
+      </tr>
+      <tbody>
+        @foreach ($employee->employeeCareers->where('cmnp_career', 1) as $career)
+          <tr>
+            <td style="border: 1px solid #ddd;">
+
+              {{ Carbon\Carbon::parse($career->start_date)->translatedFormat('d M Y') }} -
+              {{ $career->end_date ? Carbon\Carbon::parse($career->end_date)->translatedFormat('d M Y') : '' }}
+
+            </td>
+            {{-- <td style="border: 1px solid #ddd;">{{ $career->position->name ?? ($career->type ?? '') }}</td> --}}
+            <td style="border: 1px solid #ddd;">{{ $career->position_name ?? '' }}</td>
+            <td style="border: 1px solid #ddd;">{{ $career->placement ?? ($career->position->division->name ?? '') }}
+            </td>
+          </tr>
+        @endforeach
+      </tbody>
+    </table>
+
+    <table style="width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; font-size: 14px;">
+      <thead>
+      </thead>
+      <tr>
+        <th colspan="5" style="border: 1px solid #ddd; background-color: #969696; text-align: center">
+          Pengalaman Kerja
+        </th>
+      </tr>
+      <tr>
+        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+          Tanggal Masuk</th>
+        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+          Tanggal Keluar</th>
+        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+          Jabatan</th>
+        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+          Nama Perusahaan</th>
+        {{-- <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Penempatan
+        </th> --}}
+      </tr>
+      <tbody>
+        @foreach ($employee->jobHistories as $employeeJobHistory)
+          <tr>
+            <td style="border: 1px solid #ddd;">
+              {{ $employeeJobHistory->year_from }}
+            </td>
+            <td style="border: 1px solid #ddd;">
+              {{ $employeeJobHistory->year_to }}
+            </td>
+            <td style="border: 1px solid #ddd;">{{ $employeeJobHistory->position ?? '' }}</td>
+            <td style="border: 1px solid #ddd;">{{ $employeeJobHistory->company_name }}
+            </td>
+            {{-- <td style="border: 1px solid #ddd;">{{ $career->position->name ?? ($career->type ?? '') }}</td> --}}
+
+          </tr>
+        @endforeach
+      </tbody>
+    </table>
+
+    <table style="width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; font-size: 14px;">
+      <thead>
+      </thead>
+      <tr>
+        <th colspan="4" style="border: 1px solid #ddd; background-color: #969696; text-align: center">
+          Kursus/Pelatihan
         </th>
       </tr>
       <tr>
@@ -174,30 +259,54 @@
           Tempat/Kota
         </th>
         <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
-          Tahun
+          Tanggal
         </th>
       </tr>
       <tbody>
-        @foreach ($employee->TrainingAttendeds as $training)
-          {{-- <tr>
-            <td style="border: 1px solid #ddd;">
-              {{ Carbon\Carbon::parse($career->start_date)->translatedFormat('d M Y') }} -
-              @if ($career->end_date)
-                {{ Carbon\Carbon::parse($career->end_date)->translatedFormat('l, d F Y') }}
-              @else
-                Sekarang
-              @endif
-            </td>
-            <td style="border: 1px solid #ddd;">{{ $career->position->name }}</td>
-            <td style="border: 1px solid #ddd;">{{ $career->placement }}</td>
-            <td style="border: 1px solid #ddd;">{{ $career->placement }}</td>
-          </tr> --}}
-
+        @foreach ($employee->trainingAttendeds->where('is_certificated', 0) as $training)
           <tr>
             <td style="border: 1px solid #ddd;">{{ $training->training_name }}</td>
             <td style="border: 1px solid #ddd;">{{ $training->organizer_name }}</td>
             <td style="border: 1px solid #ddd;">{{ $training->city }}</td>
-            <td style="border: 1px solid #ddd;">{{ $training->year }}</td>
+            <td style="border: 1px solid #ddd;">
+              {{ $training->training_date ? Carbon\Carbon::parse($training->training_date)->translatedFormat('d M Y') : '' }}
+            </td>
+          </tr>
+        @endforeach
+      </tbody>
+    </table>
+
+    <table style="width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; font-size: 14px;">
+      <thead>
+      </thead>
+      <tr>
+        <th colspan="4" style="border: 1px solid #ddd; background-color: #969696; text-align: center">
+          Sertifikasi
+        </th>
+      </tr>
+      <tr>
+        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+          Nama Sertifikasi
+        </th>
+        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+          Penyelenggara
+        </th>
+        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+          Tempat/Kota
+        </th>
+        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+          Masa Berlaku
+        </th>
+      </tr>
+      <tbody>
+        @foreach ($employee->trainingAttendeds->where('is_certificated', 1) as $training)
+          <tr>
+            <td style="border: 1px solid #ddd;">{{ $training->training_name }}</td>
+            <td style="border: 1px solid #ddd;">{{ $training->organizer_name }}</td>
+            <td style="border: 1px solid #ddd;">{{ $training->city }}</td>
+            <td style="border: 1px solid #ddd;">
+              {{ $training->training_date ? Carbon\Carbon::parse($training->training_date)->translatedFormat('d M Y') : '' }}
+            </td>
           </tr>
         @endforeach
       </tbody>

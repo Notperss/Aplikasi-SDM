@@ -11,7 +11,7 @@
       <th scope="col">Durasi</th>
       <th scope="col">Kontrak Ke- </th>
       <th scope="col">Divisi</th>
-      <th scope="col" class="text-center">KPI</th>
+      <th scope="col" class="text-center">PK</th>
       <th scope="col"></th>
     </tr>
   </thead>
@@ -65,7 +65,7 @@
             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
               data-bs-target="#modal-form-add-kpi">
               <i class="bi bi-plus-lg"></i>
-              KPI
+              PK
             </button>
             @include('pages.employee.personal-data.form.kpi.modal-create')
           @endif

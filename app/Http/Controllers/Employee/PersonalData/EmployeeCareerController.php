@@ -39,6 +39,7 @@ class EmployeeCareerController extends Controller
             'employee_id' => 'required|exists:employees,id',
             'position_id' => 'nullable|exists:positions,id',
             'placement' => 'nullable|string|max:255',
+            'cmnp_career' => 'nullable',
             'type' => 'required|string|max:255',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date',
@@ -75,7 +76,7 @@ class EmployeeCareerController extends Controller
 
         $employeeCareer = EmployeeCareer::create($data);
 
-        if ($employeeCareer) {
+        if ($employeeCareer->cmnp_career == 0) {
             Approval::create([
                 'company_id' => $employeeCareer->employee->company_id,
                 'selected_candidate_id' => null,

@@ -24,7 +24,7 @@ class StoreEducationalHistoryRequest extends FormRequest
         return [
             'school_level' => 'required|string|max:100',
             'school_name' => 'required|string|max:255',
-            'study' => 'required|string|max:255',
+            'study' => 'nullable|string|max:255',
             'year_from' => 'required|integer|min:1900|max:' . date('Y'),
             'year_to' => 'nullable|integer|min:1900|max:' . date('Y'),
             'gpa' => 'nullable|numeric|min:0',

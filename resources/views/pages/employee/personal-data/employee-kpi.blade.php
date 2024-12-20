@@ -4,7 +4,7 @@
 
           <div class="row">
             <div class="d-flex justify-content-between align-items-center ">
-              <h4 class="card-title">KPI</h4>
+              <h4 class="card-title">Penilaian Kerja</h4>
 
               {{-- @if (!$employee->is_verified)
                 <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
@@ -22,7 +22,7 @@
                 <thead>
                   <tr>
                     <th>#</th>
-                    <th>Tahun</th>
+                    <th>Tanggal</th>
                     <th>Nilai</th>
                     <th>Rekomendasi Kontrak</th>
                     <th>File</th>
@@ -33,7 +33,9 @@
                   @forelse ($employee->kpis as $employeeKpi)
                     <tr>
                       <td class="text-bold-500">{{ $loop->iteration }}</td>
-                      <td class="text-bold-500">{{ $employeeKpi->kpi_date }}</td>
+                      <td class="text-bold-500">
+                        {{ $employeeKpi->kpi_date ? Carbon\Carbon::parse($employeeKpi->kpi_date)->translatedFormat('d M Y') : '' }}
+                      </td>
                       <td class="text-bold-500">{{ $employeeKpi->grade }}</td>
                       <td class="text-bold-500">
                         @if ($employeeKpi->contract_recommendation)

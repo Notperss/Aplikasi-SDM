@@ -13,7 +13,7 @@ class Directorate extends Model
 
     protected $fillable = ['company_id', 'code', 'name', 'is_non'];
 
-    protected $casts = ['is_non' => 'boolean'];
+    // protected $casts = ['is_non' => 'boolean'];
 
     public function company()
     {

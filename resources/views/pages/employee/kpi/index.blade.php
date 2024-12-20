@@ -1,16 +1,16 @@
 @extends('layouts.app')
-@section('title', 'KPI')
+@section('title', 'Penilaian Kerja')
 @section('content')
 
 @section('breadcrumb')
-  <x-breadcrumb title="KPI" page="Karyawan" active="KPI" route="{{ route('employeeKpi.index') }}" />
+  <x-breadcrumb title="Penilaian Kerja" page="Karyawan" active="Penilaian Kerja" route="{{ route('employeeKpi.index') }}" />
 @endsection
 
 <div class="col-md-12 mt-4">
   <div class="card">
     <div class="card-header">
       <div class="d-flex justify-content-between align-items-center ">
-        <h4 class="card-title">Data KPI</h4>
+        <h4 class="card-title">Data Penilaian Kerja</h4>
         {{-- <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
           data-bs-target="#modal-form-add-kpi">
           <i class="bi bi-plus-lg"></i>
@@ -45,7 +45,7 @@
               <th>NIK</th>
               <th>Nama Karyawan</th>
               <th>Nomor Kontrak</th>
-              <th>Tanggal Kpi</th>
+              <th>Tanggal PK</th>
               <th>Nilai</th>
               <th>Rekomendasi Kontrak</th>
               <th>File</th>
@@ -114,13 +114,11 @@
           data: 'employee.nik',
           name: 'employee.nik',
           orderable: false,
-          searchable: false,
         },
         {
           data: 'employee.name',
           name: 'employee.name',
           orderable: false,
-          searchable: false,
         },
         {
           data: 'contract.contract_number',
@@ -141,6 +139,8 @@
         {
           data: 'file',
           name: 'file',
+          orderable: false,
+          searchable: false,
         },
         {
           data: 'action',

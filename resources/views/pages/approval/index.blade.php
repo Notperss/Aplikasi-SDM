@@ -11,6 +11,219 @@
 
 
 <section class="section">
+  <div class="row">
+    <h5>Persetujuan Pending</h5>
+    <div class="col-6 col-lg-2 col-md-6">
+      <div class="card">
+        <div class="card-body px-4 py-4-5">
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
+              <div class=" mb-2" style="background-color: #fff">
+
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              <h6 class="text-muted font-semibold">Karyawan Baru</h6>
+              <h4 class="font-extrabold mb-0">
+                @role('super-admin')
+                  {{ DB::table('approvals')->whereNotNull('selected_candidate_id')->whereNull('is_approve')->count() }}
+                @else
+                  {{ DB::table('approvals')->whereNotNull('selected_candidate_id')->whereNull('is_approve')->where('company_id', auth()->user()->company_id)->count() }}
+                @endrole
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6">
+      <div class="card">
+        <div class="card-body px-4 py-4-5">
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
+              <div class=" mb-2" style="background-color: #953b3bcc">
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              <h6 class="text-muted font-semibold">Buka Verifikasi</h6>
+              <h4 class="font-extrabold mb-0">
+                @role('super-admin')
+                  {{ DB::table('approvals')->whereNotNull('employee_id')->whereNull('is_approve')->count() }}
+                @else
+                  {{ DB::table('approvals')->whereNotNull('employee_id')->whereNull('is_approve')->where('company_id', auth()->user()->company_id)->count() }}
+                @endrole
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6">
+      <div class="card">
+        <div class="card-body px-4 py-4-5">
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
+              <div class=" mb-2" style="background-color: #314299ec">
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              <h6 class="text-muted font-semibold">Promosi</h6>
+              <h4 class="font-extrabold mb-0">
+                @role('super-admin')
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'PROMOSI')->count() }}
+                @else
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'PROMOSI')->where('company_id', auth()->user()->company_id)->count() }}
+                @endrole
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6">
+      <div class="card">
+        <div class="card-body px-4 py-4-5">
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
+              <div class=" mb-2" style="background-color: #57a042cc">
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              <h6 class="text-muted font-semibold">Demosi</h6>
+              <h4 class="font-extrabold mb-0">
+                @role('super-admin')
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'DEMOSI')->count() }}
+                @else
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'DEMOSI')->where('company_id', auth()->user()->company_id)->count() }}
+                @endrole
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6">
+      <div class="card">
+        <div class="card-body px-4 py-4-5">
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
+              <div class=" mb-2" style="background-color: #7b20a2cc">
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              <h6 class="text-muted font-semibold">Mutasi</h6>
+              <h4 class="font-extrabold mb-0">
+                @role('super-admin')
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'MUTASI')->count() }}
+                @else
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'MUTASI')->where('company_id', auth()->user()->company_id)->count() }}
+                @endrole
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6">
+      <div class="card">
+        <div class="card-body px-4 py-4-5">
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
+              <div class=" mb-2" style="background-color: #b4237fcc">
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              <h6 class="text-muted font-semibold">Rotasi</h6>
+              <h4 class="font-extrabold mb-0">
+                @role('super-admin')
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'ROTASI')->count() }}
+                @else
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'ROTASI')->where('company_id', auth()->user()->company_id)->count() }}
+                @endrole
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6">
+      <div class="card">
+        <div class="card-body px-4 py-4-5">
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
+              <div class=" mb-2" style="background-color: #b4a623cc">
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              <h6 class="text-muted font-semibold">Pensiun</h6>
+              <h4 class="font-extrabold mb-0">
+                @role('super-admin')
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'PENSIUN')->count() }}
+                @else
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'PENSIUN')->where('company_id', auth()->user()->company_id)->count() }}
+                @endrole
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6">
+      <div class="card">
+        <div class="card-body px-4 py-4-5">
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
+              <div class=" mb-2" style="background-color: #2b0f70cc">
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              <h6 class="text-muted font-semibold">Resign</h6>
+              <h4 class="font-extrabold mb-0">
+                @role('super-admin')
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'RESIGN')->count() }}
+                @else
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'RESIGN')->where('company_id', auth()->user()->company_id)->count() }}
+                @endrole
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6">
+      <div class="card">
+        <div class="card-body px-4 py-4-5">
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
+              <div class=" mb-2" style="background-color: #8e0321cc">
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              <h6 class="text-muted font-semibold">Non-Aktif</h6>
+              <h4 class="font-extrabold mb-0">
+                @role('super-admin')
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'NON-AKTIF')->count() }}
+                @else
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'NON-AKTIF')->where('company_id', auth()->user()->company_id)->count() }}
+                @endrole
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
   <div class="card">
     <div class="card-header">
       <div class="d-flex justify-content-between align-items-center ">

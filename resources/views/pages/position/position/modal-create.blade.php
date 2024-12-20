@@ -18,7 +18,7 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="my-2">
-                    <label class="form-label" for="directorate_id">Direktorat</label>
+                    <label class="form-label" for="directorate_id">Direktorat <code>*</code></label>
                     <select id="store_directorate_id" name="directorate_id"
                       class="form-control @error('directorate_id') is-invalid @enderror" required>
                       <option value="" disabled selected>Choose</option>
@@ -32,9 +32,9 @@
                   </div>
 
                   <div class="mb-2">
-                    <label class="form-label" for="division_id">Divisi</label>
+                    <label class="form-label" for="division_id">Divisi <code>*</code></label>
                     <select id="store_division_id" name="division_id"
-                      class="form-control @error('division_id') is-invalid @enderror">
+                      class="form-control @error('division_id') is-invalid @enderror" required>
                       <option value="" disabled selected>Choose</option>
                       {{-- @foreach ($divisions as $division)
                       <option value="{{ $division->id }}">{{ $division->name }}</option>
@@ -75,7 +75,7 @@
                 </div>
                 <div class="col-md-6">
                   <div class="my-2">
-                    <label class="form-label" for="level_id">Level</label>
+                    <label class="form-label" for="level_id">Level <code>*</code></label>
                     <select id="level_id" name="level_id" class="form-control @error('level_id') is-invalid @enderror"
                       required>
                       <option value="" disabled selected>Choose</option>
@@ -90,7 +90,7 @@
                   </div>
 
                   <div class="mb-2">
-                    <label class="form-label" for="name">Nama Jabatan</label>
+                    <label class="form-label" for="name">Nama Jabatan <code>*</code></label>
                     <input id="name" name="name" class="form-control @error('name') is-invalid @enderror"
                       required>
                     @error('name')
