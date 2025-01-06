@@ -212,13 +212,26 @@ class ApprovalController extends Controller
 
                 if ($isApprove == 1) { // Approval logic
 
-                    // Update the employee's position or status based on the type
                     if (in_array($employeeCareer->type, ['PENSIUN', 'NON-AKTIF', 'RESIGN'])) {
+                        // Update the employee's status and date of leaving
                         Employee::where('id', $employeeCareer->employee_id)
                             ->update([
                                 'employee_status' => $employeeCareer->type,
                                 'date_leaving' => $employeeCareer->start_date,
                             ]);
+
+                        // Get all careers for the employee
+                        $careers = EmployeeCareer::where('employee_id', $employeeCareer->employee_id)->where('cmnp_career', 0)->get();
+
+                        // Update each career
+                        foreach ($careers as $career) {
+                            $career->update([
+                                'cmnp_career' => 1,
+                                'placement' => $career->position?->division->name ?? $employeeCareer->position?->division->name ?? '-',
+                                'position_name' => $career->position?->name ?? $employeeCareer->position?->name ?? '-',
+                            ]);
+                        }
+
                     } else {
                         Employee::where('id', $employeeCareer->employee_id)
                             ->update(['position_id' => $employeeCareer->position_id]);

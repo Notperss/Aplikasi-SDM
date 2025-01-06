@@ -250,16 +250,16 @@
             name: 'name'
           },
           {
-            data: 'position',
-            name: 'position',
+            data: 'position.name',
+            name: 'position.name',
             orderable: false,
-            searchable: false
+
           },
           {
-            data: 'division',
-            name: 'division',
+            data: 'position.division.name',
+            name: 'position.division.name',
             orderable: false,
-            searchable: false
+
           },
           {
             data: null,

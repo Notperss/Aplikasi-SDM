@@ -9,7 +9,7 @@ class UpdateJobHistoryRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize() : bool
+    public function authorize(): bool
     {
         return true;
     }
@@ -19,17 +19,17 @@ class UpdateJobHistoryRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [
             // 'employee_id' => 'required|integer|exists:employees,id',
             'company_name' => 'required|string|max:255',
             'company_type' => 'string|max:100',
-            'direct_supervisor' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
             // 'address' => 'required|string|max:255',
             // 'phone_number' => 'required|string|max:15',
-            'year_from' => 'required|string|max:255',
-            'year_to' => 'nullable|string|max:255',
+            'period' => 'required|string|max:255',
+            'year_out' => 'nullable|string|max:255',
             'position' => 'required|string|max:255',
             'salary' => 'nullable|numeric|min:0',
             'reason' => 'nullable|string|max:255',
@@ -38,7 +38,7 @@ class UpdateJobHistoryRequest extends FormRequest
         ];
     }
 
-    public function messages() : array
+    public function messages(): array
     {
         return [
             // employee ID
@@ -51,7 +51,7 @@ class UpdateJobHistoryRequest extends FormRequest
             'company_name.max' => 'Nama perusahaan tidak boleh lebih dari 255 karakter.',
             'company_type.required' => 'Tipe perusahaan wajib diisi.',
             'company_type.max' => 'Tipe perusahaan tidak boleh lebih dari 100 karakter.',
-            'direct_supervisor.required' => 'Supervisor langsung wajib diisi.',
+            'city.required' => 'Supervisor langsung wajib diisi.',
 
             // Address & Contact Information
             // 'address.required' => 'Alamat perusahaan wajib diisi.',

@@ -41,9 +41,9 @@ class EmployeeController extends Controller
      */
     public function index(Request $request)
     {
-        $employees = Employee::with('employeeCategory')
+        $employees = Employee::with('employeeCategory', 'position.division', 'position.level')
             ->when(! Auth::user()->hasRole('super-admin'), function ($query) {
-                $query->where('company_id', Auth::user()->company_id);
+                $query->where('employees.company_id', Auth::user()->company_id);
             })
             ->when($request->filled(['employee_status']), function ($query) use ($request) {
                 if ($request->employee_status === 'NONAKTIF') {
@@ -56,7 +56,13 @@ class EmployeeController extends Controller
             ->when($request->filled(['start_date', 'end_date']), function ($query) use ($request) {
                 $query->whereBetween('date_joining', [$request->start_date, $request->end_date]);
             })
-            ->latest();
+            ->join('positions', 'employees.position_id', '=', 'positions.id') // Join positions
+            ->join('divisions', 'positions.division_id', '=', 'divisions.id') // Join divisions
+            ->join('levels', 'positions.level_id', '=', 'levels.id') // Join levels
+            ->orderBy('divisions.name', 'asc') // Then order by division name
+            ->orderBy('levels.id', 'asc') // Order by level name
+            ->select('employees.*') // Select employees columns to avoid ambiguity
+        ;
 
 
 
@@ -85,38 +91,38 @@ class EmployeeController extends Controller
                     <i class="bi bi-three-dots-vertical"></i>
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    ' . ($canVerify ? '
+                    '.($canVerify ? '
                     <!-- Verified Form -->
-                    <form id="verifiedForm_' . $item->id . '" action="' . $verifiedRoute . '" method="POST" style="display: none;">
-                        ' . csrf_field() . method_field('PATCH') . '
+                    <form id="verifiedForm_'.$item->id.'" action="'.$verifiedRoute.'" method="POST" style="display: none;">
+                        '.csrf_field().method_field('PATCH').'
                     </form>
                     <a class="dropdown-item" href="javascript:void(0);"
-                        onclick="document.getElementById(\'verifiedForm_' . $item->id . '\').submit();"
-                        ' . ($isVerified ? 'hidden' : '') . '>Verified</a>
-                    ' : '') . '
+                        onclick="document.getElementById(\'verifiedForm_'.$item->id.'\').submit();"
+                        '.($isVerified ? 'hidden' : '').'>Verified</a>
+                    ' : '').'
 
                     <!-- Unverified Form -->
-                    <form id="unverifiedForm_' . $item->id . '" action="' . $unverifiedRoute . '" method="POST" style="display: none;">
-                        ' . csrf_field() . method_field('PATCH') . '
+                    <form id="unverifiedForm_'.$item->id.'" action="'.$unverifiedRoute.'" method="POST" style="display: none;">
+                        '.csrf_field().method_field('PATCH').'
                     </form>
                     <a class="dropdown-item" href="javascript:void(0);"
-                        onclick="document.getElementById(\'unverifiedForm_' . $item->id . '\').submit();"
-                        ' . (! $isVerified
+                        onclick="document.getElementById(\'unverifiedForm_'.$item->id.'\').submit();"
+                        '.(! $isVerified
                         ? 'hidden'
                         : ($item->approvals->where('description', 'Buka Verifikasi')->whereNull('is_approve')->first()
                             ? 'hidden'
-                            : '')) . '
+                            : '')).'
                         >Unverified</a>
                     
                     <!-- View/Edit -->
-                    <a class="dropdown-item" href="' . $showRoute . '">' . ($isVerified ? 'Lihat' : 'Edit') . '</a>
+                    <a class="dropdown-item" href="'.$showRoute.'">'.($isVerified ? 'Lihat' : 'Edit').'</a>
 
                     <!-- Delete -->
-                    ' . (! $isVerified ? '
-                    <button class="dropdown-item" onclick="showSweetAlert(' . $item->id . ')">Hapus</button>
-                    <form id="' . $deleteFormId . '" action="' . $deleteRoute . '" method="POST" style="display: none;">
-                        ' . csrf_field() . method_field('DELETE') . '
-                    </form>' : '') . '
+                    '.(! $isVerified ? '
+                    <button class="dropdown-item" onclick="showSweetAlert('.$item->id.')">Hapus</button>
+                    <form id="'.$deleteFormId.'" action="'.$deleteRoute.'" method="POST" style="display: none;">
+                        '.csrf_field().method_field('DELETE').'
+                    </form>' : '').'
                 </div>
             </div>
         </div>';
@@ -127,20 +133,39 @@ class EmployeeController extends Controller
                     if ($mainPhoto) {
                         return '
                 <div class="fixed-frame">
-                    <img src="' . asset('storage/' . $mainPhoto->file_path) . '" data-fancybox alt="Icon User"
+                    <img src="'.asset('storage/'.$mainPhoto->file_path).'" data-fancybox alt="Icon User"
                     class="framed-image" style="cursor: pointer">
                 </div>';
                     } else {
                         return 'No Image';
                     }
-                })->editColumn('created_at', function ($item) {
-                    return '' . Carbon::parse($item->created_at)->translatedFormat('d F Y') . '';
+                    // })->editColumn('created_at', function ($item) {
+                    //     return ''.Carbon::parse($item->created_at)->translatedFormat('d F Y').'';
                 })->editColumn('employeeCategory', function ($item) {
-                    return $item->employeeCategory->name ?? '-';
-                })->editColumn('position', function ($item) {
-                    return $item->position->name ?? '-';
-                })->editColumn('division', function ($item) {
-                    return $item->position->division->name ?? '-';
+                    $categoryName = $item->employeeCategory->name ?? '-';
+                    $levelId = $item->position->level->id ?? '-';
+
+                    $badgeColors = [
+                        1 => 'bg-light-primary',
+                        2 => 'bg-light-success',
+                        3 => 'bg-light-warning',
+                        4 => 'bg-light-danger',
+                        5 => 'bg-light-info',
+                    ];
+
+                    $badgeClass = $badgeColors[$levelId] ?? 'badge-secondary';
+
+                    if (in_array($levelId, [1, 2, 3, 4, 5])) {
+                        return '<span>'.$categoryName.'</span><br>
+                <span class="badge '.$badgeClass.'">'.$item->position->level->name.'</span>';
+                    }
+
+                    return '<span>'.$categoryName.'</span>';
+
+                    // })->editColumn('position', function ($item) {
+                    //     return $item->position->name ?? '-';
+                    // })->editColumn('division', function ($item) {
+                    //     return $item->position->division->name ?? '-';
                 })->editColumn('is_verified', function ($item) {
                     // Initialize variables
                     $verified = '-';
@@ -159,10 +184,13 @@ class EmployeeController extends Controller
                     }
 
                     // Return the concatenated result
-                    return $verified . ' ' . $isRequest;
-
+                    return $verified.' '.$isRequest;
+                })->editColumn('name_employee', function ($item) {
+                    $dateJoining = Carbon::parse($item->date_joining);
+                    $masaKerja = $dateJoining->diff(Carbon::now());
+                    return $item->name.'<br><small>KARYAWAN '.$item->work_relationship.'</small><br><small>'.$masaKerja->y.' tahun '.$masaKerja->m.' bulan '.$masaKerja->d.' hari</small>';
                 })
-                ->rawColumns(['action', 'photo', 'is_verified', 'employeeCategory'])
+                ->rawColumns(['action', 'photo', 'is_verified', 'employeeCategory', 'name_employee'])
                 ->toJson();
         }
 
@@ -220,8 +248,8 @@ class EmployeeController extends Controller
             if ($request->hasFile($file_field)) {
                 $file = $request->file($file_field); // Get the file
                 $extension = $file->getClientOriginalExtension(); // Get file extension
-                $file_name = $file_field . '_' . $data['name'] . '_' . time() . '.' . $extension; // Construct the file name
-                $data[$file_field] = $file->storeAs('files/employee/' . $file_field, $file_name, 'public_local'); // Store the file
+                $file_name = $file_field.'_'.$data['name'].'_'.time().'.'.$extension; // Construct the file name
+                $data[$file_field] = $file->storeAs('files/employee/'.$file_field, $file_name, 'public_local'); // Store the file
             }
         }
 
@@ -293,13 +321,14 @@ class EmployeeController extends Controller
 
         $employeeCategories = EmployeeCategory::orderBy('name', 'asc')->get();
 
-        $retirementDate = Carbon::parse($employee->dob)->addYears(55)->addMonths(3);
+        // $retirementDate = Carbon::parse($employee->dob)->addYears(55)->addMonths(3);
+        $retirementDate = Carbon::parse($employee->dob)->addYears(55);
 
         $currentDate = Carbon::now();
         $diff = $currentDate->diff($retirementDate);
 
-        $remainingYears = $diff->y;  // Whole years
-        $remainingMonths = $diff->m; // Remaining months after whole years
+        $remainingYears = $diff->invert ? 0 : $diff->y;  // Whole years (set to 0 if the date has passed)
+        $remainingMonths = $diff->invert ? 0 : $diff->m; // Remaining months after whole years (set to 0 if the date has passed)
 
         return view('pages.employee.show', compact(
             'positions',
@@ -363,9 +392,9 @@ class EmployeeController extends Controller
             if ($request->hasFile($file_field)) {
                 $file = $request->file($file_field);
                 $extension = $file->getClientOriginalExtension();
-                $file_name = $file_field . '_' . $data['name'] . '_' . time() . '.' . $extension;
+                $file_name = $file_field.'_'.$data['name'].'_'.time().'.'.$extension;
 
-                $data[$file_field] = $file->storeAs('files/employee/' . $file_field, $file_name, 'public_local');
+                $data[$file_field] = $file->storeAs('files/employee/'.$file_field, $file_name, 'public_local');
 
                 if (! empty($path_file)) {
                     Storage::disk('public_local')->delete($path_file);
@@ -566,7 +595,7 @@ class EmployeeController extends Controller
     {
         return Excel::download(
             new AttendanceExport,
-            'absensi_' . request('name', 'unknown') . '_' . request('year', now()->year) . '_' . request('month', now()->month) . '.xlsx'
+            'absensi_'.request('name', 'unknown').'_'.request('year', now()->year).'_'.request('month', now()->month).'.xlsx'
         );
     }
 

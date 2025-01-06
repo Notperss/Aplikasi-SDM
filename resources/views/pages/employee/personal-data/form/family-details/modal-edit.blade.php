@@ -185,20 +185,22 @@
                 </a>
               @enderror
             </div>
-
-            <div class="col-12 mb-1">
-              <label class="form-label" for="address">Alamat <code>*</code></label>
-              <textarea type="text" id="address" name="address" class="form-control @error('address') is-invalid @enderror"
-                rows="3" required> {{ $employeeFamilyDetail->address }}</textarea>
-              @error('address')
-                <a style="color: red">
-                  <small>
-                    {{ $message }}
-                  </small>
-                </a>
-              @enderror
-            </div>
+            @if ($employeeFamilyDetail->is_in_kk == 0)
+              <div class="col-12 mb-1">
+                <label class="form-label" for="address">Alamat</label>
+                <textarea type="text" id="address" name="address" class="form-control @error('address') is-invalid @enderror"
+                  rows="3"> {{ $employeeFamilyDetail->address }}</textarea>
+                @error('address')
+                  <a style="color: red">
+                    <small>
+                      {{ $message }}
+                    </small>
+                  </a>
+                @enderror
+              </div>
+            @endif
           </div>
+
 
           <div class="row mt-2">
             <div class="col-8">

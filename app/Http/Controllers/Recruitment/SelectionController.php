@@ -75,10 +75,26 @@ class SelectionController extends Controller
 
             // Handle the age filter
             if ($request->filled('age')) {
-                $age = (int) $request->age; // Get the age from the request
-                $startDate = Carbon::now()->subYears($age + 1)->startOfYear(); // Start of the year for the age
-                $endDate = Carbon::now()->subYears($age)->endOfYear(); // End of the year for the age
-                $candidates->whereBetween('dob', [$startDate, $endDate]);
+                $ageFilter = $request->age;
+
+                if ($ageFilter === '<20') {
+                    // Age less than 20
+                    $startDate = Carbon::now()->subYears(20)->startOfYear();
+                    $candidates->where('dob', '>', $startDate);
+                } elseif ($ageFilter === '>50') {
+                    // Age greater than 50
+                    $endDate = Carbon::now()->subYears(50)->endOfYear();
+                    $candidates->where('dob', '<', $endDate);
+                } elseif (preg_match('/^(\d+)-(\d+)$/', $ageFilter, $matches)) {
+                    // Age range (e.g., 20-25)
+                    $startAge = (int) $matches[1];
+                    $endAge = (int) $matches[2];
+
+                    $startDate = Carbon::now()->subYears($endAge + 1)->startOfYear();
+                    $endDate = Carbon::now()->subYears($startAge)->endOfYear();
+
+                    $candidates->whereBetween('dob', [$startDate, $endDate]);
+                }
             }
 
             if ($request->filled('marital_status')) {
@@ -511,11 +527,35 @@ class SelectionController extends Controller
             ];
 
             // Handle the age filter
+            // if ($request->filled('age')) {
+            //     $age = (int) $request->age; // Get the age from the request
+            //     $startDate = Carbon::now()->subYears($age + 1)->startOfYear(); // Start of the year for the age
+            //     $endDate = Carbon::now()->subYears($age)->endOfYear(); // End of the year for the age
+            //     $candidates->whereBetween('dob', [$startDate, $endDate]);
+            // }
+
+            // Handle the age filter
             if ($request->filled('age')) {
-                $age = (int) $request->age; // Get the age from the request
-                $startDate = Carbon::now()->subYears($age + 1)->startOfYear(); // Start of the year for the age
-                $endDate = Carbon::now()->subYears($age)->endOfYear(); // End of the year for the age
-                $candidates->whereBetween('dob', [$startDate, $endDate]);
+                $ageFilter = $request->age;
+
+                if ($ageFilter === '<20') {
+                    // Age less than 20
+                    $startDate = Carbon::now()->subYears(20)->startOfYear();
+                    $candidates->where('dob', '>', $startDate);
+                } elseif ($ageFilter === '>50') {
+                    // Age greater than 50
+                    $endDate = Carbon::now()->subYears(50)->endOfYear();
+                    $candidates->where('dob', '<', $endDate);
+                } elseif (preg_match('/^(\d+)-(\d+)$/', $ageFilter, $matches)) {
+                    // Age range (e.g., 20-25)
+                    $startAge = (int) $matches[1];
+                    $endAge = (int) $matches[2];
+
+                    $startDate = Carbon::now()->subYears($endAge + 1)->startOfYear();
+                    $endDate = Carbon::now()->subYears($startAge)->endOfYear();
+
+                    $candidates->whereBetween('dob', [$startDate, $endDate]);
+                }
             }
 
             if ($request->filled('marital_status')) {

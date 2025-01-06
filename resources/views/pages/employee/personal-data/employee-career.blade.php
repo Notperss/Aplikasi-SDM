@@ -146,7 +146,7 @@
                         {{ Carbon\Carbon::parse($employeeCareer->start_date)->translatedFormat('l, d F Y') }}
                       </td>
                       <td class="text-bold-500">
-                        {{ $employeeCareer->end_date ? Carbon\Carbon::parse($employeeCareer->end_date)->translatedFormat('l, d F Y') : 'Sekarang' }}
+                        {{ $employeeCareer->end_date ? Carbon\Carbon::parse($employeeCareer->end_date)->translatedFormat('l, d F Y') : '-' }}
                       </td>
                       <td class="text-bold-500">{{ $employeeCareer->placement ?? '' }}</td>
                       <td class="text-bold-500">{{ $employeeCareer->position_name ?? '' }}</td>

@@ -211,14 +211,25 @@
                   <th scope="col">
                     <textarea type="text" class="form-control form-control-sm" id="nameSearch" placeholder="search ..."></textarea>
                   </th>
-                  <th scope="col">
+                  {{-- <th scope="col">
                     <input type="text" oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="2"
                       class="form-control form-control-sm" id="ageSearch" placeholder="search ..."></input>
+                  </th> --}}
+                  <th scope="col">
+                    <select id="ageFilter" class="form-control form-control-sm" style="width: 100%">
+                      <option value="" selected>Semua</option>
+                      <option value="<20">
+                        < 20</option>
+                      <option value="20-25">20-25</option>
+                      <option value="25-35">25-35</option>
+                      <option value="35-50">35-50</option>
+                      <option value=">50"> > 50</option>
+                    </select>
                   </th>
                   <th scope="col">
                     <select type="text" id="genderFilter" class="form-control form-control-sm"
                       style="width: 100%">
-                      <option value="" disabled selected>Choose</option>
+                      <option value="" selected>Semua</option>
                       <option value="LAKI-LAKI">LAKI-LAKI</option>
                       <option value="PEREMPUAN">PEREMPUAN</option>
                     </select>
@@ -232,7 +243,7 @@
                   <th scope="col">
                     <select type="text" id="educateFilter" class="form-control form-control-sm"
                       style="width: 100%">
-                      <option value="" disabled selected>Choose</option>
+                      <option value="" selected>Semua</option>
                       <option value="S-3"> S-3 </option>
                       <option value="S-2"> S-2 </option>
                       <option value="S-1"> S-1 </option>
@@ -257,7 +268,7 @@
                   <th scope="col">
                     <select type="text" id="maritalFilter" class="form-control form-control-sm"
                       style="width: 100%">
-                      <option value="" disabled selected>Choose</option>
+                      <option value="" selected>Semua</option>
                       <option value="Kawin">Kawin</option>
                       <option value="Belum Kawin">
                         Belum Kawin</option>
@@ -520,7 +531,8 @@
           url: "{{ route('selection.index') }}",
           data: function(d) {
             d.name = $('#nameSearch').val();
-            d.age = $('#ageSearch').val();
+            // d.age = $('#ageSearch').val();
+            d.age = $('#ageFilter').val();
             d.gender = $('#genderFilter').val();
             // d.phone_number = $('#phoneSearch').val(); // Should match the database column
             // d.applied_position = $('#appPositionSearch').val();
@@ -604,7 +616,11 @@
       $('#nameSearch').keyup(function() {
         table.draw();
       });
-      $('#ageSearch').keyup(function() {
+      // $('#ageSearch').keyup(function() {
+      //   table.draw();
+      // });
+      // Event listener for the year filter dropdown
+      $('#ageFilter').change(function() {
         table.draw();
       });
       // Event listener for the year filter dropdown

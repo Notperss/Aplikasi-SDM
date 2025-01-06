@@ -257,13 +257,17 @@ class DashboardController extends Controller
     {
         $divisionId = Division::findOrFail($id);
 
-        $positions = Position::whereHas('employee', function ($query) {
+        $positions = Position::with('level')->whereHas('employee', function ($query) {
             $query
                 ->where('employee_status', 'AKTIF')
                 ->when(! Auth::user()->hasRole('super-admin'), function ($query) {
                     $query->where('company_id', Auth::user()->company_id);
                 });
-        })->where('division_id', $id)->get();
+        })->where('division_id', $id)
+            ->join('levels', 'positions.level_id', '=', 'levels.id') // Join the levels table
+            ->orderBy('levels.id', 'asc') // Order by the levels.name
+            ->select('positions.*') // Select only position columns to avoid ambiguity
+            ->get();
 
         return view('pages.dashboard.employeesDivision', compact('positions', 'divisionId'));
     }

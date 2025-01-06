@@ -200,10 +200,10 @@
               name: 'nik_employee'
             },
             {
-              data: 'name_employee',
-              name: 'name_employee',
-              orderable: false,
-              searchable: false
+              data: 'employee.name',
+              name: 'employee.name',
+              // orderable: false,
+              // searchable: false
             },
             {
               data: 'start_date',

@@ -51,35 +51,34 @@
               </div> --}}
 
               <div class="mb-2">
-                <label class="form-label" for="direct_supervisor">Nama Atasan Langsung</label>
-                <input type="text" value="{{ $employeeJobHistory->direct_supervisor }}" id="direct_supervisor"
-                  name="direct_supervisor" class="form-control @error('direct_supervisor') is-invalid @enderror"
-                  required />
-                @error('direct_supervisor')
+                <label class="form-label" for="city">Kota</label>
+                <input type="text" value="{{ $employeeJobHistory->city }}" id="city" name="city"
+                  class="form-control @error('city') is-invalid @enderror" required />
+                @error('city')
                   <a style="color: red"><small>{{ $message }}</small></a>
                 @enderror
               </div>
-              <div class="row">
-                <div class="col-md-6 mb-2">
-                  <label for="year_from">Tahun Masuk</label>
-                  <input type="text" value="{{ $employeeJobHistory->year_from }}"
-                    oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="4" id="year" name="year_from"
-                    value="{{ old('year_from') }}" class="form-control  @error('year_from') is-invalid @enderror" />
-                  @error('year_from')
-                    <a style="color: red"><small>{{ $message }}</small></a>
-                  @enderror
-                </div>
 
-                <div class="col-md-6 mb-2">
-                  <label class="form-label" for="year_to">Tahun Keluar</label>
-                  <input type="text" value="{{ $employeeJobHistory->year_to }}"
-                    oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="4" id="year_to" name="year_to"
-                    value="{{ old('year_to') }}" class="form-control  @error('year_to') is-invalid @enderror" />
-                  @error('year_to')
-                    <a style="color: red"><small>{{ $message }}</small></a>
-                  @enderror
-                </div>
+              <div class=" mb-2">
+                <label for="period">Periode</label>
+                <input type="text" value="{{ $employeeJobHistory->period }}"
+                  oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="4" id="year" name="period"
+                  value="{{ old('period') }}" class="form-control  @error('period') is-invalid @enderror" />
+                @error('period')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
               </div>
+
+              <div class=" mb-2">
+                <label class="form-label" for="year_out">Tahun Keluar</label>
+                <input type="text" value="{{ $employeeJobHistory->year_out }}"
+                  oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="4" id="year_out" name="year_out"
+                  value="{{ old('year_out') }}" class="form-control  @error('year_out') is-invalid @enderror" />
+                @error('year_out')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div>
+
 
 
 
@@ -98,7 +97,7 @@
               </div>
 
               <div class="mb-2">
-                <label class="form-label" for="reason">Alasan Keluar/Resign</label>
+                <label class="form-label" for="reason">Keterangan Tambahan</label>
                 <textarea id="reason" name="reason" class="form-control @error('reason') is-invalid @enderror" rows="2"
                   required>{{ $employeeJobHistory->reason }}</textarea>
                 @error('reason')

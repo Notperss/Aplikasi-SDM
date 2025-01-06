@@ -83,7 +83,7 @@
             <td class="text-bold-500">{{ $loop->iteration }}</td>
             <td class="text-bold-500">{{ $employmentHistory->company_name }}</td>
             <td class="text-bold-500">{{ $employmentHistory->position }}</td>
-            <td class="text-bold-500">{{ $employmentHistory->direct_supervisor }}</td>
+            <td class="text-bold-500">{{ $employmentHistory->city }}</td>
             <td class="text-bold-500">
               {{ $employmentHistory->year_from }} - {{ $employmentHistory->year_to }}
             </td> <!-- Combine year_from and year_to -->

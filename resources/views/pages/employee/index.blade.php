@@ -3,7 +3,7 @@
 @section('content')
 
 @section('breadcrumb')
-  <x-breadcrumb title="Karyawan" page="Recruitment" active="Karyawan" route="{{ route('employee.index') }}" />
+  <x-breadcrumb title="Karyawan" page="Karyawan" active="Karyawan" route="{{ route('employee.index') }}" />
 @endsection
 
 <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
@@ -12,9 +12,10 @@
 
 <section class="section">
   <div class="card">
+
     <div class="card-header">
       <div class="d-flex justify-content-between align-items-center ">
-        <h5 class="fw-normal mb-0 text-body">Daftar Karyawan Aktif</h5>
+        <h5 class="fw-normal mb-0 text-body">Daftar Karyawan</h5>
         <a href="{{ route('employee.create') }}" class="btn btn-primary btn-md">
           <i class="bi bi-plus-lg"></i>
           Karyawan</a>
@@ -78,10 +79,8 @@
       </div> --}}
 
     </div>
+
     <div class="card-body">
-
-
-
 
       <table class="table table-striped" id="table-employee" style="font-size: 85%">
         <thead>
@@ -90,9 +89,9 @@
             <th></th>
             <th>NIK</th>
             <th>Nama</th>
-            <th>Kategori Karyawan</th>
             <th>Jabatan</th>
             <th>Divisi</th>
+            <th>Kategori Karyawan</th>
             <th>Status</th>
             <th></th>
           </tr>
@@ -209,26 +208,29 @@
             name: 'nik'
           },
           {
-            data: 'name',
-            name: 'name'
+            data: 'name_employee',
+            name: 'name',
+            // render: function(data, type, row) {
+            //   return `${data.name}<br><small>${data.position.name}</small>`;
+            // }
+          },
+
+
+          {
+            data: 'position.name',
+            name: 'position.name',
+            // orderable: false,
+          },
+          {
+            data: 'position.division.name',
+            name: 'position.division.name',
+            // orderable: false,
           },
           {
             data: 'employeeCategory',
-            name: 'employeeCategory',
-            orderable: false,
-            searchable: false
-          },
-          {
-            data: 'position',
-            name: 'position',
-            orderable: false,
-            searchable: false
-          },
-          {
-            data: 'division',
-            name: 'division',
-            orderable: false,
-            searchable: false
+            name: 'employeeCategory.name',
+            // orderable: false,
+            // searchable: false
           },
           {
             data: 'is_verified',

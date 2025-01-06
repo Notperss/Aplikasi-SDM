@@ -24,7 +24,7 @@ class ContractController extends Controller
     {
         $contracts = Contract::when(! Auth::user()->hasRole('super-admin'), function ($query) {
             $query->where('company_id', Auth::user()->company_id);
-        })->with('employee')->orderBy('created_at', 'desc');
+        })->with('employee')->orderBy('contracts.created_at', 'asc');
 
         // Apply date range filter
         if ($request->filled(['start_date', 'end_date'])) {
@@ -62,13 +62,13 @@ class ContractController extends Controller
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                      
-                     <a class="dropdown-item" href="' . route('contract.edit', $item) . '">
+                     <a class="dropdown-item" href="'.route('contract.edit', $item).'">
                      Edit
                     </a>
-                        <button class="dropdown-item" onclick=" showSweetAlert(' . $item->id . ') ">Hapus</button>
-                        <form id="deleteForm_' . $item->id . '"
-                          action="' . route('contract.destroy', $item->id) . '" method="POST">
-                          ' . method_field('delete') . csrf_field() . '
+                        <button class="dropdown-item" onclick=" showSweetAlert('.$item->id.') ">Hapus</button>
+                        <form id="deleteForm_'.$item->id.'"
+                          action="'.route('contract.destroy', $item->id).'" method="POST">
+                          '.method_field('delete').csrf_field().'
                         </form>
                     </div>
                   </div>
@@ -77,14 +77,14 @@ class ContractController extends Controller
                     ';
 
                 })->editColumn('start_date', function ($item) {
-                    return '' . Carbon::parse($item->start_date)->translatedFormat('l, d F Y') . '';
+                    return ''.Carbon::parse($item->start_date)->translatedFormat('l, d F Y').'';
                 })->editColumn('end_date', function ($item) {
-                    return '' . Carbon::parse($item->end_date)->translatedFormat('l, d F Y') . '';
-                })->editColumn('name_employee', function ($item) {
-                    return $item->employee->name;
+                    return ''.Carbon::parse($item->end_date)->translatedFormat('l, d F Y').'';
+                    // })->editColumn('name_employee', function ($item) {
+                    //     return $item->employee->name;
                 })->editColumn('file', function ($item) {
                     if ($item->file) {
-                        return '<a class="btn btn-sm btn-primary" href="' . asset('storage/' . $item->file) . '" target="_blank" > Lihat </a>';
+                        return '<a class="btn btn-sm btn-primary" href="'.asset('storage/'.$item->file).'" target="_blank" > Lihat </a>';
                     } else {
                         return '<span> - </span>';
                     }
@@ -115,7 +115,7 @@ class ContractController extends Controller
         if ($request->hasFile('file')) {
             $file = $request->file('file'); // Get the file from the request
             $extension = $file->getClientOriginalExtension(); // Get the file extension
-            $file_name = 'file_kontrak' . time() . '.' . $extension; // Construct the file name
+            $file_name = 'file_kontrak'.time().'.'.$extension; // Construct the file name
             $data['file'] = $file->storeAs('files/employee/file_kontrak', $file_name, 'public_local'); // Store the file
         }
 
@@ -153,7 +153,7 @@ class ContractController extends Controller
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $extension = $file->getClientOriginalExtension();
-            $file_name = 'file_kontrak' . time() . '.' . $extension; // Construct the file name
+            $file_name = 'file_kontrak'.time().'.'.$extension; // Construct the file name
             $data['file'] = $file->storeAs('files/employee/file_kontrak', $file_name, 'public_local'); // Store the file
             // delete file
             if ($path_file != null || $path_file != '') {
@@ -195,7 +195,7 @@ class ContractController extends Controller
         if ($request->hasFile('file')) {
             $file = $request->file('file'); // Get the file
             $extension = $file->getClientOriginalExtension(); // Get the file extension
-            $file_name = 'file_import_contract_' . date('H-i-s_d-m-Y') . '.' . $extension;
+            $file_name = 'file_import_contract_'.date('H-i-s_d-m-Y').'.'.$extension;
 
 
             // Store the file and get the storage path
@@ -237,7 +237,7 @@ class ContractController extends Controller
     {
         return Excel::download(
             new ContractExportExpired,
-            'contracts_expired_' . request('year', now()->year) . '_' . request('month', now()->month) . '.xlsx'
+            'contracts_expired_'.request('year', now()->year).'_'.request('month', now()->month).'.xlsx'
         );
     }
 

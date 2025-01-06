@@ -350,7 +350,7 @@
     });
 
     // If division_id is null on page load, reset the department dropdown to 'Choose'
-    @if (is_null($position->department_id))
+    @if (is_null($position->section_id))
       sectionSelect_{{ $position->id }}.clearStore();
       sectionSelect_{{ $position->id }}.clearChoices([{
         value: '',

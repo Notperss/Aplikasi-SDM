@@ -39,6 +39,7 @@ use App\Http\Controllers\Employee\PersonalData\EmployeeAwardController;
 use App\Http\Controllers\Employee\PersonalData\EmployeePhotoController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeSkillController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeCareerController;
+use App\Http\Controllers\Employee\PersonalData\EmployeeSanctionController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeJobHistoryController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeFamilyDetailController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeSocialPlatformController;
@@ -135,6 +136,7 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::get('employeeAward/export', [EmployeeAwardController::class, 'awardExport'])->name('employeeAward.export');
 
     Route::resource('employeePhoto', EmployeePhotoController::class)->only('store', 'update', 'destroy');
+    Route::resource('employeeSanction', EmployeeSanctionController::class)->only('store', 'update', 'destroy');
 
     Route::get('approval-list', [EmployeeCareerController::class, 'indexApproval'])->name('indexApproval');
     Route::patch('/{id}/update-approval', [EmployeeCareerController::class, 'updateApprovalStatus'])->name('updateApprovalStatus');
@@ -215,4 +217,4 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
 });
 
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

@@ -25,17 +25,40 @@ class PositionController extends Controller
         $companyId = Auth::user()->company_id;
         $isSuperAdmin = Auth::user()->hasRole('super-admin');
 
+        // $positions = Position::when(! $isSuperAdmin, function ($query) use ($companyId) {
+        //     $query->where('positions.company_id', $companyId);
+        // })
+        //     ->join('levels', 'positions.level_id', '=', 'levels.id') // Join the levels table
+        //     ->join('divisions', 'positions.division_id', '=', 'divisions.id') // Join the divisions table
+        //     ->join('directorates', 'divisions.directorate_id', '=', 'directorates.id') // Join the directorates table via divisions
+        //     ->orderBy('levels.name', 'asc') // Order by the levels.name
+        //     ->orderBy('divisions.name', 'asc') // Then order by the divisions.name
+        //     ->orderBy('directorates.name', 'asc') // Order by the directorates.name
+        //     ->with(['level', 'division', 'division.directorate']) // Eager load the relationships
+        //     ->select('positions.*'); // Select positions columns only;
+
         $positions = Position::when(! $isSuperAdmin, function ($query) use ($companyId) {
             $query->where('positions.company_id', $companyId);
         })
             ->join('levels', 'positions.level_id', '=', 'levels.id') // Join the levels table
             ->join('divisions', 'positions.division_id', '=', 'divisions.id') // Join the divisions table
-            ->join('directorates', 'divisions.directorate_id', '=', 'directorates.id') // Join the directorates table via divisions
-            ->orderBy('levels.name', 'asc') // Order by the levels.name
-            ->orderBy('divisions.name', 'asc') // Then order by the divisions.name
-            ->orderBy('directorates.name', 'asc') // Order by the directorates.name
-            ->with(['level', 'division', 'division.directorate']) // Eager load the relationships
-            ->select('positions.*'); // Select positions columns only;
+            ->join('directorates', 'divisions.directorate_id', '=', 'directorates.id') // Join the directorates table
+            ->leftJoin('departments', 'positions.department_id', '=', 'departments.id') // Join the departments table
+            ->leftJoin('sections', 'positions.section_id', '=', 'sections.id') // Join the sections table
+            ->orderBy('directorates.name', 'asc') // Order by the directorate name
+            ->orderBy('divisions.name', 'asc') // Then by division name
+            ->orderBy('departments.name', 'asc') // Then by department name
+            ->orderBy('sections.name', 'asc') // Then by section name
+            ->orderBy('levels.name', 'asc') // Finally by level name
+            ->with([
+                'level',
+                'division',
+                'division.directorate',
+                'department',
+                'section',
+            ]) // Eager load relationships
+            ->select('positions.*'); // Select only position columns
+
 
 
         $levels = Level::when(! $isSuperAdmin, function ($query) use ($companyId) {

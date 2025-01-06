@@ -44,17 +44,27 @@
                 @enderror
               </div>
 
-              <div class="col-6 mb-2">
-                <label class="form-label" for="training_date">Tanggal</label>
-                <input type="date" id="training_date" name="training_date" maxlength="4"
-                  value="{{ old('training_date') }}" class="form-control @error('training_date') is-invalid @enderror">
-                @error('training_date')
-                  <a style="color: red"><small>{{ $message }}</small></a>
-                @enderror
+              <div class="row">
+                <div class="col-6 mb-2">
+                  <label class="form-label" for="start_date">Tanggal Mulai</label>
+                  <input type="date" id="start_date" name="start_date" maxlength="4" value="{{ old('start_date') }}"
+                    class="form-control @error('start_date') is-invalid @enderror">
+                  @error('start_date')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div>
+                <div class="col-6 mb-2">
+                  <label class="form-label" for="end_date">Tanggal Akhir</label>
+                  <input type="date" id="end_date" name="end_date" maxlength="4" value="{{ old('end_date') }}"
+                    class="form-control @error('end_date') is-invalid @enderror">
+                  @error('end_date')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div>
               </div>
 
               <div class="mb-2">
-                <label for="file_sertifikat" class="form-label">File Setifikat</label>
+                <label for="file_sertifikat" class="form-label">File Pelatihan</label>
                 <input class="form-control" accept=".pdf" type="file" id="file_sertifikat"
                   @error('file_sertifikat') is-invalid @enderror name="file_sertifikat">
                 @error('file_sertifikat')

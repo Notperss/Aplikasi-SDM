@@ -7,7 +7,8 @@
       <th style="width: 30;">Nama Training</th>
       <th style="width: 30;">Penyelenggara</th>
       <th style="width: 30;">Kota</th>
-      <th style="width: 30;">Tanggal Training</th>
+      <th style="width: 30;">Tanggal Mulai</th>
+      <th style="width: 30;">Tanggal Akhir</th>
     </tr>
   </thead>
   <tbody>
@@ -19,7 +20,8 @@
         <td>{{ $training->training_name }}</td>
         <td>{{ $training->organizer_name }}</td>
         <td>{{ $training->city }}</td>
-        <td>{{ \Carbon\Carbon::parse($training->training_date)->format('d-m-Y') }}</td>
+        <td>{{ \Carbon\Carbon::parse($training->start_date)->format('d-m-Y') }}</td>
+        <td>{{ \Carbon\Carbon::parse($training->end_date)->format('d-m-Y') }}</td>
       </tr>
     @endforeach
   </tbody>

@@ -106,7 +106,7 @@
                     <th>No. Telp</th>
                     <th>Pendidikan</th>
                     <th>Pekerjaan</th>
-                    <th>Alamat</th>
+                    {{-- <th>Alamat</th> --}}
                     <th style="width: 13%"></th>
                   </tr>
                 </thead>
@@ -133,7 +133,7 @@
                       <td class="text-bold-500">{{ $employeeFamilyDetail->phone_number }}</td>
                       <td class="text-bold-500">{{ $employeeFamilyDetail->education }}</td>
                       <td class="text-bold-500">{{ $employeeFamilyDetail->job }}</td>
-                      <td class="text-bold-500">{{ $employeeFamilyDetail->address }}</td>
+                      {{-- <td class="text-bold-500">{{ $employeeFamilyDetail->address }}</td> --}}
                       <td class="text-bold-500">
 
                         @if (!$employee->is_verified)

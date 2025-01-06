@@ -23,7 +23,7 @@ class TrainingExport implements FromView
      *
      * @return View
      */
-    public function view() : View
+    public function view(): View
     {
         $query = EmployeeTrainingAttended::query()->when(! Auth::user()->hasRole('super-admin'), function ($query) {
             $query->where('company_id', Auth::user()->company_id);
@@ -31,7 +31,7 @@ class TrainingExport implements FromView
 
         // Apply date range filter if provided
         if ($this->startDate && $this->endDate) {
-            $query->whereBetween('training_date', [$this->startDate, $this->endDate]);
+            $query->whereBetween('end_date', [$this->startDate, $this->endDate]);
         }
 
         return view('pages.employee.training-attended.export', [

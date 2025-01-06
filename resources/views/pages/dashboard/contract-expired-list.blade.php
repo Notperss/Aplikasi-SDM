@@ -5,6 +5,7 @@
       <th scope="col"></th>
       <th scope="col">NIK</th>
       <th scope="col">Nama</th>
+      <th scope="col">Jabatan</th>
       <th scope="col">No. Kontrak</th>
       <th scope="col">Tgl Mulai</th>
       <th scope="col">Tgl Berakhir</th>
@@ -36,6 +37,9 @@
         </td>
         <td>
           {{ $contract->employee->name ?? 'N/A' }}
+        </td>
+        <td>
+          {{ $contract->employee->position->name ?? 'N/A' }}
         </td>
         <td>
           {{ $contract->contract_number ?? 'N/A' }}

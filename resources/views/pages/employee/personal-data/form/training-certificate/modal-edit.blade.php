@@ -50,12 +50,33 @@
                 @enderror
               </div>
 
+              <div class="row">
+                <div class="col-6 mb-2">
+                  <label class="form-label" for="start_date">Tanggal Mulai</label>
+                  <input type="date" id="start_date" name="start_date" maxlength="4"
+                    value="{{ old('start_date', $employeeTrainingAttended->start_date) }}"
+                    class="form-control @error('start_date') is-invalid @enderror">
+                  @error('start_date')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div>
+                <div class="col-6 mb-2">
+                  <label class="form-label" for="end_date">Tanggal Akhir</label>
+                  <input type="date" id="end_date" name="end_date" maxlength="4"
+                    value="{{ old('end_date', $employeeTrainingAttended->end_date) }}"
+                    class="form-control @error('end_date') is-invalid @enderror">
+                  @error('end_date')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div>
+              </div>
+
               <div class="col-6 mb-2">
-                <label class="form-label" for="training_date">Masa Berlaku</label>
-                <input type="date" id="training_date" name="training_date" maxlength="4"
-                  value="{{ old('training_date', $employeeTrainingAttended->training_date) }}"
-                  class="form-control @error('training_date') is-invalid @enderror">
-                @error('training_date')
+                <label class="form-label" for="expired_certificate_date">Masa Berlaku</label>
+                <input type="date" id="expired_certificate_date" name="expired_certificate_date" maxlength="4"
+                  value="{{ old('expired_certificate_date', $employeeTrainingAttended->expired_certificate_date) }}"
+                  class="form-control @error('expired_certificate_date') is-invalid @enderror">
+                @error('expired_certificate_date')
                   <a style="color: red"><small>{{ $message }}</small></a>
                 @enderror
               </div>

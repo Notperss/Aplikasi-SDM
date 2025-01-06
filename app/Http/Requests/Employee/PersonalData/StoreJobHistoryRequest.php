@@ -9,7 +9,7 @@ class StoreJobHistoryRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize() : bool
+    public function authorize(): bool
     {
         return true;
     }
@@ -19,17 +19,17 @@ class StoreJobHistoryRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [
             'employee_id' => 'required|integer|exists:employees,id',
             'company_name' => 'required|string|max:255',
             'company_type' => 'nullable|string|max:100',
-            'direct_supervisor' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:255',
             // 'address' => 'required|string|max:255',
             // 'phone_number' => 'required|string|max:15',
-            'year_from' => 'required|string|max:255',
-            'year_to' => 'nullable|string|max:255',
+            'period' => 'required|string|max:255',
+            'year_out' => 'nullable|string|max:255',
             // 'year_from' => 'required|integer|min:1900|max:' . date('Y'),
             // 'year_to' => 'nullable|integer|min:1900|max:' . date('Y'),
             'position' => 'required|string|max:255',
@@ -40,7 +40,7 @@ class StoreJobHistoryRequest extends FormRequest
         ];
     }
 
-    public function messages() : array
+    public function messages(): array
     {
         return [
             // employee ID
@@ -53,7 +53,7 @@ class StoreJobHistoryRequest extends FormRequest
             'company_name.max' => 'Nama perusahaan tidak boleh lebih dari 255 karakter.',
             'company_type.required' => 'Tipe perusahaan wajib diisi.',
             'company_type.max' => 'Tipe perusahaan tidak boleh lebih dari 100 karakter.',
-            'direct_supervisor.required' => 'Supervisor langsung wajib diisi.',
+            'city.required' => 'Kota langsung wajib diisi.',
 
             // Address & Contact Information
             // 'address.required' => 'Alamat perusahaan wajib diisi.',
@@ -61,7 +61,7 @@ class StoreJobHistoryRequest extends FormRequest
             // 'phone_number.max' => 'Nomor telepon tidak boleh lebih dari 15 karakter.',
 
             // Employment Dates
-            'year_from.required' => 'Tahun masuk wajib diisi.',
+            'period.required' => 'Tahun masuk wajib diisi.',
             'year_from.min' => 'Tahun masuk tidak boleh sebelum 1900.',
             'year_from.max' => 'Tahun masuk tidak boleh melebihi tahun sekarang.',
             'year_to.min' => 'Tahun keluar tidak boleh sebelum 1900.',

@@ -137,17 +137,19 @@
               @enderror
             </div>
 
-            <div class="col-12 mb-1">
-              <label class="form-label" for="address">Alamat <code>*</code></label>
-              <textarea type="text" id="address" name="address" class="form-control @error('address') is-invalid @enderror"
-                rows="3" required></textarea>
-              @error('address')
-                <a style="color: red">
-                  <small>
-                    {{ $message }}
-                  </small>
-                </a>
-              @enderror
+            <div class="row mt-2" id="address-field">
+              <div class="col-12 mb-1">
+                <label class="form-label" for="address">Alamat</label>
+                <textarea type="text" id="address" name="address" class="form-control @error('address') is-invalid @enderror"
+                  rows="3"></textarea>
+                @error('address')
+                  <a style="color: red">
+                    <small>
+                      {{ $message }}
+                    </small>
+                  </a>
+                @enderror
+              </div>
             </div>
 
             <div class="row mt-2">
@@ -226,3 +228,26 @@
     $('input[name="is_in_kk"]:checked').trigger('change');
   });
 </script> --}}
+<script>
+  $(document).ready(function() {
+    // Initially hide the address field
+    $('#address-field').hide();
+
+    // Listen for changes on the radio buttons
+    $('input[name="is_in_kk"]').change(function() {
+      var selectedValue = $('input[name="is_in_kk"]:checked').val();
+
+      if (selectedValue === '0') {
+        $('#address-field').slideDown(); // Show with animation
+      } else {
+        $('#address-field').slideUp(function() {
+          // Reset the address field after it is hidden
+          $('#address').val('');
+        });
+      }
+    });
+
+    // Trigger the change event on page load to apply the correct state
+    $('input[name="is_in_kk"]:checked').trigger('change');
+  });
+</script>

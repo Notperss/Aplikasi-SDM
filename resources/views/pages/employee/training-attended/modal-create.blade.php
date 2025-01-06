@@ -43,19 +43,27 @@
                     <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror
                 </div>
-
+              </div>
+              <div class="row">
                 <div class="col-md-6">
-                  <label class="form-label" for="training_date">Tanggal</label>
-                  <input type="date" id="training_date" name="training_date" maxlength="4"
-                    value="{{ old('training_date') }}"
-                    class="form-control @error('training_date') is-invalid @enderror">
-                  @error('training_date')
+                  <label class="form-label" for="start_date">Tanggal Mulai</label>
+                  <input type="date" id="start_date" name="start_date" maxlength="4" value="{{ old('start_date') }}"
+                    class="form-control @error('start_date') is-invalid @enderror">
+                  @error('start_date')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="end_date">Tanggal Akhir</label>
+                  <input type="date" id="end_date" name="end_date" maxlength="4" value="{{ old('end_date') }}"
+                    class="form-control @error('end_date') is-invalid @enderror">
+                  @error('end_date')
                     <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror
                 </div>
               </div>
 
-              <div class="row">
+              <div class="row mt-3">
                 <div class="col-md-4 d-flex align-items-end">
                   <a class="btn btn-primary" onclick="openMyModalAdd()">
                     <i class="bi bi-plus-lg"></i> Karyawan
@@ -244,16 +252,14 @@
             name: 'name'
           },
           {
-            data: 'position',
-            name: 'position',
+            data: 'position.name',
+            name: 'position.name',
             orderable: false,
-            searchable: false
           },
           {
-            data: 'division',
-            name: 'division',
+            data: 'position.division.name',
+            name: 'position.division.name',
             orderable: false,
-            searchable: false
           },
           {
             data: null,
@@ -265,8 +271,8 @@
                                     data-id="${data.id}"
                                     data-nik="${data.nik}"
                                     data-name="${data.name}"
-                                    data-position="${data.position}"
-                                    data-division="${data.division}">
+                                    data-position="${data.position.name}"
+                                    data-division="${data.position.division.name}">
                                 Pilih
                             </button>
                         `;

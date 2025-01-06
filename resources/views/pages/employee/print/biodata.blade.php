@@ -269,7 +269,7 @@
             <td style="border: 1px solid #ddd;">{{ $training->organizer_name }}</td>
             <td style="border: 1px solid #ddd;">{{ $training->city }}</td>
             <td style="border: 1px solid #ddd;">
-              {{ $training->training_date ? Carbon\Carbon::parse($training->training_date)->translatedFormat('d M Y') : '' }}
+              {{ $training->end_date ? Carbon\Carbon::parse($training->end_date)->translatedFormat('d M Y') : '' }}
             </td>
           </tr>
         @endforeach
@@ -305,7 +305,7 @@
             <td style="border: 1px solid #ddd;">{{ $training->organizer_name }}</td>
             <td style="border: 1px solid #ddd;">{{ $training->city }}</td>
             <td style="border: 1px solid #ddd;">
-              {{ $training->training_date ? Carbon\Carbon::parse($training->training_date)->translatedFormat('d M Y') : '' }}
+              {{ $training->end_date ? Carbon\Carbon::parse($training->end_date)->translatedFormat('d M Y') : '' }}
             </td>
           </tr>
         @endforeach

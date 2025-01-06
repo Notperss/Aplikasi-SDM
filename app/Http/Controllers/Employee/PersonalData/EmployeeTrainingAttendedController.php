@@ -35,7 +35,7 @@ class EmployeeTrainingAttendedController extends Controller
             ->latest();
 
         if ($request->filled(['start_date', 'end_date'])) {
-            $employeeTrainingAttended->whereBetween('training_date', [$request->start_date, $request->end_date]);
+            $employeeTrainingAttended->whereBetween('end_date', [$request->start_date, $request->end_date]);
         }
 
 
@@ -52,13 +52,13 @@ class EmployeeTrainingAttendedController extends Controller
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         
-                            <a class="dropdown-item" href="' . route('employeeTrainingAttended.edit', $item) . '">Edit</a>
+                            <a class="dropdown-item" href="'.route('employeeTrainingAttended.edit', $item).'">Edit</a>
                             
-                            <button class="dropdown-item" onclick="deleteTrainingAttend(' . $item->id . ')">Hapus</button>
-                            <form id="deleteTrainingAttendForm_' . $item->id . '"
-                                action="' . route('employeeTrainingAttended.destroy', $item->id) . '"
+                            <button class="dropdown-item" onclick="deleteTrainingAttend('.$item->id.')">Hapus</button>
+                            <form id="deleteTrainingAttendForm_'.$item->id.'"
+                                action="'.route('employeeTrainingAttended.destroy', $item->id).'"
                                 method="POST">
-                                ' . method_field('delete') . csrf_field() . '
+                                '.method_field('delete').csrf_field().'
                             </form>
                         </div>
                     </div>
@@ -66,14 +66,16 @@ class EmployeeTrainingAttendedController extends Controller
             ';
                 })->editColumn('file', function ($item) {
                     if ($item->file_sertifikat) {
-                        return '<a class="btn btn-sm btn-primary" href="' . asset('storage/' . $item->file_sertifikat) . '" target="_blank" > Lihat </a>';
+                        return '<a class="btn btn-sm btn-primary" href="'.asset('storage/'.$item->file_sertifikat).'" target="_blank" > Lihat </a>';
                     } else {
                         return '<span> - </span>';
                     }
-                })->editColumn('training_date', function ($item) {
-                    return $item->training_date ? Carbon::parse($item->training_date)->translatedFormat('d M Y') : ' ';
+                })->editColumn('start_date', function ($item) {
+                    return $item->start_date ? Carbon::parse($item->start_date)->translatedFormat('d M Y') : ' ';
+                })->editColumn('end_date', function ($item) {
+                    return $item->end_date ? Carbon::parse($item->end_date)->translatedFormat('d M Y') : ' ';
                 })
-                ->rawColumns(['action', 'file', 'training_date'])
+                ->rawColumns(['action', 'file', 'start_date', 'end_date'])
                 ->toJson();
         }
 
@@ -109,7 +111,7 @@ class EmployeeTrainingAttendedController extends Controller
             if ($request->hasFile('file_sertifikat')) {
                 $file = $request->file('file_sertifikat');
                 $extension = $file->getClientOriginalExtension();
-                $file_name = 'file_sertifikat_pelatihan_' . time() . '.' . $extension; // Generate a unique file name
+                $file_name = 'file_sertifikat_pelatihan_'.time().'.'.$extension; // Generate a unique file name
                 $file_path = $file->storeAs('files/employee/file_sertifikat_pelatihan', $file_name, 'public_local');
             }
 
@@ -125,9 +127,11 @@ class EmployeeTrainingAttendedController extends Controller
                         'training_name' => $request->training_name,
                         'organizer_name' => $request->organizer_name,
                         'city' => $request->city,
-                        'training_date' => $request->training_date,
+                        'expired_certificate_date' => $request->expired_certificate_date,
+                        'start_date' => $request->start_date,
+                        'end_date' => $request->end_date,
                         'file_sertifikat' => $file_path, // Attach file path if the certificate is uploaded
-                        'is_certificated' => $request->is_certificated, // Attach file path if the certificate is uploaded
+                        'is_certificated' => $request->is_certificated ?? 0, // Attach file path if the certificate is uploaded
                     ]);
                 }
             } else {
@@ -137,9 +141,11 @@ class EmployeeTrainingAttendedController extends Controller
                     'training_name' => $request->training_name,
                     'organizer_name' => $request->organizer_name,
                     'city' => $request->city,
-                    'training_date' => $request->training_date,
+                    'expired_certificate_date' => $request->expired_certificate_date,
+                    'start_date' => $request->start_date,
+                    'end_date' => $request->end_date,
                     'file_sertifikat' => $file_path, // Attach file path if the certificate is uploaded
-                    'is_certificated' => $request->is_certificated, // Attach file path if the certificate is uploaded
+                    'is_certificated' => $request->is_certificated ?? 0, // Attach file path if the certificate is uploaded
                 ]);
             }
 
@@ -154,7 +160,7 @@ class EmployeeTrainingAttendedController extends Controller
             DB::rollback();
 
             // Log the error for debugging
-            Log::error('Error storing training: ' . $e->getMessage());
+            Log::error('Error storing training: '.$e->getMessage());
 
             // Redirect back with an error message
             return redirect()->back()
@@ -190,7 +196,7 @@ class EmployeeTrainingAttendedController extends Controller
         if ($request->hasFile('file_sertifikat')) {
             $file = $request->file('file_sertifikat');
             $extension = $file->getClientOriginalExtension();
-            $file_name = 'file_sertifikat_pelatihan_' . time() . '.' . $extension; // Construct the file name
+            $file_name = 'file_sertifikat_pelatihan_'.time().'.'.$extension; // Construct the file name
             $data['file_sertifikat'] = $file->storeAs('files/employee/file_sertifikat_pelatihan', $file_name, 'public_local'); // Store the file
             // delete sertifikat
             if ($path_sertifikat != null || $path_sertifikat != '') {

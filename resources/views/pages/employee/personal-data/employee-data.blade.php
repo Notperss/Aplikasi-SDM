@@ -26,6 +26,53 @@
                 </div>
 
                 <div class="form-group">
+                  <label for="employee_category_id">Kategori Karyawan</label>
+                  <select name="employee_category_id" id="employee_category_id"
+                    class="form-control choices  @error('employee_category_id') is-invalid @enderror">
+                    <option value="" disabled selected>Choose</option>
+                    @foreach ($employeeCategories as $employeeCategory)
+                      <option value="{{ $employeeCategory->id }}"
+                        {{ old('employee_category_id', $employee->employee_category_id) == $employeeCategory->id ? 'selected' : '' }}>
+                        {{ $employeeCategory->name }}</option>
+                    @endforeach
+                  </select>
+                  @error('employee_category_id')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
+                </div>
+
+                <div class="form-group">
+                  <label for="work_relationship">Hubungan Kerja</label>
+                  <select type="text" id="work_relationship"
+                    class="form-control choices @error('work_relationship') is-invalid @enderror"
+                    name="work_relationship" readonly>
+                    <option value="" disabled selected>Choose</option>
+                    <option value="KONTRAK"
+                      {{ old('work_relationship', $employee->work_relationship) == 'KONTRAK' ? 'selected' : '' }}>
+                      KONTRAK
+                    </option>
+                    <option value="TETAP"
+                      {{ old('work_relationship', $employee->work_relationship) == 'TETAP' ? 'selected' : '' }}>TETAP
+                    </option>
+                    <option value="INTERNSHIP"
+                      {{ old('work_relationship', $employee->work_relationship) == 'INTERNSHIP' ? 'selected' : '' }}>
+                      INTERNSHIP
+                    </option>
+                  </select>
+                  @error('work_relationship')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
+                </div>
+
+                <div class="form-group">
                   <label for="email">Email</label>
                   <input type="email" id="email" value="{{ old('email', $employee->email) }}"
                     class="form-control @error('email') is-invalid @enderror" name="email">
@@ -175,6 +222,59 @@
               </div>
 
               <div class="col-md-6 col-12">
+
+                <div class="form-group">
+                  <label for="employee_status">Status Karyawan</label>
+                  <select type="text" id="employee_status" name="employee_status"
+                    class="form-control choices @error('employee_status') is-invalid @enderror" readonly>
+                    <option value="" disabled>Choose</option>
+                    <option value="AKTIF"
+                      {{ old('employee_status', $employee->employee_status) == 'AKTIF' ? 'selected' : '' }}>AKTIF
+                    </option>
+                    <option value="PENSIUN"
+                      {{ old('employee_status', $employee->employee_status) == 'PENSIUN' ? 'selected' : '' }}>PENSIUN
+                    </option>
+                    <option value="RESIGN"
+                      {{ old('employee_status', $employee->employee_status) == 'RESIGN' ? 'selected' : '' }}>RESIGN
+                    </option>
+                    <option value="NON AKTIF"
+                      {{ old('employee_status', $employee->employee_status) == 'NON AKTIF' ? 'selected' : '' }}>
+                      NON AKTIF</option>
+                  </select>
+                  @error('employee_status')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
+                </div>
+
+                <div class="form-group">
+                  <label for="work_status">Tipe Waktu Pekerjaan</label>
+                  <select type="text" id="work_status"
+                    class="form-control choices @error('work_status') is-invalid @enderror" name="work_status"
+                    readonly>
+                    <option value="" disabled selected>Choose</option>
+                    <option value="FULL-TIME"
+                      {{ old('work_status', $employee->work_status) == 'FULL-TIME' ? 'selected' : '' }}>FULL-TIME
+                    </option>
+                    <option value="PART-TIME"
+                      {{ old('work_status', $employee->work_status) == 'PART-TIME' ? 'selected' : '' }}>PART-TIME
+                    </option>
+                    <option value="INTERNSHIP"
+                      {{ old('work_status', $employee->work_status) == 'INTERNSHIP' ? 'selected' : '' }}>INTERNSHIP
+                    </option>
+                  </select>
+                  @error('work_status')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
+                </div>
+
                 <div class="form-group">
                   <label for="pob">Tempat Lahir <code>*</code></label>
                   <input type="text" id="pob" value="{{ old('pob', $employee->pob) }}"
@@ -543,7 +643,7 @@
                 <div class="form-group col-md-3">
                   <label for="zipcode_ktp">Kode Pos KTP <code>*</code></label>
                   <input type="text" oninput="this.value = this.value.replace(/\D+/g, '')" id="zipcode_ktp"
-                    value="{{ old('zipcode_ktp', $employee->zipcode) }}"
+                    value="{{ old('zipcode_ktp', $employee->zipcode_ktp) }}"
                     class="form-control  @error('zipcode_ktp') is-invalid @enderror" name="zipcode_ktp">
                   @error('zipcode_ktp')
                     <a style="color: red">

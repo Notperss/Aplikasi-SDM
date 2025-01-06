@@ -8,7 +8,7 @@ class StoreFamilyDetailRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize() : bool
+    public function authorize(): bool
     {
         return true;
     }
@@ -18,7 +18,7 @@ class StoreFamilyDetailRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [
             'employee_id' => ['required', 'integer', 'exists:employees,id'],
@@ -28,13 +28,13 @@ class StoreFamilyDetailRequest extends FormRequest
             'education' => ['nullable', 'string', 'max:255'], // Can be nullable if it's optional
             'job' => ['nullable', 'string', 'max:255'],
             'phone_number' => ['nullable', 'string', 'min:8', 'max:15', 'regex:/^[0-9]+$/'], // Only numbers allowed
-            'address' => ['required', 'string', 'max:500'],
+            'address' => ['nullable', 'string', 'max:500'],
             'dob_family' => ['nullable', 'date', 'before:today'], // Valid date and must be in the past
             'is_in_kk' => ['nullable', 'boolean'], // Valid date and must be in the past
         ];
     }
 
-    public function messages() : array
+    public function messages(): array
     {
         return [
             'employee_id.required' => 'ID karyawan wajib diisi.',

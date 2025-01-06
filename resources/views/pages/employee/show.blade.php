@@ -97,6 +97,8 @@
               aria-selected="false">Kontak Darurat</a>
             <a class="btn btn-primary mt-1" id="v-pills-photo-tab" data-bs-toggle="pill" href="#v-pills-photo"
               role="tab" aria-controls="v-pills-photo" aria-selected="false">Photo</a>
+            <a class="btn btn-primary mt-1" id="v-pills-sanction-tab" data-bs-toggle="pill" href="#v-pills-sanction"
+              role="tab" aria-controls="v-pills-sanction" aria-selected="false">Sanksi</a>
           @endif
         </div>
       </div>
@@ -613,6 +615,9 @@
             </div>
             <div class="tab-pane fade" id="v-pills-photo" role="tabpanel" aria-labelledby="v-pills-photo-tab">
               @include('pages.employee.personal-data.photo-employee')
+            </div>
+            <div class="tab-pane fade" id="v-pills-sanction" role="tabpanel" aria-labelledby="v-pills-sanction-tab">
+              @include('pages.employee.personal-data.sanction')
             </div>
           @endif
           <div class="tab-pane fade show active" id="v-pills-informasi-dasar" role="tabpanel"

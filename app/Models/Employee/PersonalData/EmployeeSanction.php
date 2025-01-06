@@ -3,24 +3,20 @@
 namespace App\Models\Employee\PersonalData;
 
 use App\Models\Employee\Employee;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class EmployeeTrainingAttended extends Model
+class EmployeeSanction extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
 
     protected $fillable = [
         'employee_id',
-        'training_name',
-        'organizer_name',
-        'expired_certificate_date',
+        'sanction_name',
+        'sanction_category',
         'start_date',
         'end_date',
-        'city',
-        'file_sertifikat',
-        'is_certificated',
+        'file_sanction',
     ];
 
     public function employee()

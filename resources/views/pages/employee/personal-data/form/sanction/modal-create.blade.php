@@ -1,13 +1,13 @@
 <!-- Modals add menu -->
-<div id="modal-form-add-training-certificate" class="modal fade" tabindex="-1"
-  aria-labelledby="modal-form-add-training-certificate-label" aria-hidden="true" style="display: none;">
+<div id="modal-form-add-sanction" class="modal fade" tabindex="-1" aria-labelledby="modal-form-add-sanction-label"
+  aria-hidden="true" style="display: none;">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form action="{{ route('employeeTrainingAttended.store') }}" method="post" enctype="multipart/form-data">
+      <form action="{{ route('employeeSanction.store') }}" method="post" enctype="multipart/form-data">
         @csrf
 
         <div class="modal-header">
-          <h5 class="modal-title" id="modal-form-add-training-certificate-label">Tambah Data Sertifikasi</h5>
+          <h5 class="modal-title" id="modal-form-add-sanction-label">Tambah Data Sertifikasi</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
         </div>
 
@@ -19,28 +19,32 @@
               <input type="hidden" name="is_certificated" value="1">
 
               <div class="mb-2">
-                <label class="form-label" for="training_name">Nama Sertifikasi</label>
-                <input id="training_name" name="training_name" value="{{ old('training_name') }}"
-                  class="form-control @error('training_name') is-invalid @enderror" required>
-                @error('training_name')
+                <label class="form-label" for="sanction_name">Nama Sanksi</label>
+                <input id="sanction_name" name="sanction_name" value="{{ old('sanction_name') }}"
+                  class="form-control @error('sanction_name') is-invalid @enderror" required>
+                @error('sanction_name')
                   <a style="color: red"><small>{{ $message }}</small></a>
                 @enderror
               </div>
 
               <div class="mb-2">
-                <label class="form-label" for="organizer_name">Penyelenggara</label>
-                <input id="organizer_name" name="organizer_name" value="{{ old('organizer_name') }}"
-                  class="form-control @error('organizer_name') is-invalid @enderror" required>
-                @error('organizer_name')
-                  <a style="color: red"><small>{{ $message }}</small></a>
-                @enderror
-              </div>
-
-              <div class="mb-2">
-                <label class="form-label" for="city">Tempat/Kota</label>
-                <input id="city" value="{{ old('city') }}" name="city"
-                  class="form-control @error('city') is-invalid @enderror">
-                @error('city')
+                <label class="form-label" for="sanction_category">Kategori Sanksi</label>
+                <select id="sanction_category" name="sanction_category" value="{{ old('sanction_category') }}"
+                  class="form-control @error('sanction_category') is-invalid @enderror" required>
+                  <option value="" disabled selected>Choose</option>
+                  <option value="TEGURAN LISAN" {{ old('sanction_category') == 'TEGURAN LISAN' ? 'selected' : '' }}>
+                    TEGURAN LISAN</option>
+                  <option value="TEGURAN TERTULIS"
+                    {{ old('sanction_category') == 'TEGURAN TERTULIS' ? 'selected' : '' }}>
+                    TEGURAN TERTULIS</option>
+                  <option value="SP1" {{ old('sanction_category') == 'SP1' ? 'selected' : '' }}>
+                    SP1</option>
+                  <option value="SP2" {{ old('sanction_category') == 'SP2' ? 'selected' : '' }}>
+                    SP2</option>
+                  <option value="SP3" {{ old('sanction_category') == 'SP3' ? 'selected' : '' }}>
+                    SP3</option>
+                </select>
+                @error('sanction_category')
                   <a style="color: red"><small>{{ $message }}</small></a>
                 @enderror
               </div>
@@ -48,8 +52,8 @@
               <div class="row">
                 <div class="col-6 mb-2">
                   <label class="form-label" for="start_date">Tanggal Mulai</label>
-                  <input type="date" id="start_date" name="start_date" maxlength="4" value="{{ old('start_date') }}"
-                    class="form-control @error('start_date') is-invalid @enderror">
+                  <input type="date" id="start_date" name="start_date" maxlength="4"
+                    value="{{ old('start_date') }}" class="form-control @error('start_date') is-invalid @enderror">
                   @error('start_date')
                     <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror
@@ -64,21 +68,11 @@
                 </div>
               </div>
 
-              <div class="col-6 mb-2">
-                <label class="form-label" for="expired_certificate_date">Masa Berlaku</label>
-                <input type="date" id="expired_certificate_date" name="expired_certificate_date" maxlength="4"
-                  value="{{ old('expired_certificate_date') }}"
-                  class="form-control @error('expired_certificate_date') is-invalid @enderror">
-                @error('expired_certificate_date')
-                  <a style="color: red"><small>{{ $message }}</small></a>
-                @enderror
-              </div>
-
               <div class="mb-2">
-                <label for="file_sertifikat" class="form-label">File Sertifikat</label>
-                <input class="form-control" accept=".pdf" type="file" id="file_sertifikat"
-                  @error('file_sertifikat') is-invalid @enderror name="file_sertifikat">
-                @error('file_sertifikat')
+                <label for="file_sanction" class="form-label">File</label>
+                <input class="form-control" accept=".pdf" type="file" id="file_sanction"
+                  @error('file_sanction') is-invalid @enderror name="file_sanction">
+                @error('file_sanction')
                   <a style="color: red"><small>{{ $message }}</small></a>
                 @enderror
                 {{-- <div class="text-center my-3" style="height: 30px;">

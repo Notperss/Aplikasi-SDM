@@ -47,10 +47,10 @@
               </div> --}}
 
               <div class="mb-2">
-                <label class="form-label" for="direct_supervisor">Nama Atasan Langsung</label>
-                <input type="text" id="direct_supervisor" name="direct_supervisor"
-                  class="form-control @error('direct_supervisor') is-invalid @enderror" required />
-                @error('direct_supervisor')
+                <label class="form-label" for="city">Nama Atasan Langsung</label>
+                <input type="text" id="city" name="city"
+                  class="form-control @error('city') is-invalid @enderror" required />
+                @error('city')
                   <a style="color: red"><small>{{ $message }}</small></a>
                 @enderror
               </div>

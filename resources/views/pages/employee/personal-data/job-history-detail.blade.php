@@ -22,17 +22,19 @@
                   <tr>
                     <th>Nama Perusahaan</th>
                     <th>Jabatan </th>
-                    <th>Atasan</th>
-                    <th style="text-align: center;">
+                    <th>Kota</th>
+                    <th>Periode</th>
+                    <th>Thn Keluar</th>
+                    {{-- <th style="text-align: center;">
                       <div>Lama Bekerja</div>
                       <div style="display: flex; justify-content: space-between;">
                         <span>Masuk</span>
                         <span>-</span>
                         <span>Keluar</span>
                       </div>
-                    </th>
+                    </th> --}}
                     <th>Gaji</th>
-                    <th>Alasan Berhenti</th>
+                    <th>Keterangan</th>
                     <th>File</th>
                     <th style="width: 13%"></th>
                   </tr>
@@ -42,14 +44,16 @@
                     <tr>
                       <td>{{ $employeeJobHistory->company_name }}</td>
                       <td class="text-bold-500">{{ $employeeJobHistory->position }}</td>
-                      <td class="text-bold-500">{{ $employeeJobHistory->direct_supervisor }}</td>
-                      <td style="text-align: center;">
+                      <td class="text-bold-500">{{ $employeeJobHistory->city }}</td>
+                      <td class="text-bold-500">{{ $employeeJobHistory->period }}</td>
+                      <td class="text-bold-500">{{ $employeeJobHistory->year_out }}</td>
+                      {{-- <td style="text-align: center;">
                         <div style="display: flex; justify-content: space-between;">
                           <span>{{ $employeeJobHistory->year_from }}</span>
                           <span>-</span>
                           <span>{{ $employeeJobHistory->year_to }}</span>
                         </div>
-                      </td>
+                      </td> --}}
                       <td class="text-bold-500">Rp.
                         {{ number_format($employeeJobHistory->salary, 0, ',', '.') }}
                       </td>
@@ -88,7 +92,7 @@
                     </tr>
                   @empty
                     <tr>
-                      <td class="text-center" colspan="8">No data available in table</td>
+                      <td class="text-center" colspan="9">No data available in table</td>
                     </tr>
                   @endforelse
 

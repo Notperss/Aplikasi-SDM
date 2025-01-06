@@ -30,6 +30,7 @@
             <th></th>
             <th>NIK</th>
             <th>Nama</th>
+            <th>Jabatan</th>
             <th>Kategori Karyawan</th>
             {{-- <th>Email</th>
             <th>Phone</th> --}}
@@ -44,9 +45,12 @@
                 {{ $loop->iteration }}
               </td>
               <td>
-                @if ($pos->employee->photo)
+                @php
+                  $mainPhoto = $pos->employee->employeePhotos->where('main_photo', true)->first();
+                @endphp
+                @if ($mainPhoto)
                   <div class="fixed-frame">
-                    <img src="{{ asset('storage/' . $pos->employee->photo) }} " data-fancybox alt="Icon User"
+                    <img src="{{ asset('storage/' . $mainPhoto->file_path) }} " data-fancybox alt="Icon User"
                       class="framed-image" style="cursor: pointer">
                   </div>
                 @else
@@ -60,7 +64,32 @@
                 {{ $pos->employee->name ?? '' }}
               </td>
               <td>
-                {{ $pos->employee->employeeCategory->name ?? '' }}
+                {{ $pos->name ?? '' }}
+              </td>
+              <td>
+                @php
+                  $categoryName = $pos->employee->employeeCategory->name ?? '-';
+                  $levelId = $pos->level->id ?? '-';
+
+                  $badgeColors = [
+                      1 => 'bg-light-primary',
+                      2 => 'bg-light-success',
+                      3 => 'bg-light-warning',
+                      4 => 'bg-light-danger',
+                      5 => 'bg-light-info',
+                  ];
+
+                  $badgeClass = $badgeColors[$levelId] ?? 'badge-secondary';
+                @endphp
+
+                @if (in_array($levelId, [1, 2, 3, 4, 5]))
+                  <span>{{ $categoryName }}</span><br>
+                  <span class="badge {{ $badgeClass }}">{{ $pos->level->name }}</span>
+                @endif
+
+
+                {{-- <span class="badge bg-light-primary">asoidjhoa</span> --}}
+                {{-- {{ $pos->employee->employeeCategory->name ?? '' }} --}}
               </td>
               <td>
                 @if ($pos->employee->is_verified == 0)

@@ -48,7 +48,8 @@
               <th>Pelatihan/Seminar</th>
               <th>Penyelenggara</th>
               <th>Tempat/Kota</th>
-              <th>Tanggal</th>
+              <th>Tanggal Mulai</th>
+              <th>Tanggal Akhir</th>
               <th>File</th>
               <th style="width: 13%"></th>
             </tr>
@@ -180,8 +181,8 @@
           name: 'city',
         },
         {
-          data: 'training_date',
-          name: 'training_date',
+          data: 'end_date',
+          name: 'end_date',
         },
         {
           data: 'file',
@@ -251,8 +252,12 @@
           name: 'city'
         },
         {
-          data: 'training_date',
-          name: 'training_date'
+          data: 'start_date',
+          name: 'start_date'
+        },
+        {
+          data: 'end_date',
+          name: 'end_date'
         },
         {
           data: 'file',
