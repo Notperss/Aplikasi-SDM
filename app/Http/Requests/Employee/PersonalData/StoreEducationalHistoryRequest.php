@@ -9,7 +9,7 @@ class StoreEducationalHistoryRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize() : bool
+    public function authorize(): bool
     {
         return true;
     }
@@ -19,21 +19,22 @@ class StoreEducationalHistoryRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [
             'school_level' => 'required|string|max:100',
             'school_name' => 'required|string|max:255',
             'study' => 'nullable|string|max:255',
-            'year_from' => 'required|integer|min:1900|max:' . date('Y'),
-            'year_to' => 'nullable|integer|min:1900|max:' . date('Y'),
+            'city' => 'nullable|string|max:255',
+            'year_from' => 'required|integer|min:1900|max:'.date('Y'),
+            'year_to' => 'nullable|integer|min:1900|max:'.date('Y'),
             'gpa' => 'nullable|numeric|min:0',
             'file_ijazah' => 'mimes:pdf|max:512',
 
         ];
     }
 
-    public function messages() : array
+    public function messages(): array
     {
         return [
             // School Information

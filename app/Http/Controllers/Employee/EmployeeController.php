@@ -86,7 +86,7 @@ class EmployeeController extends Controller
                     return '
         <div class="btn-group mb-1">
             <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton"
+                <button class="btn btn-sm btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton"
                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="bi bi-three-dots-vertical"></i>
                 </button>
@@ -170,6 +170,7 @@ class EmployeeController extends Controller
                     // Initialize variables
                     $verified = '-';
                     $isRequest = '';
+                    $latestContract = '';
 
                     // Determine verification badge
                     if ($item->is_verified == 0) {
@@ -180,17 +181,48 @@ class EmployeeController extends Controller
 
                     // Check for 'Buka Verifikasi' approval request
                     if ($item->approvals->where('description', 'Buka Verifikasi')->whereNull('is_approve')->first()) {
-                        $isRequest = '<span class="badge bg-secondary">Request Pending</span>';
+                        $isRequest = '<span class="badge bg-secondary">Request Pending</span> <br>';
+                    }
+
+                    if ($item->contracts && $item->contracts->isNotEmpty()) {
+                        $latestContractData = $item->contracts->first();
+                        $contractSequence = $latestContractData->contract_sequence_number ?? '-';
+
+                        // Calculate days until contract expiration
+                        $contractEndDate = $latestContractData->end_date; // Assuming `end_date` exists in your contract model
+                        $daysToExpire = $contractEndDate ? floor(now()->diffInDays(Carbon::parse($contractEndDate), false)) : null;
+
+                        $daysToExpireText = $daysToExpire !== null
+                            ? ($daysToExpire > 0
+                                ? "$daysToExpire hari menuju kontrak habis"
+                                : "Kontrak sudah habis")
+                            : "Tanggal akhir kontrak tidak tersedia";
+
+                        $color = $daysToExpire !== null
+                            ? ($daysToExpire > 0
+                                ? "secondary"
+                                : "danger")
+                            : "Tanggal akhir kontrak tidak tersedia";
+
+                        $latestContract = '<small><span class="badge bg-secondary">Kontrak Ke - '.$contractSequence.'</span></small> <br>'
+                            .'<small><span class="badge bg-light-'.$color.'">'.$daysToExpireText.'</span></small>';
                     }
 
                     // Return the concatenated result
-                    return $verified.' '.$isRequest;
-                })->editColumn('name_employee', function ($item) {
+                    return $verified.$isRequest.$latestContract;
+                })->editColumn('employee_nik', function ($item) {
                     $dateJoining = Carbon::parse($item->date_joining);
                     $masaKerja = $dateJoining->diff(Carbon::now());
-                    return $item->name.'<br><small>KARYAWAN '.$item->work_relationship.'</small><br><small>'.$masaKerja->y.' tahun '.$masaKerja->m.' bulan '.$masaKerja->d.' hari</small>';
+                    $dob = Carbon::parse($item->dob);
+                    $age = $dob->diff(Carbon::now());
+                    return '<span class="badge bg-light-primary" style="font-size: 110%">'.$item->nik.'</span>
+                    <br><small>Tgl Lahir : '.Carbon::parse($item->dob)->translatedFormat('d M Y').'</small>
+                    <br><small>Usia : '.$age->y.' tahun </small>
+                    <br><small>Status : '.$item->marital_status.'</small>
+                    <br><small>Masa Kerja : </small>
+                    <br><small class="badge bg-light-info">'.$masaKerja->y.' tahun '.$masaKerja->m.' bulan '.$masaKerja->d.' hari</small>';
                 })
-                ->rawColumns(['action', 'photo', 'is_verified', 'employeeCategory', 'name_employee'])
+                ->rawColumns(['action', 'photo', 'is_verified', 'employeeCategory', 'employee_nik'])
                 ->toJson();
         }
 

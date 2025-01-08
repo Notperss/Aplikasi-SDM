@@ -11,10 +11,10 @@
               <table class="table table-sm table-bordered" style="font-size: 80%">
                 <thead>
                   <tr>
-                    <th>Unit Kerja</th>
-                    <th>Total Karyawan</th>
-                    <th>Laki-Laki</th>
-                    <th>Perempuan</th>
+                    <th class="text-center">Unit Kerja</th>
+                    <th class="text-center">Total Karyawan</th>
+                    <th class="text-center">Laki-Laki</th>
+                    <th class="text-center">Perempuan</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -77,17 +77,17 @@
                         $totalFemale += $femaleCount;
                       @endphp
                       <tr>
-                        <td class="text-bold-500">{{ $directorate->name }}</td>
-                        <td class="text-bold-500">{{ $totalCount }}</td>
-                        <td class="text-bold-500">{{ $maleCount }}</td>
-                        <td class="text-bold-500">{{ $femaleCount }}</td>
+                        <td class="text-bold-500 ">{{ $directorate->name }}</td>
+                        <td class="text-bold-500 text-center">{{ $totalCount }}</td>
+                        <td class="text-bold-500 text-center">{{ $maleCount }}</td>
+                        <td class="text-bold-500 text-center">{{ $femaleCount }}</td>
                       </tr>
                     @endforeach
                     <tr>
                       <td class="text-bold-500 text-center">Total :</td>
-                      <td class="text-bold-500">{{ $total }}</td>
-                      <td class="text-bold-500">{{ $totalMale }}</td>
-                      <td class="text-bold-500">{{ $totalFemale }}</td>
+                      <td class="text-bold-500 text-center">{{ $total }}</td>
+                      <td class="text-bold-500 text-center">{{ $totalMale }}</td>
+                      <td class="text-bold-500 text-center">{{ $totalFemale }}</td>
                     </tr>
                   @empty
                     <tr>
@@ -107,8 +107,8 @@
                 <table class="table table-sm table-bordered" style="font-size: 80%">
                   <thead>
                     <tr>
-                      <th style="width: 30%">Unit Kerja</th>
-                      <th style="width: 10%">Total Karyawan</th>
+                      <th style="width: 30%" class="text-center">Unit Kerja</th>
+                      <th style="width: 10%" class="text-center">Total Karyawan</th>
                       @php
                         // Collect unique employee categories for the table header
                         $uniqueCategories = collect();
@@ -126,7 +126,7 @@
                       @endphp
 
                       @foreach ($uniqueCategories as $category)
-                        <th style="background-color: #5654549d">{{ $category }}</th>
+                        <th class="text-center" style="background-color: #5654549d">{{ $category }}</th>
                         <th>LAKI-LAKI</th>
                         <th>PEREMPUAN</th>
                       @endforeach
@@ -192,11 +192,12 @@
                         @endphp
                         <tr>
                           <td class="text-bold-500">{{ $directorate->name }}</td>
-                          <td class="text-bold-500">{{ array_sum(array_column($categoryCounts, 'total')) }}</td>
+                          <td class="text-bold-500 text-center">{{ array_sum(array_column($categoryCounts, 'total')) }}
+                          </td>
                           @foreach ($uniqueCategories as $category)
-                            <td>{{ $categoryCounts[$category]['total'] }}</td>
-                            <td>{{ $categoryCounts[$category]['laki'] }}</td>
-                            <td>{{ $categoryCounts[$category]['perempuan'] }}</td>
+                            <td class="text-center">{{ $categoryCounts[$category]['total'] }}</td>
+                            <td class="text-center">{{ $categoryCounts[$category]['laki'] }}</td>
+                            <td class="text-center">{{ $categoryCounts[$category]['perempuan'] }}</td>
                           @endforeach
                         </tr>
                       @endforeach
@@ -204,11 +205,11 @@
                       <!-- Total Row -->
                       <tr>
                         <td class="text-bold-500 text-center">Total :</td>
-                        <td class="text-bold-500">{{ array_sum(array_column($totalCounts, 'total')) }}</td>
+                        <td class="text-bold-500 text-center">{{ array_sum(array_column($totalCounts, 'total')) }}</td>
                         @foreach ($uniqueCategories as $category)
-                          <td class="text-bold-500">{{ $totalCounts[$category]['total'] }}</td>
-                          <td class="text-bold-500">{{ $totalCounts[$category]['laki'] }}</td>
-                          <td class="text-bold-500">{{ $totalCounts[$category]['perempuan'] }}</td>
+                          <td class="text-bold-500 text-center">{{ $totalCounts[$category]['total'] }}</td>
+                          <td class="text-bold-500 text-center">{{ $totalCounts[$category]['laki'] }}</td>
+                          <td class="text-bold-500 text-center">{{ $totalCounts[$category]['perempuan'] }}</td>
                         @endforeach
                       </tr>
                     @empty

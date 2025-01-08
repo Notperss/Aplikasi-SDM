@@ -23,7 +23,7 @@
                     <th>Menulis</th>
                     <th>Membaca</th>
                     <th>Mendengar</th>
-                    <th></th>
+                    <th style="width: 13%"></th>
                   </tr>
                 </thead>
                 <tbody>

@@ -26,6 +26,7 @@
                     <th>Durasi</th>
                     <th>Kontrak Ke</th>
                     <th>Deskripsi</th>
+                    <th>PK</th>
                     <th>File</th>
                     <th>Lock</th>
                     <th style="width: 12%"></th>
@@ -43,6 +44,7 @@
                       <td class="text-bold-500">{{ $contract->duration }}</td>
                       <td class="text-bold-500">{{ $contract->contract_sequence_number }}</td>
                       <td class="text-bold-500">{{ $contract->description }}</td>
+                      <td class="text-bold-500">{{ $contract->contractKpi->grade ?? '-' }}</td>
                       <td class="text-bold-500">
                         @if ($contract->file)
                           <a href="{{ Storage::url($contract->file) }}" target="_blank">

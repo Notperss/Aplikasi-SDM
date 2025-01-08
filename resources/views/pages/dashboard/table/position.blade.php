@@ -89,11 +89,11 @@
           </table>
         </div> --}}
 
-        <div class="col-md-12">
-          <table class="table table-sm table-bordered text-center" style="font-size: 80%">
+        {{-- <div class="col-md-12">
+          <table class="table table-sm table-bordered" style="font-size: 80%">
             <thead>
               <tr>
-                <th>Unit Kerja</th>
+                <th class="text-center">Unit Kerja</th>
                 @php
                   $uniqueLevels = collect();
                   foreach ($directorates as $directorate) {
@@ -101,19 +101,20 @@
                           foreach ($division->positions as $position) {
                               if ($position->employee && $position->employee->employee_status === 'AKTIF') {
                                   // Ensure the position has an employee
-                                  $levelName = optional($position)->level->name ?? null;
-                                  if ($levelName) {
-                                      $uniqueLevels->push($levelName);
+                                  $level = optional($position)->level;
+                                  if ($level) {
+                                      $uniqueLevels->push($level);
                                   }
                               }
                           }
                       }
                   }
-                  $uniqueLevels = $uniqueLevels->unique();
+                  // Remove duplicates and sort by id
+                  $uniqueLevels = $uniqueLevels->unique('id')->sortBy('id');
                 @endphp
 
                 @foreach ($uniqueLevels as $level)
-                  <th>{{ $level }}</th>
+                  <th>{{ $level->name }}</th>
                 @endforeach
               </tr>
             </thead>
@@ -160,7 +161,7 @@
                   <tr>
                     <td class="font-weight-bold">{{ $directorate->name }}</td>
                     @foreach ($uniqueLevels as $level)
-                      <td>{{ $levelCounts[$level] }}</td>
+                      <td class="text-center">{{ $levelCounts[$level] }}</td>
                     @endforeach
                   </tr>
                 @endforeach
@@ -169,7 +170,101 @@
                 <tr>
                   <td class="font-weight-bold text-center">Total :</td>
                   @foreach ($uniqueLevels as $level)
-                    <td class="font-weight-bold">{{ $totalCounts[$level] }}</td>
+                    <td class="font-weight-bold text-center">{{ $totalCounts[$level] }}</td>
+                  @endforeach
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="{{ 1 + $uniqueLevels->count() }}" class="font-weight-bold text-center">
+                    No data available in table
+                  </td>
+                </tr>
+              @endforelse
+            </tbody>
+          </table>
+        </div> --}}
+
+        <div class="col-md-12">
+          <table class="table table-sm table-bordered" style="font-size: 80%">
+            <thead>
+              <tr>
+                <th class="text-center">Unit Kerja</th>
+                @php
+                  $uniqueLevels = collect();
+                  foreach ($directorates as $directorate) {
+                      foreach ($directorate->divisions as $division) {
+                          foreach ($division->positions as $position) {
+                              if ($position->employee && $position->employee->employee_status === 'AKTIF') {
+                                  // Ensure the position has an employee
+                                  $level = optional($position)->level;
+                                  if ($level) {
+                                      $uniqueLevels->push($level);
+                                  }
+                              }
+                          }
+                      }
+                  }
+                  // Remove duplicates and sort by id
+                  $uniqueLevels = $uniqueLevels->unique('id')->sortBy('id');
+                @endphp
+
+                @foreach ($uniqueLevels as $level)
+                  <th>{{ $level->name }}</th>
+                @endforeach
+              </tr>
+            </thead>
+            <tbody>
+              @php
+                $groupedDirectorates = $directorates->groupBy('is_non')->sortKeysUsing(function ($key1, $key2) {
+                    $order = [1, 2]; // Define the desired order for is_non
+                    $index1 = array_search($key1, $order) !== false ? array_search($key1, $order) : count($order);
+                    $index2 = array_search($key2, $order) !== false ? array_search($key2, $order) : count($order);
+                    return $index1 <=> $index2;
+                });
+              @endphp
+
+              @forelse ($groupedDirectorates as $isNon => $directoratesGroup)
+                <tr>
+                  <td colspan="{{ 1 + $uniqueLevels->count() }}" class="font-weight-bold text-center">
+                    {{ $isNon == 1 ? 'DIREKTORAT' : ($isNon == 2 ? 'NON-DIREKTORAT' : 'LAIN-LAIN') }}
+                  </td>
+                </tr>
+
+                @php
+                  $totalCounts = array_fill_keys($uniqueLevels->pluck('name')->toArray(), 0);
+                @endphp
+
+                @foreach ($directoratesGroup as $directorate)
+                  @php
+                    $levelCounts = array_fill_keys($uniqueLevels->pluck('name')->toArray(), 0);
+
+                    foreach ($directorate->divisions as $division) {
+                        foreach ($division->positions as $position) {
+                            if ($position->employee && $position->employee->employee_status === 'AKTIF') {
+                                // Ensure the position has an employee
+                                $level = optional($position)->level;
+                                if ($level && isset($levelCounts[$level->name])) {
+                                    $levelCounts[$level->name]++;
+                                    $totalCounts[$level->name]++;
+                                }
+                            }
+                        }
+                    }
+                  @endphp
+
+                  <tr>
+                    <td class="font-weight-bold">{{ $directorate->name }}</td>
+                    @foreach ($uniqueLevels as $level)
+                      <td class="text-center">{{ $levelCounts[$level->name] }}</td>
+                    @endforeach
+                  </tr>
+                @endforeach
+
+                <!-- Total Row -->
+                <tr>
+                  <td class="font-weight-bold text-center">Total :</td>
+                  @foreach ($uniqueLevels as $level)
+                    <td class="font-weight-bold text-center">{{ $totalCounts[$level->name] }}</td>
                   @endforeach
                 </tr>
               @empty
@@ -185,10 +280,217 @@
 
         <div class="col-md-12">
           <h3>OFFICE</h3>
-          <table class="table table-sm table-bordered text-center" style="font-size: 80%">
+          <table class="table table-sm table-bordered" style="font-size: 80%">
             <thead>
               <tr>
-                <th>Unit Kerja</th>
+                <th class="text-center">Unit Kerja</th>
+                @php
+                  $uniqueLevels = collect();
+                  foreach ($directorates as $directorate) {
+                      foreach ($directorate->divisions as $division) {
+                          foreach ($division->positions as $position) {
+                              if (
+                                  $position->employee &&
+                                  $position->employee->employee_status === 'AKTIF' &&
+                                  $position->employee->employeeCategory->name === 'OFFICE'
+                              ) {
+                                  // Ensure the position has an employee
+                                  $level = optional($position)->level;
+                                  if ($level) {
+                                      $uniqueLevels->push($level);
+                                  }
+                              }
+                          }
+                      }
+                  }
+                  // Remove duplicates and sort by id
+                  $uniqueLevels = $uniqueLevels->unique('id')->sortBy('id');
+                @endphp
+
+                @foreach ($uniqueLevels as $level)
+                  <th>{{ $level->name }}</th>
+                @endforeach
+              </tr>
+            </thead>
+            <tbody>
+              @php
+                $groupedDirectorates = $directorates->groupBy('is_non')->sortKeysUsing(function ($key1, $key2) {
+                    $order = [1, 2]; // Define the desired order for is_non
+                    $index1 = array_search($key1, $order) !== false ? array_search($key1, $order) : count($order);
+                    $index2 = array_search($key2, $order) !== false ? array_search($key2, $order) : count($order);
+                    return $index1 <=> $index2;
+                });
+              @endphp
+
+              @forelse ($groupedDirectorates as $isNon => $directoratesGroup)
+                <tr>
+                  <td colspan="{{ 1 + $uniqueLevels->count() }}" class="font-weight-bold text-center">
+                    {{ $isNon == 1 ? 'DIREKTORAT' : ($isNon == 2 ? 'NON-DIREKTORAT' : 'LAIN-LAIN') }}
+                  </td>
+                </tr>
+
+                @php
+                  $totalCounts = array_fill_keys($uniqueLevels->pluck('name')->toArray(), 0);
+                @endphp
+
+                @foreach ($directoratesGroup as $directorate)
+                  @php
+                    $levelCounts = array_fill_keys($uniqueLevels->pluck('name')->toArray(), 0);
+
+                    foreach ($directorate->divisions as $division) {
+                        foreach ($division->positions as $position) {
+                            if (
+                                $position->employee &&
+                                $position->employee->employee_status === 'AKTIF' &&
+                                $position->employee->employeeCategory->name === 'OFFICE'
+                            ) {
+                                // Ensure the position has an employee
+                                $level = optional($position)->level;
+                                if ($level && isset($levelCounts[$level->name])) {
+                                    $levelCounts[$level->name]++;
+                                    $totalCounts[$level->name]++;
+                                }
+                            }
+                        }
+                    }
+                  @endphp
+
+                  <tr>
+                    <td class="font-weight-bold">{{ $directorate->name }}</td>
+                    @foreach ($uniqueLevels as $level)
+                      <td class="text-center">{{ $levelCounts[$level->name] }}</td>
+                    @endforeach
+                  </tr>
+                @endforeach
+
+                <!-- Total Row -->
+                <tr>
+                  <td class="font-weight-bold text-center">Total :</td>
+                  @foreach ($uniqueLevels as $level)
+                    <td class="font-weight-bold text-center">{{ $totalCounts[$level->name] }}</td>
+                  @endforeach
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="{{ 1 + $uniqueLevels->count() }}" class="font-weight-bold text-center">
+                    No data available in table
+                  </td>
+                </tr>
+              @endforelse
+            </tbody>
+          </table>
+        </div>
+
+        <div class="col-md-12">
+          <h3>NON-OFFICE</h3>
+          <table class="table table-sm table-bordered" style="font-size: 80%">
+            <thead>
+              <tr>
+                <th class="text-center">Unit Kerja</th>
+                @php
+                  $uniqueLevels = collect();
+                  foreach ($directorates as $directorate) {
+                      foreach ($directorate->divisions as $division) {
+                          foreach ($division->positions as $position) {
+                              if (
+                                  $position->employee &&
+                                  $position->employee->employee_status === 'AKTIF' &&
+                                  $position->employee->employeeCategory->name === 'NON-OFFICE'
+                              ) {
+                                  // Ensure the position has an employee
+                                  $level = optional($position)->level;
+                                  if ($level) {
+                                      $uniqueLevels->push($level);
+                                  }
+                              }
+                          }
+                      }
+                  }
+                  // Remove duplicates and sort by id
+                  $uniqueLevels = $uniqueLevels->unique('id')->sortBy('id');
+                @endphp
+
+                @foreach ($uniqueLevels as $level)
+                  <th>{{ $level->name }}</th>
+                @endforeach
+              </tr>
+            </thead>
+            <tbody>
+              @php
+                $groupedDirectorates = $directorates->groupBy('is_non')->sortKeysUsing(function ($key1, $key2) {
+                    $order = [1, 2]; // Define the desired order for is_non
+                    $index1 = array_search($key1, $order) !== false ? array_search($key1, $order) : count($order);
+                    $index2 = array_search($key2, $order) !== false ? array_search($key2, $order) : count($order);
+                    return $index1 <=> $index2;
+                });
+              @endphp
+
+              @forelse ($groupedDirectorates as $isNon => $directoratesGroup)
+                <tr>
+                  <td colspan="{{ 1 + $uniqueLevels->count() }}" class="font-weight-bold text-center">
+                    {{ $isNon == 1 ? 'DIREKTORAT' : ($isNon == 2 ? 'NON-DIREKTORAT' : 'LAIN-LAIN') }}
+                  </td>
+                </tr>
+
+                @php
+                  $totalCounts = array_fill_keys($uniqueLevels->pluck('name')->toArray(), 0);
+                @endphp
+
+                @foreach ($directoratesGroup as $directorate)
+                  @php
+                    $levelCounts = array_fill_keys($uniqueLevels->pluck('name')->toArray(), 0);
+
+                    foreach ($directorate->divisions as $division) {
+                        foreach ($division->positions as $position) {
+                            if (
+                                $position->employee &&
+                                $position->employee->employee_status === 'AKTIF' &&
+                                $position->employee->employeeCategory->name === 'NON-OFFICE'
+                            ) {
+                                // Ensure the position has an employee
+                                $level = optional($position)->level;
+                                if ($level && isset($levelCounts[$level->name])) {
+                                    $levelCounts[$level->name]++;
+                                    $totalCounts[$level->name]++;
+                                }
+                            }
+                        }
+                    }
+                  @endphp
+
+                  <tr>
+                    <td class="font-weight-bold">{{ $directorate->name }}</td>
+                    @foreach ($uniqueLevels as $level)
+                      <td class="text-center">{{ $levelCounts[$level->name] }}</td>
+                    @endforeach
+                  </tr>
+                @endforeach
+
+                <!-- Total Row -->
+                <tr>
+                  <td class="font-weight-bold text-center">Total :</td>
+                  @foreach ($uniqueLevels as $level)
+                    <td class="font-weight-bold text-center">{{ $totalCounts[$level->name] }}</td>
+                  @endforeach
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="{{ 1 + $uniqueLevels->count() }}" class="font-weight-bold text-center">
+                    No data available in table
+                  </td>
+                </tr>
+              @endforelse
+            </tbody>
+          </table>
+        </div>
+
+
+        {{-- <div class="col-md-12">
+          <h3>OFFICE</h3>
+          <table class="table table-sm table-bordered" style="font-size: 80%">
+            <thead>
+              <tr>
+                <th class="text-center">Unit Kerja</th>
                 @php
                   $uniqueLevels = collect();
                   foreach ($directorates as $directorate) {
@@ -212,7 +514,7 @@
                 @endphp
 
                 @forelse ($uniqueLevels as $level)
-                  <th>{{ $level }}</th>
+                  <th class="text-center">{{ $level }}</th>
                 @empty
                   <th class="font-weight-bold">-</th>
                 @endforelse
@@ -265,7 +567,7 @@
                   <tr>
                     <td class="font-weight-bold">{{ $directorate->name }}</td>
                     @forelse ($uniqueLevels as $level)
-                      <td>{{ $levelCounts[$level] }}</td>
+                      <td class="text-center">{{ $levelCounts[$level] }}</td>
                     @empty
                       <td class="font-weight-bold">-</td>
                     @endforelse
@@ -276,7 +578,7 @@
                 <tr>
                   <td class="font-weight-bold text-center">Total :</td>
                   @forelse ($uniqueLevels as $level)
-                    <td class="font-weight-bold">{{ $totalCounts[$level] }}</td>
+                    <td class="font-weight-bold text-center">{{ $totalCounts[$level] }}</td>
                   @empty
                     <td class="font-weight-bold">-</td>
                   @endforelse
@@ -294,10 +596,10 @@
 
         <div class="col-md-12">
           <h3>NON-OFFICE</h3>
-          <table class="table table-sm table-bordered text-center" style="font-size: 80%">
+          <table class="table table-sm table-bordered" style="font-size: 80%">
             <thead>
               <tr>
-                <th>Unit Kerja</th>
+                <th class="text-center">Unit Kerja</th>
                 @php
                   $uniqueLevels = collect();
                   foreach ($directorates as $directorate) {
@@ -321,7 +623,7 @@
                 @endphp
 
                 @forelse ($uniqueLevels as $level)
-                  <th>{{ $level }}</th>
+                  <th class="text-center">{{ $level }}</th>
                 @empty
                   <th class="font-weight-bold">-</th>
                 @endforelse
@@ -374,7 +676,7 @@
                   <tr>
                     <td class="font-weight-bold">{{ $directorate->name }}</td>
                     @forelse ($uniqueLevels as $level)
-                      <td>{{ $levelCounts[$level] }}</td>
+                      <td class="text-center">{{ $levelCounts[$level] }}</td>
                     @empty
                       <td class="font-weight-bold">-</td>
                     @endforelse
@@ -385,7 +687,7 @@
                 <tr>
                   <td class="font-weight-bold text-center">Total :</td>
                   @forelse ($uniqueLevels as $level)
-                    <td class="font-weight-bold">{{ $totalCounts[$level] }}</td>
+                    <td class="font-weight-bold text-center">{{ $totalCounts[$level] }}</td>
                   @empty
                     <td class="font-weight-bold">-</td>
                   @endforelse
@@ -399,7 +701,7 @@
               @endforelse
             </tbody>
           </table>
-        </div>
+        </div> --}}
 
 
       </div>

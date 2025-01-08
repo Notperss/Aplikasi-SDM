@@ -21,6 +21,7 @@ class EmployeeEducationalHistory extends Model
         'gpa',
         'graduate',
         'file_ijazah',
+        'city',
     ];
 
     public function employee()

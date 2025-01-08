@@ -59,6 +59,15 @@
                 @enderror
               </div>
 
+              <div class="mb-2">
+                <label class="form-label" for="city">Tempat/Kota </label>
+                <input type="text" id="city" name="city"
+                  class="form-control @error('city') is-invalid @enderror" />
+                @error('city')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div>
+
               <div class="row">
                 <div class="col-md-6 mb-2">
                   <label class="form-label" for="graduate">Lulus/Tidak Lulus <code>*</code></label>

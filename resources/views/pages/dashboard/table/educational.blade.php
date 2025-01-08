@@ -15,9 +15,9 @@
                 <th style="width: 5%">SD</th>
                 <th style="width: 5%">SMP</th>
                 <th style="width: 5%">SMA</th>
-                <th style="width: 5%">MA</th>
+                {{-- <th style="width: 5%">MA</th>
                 <th style="width: 5%">MTS</th>
-                <th style="width: 5%">SMK</th>
+                <th style="width: 5%">SMK</th> --}}
                 <th style="width: 5%">D-1</th>
                 <th style="width: 5%">D-2</th>
                 <th style="width: 5%">D-3</th>
@@ -41,9 +41,9 @@
                     'SD' => 0,
                     'SMP' => 0,
                     'SMA' => 0,
-                    'MA' => 0,
-                    'MTS' => 0,
-                    'SMK' => 0,
+                    // 'MA' => 0,
+                    // 'MTS' => 0,
+                    // 'SMK' => 0,
                     'D-1' => 0,
                     'D-2' => 0,
                     'D-3' => 0,
@@ -66,9 +66,9 @@
                         'SD' => 0,
                         'SMP' => 0,
                         'SMA' => 0,
-                        'MA' => 0,
-                        'MTS' => 0,
-                        'SMK' => 0,
+                        // 'MA' => 0,
+                        // 'MTS' => 0,
+                        // 'SMK' => 0,
                         'D-1' => 0,
                         'D-2' => 0,
                         'D-3' => 0,
@@ -95,9 +95,9 @@
                     <td>{{ $educationCounts['SD'] }}</td>
                     <td>{{ $educationCounts['SMP'] }}</td>
                     <td>{{ $educationCounts['SMA'] }}</td>
-                    <td>{{ $educationCounts['MA'] }}</td>
+                    {{-- <td>{{ $educationCounts['MA'] }}</td>
                     <td>{{ $educationCounts['MTS'] }}</td>
-                    <td>{{ $educationCounts['SMK'] }}</td>
+                    <td>{{ $educationCounts['SMK'] }}</td> --}}
                     <td>{{ $educationCounts['D-1'] }}</td>
                     <td>{{ $educationCounts['D-2'] }}</td>
                     <td>{{ $educationCounts['D-3'] }}</td>
@@ -118,9 +118,9 @@
                 <td>{{ $grandTotals['SD'] }}</td>
                 <td>{{ $grandTotals['SMP'] }}</td>
                 <td>{{ $grandTotals['SMA'] }}</td>
-                <td>{{ $grandTotals['MA'] }}</td>
+                {{-- <td>{{ $grandTotals['MA'] }}</td>
                 <td>{{ $grandTotals['MTS'] }}</td>
-                <td>{{ $grandTotals['SMK'] }}</td>
+                <td>{{ $grandTotals['SMK'] }}</td> --}}
                 <td>{{ $grandTotals['D-1'] }}</td>
                 <td>{{ $grandTotals['D-2'] }}</td>
                 <td>{{ $grandTotals['D-3'] }}</td>
@@ -142,9 +142,9 @@
                 <th style="width: 5%">SD</th>
                 <th style="width: 5%">SMP</th>
                 <th style="width: 5%">SMA</th>
-                <th style="width: 5%">MA</th>
+                {{-- <th style="width: 5%">MA</th>
                 <th style="width: 5%">MTS</th>
-                <th style="width: 5%">SMK</th>
+                <th style="width: 5%">SMK</th> --}}
                 <th style="width: 5%">D-1</th>
                 <th style="width: 5%">D-2</th>
                 <th style="width: 5%">D-3</th>
@@ -168,9 +168,9 @@
                     'SD' => 0,
                     'SMP' => 0,
                     'SMA' => 0,
-                    'MA' => 0,
-                    'MTS' => 0,
-                    'SMK' => 0,
+                    // 'MA' => 0,
+                    // 'MTS' => 0,
+                    // 'SMK' => 0,
                     'D-1' => 0,
                     'D-2' => 0,
                     'D-3' => 0,
@@ -193,9 +193,9 @@
                         'SD' => 0,
                         'SMP' => 0,
                         'SMA' => 0,
-                        'MA' => 0,
-                        'MTS' => 0,
-                        'SMK' => 0,
+                        // 'MA' => 0,
+                        // 'MTS' => 0,
+                        // 'SMK' => 0,
                         'D-1' => 0,
                         'D-2' => 0,
                         'D-3' => 0,
@@ -226,9 +226,9 @@
                     <td>{{ $educationCounts['SD'] }}</td>
                     <td>{{ $educationCounts['SMP'] }}</td>
                     <td>{{ $educationCounts['SMA'] }}</td>
-                    <td>{{ $educationCounts['MA'] }}</td>
+                    {{-- <td>{{ $educationCounts['MA'] }}</td>
                     <td>{{ $educationCounts['MTS'] }}</td>
-                    <td>{{ $educationCounts['SMK'] }}</td>
+                    <td>{{ $educationCounts['SMK'] }}</td> --}}
                     <td>{{ $educationCounts['D-1'] }}</td>
                     <td>{{ $educationCounts['D-2'] }}</td>
                     <td>{{ $educationCounts['D-3'] }}</td>
@@ -249,9 +249,9 @@
                 <td>{{ $grandTotals['SD'] }}</td>
                 <td>{{ $grandTotals['SMP'] }}</td>
                 <td>{{ $grandTotals['SMA'] }}</td>
-                <td>{{ $grandTotals['MA'] }}</td>
+                {{-- <td>{{ $grandTotals['MA'] }}</td>
                 <td>{{ $grandTotals['MTS'] }}</td>
-                <td>{{ $grandTotals['SMK'] }}</td>
+                <td>{{ $grandTotals['SMK'] }}</td> --}}
                 <td>{{ $grandTotals['D-1'] }}</td>
                 <td>{{ $grandTotals['D-2'] }}</td>
                 <td>{{ $grandTotals['D-3'] }}</td>
@@ -273,9 +273,9 @@
                 <th style="width: 5%">SD</th>
                 <th style="width: 5%">SMP</th>
                 <th style="width: 5%">SMA</th>
-                <th style="width: 5%">MA</th>
+                {{-- <th style="width: 5%">MA</th>
                 <th style="width: 5%">MTS</th>
-                <th style="width: 5%">SMK</th>
+                <th style="width: 5%">SMK</th> --}}
                 <th style="width: 5%">D-1</th>
                 <th style="width: 5%">D-2</th>
                 <th style="width: 5%">D-3</th>
@@ -299,9 +299,9 @@
                     'SD' => 0,
                     'SMP' => 0,
                     'SMA' => 0,
-                    'MA' => 0,
-                    'MTS' => 0,
-                    'SMK' => 0,
+                    // 'MA' => 0,
+                    // 'MTS' => 0,
+                    // 'SMK' => 0,
                     'D-1' => 0,
                     'D-2' => 0,
                     'D-3' => 0,
@@ -324,9 +324,9 @@
                         'SD' => 0,
                         'SMP' => 0,
                         'SMA' => 0,
-                        'MA' => 0,
-                        'MTS' => 0,
-                        'SMK' => 0,
+                        // 'MA' => 0,
+                        // 'MTS' => 0,
+                        // 'SMK' => 0,
                         'D-1' => 0,
                         'D-2' => 0,
                         'D-3' => 0,
@@ -357,9 +357,9 @@
                     <td>{{ $educationCounts['SD'] }}</td>
                     <td>{{ $educationCounts['SMP'] }}</td>
                     <td>{{ $educationCounts['SMA'] }}</td>
-                    <td>{{ $educationCounts['MA'] }}</td>
+                    {{-- <td>{{ $educationCounts['MA'] }}</td>
                     <td>{{ $educationCounts['MTS'] }}</td>
-                    <td>{{ $educationCounts['SMK'] }}</td>
+                    <td>{{ $educationCounts['SMK'] }}</td> --}}
                     <td>{{ $educationCounts['D-1'] }}</td>
                     <td>{{ $educationCounts['D-2'] }}</td>
                     <td>{{ $educationCounts['D-3'] }}</td>
@@ -380,9 +380,9 @@
                 <td>{{ $grandTotals['SD'] }}</td>
                 <td>{{ $grandTotals['SMP'] }}</td>
                 <td>{{ $grandTotals['SMA'] }}</td>
-                <td>{{ $grandTotals['MA'] }}</td>
+                {{-- <td>{{ $grandTotals['MA'] }}</td>
                 <td>{{ $grandTotals['MTS'] }}</td>
-                <td>{{ $grandTotals['SMK'] }}</td>
+                <td>{{ $grandTotals['SMK'] }}</td> --}}
                 <td>{{ $grandTotals['D-1'] }}</td>
                 <td>{{ $grandTotals['D-2'] }}</td>
                 <td>{{ $grandTotals['D-3'] }}</td>

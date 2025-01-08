@@ -26,7 +26,7 @@
                     <th>Tanggal Mulai</th>
                     <th>Tanggal Akhir</th>
                     <th>File</th>
-                    <th></th>
+                    <th style="width: 13%"></th>
                   </tr>
                 </thead>
                 <tbody>

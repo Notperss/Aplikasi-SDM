@@ -19,7 +19,7 @@
                   <tr>
                     <th>Nama Keterampilan/Kompetensi</th>
                     <th>Kemahiran</th>
-                    <th></th>
+                    <th style="width: 13%"></th>
                   </tr>
                 </thead>
                 <tbody>

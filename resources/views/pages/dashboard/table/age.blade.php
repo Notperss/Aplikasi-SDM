@@ -122,14 +122,14 @@
           <table class="table table-sm table-bordered" style="font-size: 80%">
             <thead>
               <tr>
-                <th>Unit Kerja</th>
-                <th>Total Karyawan</th>
-                <th>
+                <th class="text-center">Unit Kerja</th>
+                <th class="text-center">Total Karyawan</th>
+                <th class="text-center">
                   < 20</th>
-                <th>20-25</th>
-                <th>25-35</th>
-                <th>35-50</th>
-                <th>> 50</th>
+                <th class="text-center">20-25</th>
+                <th class="text-center">25-35</th>
+                <th class="text-center">35-50</th>
+                <th class="text-center">> 50</th>
               </tr>
             </thead>
             <tbody>
@@ -226,12 +226,12 @@
 
                   <tr>
                     <td class="text-bold-500">{{ $directorate->name }}</td>
-                    <td>{{ $totalCount }}</td>
-                    <td>{{ $below20 }}</td>
-                    <td>{{ $age2025 }}</td>
-                    <td>{{ $age2535 }}</td>
-                    <td>{{ $age3550 }}</td>
-                    <td>{{ $up50 }}</td>
+                    <td class="text-center">{{ $totalCount }}</td>
+                    <td class="text-center">{{ $below20 }}</td>
+                    <td class="text-center">{{ $age2025 }}</td>
+                    <td class="text-center">{{ $age2535 }}</td>
+                    <td class="text-center">{{ $age3550 }}</td>
+                    <td class="text-center">{{ $up50 }}</td>
                   </tr>
                 @endforeach
               @empty
@@ -243,12 +243,12 @@
               <!-- Totals Row -->
               <tr class="table-primary">
                 <td class="text-bold-500 text-center">TOTAL</td>
-                <td>{{ $totalEmployees }}</td>
-                <td>{{ $totalBelow20 }}</td>
-                <td>{{ $total2025 }}</td>
-                <td>{{ $total2535 }}</td>
-                <td>{{ $total3550 }}</td>
-                <td>{{ $totalAbove50 }}</td>
+                <td class="text-center">{{ $totalEmployees }}</td>
+                <td class="text-center">{{ $totalBelow20 }}</td>
+                <td class="text-center">{{ $total2025 }}</td>
+                <td class="text-center">{{ $total2535 }}</td>
+                <td class="text-center">{{ $total3550 }}</td>
+                <td class="text-center">{{ $totalAbove50 }}</td>
               </tr>
             </tbody>
           </table>
@@ -259,14 +259,14 @@
           <table class="table table-sm table-bordered" style="font-size: 80%">
             <thead>
               <tr>
-                <th>Unit Kerja</th>
-                <th>Total Karyawan</th>
-                <th>
+                <th class="text-center">Unit Kerja</th>
+                <th class="text-center">Total Karyawan</th>
+                <th class="text-center">
                   < 20</th>
-                <th>20-25</th>
-                <th>25-35</th>
-                <th>35-50</th>
-                <th>> 50</th>
+                <th class="text-center">20-25</th>
+                <th class="text-center">25-35</th>
+                <th class="text-center">35-50</th>
+                <th class="text-center">> 50</th>
               </tr>
             </thead>
             <tbody>
@@ -372,12 +372,12 @@
 
                   <tr>
                     <td class="text-bold-500">{{ $directorate->name }}</td>
-                    <td>{{ $totalCount }}</td>
-                    <td>{{ $below20 }}</td>
-                    <td>{{ $age2025 }}</td>
-                    <td>{{ $age2535 }}</td>
-                    <td>{{ $age3550 }}</td>
-                    <td>{{ $up50 }}</td>
+                    <td class="text-center">{{ $totalCount }}</td>
+                    <td class="text-center">{{ $below20 }}</td>
+                    <td class="text-center">{{ $age2025 }}</td>
+                    <td class="text-center">{{ $age2535 }}</td>
+                    <td class="text-center">{{ $age3550 }}</td>
+                    <td class="text-center">{{ $up50 }}</td>
                   </tr>
                 @endforeach
               @empty
@@ -389,12 +389,12 @@
               <!-- Totals Row -->
               <tr class="table-primary">
                 <td class="text-bold-500 text-center">TOTAL</td>
-                <td>{{ $totalEmployees }}</td>
-                <td>{{ $totalBelow20 }}</td>
-                <td>{{ $total2025 }}</td>
-                <td>{{ $total2535 }}</td>
-                <td>{{ $total3550 }}</td>
-                <td>{{ $totalAbove50 }}</td>
+                <td class="text-center">{{ $totalEmployees }}</td>
+                <td class="text-center">{{ $totalBelow20 }}</td>
+                <td class="text-center">{{ $total2025 }}</td>
+                <td class="text-center">{{ $total2535 }}</td>
+                <td class="text-center">{{ $total3550 }}</td>
+                <td class="text-center">{{ $totalAbove50 }}</td>
               </tr>
             </tbody>
           </table>
@@ -405,14 +405,14 @@
           <table class="table table-sm table-bordered" style="font-size: 80%">
             <thead>
               <tr>
-                <th>Unit Kerja</th>
-                <th>Total Karyawan</th>
-                <th>
+                <th class="text-center">Unit Kerja</th>
+                <th class="text-center">Total Karyawan</th>
+                <th class="text-center">
                   < 20</th>
-                <th>20-25</th>
-                <th>25-35</th>
-                <th>35-50</th>
-                <th>> 50</th>
+                <th class="text-center">20-25</th>
+                <th class="text-center">25-35</th>
+                <th class="text-center">35-50</th>
+                <th class="text-center">> 50</th>
               </tr>
             </thead>
             <tbody>
@@ -518,12 +518,12 @@
 
                   <tr>
                     <td class="text-bold-500">{{ $directorate->name }}</td>
-                    <td>{{ $totalCount }}</td>
-                    <td>{{ $below20 }}</td>
-                    <td>{{ $age2025 }}</td>
-                    <td>{{ $age2535 }}</td>
-                    <td>{{ $age3550 }}</td>
-                    <td>{{ $up50 }}</td>
+                    <td class="text-center">{{ $totalCount }}</td>
+                    <td class="text-center">{{ $below20 }}</td>
+                    <td class="text-center">{{ $age2025 }}</td>
+                    <td class="text-center">{{ $age2535 }}</td>
+                    <td class="text-center">{{ $age3550 }}</td>
+                    <td class="text-center">{{ $up50 }}</td>
                   </tr>
                 @endforeach
               @empty
@@ -535,17 +535,16 @@
               <!-- Totals Row -->
               <tr class="table-primary">
                 <td class="text-bold-500 text-center">TOTAL</td>
-                <td>{{ $totalEmployees }}</td>
-                <td>{{ $totalBelow20 }}</td>
-                <td>{{ $total2025 }}</td>
-                <td>{{ $total2535 }}</td>
-                <td>{{ $total3550 }}</td>
-                <td>{{ $totalAbove50 }}</td>
+                <td class="text-center">{{ $totalEmployees }}</td>
+                <td class="text-center">{{ $totalBelow20 }}</td>
+                <td class="text-center">{{ $total2025 }}</td>
+                <td class="text-center">{{ $total2535 }}</td>
+                <td class="text-center">{{ $total3550 }}</td>
+                <td class="text-center">{{ $totalAbove50 }}</td>
               </tr>
             </tbody>
           </table>
         </div>
-
 
       </div>
     </div>

@@ -11,8 +11,8 @@
           <table class="table table-sm table-bordered" style="font-size: 80%">
             <thead>
               <tr>
-                <th style="width: 50%">Unit Kerja</th>
-                <th style="width: 10%">Total Karyawan</th>
+                <th style="width: 50%; text-align: center">Unit Kerja</th>
+                <th style="width: 10%; text-align: center">Total Karyawan</th>
                 @php
                   // Collect unique employee categories for the table header
                   $uniqueCategories = collect();
@@ -87,9 +87,9 @@
                   @endphp
                   <tr>
                     <td class="text-bold-500">{{ $directorate->name }}</td>
-                    <td class="text-bold-500">{{ array_sum($categoryCounts) }}</td>
+                    <td class="text-bold-500" style="text-align: center">{{ array_sum($categoryCounts) }}</td>
                     @foreach ($uniqueCategories as $category)
-                      <td>{{ $categoryCounts[$category] }}</td>
+                      <td style="text-align: center">{{ $categoryCounts[$category] }}</td>
                     @endforeach
                   </tr>
                 @endforeach
@@ -97,9 +97,9 @@
                 <!-- Total Row -->
                 <tr>
                   <td class="text-bold-500 text-center">Total :</td>
-                  <td class="text-bold-500">{{ array_sum($totalCounts) }}</td>
+                  <td class="text-bold-500 text-center">{{ array_sum($totalCounts) }}</td>
                   @foreach ($uniqueCategories as $category)
-                    <td class="text-bold-500">{{ $totalCounts[$category] }}</td>
+                    <td class="text-bold-500 text-center">{{ $totalCounts[$category] }}</td>
                   @endforeach
                 </tr>
               @empty

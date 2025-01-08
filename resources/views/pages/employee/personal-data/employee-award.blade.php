@@ -23,7 +23,7 @@
                     <th>Nama Penghargaan</th>
                     <th>Tanggal Penghargaan</th>
                     <th>File</th>
-                    <th></th>
+                    <th style="width: 13%"></th>
                   </tr>
                 </thead>
                 <tbody>

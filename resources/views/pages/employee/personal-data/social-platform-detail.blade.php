@@ -21,7 +21,7 @@
                     <th>Platform</th>
                     <th>Nama Akun</th>
                     <th>Link Akun</th>
-                    <th></th>
+                    <th style="width: 13%"></th>
                   </tr>
                 </thead>
                 <tbody>

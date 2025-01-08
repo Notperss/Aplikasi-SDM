@@ -14,13 +14,14 @@
   <div class="card">
 
     <div class="card-header">
-      <div class="d-flex justify-content-between align-items-center ">
-        <h5 class="fw-normal mb-0 text-body">Daftar Karyawan</h5>
-        <a href="{{ route('employee.create') }}" class="btn btn-primary btn-md">
-          <i class="bi bi-plus-lg"></i>
-          Karyawan</a>
-      </div>
-
+      @role('manager|ka-dep|super-admin')
+        <div class="d-flex justify-content-between align-items-center ">
+          <h5 class="fw-normal mb-0 text-body">Daftar Karyawan</h5>
+          <a href="{{ route('employee.create') }}" class="btn btn-primary btn-md">
+            <i class="bi bi-plus-lg"></i>
+            Karyawan</a>
+        </div>
+      @endrole
 
 
       <div class="d-flex justify-content-between align-items-center my-2">
@@ -204,11 +205,11 @@
             name: 'photo'
           },
           {
-            data: 'nik',
+            data: 'employee_nik',
             name: 'nik'
           },
           {
-            data: 'name_employee',
+            data: 'name',
             name: 'name',
             // render: function(data, type, row) {
             //   return `${data.name}<br><small>${data.position.name}</small>`;
@@ -246,7 +247,7 @@
         ],
         columnDefs: [{
           className: 'text-center',
-          targets: '_all'
+          targets: [0, 1, 3, 4, 5, 6, 7, 8]
         }]
       });
 

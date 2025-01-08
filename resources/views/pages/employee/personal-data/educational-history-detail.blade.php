@@ -22,18 +22,21 @@
                     <th>Tingkat</th>
                     <th>Institusi</th>
                     <th>Jurusan</th>
+                    <th>Tempat/Kota</th>
                     <th>GPA/NEM</th>
-                    <th style="text-align: center;">
+                    <th>Tahun Masuk</th>
+                    <th>Tahun Keluar</th>
+                    {{-- <th style="text-align: center;">
                       <div>Tahun</div>
                       <div style="display: flex; justify-content: space-between;">
                         <span>Masuk</span>
                         <span>-</span>
                         <span>Keluar</span>
                       </div>
-                    </th>
+                    </th> --}}
                     <th>Lulus/Tidak</th>
                     <th>Ijazah</th>
-                    <th></th>
+                    <th style="width: 13%"></th>
                   </tr>
                 </thead>
 
@@ -43,14 +46,17 @@
                       <td class="text-bold-500">{{ $employeeEducationalHistory->school_level }}</td>
                       <td>{{ $employeeEducationalHistory->school_name }}</td>
                       <td class="text-bold-500">{{ $employeeEducationalHistory->study }}</td>
+                      <td class="text-bold-500">{{ $employeeEducationalHistory->city }}</td>
                       <td class="text-bold-500">{{ $employeeEducationalHistory->gpa }}</td>
-                      <td style="text-align: center;">
+                      <td class="text-bold-500">{{ $employeeEducationalHistory->year_from }}</td>
+                      <td class="text-bold-500">{{ $employeeEducationalHistory->year_to }}</td>
+                      {{-- <td style="text-align: center;">
                         <div style="display: flex; justify-content: space-between;">
                           <span>{{ $employeeEducationalHistory->year_from }}</span>
                           <span>-</span>
                           <span>{{ $employeeEducationalHistory->year_to }}</span>
                         </div>
-                      </td>
+                      </td> --}}
                       <td class="text-bold-500">{{ $employeeEducationalHistory->graduate }}</td>
                       <td class="text-bold-500 text-center">
                         @if ($employeeEducationalHistory->file_ijazah)

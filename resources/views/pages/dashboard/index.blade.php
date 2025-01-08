@@ -820,13 +820,61 @@
                         })
                         ->count();
 
+                    $positionsWithActiveEmployeeOfficeCount = $division
+                        ->positions()
+                        ->whereHas('employee', function ($query) {
+                            $query
+                                ->where('employee_status', 'AKTIF')
+                                ->whereHas('employeeCategory', function ($query) {
+                                    $query->where('name', 'OFFICE'); // Adjust based on your relationship
+                                })
+                                ->when(!Auth::user()->hasRole('super-admin'), function ($query) {
+                                    $query->where('company_id', Auth::user()->company_id);
+                                });
+                        })
+                        ->count();
+
+                    $positionsWithActiveEmployeeNonOfficeCount = $division
+                        ->positions()
+                        ->whereHas('employee', function ($query) {
+                            $query
+                                ->where('employee_status', 'AKTIF')
+                                ->whereHas('employeeCategory', function ($query) {
+                                    $query->where('name', 'NON-OFFICE'); // Adjust based on your relationship
+                                })
+                                ->when(!Auth::user()->hasRole('super-admin'), function ($query) {
+                                    $query->where('company_id', Auth::user()->company_id);
+                                });
+                        })
+                        ->count();
+
                   @endphp
-                  <h6 class="text-muted font-semibold">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="text-muted font-semibold">
+                      <a href="{{ route('getDivisionEmployee', $division->id) }}"> {{ $division->code }}</a>
+                    </h6>
+                    <span class="h5"> {{ $positionsWithActiveEmployeeCount }} </span>
+                  </div>
+
+                  <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="text-muted font-semibold">
+                      Office
+                    </h6>
+                    <span class="h5"> {{ $positionsWithActiveEmployeeOfficeCount }} </span>
+                  </div>
+
+                  <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="text-muted font-semibold">
+                      Non-Office
+                    </h6>
+                    <span class="h5"> {{ $positionsWithActiveEmployeeNonOfficeCount }} </span>
+                  </div>
+                  {{-- <h6 class="text-muted font-semibold">
                     <a href="{{ route('getDivisionEmployee', $division->id) }}"> {{ $division->code }}</a>
                   </h6>
                   <h4 class="font-extrabold mb-0 float-end">
                     {{ $positionsWithActiveEmployeeCount }}
-                  </h4>
+                  </h4> --}}
                 </div>
               </div>
             </div>
@@ -852,20 +900,69 @@
           <div class="card">
             <div class="card-body ">
               <div class="row">
+                @php
+                  $positionsWithEmployeeCount = $division->positions
+                      ->filter(function ($position) {
+                          return $position->employee !== null;
+                      })
+                      ->count();
+
+                  $positionsWithActiveEmployeeOfficeCount = $division
+                      ->positions()
+                      ->whereHas('employee', function ($query) {
+                          $query
+                              ->where('employee_status', 'AKTIF')
+                              ->whereHas('employeeCategory', function ($query) {
+                                  $query->where('name', 'OFFICE'); // Adjust based on your relationship
+                              })
+                              ->when(!Auth::user()->hasRole('super-admin'), function ($query) {
+                                  $query->where('company_id', Auth::user()->company_id);
+                              });
+                      })
+                      ->count();
+
+                  $positionsWithActiveEmployeeNonOfficeCount = $division
+                      ->positions()
+                      ->whereHas('employee', function ($query) {
+                          $query
+                              ->where('employee_status', 'AKTIF')
+                              ->whereHas('employeeCategory', function ($query) {
+                                  $query->where('name', 'NON-OFFICE'); // Adjust based on your relationship
+                              })
+                              ->when(!Auth::user()->hasRole('super-admin'), function ($query) {
+                                  $query->where('company_id', Auth::user()->company_id);
+                              });
+                      })
+                      ->count();
+
+                @endphp
                 <div class="col-md-12">
-                  <h6 class="text-muted font-semibold">
+                  {{-- <h6 class="text-muted font-semibold">
                     <a href="{{ route('getDivisionEmployee', $division->id) }}"> {{ $division->code }}</a>
                   </h6>
-                  @php
-                    $positionsWithEmployeeCount = $division->positions
-                        ->filter(function ($position) {
-                            return $position->employee !== null;
-                        })
-                        ->count();
-                  @endphp
                   <h4 class="font-extrabold mb-0 float-end">
                     {{ $positionsWithEmployeeCount }}
-                  </h4>
+                  </h4> --}}
+                  <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="text-muted font-semibold">
+                      <a href="{{ route('getDivisionEmployee', $division->id) }}"> {{ $division->code }}</a>
+                    </h6>
+                    <span class="h5"> {{ $positionsWithEmployeeCount }} </span>
+                  </div>
+
+                  <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="text-muted font-semibold">
+                      Office
+                    </h6>
+                    <span class="h5"> {{ $positionsWithActiveEmployeeOfficeCount }} </span>
+                  </div>
+
+                  <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="text-muted font-semibold">
+                      Non-Office
+                    </h6>
+                    <span class="h5"> {{ $positionsWithActiveEmployeeNonOfficeCount }} </span>
+                  </div>
                 </div>
               </div>
             </div>

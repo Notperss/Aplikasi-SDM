@@ -22,17 +22,19 @@
                 <thead>
                   <tr>
                     <th>#</th>
+                    <th>Nomor Kontrak</th>
                     <th>Tanggal</th>
                     <th>Nilai</th>
                     <th>Rekomendasi Kontrak</th>
                     <th>File</th>
-                    <th></th>
+                    <th style="width: 13%"></th>
                   </tr>
                 </thead>
                 <tbody>
                   @forelse ($employee->kpis as $employeeKpi)
                     <tr>
                       <td class="text-bold-500">{{ $loop->iteration }}</td>
+                      <td class="text-bold-500">{{ $employeeKpi->contract->contract_number }}</td>
                       <td class="text-bold-500">
                         {{ $employeeKpi->kpi_date ? Carbon\Carbon::parse($employeeKpi->kpi_date)->translatedFormat('d M Y') : '' }}
                       </td>

@@ -90,6 +90,15 @@
                 @enderror
               </div>
 
+              <div class="mb-2">
+                <label class="form-label" for="city">Tempat/Kota</label>
+                <input type="text" id="city" name="city" value="{{ $employeeEducationalHistory->city }}"
+                  class="form-control @error('city') is-invalid @enderror" />
+                @error('city')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div>
+
               <div class="row">
                 <div class="col-md-6 mb-2">
                   <label class="form-label" for="graduate">Lulus/Tidak Lulus</label>
@@ -125,9 +134,9 @@
                 <div class="col-md-6 mb-2">
                   <label for="year_from">Tahun Masuk <code>*</code></label>
                   <input type="text" value="{{ $employeeEducationalHistory->year_from }}"
-                    oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="4" id="year" name="year_from"
-                    value="{{ old('year_from') }}" class="form-control  @error('year_from') is-invalid @enderror"
-                    required />
+                    oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="4" id="year"
+                    name="year_from" value="{{ old('year_from') }}"
+                    class="form-control  @error('year_from') is-invalid @enderror" required />
                   @error('year_from')
                     <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror

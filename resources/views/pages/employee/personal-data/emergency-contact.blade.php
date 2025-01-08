@@ -46,7 +46,7 @@
                               class="btn btn-sm btn-icon btn-secondary text-white">
                               <i class="bi bi-pencil-square"></i>
                             </a>
-                            {{-- @include('pages.employee.personal-data.form.emergency-contact.modal-edit') --}}
+                            @include('pages.employee.personal-data.form.emergency-contact.modal-edit')
 
                             <a class="btn btn-sm btn-light-danger mx-2"
                               onclick="deleteEmergencyContact('{{ $emergencyContact->id }}')"><i

@@ -26,6 +26,7 @@
                     <th>Nama</th>
                     <th>L/P</th>
                     <th>Tgl Lahir</th>
+                    <th>Usia</th>
                     <th>No. Telp</th>
                     <th>Pendidikan</th>
                     <th>Pekerjaan</th>
@@ -51,6 +52,9 @@
                       <td class="text-bold-500">{{ $employeeFamilyDetail->gender }}</td>
                       <td class="text-bold-500">
                         {{ Carbon\Carbon::parse($employeeFamilyDetail->dob_family)->translatedFormat('d F Y') }}
+                      </td>
+                      <td class="text-bold-500">
+                        {{ Carbon\Carbon::parse($employeeFamilyDetail->dob_family)->age }} Tahun
                       </td>
                       <td class="text-bold-500">{{ $employeeFamilyDetail->phone_number }}</td>
                       <td class="text-bold-500">{{ $employeeFamilyDetail->education }}</td>
@@ -103,6 +107,7 @@
                     <th>Nama</th>
                     <th>L/P</th>
                     <th>Tgl Lahir</th>
+                    <th>Usia</th>
                     <th>No. Telp</th>
                     <th>Pendidikan</th>
                     <th>Pekerjaan</th>
@@ -129,6 +134,9 @@
                       <td class="text-bold-500">{{ $employeeFamilyDetail->gender }}</td>
                       <td class="text-bold-500">
                         {{ Carbon\Carbon::parse($employeeFamilyDetail->dob_family)->translatedFormat('d F Y') }}
+                      </td>
+                      <td class="text-bold-500">
+                        {{ Carbon\Carbon::parse($employeeFamilyDetail->dob_family)->age }} Tahun
                       </td>
                       <td class="text-bold-500">{{ $employeeFamilyDetail->phone_number }}</td>
                       <td class="text-bold-500">{{ $employeeFamilyDetail->education }}</td>

@@ -218,13 +218,6 @@
                     <input name="employee_category_id" id="employee_category_id"
                       value="{{ $employee->employeeCategory->name }}"
                       class="form-control choices  @error('employee_category_id') is-invalid @enderror" readonly>
-                    {{-- <option value="" disabled selected>Choose</option>
-                      @foreach ($employeeCategories as $employeeCategory)
-                        <option value="{{ $employeeCategory->id }}"
-                          {{ old('employee_category_id', $employee->employee_category_id) == $employeeCategory->id ? 'selected' : '' }}>
-                          {{ $employeeCategory->name }}</option>
-                      @endforeach
-                    </input> --}}
                     @error('employee_category_id')
                       <a style="color: red">
                         <small>
@@ -238,20 +231,6 @@
                     <input type="text" id="employee_status" name="employee_status"
                       value="{{ $employee->employee_status }}"
                       class="form-control choices @error('employee_status') is-invalid @enderror" readonly>
-                    {{-- <option value="" disabled>Choose</option>
-                      <option value="AKTIF"
-                        {{ old('employee_status', $employee->employee_status) == 'AKTIF' ? 'selected' : '' }}>AKTIF
-                      </option>
-                      <option value="PENSIUN"
-                        {{ old('employee_status', $employee->employee_status) == 'PENSIUN' ? 'selected' : '' }}>PENSIUN
-                      </option>
-                      <option value="RESIGN"
-                        {{ old('employee_status', $employee->employee_status) == 'RESIGN' ? 'selected' : '' }}>RESIGN
-                      </option>
-                      <option value="NON AKTIF"
-                        {{ old('employee_status', $employee->employee_status) == 'NON AKTIF' ? 'selected' : '' }}>
-                        NON AKTIF</option>
-                    </input> --}}
                     @error('employee_status')
                       <a style="color: red">
                         <small>
@@ -265,19 +244,6 @@
                     <input type="text" id="work_relationship" value="{{ $employee->work_relationship }}"
                       class="form-control choices @error('work_relationship') is-invalid @enderror"
                       name="work_relationship" readonly>
-                    {{-- <option value="" disabled selected>Choose</option>
-                      <option value="KONTRAK"
-                        {{ old('work_relationship', $employee->work_relationship) == 'KONTRAK' ? 'selected' : '' }}>
-                        KONTRAK
-                      </option>
-                      <option value="TETAP"
-                        {{ old('work_relationship', $employee->work_relationship) == 'TETAP' ? 'selected' : '' }}>TETAP
-                      </option>
-                      <option value="INTERNSHIP"
-                        {{ old('work_relationship', $employee->work_relationship) == 'INTERNSHIP' ? 'selected' : '' }}>
-                        INTERNSHIP
-                      </option>
-                    </input> --}}
                     @error('work_relationship')
                       <a style="color: red">
                         <small>
@@ -291,17 +257,6 @@
                     <input type="text" id="work_status" value="{{ $employee->work_status }}"
                       class="form-control choices @error('work_status') is-invalid @enderror" name="work_status"
                       readonly>
-                    {{-- <option value="" disabled selected>Choose</option>
-                      <option value="FULL-TIME"
-                        {{ old('work_status', $employee->work_status) == 'FULL-TIME' ? 'selected' : '' }}>FULL-TIME
-                      </option>
-                      <option value="PART-TIME"
-                        {{ old('work_status', $employee->work_status) == 'PART-TIME' ? 'selected' : '' }}>PART-TIME
-                      </option>
-                      <option value="INTERNSHIP"
-                        {{ old('work_status', $employee->work_status) == 'INTERNSHIP' ? 'selected' : '' }}>INTERNSHIP
-                      </option>
-                    </input> --}}
                     @error('work_status')
                       <a style="color: red">
                         <small>
