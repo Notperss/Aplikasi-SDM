@@ -99,7 +99,7 @@
           <td class="text-bold-500">{{ $employeeAttendance->working_type }}</td>
           <td class="text-bold-500">{{ $employeeAttendance->status }}</td>
           <td class="text-bold-500">{{ $employeeAttendance->late }}</td>
-          <td class="text-bold-500">{{ Carbon\Carbon::parse($employeeAttendance->date)->translatedFormat('d M Y') }}
+          <td class="text-bold-500">{{ Carbon\Carbon::parse($employeeAttendance->date)->translatedFormat('d-m-Y') }}
           </td>
           <td class="text-bold-500">{{ $employeeAttendance->working_hours }}</td>
         </tr>

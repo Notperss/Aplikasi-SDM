@@ -10,7 +10,7 @@ class UpdateCandidateRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize() : bool
+    public function authorize(): bool
     {
         return true;
     }
@@ -20,7 +20,7 @@ class UpdateCandidateRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [
             'name' => ['required', 'string'],
@@ -50,11 +50,11 @@ class UpdateCandidateRequest extends FormRequest
             'dob' => ['nullable', 'date', 'before:today'],
             'gender' => ['nullable', 'string', 'in:LAKI-LAKI,PEREMPUAN'],
             'date_applied' => ['nullable', 'date'],
-            'photo' => 'image|mimes:jpg,jpeg,png|max:512',
+            'photo' => 'image|mimes:jpg,jpeg,png|max:51200',
 
             'paspor_number' => ['nullable', Rule::unique('candidates')->ignore($this->candidate)],
 
-            $validateFile = 'mimes:pdf|max:512',
+            $validateFile = 'mimes:pdf|max:51200',
 
             'file_kk' => $validateFile,
             'file_ktp' => $validateFile,
@@ -65,13 +65,13 @@ class UpdateCandidateRequest extends FormRequest
             'file_vaksin' => $validateFile,
             'file_surat_sehat' => $validateFile,
 
-            'file_sim_a' => 'mimes:jpg,jpeg,png,pdf|max:512',
-            'file_sim_b' => 'mimes:jpg,jpeg,png,pdf|max:512',
-            'file_sim_c' => 'mimes:jpg,jpeg,png,pdf|max:512',
+            'file_sim_a' => 'mimes:jpg,jpeg,png,pdf|max:51200',
+            'file_sim_b' => 'mimes:jpg,jpeg,png,pdf|max:51200',
+            'file_sim_c' => 'mimes:jpg,jpeg,png,pdf|max:51200',
         ];
     }
 
-    public function messages() : array
+    public function messages(): array
     {
         return [
             'name.required' => 'Nama wajib diisi.',
@@ -140,19 +140,19 @@ class UpdateCandidateRequest extends FormRequest
             'photo.required' => 'File gambar wajib diunggah.',
             'photo.image' => 'File harus berupa gambar.',
             'photo.mimes' => 'Ekstensi file harus berupa jpg, jpeg, atau png.',
-            'photo.max' => 'Ukuran file maksimal adalah 500KB.',
+            'photo.max' => 'Ukuran file maksimal adalah 50MB.',
 
             'file_kk.mimes' => 'Ekstensi file KK harus berupa pdf.',
-            'file_kk.max' => 'Ukuran file KK maksimal adalah 500KB.',
+            'file_kk.max' => 'Ukuran file KK maksimal adalah 50MB.',
 
             'file_ktp.mimes' => 'Ekstensi file KTP harus berupa pdf.',
-            'file_ktp.max' => 'Ukuran file KTP maksimal adalah 500KB.',
+            'file_ktp.max' => 'Ukuran file KTP maksimal adalah 50MB.',
 
             'file_skck.mimes' => 'Ekstensi file SKCK harus berupa pdf.',
-            'file_skck.max' => 'Ukuran file SKCK maksimal adalah 500KB.',
+            'file_skck.max' => 'Ukuran file SKCK maksimal adalah 50MB.',
 
             'file_cv.mimes' => 'Ekstensi file CV harus berupa pdf.',
-            'file_cv.max' => 'Ukuran file CV maksimal adalah 500KB.',
+            'file_cv.max' => 'Ukuran file CV maksimal adalah 50MB.',
             'file_cv.required' => 'File CV wajib diunggah.',
 
             'paspor_number.unique' => 'Nomor paspor sudah terdaftar.',
@@ -160,13 +160,13 @@ class UpdateCandidateRequest extends FormRequest
             'paspor_number.min_digits' => 'Nomor paspor tidak boleh kurang dari 6 digit.',
 
             'file_sim_a.mimes' => 'Ekstensi file harus berupa jpg, jpeg,png, atau pdf.',
-            'file_sim_a.max' => 'Ukuran file maksimal adalah 500KB.',
+            'file_sim_a.max' => 'Ukuran file maksimal adalah 50MB.',
 
             'file_sim_b.mimes' => 'Ekstensi file harus berupa jpg, jpeg,png, atau pdf.',
-            'file_sim_b.max' => 'Ukuran file maksimal adalah 500KB.',
+            'file_sim_b.max' => 'Ukuran file maksimal adalah 50MB.',
 
             'file_sim_c.mimes' => 'Ekstensi file harus berupa jpg, jpeg,png, atau pdf.',
-            'file_sim_c.max' => 'Ukuran file maksimal adalah 500KB.',
+            'file_sim_c.max' => 'Ukuran file maksimal adalah 50MB.',
         ];
     }
 }

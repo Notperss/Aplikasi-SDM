@@ -89,7 +89,7 @@
                     </tr>
                   @empty
                     <tr>
-                      <td class="text-center" colspan="9">No data available in table</td>
+                      <td class="text-center" colspan="10">No data available in table</td>
                     </tr>
                   @endforelse
 

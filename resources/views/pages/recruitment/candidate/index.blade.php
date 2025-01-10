@@ -136,8 +136,8 @@
             name: 'phone_number',
           },
           {
-            data: 'created_at',
-            name: 'created_at',
+            data: 'date_applieds',
+            name: 'date_applied',
           },
           {
             data: 'action',

@@ -9,7 +9,7 @@ class StoreCandidateRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize() : bool
+    public function authorize(): bool
     {
         return true;
     }
@@ -19,7 +19,7 @@ class StoreCandidateRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [
             'name' => ['required', 'string'],
@@ -40,7 +40,7 @@ class StoreCandidateRequest extends FormRequest
             'study' => 'nullable',
             'marital_status' => 'nullable',
 
-            'photo' => 'image|mimes:jpg,jpeg,png|max:512',
+            'photo' => 'image|mimes:jpg,jpeg,png|max:51200',
             'religion' => ['nullable', 'string'],
             'nationality' => ['nullable', 'string'],
             'height' => ['nullable', 'integer'],
@@ -52,23 +52,23 @@ class StoreCandidateRequest extends FormRequest
 
             'paspor_number' => ['nullable', 'unique:candidates,paspor_number'],
 
-            'file_kk' => 'mimes:pdf|max:512',
-            'file_ktp' => 'mimes:pdf|max:512',
-            'file_cv' => 'nullable|mimes:pdf|max:512',
-            'file_skck' => 'mimes:pdf|max:512',
-            'file_ijazah' => 'mimes:pdf|max:512',
-            'file_sertifikat' => 'mimes:pdf|max:512',
-            'file_vaksin' => 'mimes:pdf|max:512',
-            'file_surat_sehat' => 'mimes:pdf|max:512',
+            'file_kk' => 'mimes:pdf|max:51200',
+            'file_ktp' => 'mimes:pdf|max:51200',
+            'file_cv' => 'nullable|mimes:pdf|max:51200',
+            'file_skck' => 'mimes:pdf|max:51200',
+            'file_ijazah' => 'mimes:pdf|max:51200',
+            'file_sertifikat' => 'mimes:pdf|max:51200',
+            'file_vaksin' => 'mimes:pdf|max:51200',
+            'file_surat_sehat' => 'mimes:pdf|max:51200',
 
-            'file_sim_a' => 'mimes:jpg,jpeg,png,pdf|max:512',
-            'file_sim_b' => 'mimes:jpg,jpeg,png,pdf|max:512',
-            'file_sim_c' => 'mimes:jpg,jpeg,png,pdf|max:512',
+            'file_sim_a' => 'mimes:jpg,jpeg,png,pdf|max:51200',
+            'file_sim_b' => 'mimes:jpg,jpeg,png,pdf|max:51200',
+            'file_sim_c' => 'mimes:jpg,jpeg,png,pdf|max:51200',
 
         ];
     }
 
-    public function messages() : array
+    public function messages(): array
     {
         return [
             'name.required' => 'Nama wajib diisi.',
@@ -137,19 +137,19 @@ class StoreCandidateRequest extends FormRequest
             'photo.required' => 'File gambar wajib diunggah.',
             'photo.image' => 'File harus berupa gambar.',
             'photo.mimes' => 'Ekstensi file harus berupa jpg, jpeg, atau png.',
-            'photo.max' => 'Ukuran file maksimal adalah 500KB.',
+            'photo.max' => 'Ukuran file maksimal adalah 50MB.',
 
             'file_kk.mimes' => 'Ekstensi file KK harus berupa pdf.',
-            'file_kk.max' => 'Ukuran file KK maksimal adalah 500KB.',
+            'file_kk.max' => 'Ukuran file KK maksimal adalah 50MB.',
 
             'file_ktp.mimes' => 'Ekstensi file KTP harus berupa pdf.',
-            'file_ktp.max' => 'Ukuran file KTP maksimal adalah 500KB.',
+            'file_ktp.max' => 'Ukuran file KTP maksimal adalah 50MB.',
 
             'file_skck.mimes' => 'Ekstensi file SKCK harus berupa pdf.',
-            'file_skck.max' => 'Ukuran file SKCK maksimal adalah 500KB.',
+            'file_skck.max' => 'Ukuran file SKCK maksimal adalah 50MB.',
 
             'file_cv.mimes' => 'Ekstensi file CV harus berupa pdf.',
-            'file_cv.max' => 'Ukuran file CV maksimal adalah 500KB.',
+            'file_cv.max' => 'Ukuran file CV maksimal adalah 50MB.',
             'file_cv.required' => 'File CV wajib diunggah.',
 
             'paspor_number.unique' => 'Nomor paspor sudah terdaftar.',
@@ -157,13 +157,13 @@ class StoreCandidateRequest extends FormRequest
             'paspor_number.min_digits' => 'Nomor paspor tidak boleh kurang dari 6 digit.',
 
             'file_sim_a.mimes' => 'Ekstensi file harus berupa jpg, jpeg,png, atau pdf.',
-            'file_sim_a.max' => 'Ukuran file maksimal adalah 500KB.',
+            'file_sim_a.max' => 'Ukuran file maksimal adalah 50MB.',
 
             'file_sim_b.mimes' => 'Ekstensi file harus berupa jpg, jpeg,png, atau pdf.',
-            'file_sim_b.max' => 'Ukuran file maksimal adalah 500KB.',
+            'file_sim_b.max' => 'Ukuran file maksimal adalah 50MB.',
 
             'file_sim_c.mimes' => 'Ekstensi file harus berupa jpg, jpeg,png, atau pdf.',
-            'file_sim_c.max' => 'Ukuran file maksimal adalah 500KB.',
+            'file_sim_c.max' => 'Ukuran file maksimal adalah 50MB.',
         ];
     }
 }

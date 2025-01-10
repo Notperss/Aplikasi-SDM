@@ -47,13 +47,13 @@ class EmployeeAwardController extends Controller
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         
-                            <a class="dropdown-item" href="' . route('employeeAward.edit', $item) . '">Edit</a>
+                            <a class="dropdown-item" href="'.route('employeeAward.edit', $item).'">Edit</a>
                             
-                            <button class="dropdown-item" onclick="deleteAward(' . $item->id . ')">Hapus</button>
-                            <form id="deleteAwardForm_' . $item->id . '"
-                                  action="' . route('employeeAward.destroy', $item->id) . '"
+                            <button class="dropdown-item" onclick="deleteAward('.$item->id.')">Hapus</button>
+                            <form id="deleteAwardForm_'.$item->id.'"
+                                  action="'.route('employeeAward.destroy', $item->id).'"
                                   method="POST">
-                                ' . method_field('delete') . csrf_field() . '
+                                '.method_field('delete').csrf_field().'
                             </form>
                         </div>
                     </div>
@@ -61,12 +61,12 @@ class EmployeeAwardController extends Controller
             ';
                 })->editColumn('file', function ($item) {
                     if ($item->file) {
-                        return '<a class="btn btn-sm btn-primary" href="' . asset('storage/' . $item->file) . '" target="_blank" > Lihat </a>';
+                        return '<a class="btn btn-sm btn-primary" href="'.asset('storage/'.$item->file).'" target="_blank" > Lihat </a>';
                     } else {
                         return '<span> - </span>';
                     }
                 })->editColumn('date_award', function ($item) {
-                    return '' . $item->date_award ? Carbon::parse($item->date_award)->translatedFormat('d M Y') : '-' . '';
+                    return ''.$item->date_award ? Carbon::parse($item->date_award)->translatedFormat('d-m-Y') : '-'.'';
                 })->rawColumns(['action', 'file',])
                 ->toJson();
         }
@@ -122,7 +122,7 @@ class EmployeeAwardController extends Controller
             if ($request->hasFile('file_award')) {
                 $file = $request->file('file_award');
                 $extension = $file->getClientOriginalExtension();
-                $file_name = 'file_penghargaan_' . time() . '.' . $extension; // Generate a unique file name
+                $file_name = 'file_penghargaan_'.time().'.'.$extension; // Generate a unique file name
                 $file_path = $file->storeAs('files/employee/file_penghargaan', $file_name, 'public_local');
             }
 
@@ -160,7 +160,7 @@ class EmployeeAwardController extends Controller
             DB::rollback();
 
             // Log the error for debugging
-            Log::error('Error storing training: ' . $e->getMessage());
+            Log::error('Error storing training: '.$e->getMessage());
 
             // Redirect back with an error message
             return redirect()->back()
@@ -207,7 +207,7 @@ class EmployeeAwardController extends Controller
         if ($request->hasFile('file_award')) {
             $file = $request->file('file_award');
             $extension = $file->getClientOriginalExtension();
-            $file_name = 'file_penghargaan_' . $request['name'] . '_' . time() . '.' . $extension; // Construct the file name
+            $file_name = 'file_penghargaan_'.$request['name'].'_'.time().'.'.$extension; // Construct the file name
             $data['file_award'] = $file->storeAs('files/employee/file_penghargaan', $file_name, 'public_local'); // Store the file
             // delete sertifikat
             if ($path_file != null || $path_file != '') {

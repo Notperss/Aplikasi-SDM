@@ -71,7 +71,7 @@
                 </div>
               </div>
               <p class="my-0 text-sm">* Ekstensi File : pdf</p>
-              <p class="mb-0 text-sm">* Ukuran File Maks. 500KB</p>
+              <p class="mb-0 text-sm">* Ukuran File Maks. 50MB</p>
             </div>
           </div>
 
@@ -130,7 +130,7 @@
                 </div>
               </div>
               <p class="my-0 text-sm">* Ekstensi File : pdf</p>
-              <p class="mb-0 text-sm">* Ukuran File Maks. 500KB</p>
+              <p class="mb-0 text-sm">* Ukuran File Maks. 50MB</p>
             </div>
           </div>
 
@@ -192,7 +192,7 @@
                 </div>
               </div>
               <p class="my-0 text-sm">* Ekstensi File : pdf</p>
-              <p class="mb-0 text-sm">* Ukuran File Maks. 500KB</p>
+              <p class="mb-0 text-sm">* Ukuran File Maks. 50MB</p>
             </div>
           </div>
 
@@ -252,7 +252,7 @@
                 </div>
               </div>
               <p class="my-0 text-sm">* Ekstensi File : pdf</p>
-              <p class="mb-0 text-sm">* Ukuran File Maks. 500KB</p>
+              <p class="mb-0 text-sm">* Ukuran File Maks. 50MB</p>
             </div>
           </div>
 
@@ -312,7 +312,7 @@
                 </div>
               </div>
               <p class="my-0 text-sm">* Ekstensi File : pdf</p>
-              <p class="mb-0 text-sm">* Ukuran File Maks. 500KB</p>
+              <p class="mb-0 text-sm">* Ukuran File Maks. 50MB</p>
             </div>
           </div>
 

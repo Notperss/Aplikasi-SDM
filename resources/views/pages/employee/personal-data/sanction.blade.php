@@ -35,10 +35,10 @@
                       <td class="text-bold-500">{{ $sanction->sanction_name }}</td>
                       <td class="text-bold-500">{{ $sanction->sanction_category }}</td>
                       <td class="text-bold-500">
-                        {{ $sanction->start_date ? Carbon\Carbon::parse($sanction->start_date)->translatedFormat('d M Y') : '' }}
+                        {{ $sanction->start_date ? Carbon\Carbon::parse($sanction->start_date)->translatedFormat('d-m-Y') : '' }}
                       </td>
                       <td class="text-bold-500">
-                        {{ $sanction->end_date ? Carbon\Carbon::parse($sanction->end_date)->translatedFormat('d M Y') : '' }}
+                        {{ $sanction->end_date ? Carbon\Carbon::parse($sanction->end_date)->translatedFormat('d-m-Y') : '' }}
                       </td>
                       <td class="text-bold-500">
                         @if ($sanction->file_sanction)

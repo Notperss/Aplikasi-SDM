@@ -24,7 +24,7 @@
                     <th>Jabatan </th>
                     <th>Kota</th>
                     <th>Periode</th>
-                    <th>Thn Keluar</th>
+                    {{-- <th>Thn Keluar</th> --}}
                     {{-- <th style="text-align: center;">
                       <div>Lama Bekerja</div>
                       <div style="display: flex; justify-content: space-between;">
@@ -46,7 +46,7 @@
                       <td class="text-bold-500">{{ $employeeJobHistory->position }}</td>
                       <td class="text-bold-500">{{ $employeeJobHistory->city }}</td>
                       <td class="text-bold-500">{{ $employeeJobHistory->period }}</td>
-                      <td class="text-bold-500">{{ $employeeJobHistory->year_out }}</td>
+                      {{-- <td class="text-bold-500">{{ $employeeJobHistory->year_out }}</td> --}}
                       {{-- <td style="text-align: center;">
                         <div style="display: flex; justify-content: space-between;">
                           <span>{{ $employeeJobHistory->year_from }}</span>

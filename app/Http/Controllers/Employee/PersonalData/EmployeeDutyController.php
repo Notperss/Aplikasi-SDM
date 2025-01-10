@@ -47,13 +47,13 @@ class EmployeeDutyController extends Controller
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         
-                            <a class="dropdown-item" href="' . route('employeeDuty.edit', $item) . '">Edit</a>
+                            <a class="dropdown-item" href="'.route('employeeDuty.edit', $item).'">Edit</a>
                             
-                            <button class="dropdown-item" onclick="deleteDuty(' . $item->id . ')">Hapus</button>
-                            <form id="deleteDutyForm_' . $item->id . '"
-                                  action="' . route('employeeDuty.destroy', $item->id) . '"
+                            <button class="dropdown-item" onclick="deleteDuty('.$item->id.')">Hapus</button>
+                            <form id="deleteDutyForm_'.$item->id.'"
+                                  action="'.route('employeeDuty.destroy', $item->id).'"
                                   method="POST">
-                                ' . method_field('delete') . csrf_field() . '
+                                '.method_field('delete').csrf_field().'
                             </form>
                         </div>
                     </div>
@@ -61,14 +61,14 @@ class EmployeeDutyController extends Controller
             ';
                 })->editColumn('file', function ($item) {
                     if ($item->file) {
-                        return '<a class="btn btn-sm btn-primary" href="' . asset('storage/' . $item->file) . '" target="_blank" > Lihat </a>';
+                        return '<a class="btn btn-sm btn-primary" href="'.asset('storage/'.$item->file).'" target="_blank" > Lihat </a>';
                     } else {
                         return '<span> - </span>';
                     }
                 })->editColumn('start_date', function ($item) {
-                    return '' . $item->start_date ? Carbon::parse($item->start_date)->translatedFormat('d M Y') : '-' . '';
+                    return ''.$item->start_date ? Carbon::parse($item->start_date)->translatedFormat('d-m-Y') : '-'.'';
                 })->editColumn('end_date', function ($item) {
-                    return '' . $item->end_date ? Carbon::parse($item->end_date)->translatedFormat('d M Y') : '-' . '';
+                    return ''.$item->end_date ? Carbon::parse($item->end_date)->translatedFormat('d-m-Y') : '-'.'';
                 })->rawColumns(['action', 'file',])
                 ->toJson();
         }
@@ -127,7 +127,7 @@ class EmployeeDutyController extends Controller
             if ($request->hasFile('file')) {
                 $file = $request->file('file');
                 $extension = $file->getClientOriginalExtension();
-                $file_name = 'file_dinas_' . time() . '.' . $extension; // Generate a unique file name
+                $file_name = 'file_dinas_'.time().'.'.$extension; // Generate a unique file name
                 $file_path = $file->storeAs('files/employee/file_dinas', $file_name, 'public_local');
             }
 
@@ -171,7 +171,7 @@ class EmployeeDutyController extends Controller
             DB::rollback();
 
             // Log the error for debugging
-            Log::error('Error storing training: ' . $e->getMessage());
+            Log::error('Error storing training: '.$e->getMessage());
 
             // Redirect back with an error message
             return redirect()->back()
@@ -221,7 +221,7 @@ class EmployeeDutyController extends Controller
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $extension = $file->getClientOriginalExtension();
-            $file_name = 'file_dinas_' . time() . '.' . $extension; // Construct the file name
+            $file_name = 'file_dinas_'.time().'.'.$extension; // Construct the file name
             $data['file'] = $file->storeAs('files/employee/file_dinas', $file_name, 'public_local'); // Store the file
             // delete sertifikat
             if ($path_file != null || $path_file != '') {

@@ -10,7 +10,7 @@ class StoreEmployeeRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize() : bool
+    public function authorize(): bool
     {
         return true;
     }
@@ -20,7 +20,7 @@ class StoreEmployeeRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [
             'company_id' => 'nullable|integer|exists:companies,id',
@@ -52,7 +52,7 @@ class StoreEmployeeRequest extends FormRequest
             'study' => 'required|string|max:100',
             'marital_status' => 'required|string|max:50',
             'candidate_from' => 'required|string|max:100',
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:512',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:51200',
             'religion' => 'nullable|string|max:50',
             'nationality' => 'nullable|string|max:50',
             'height' => 'nullable|integer|min:0',
@@ -73,14 +73,14 @@ class StoreEmployeeRequest extends FormRequest
             'npwp_number' => ['nullable', 'string', 'max:20', Rule::unique('employees', 'npwp_number')],
             'glasses' => 'nullable|boolean',
             'paspor_number' => ['nullable', 'string', Rule::unique('employees', 'paspor_number')],
-            'file_kk' => 'nullable|mimes:pdf|max:512',
-            'file_ktp' => 'nullable|mimes:pdf|max:512',
-            'file_cv' => 'nullalble|mimes:pdf|max:512',
-            'file_skck' => 'nullable|mimes:pdf|max:512',
-            'file_ijazah' => 'nullable|mimes:pdf|max:512',
-            'file_sertifikat' => 'nullable|mimes:pdf|max:512',
-            'file_vaksin' => 'nullable|mimes:pdf|max:512',
-            'file_surat_sehat' => 'nullable|mimes:pdf|max:512',
+            'file_kk' => 'nullable|mimes:pdf|max:51200',
+            'file_ktp' => 'nullable|mimes:pdf|max:51200',
+            'file_cv' => 'nullalble|mimes:pdf|max:51200',
+            'file_skck' => 'nullable|mimes:pdf|max:51200',
+            'file_ijazah' => 'nullable|mimes:pdf|max:51200',
+            'file_sertifikat' => 'nullable|mimes:pdf|max:51200',
+            'file_vaksin' => 'nullable|mimes:pdf|max:51200',
+            'file_surat_sehat' => 'nullable|mimes:pdf|max:51200',
             'longitude_ktp' => 'nullable|numeric',
             'longitude_domisili' => 'nullable|numeric',
             'latitude_ktp' => 'nullable|numeric',
@@ -91,14 +91,14 @@ class StoreEmployeeRequest extends FormRequest
             'expired_sim_a' => 'nullable|date',
             'expired_sim_b' => 'nullable|date',
             'expired_sim_c' => 'nullable|date',
-            'file_sim_a' => 'nullable|mimes:jpg,jpeg,png,pdf|max:512',
-            'file_sim_b' => 'nullable|mimes:jpg,jpeg,png,pdf|max:512',
-            'file_sim_c' => 'nullable|mimes:jpg,jpeg,png,pdf|max:512',
+            'file_sim_a' => 'nullable|mimes:jpg,jpeg,png,pdf|max:51200',
+            'file_sim_b' => 'nullable|mimes:jpg,jpeg,png,pdf|max:51200',
+            'file_sim_c' => 'nullable|mimes:jpg,jpeg,png,pdf|max:51200',
         ];
     }
 
 
-    public function messages() : array
+    public function messages(): array
     {
         return [
             'required' => ':attribute wajib diisi.',
@@ -118,7 +118,7 @@ class StoreEmployeeRequest extends FormRequest
         ];
     }
 
-    public function attributes() : array
+    public function attributes(): array
     {
         return [
             'nik' => 'NIK',

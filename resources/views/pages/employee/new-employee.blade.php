@@ -48,7 +48,7 @@
             <!-- Additional Information -->
             <p class="mb-0 mt-3" style="font-size: 70%"> * Latar Belakang Foto Warna Merah</p>
             <p class="mb-0" style="font-size: 70%"> * Ekstensi File : jpg, jpeg, png</p>
-            <p class="mb-0" style="font-size: 70%"> * Ukuran File Maks. 500KB</p>
+            <p class="mb-0" style="font-size: 70%"> * Ukuran File Maks. 50MB</p>
             <p class="mb-0" style="font-size: 70%"> * Dimensi Foto 4x6</p>
             <p class="mb-0" style="font-size: 70%"> * Pastikan Foto Wajah Terlihat Jelas</p>
           </div>
@@ -93,7 +93,7 @@
                 </div>
                 <p class="card-text text-sm">
                   * Ekstensi File : pdf <br>
-                  * Ukuran File Maks. 500KB
+                  * Ukuran File Maks. 50MB
                 </p>
               </div>
             </div>
@@ -621,18 +621,20 @@
                     <option value="D-1"
                       {{ old('last_educational', $candidate->last_educational) == 'D-1' ? 'selected' : '' }}> D-1
                     </option>
-                    <option value="MA"
+                    {{-- <option value="MA"
                       {{ old('last_educational', $candidate->last_educational) == 'MA' ? 'selected' : '' }}> MA
                     </option>
                     <option value="SMK"
                       {{ old('last_educational', $candidate->last_educational) == 'SMK' ? 'selected' : '' }}> SMK
                     </option>
+                     <option value="MTS"
+                      {{ old('last_educational', $candidate->last_educational) == 'MTS' ? 'selected' : '' }}> MTS
+                    </option> --}}
+
                     <option value="SMA"
                       {{ old('last_educational', $candidate->last_educational) == 'SMA' ? 'selected' : '' }}> SMA
                     </option>
-                    <option value="MTS"
-                      {{ old('last_educational', $candidate->last_educational) == 'MTS' ? 'selected' : '' }}> MTS
-                    </option>
+
                     <option value="SMP"
                       {{ old('last_educational', $candidate->last_educational) == 'SMP' ? 'selected' : '' }}> SMP
                     </option>

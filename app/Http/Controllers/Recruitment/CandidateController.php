@@ -27,7 +27,7 @@ class CandidateController extends Controller
      */
     public function index()
     {
-        $candidates = Candidate::latest()
+        $candidates = Candidate::orderBy('date_applied', 'desc')
             ->when(! Auth::user()->hasRole('super-admin'), function ($query) {
                 $query->where('company_id', Auth::user()->company_id);
             });
@@ -44,11 +44,11 @@ class CandidateController extends Controller
                       <i class="bi bi-three-dots-vertical"></i>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <a class="dropdown-item" href="' . route('candidate.edit', $item) . '">Edit</a>
-                        <button class="dropdown-item" onclick=" showSweetAlert(' . $item->id . ') ">Hapus</button>
-                        <form id="deleteForm_' . $item->id . '"
-                          action="' . route('candidate.destroy', $item->id) . '" method="POST">
-                          ' . method_field('delete') . csrf_field() . '
+                      <a class="dropdown-item" href="'.route('candidate.edit', $item).'">Edit</a>
+                        <button class="dropdown-item" onclick=" showSweetAlert('.$item->id.') ">Hapus</button>
+                        <form id="deleteForm_'.$item->id.'"
+                          action="'.route('candidate.destroy', $item->id).'" method="POST">
+                          '.method_field('delete').csrf_field().'
                         </form>
                     </div>
                   </div>
@@ -57,14 +57,14 @@ class CandidateController extends Controller
                 })->editColumn('photo', function ($item) {
                     if ($item->photo) {
                         return ' <div class="fixed-frame">
-                    <img src="' . asset('storage/' . $item->photo) . '" data-fancybox alt="Icon User"
+                    <img src="'.asset('storage/'.$item->photo).'" data-fancybox alt="Icon User"
                       class="framed-image" style="cursor: pointer">
                   </div>';
                     } else {
                         return 'No Image';
                     }
-                })->editColumn('created_at', function ($item) {
-                    return '' . Carbon::parse($item->created_at)->translatedFormat('d F Y') . '';
+                })->editColumn('date_applieds', function ($item) {
+                    return ''.Carbon::parse($item->date_applied)->translatedFormat('d-m-Y').'';
                 })
                 ->rawColumns(['action', 'photo'])
                 ->toJson();
@@ -110,8 +110,8 @@ class CandidateController extends Controller
             if ($request->hasFile($file_field)) {
                 $file = $request->file($file_field); // Get the file
                 $extension = $file->getClientOriginalExtension(); // Get file extension
-                $file_name = $file_field . '_' . $data['name'] . '_' . time() . '.' . $extension; // Construct the file name
-                $data[$file_field] = $file->storeAs('files/candidate/' . $file_field, $file_name, 'public_local'); // Store the file
+                $file_name = $file_field.'_'.$data['name'].'_'.time().'.'.$extension; // Construct the file name
+                $data[$file_field] = $file->storeAs('files/candidate/'.$file_field, $file_name, 'public_local'); // Store the file
             }
         }
 
@@ -197,9 +197,9 @@ class CandidateController extends Controller
             if ($request->hasFile($file_field)) {
                 $file = $request->file($file_field);
                 $extension = $file->getClientOriginalExtension();
-                $file_name = $file_field . '_' . $data['name'] . '_' . time() . '.' . $extension;
+                $file_name = $file_field.'_'.$data['name'].'_'.time().'.'.$extension;
 
-                $data[$file_field] = $file->storeAs('files/candidate/' . $file_field, $file_name, 'public_local');
+                $data[$file_field] = $file->storeAs('files/candidate/'.$file_field, $file_name, 'public_local');
 
                 if (! empty($path_file)) {
                     Storage::disk('public_local')->delete($path_file);
@@ -287,13 +287,13 @@ class CandidateController extends Controller
     // {
     //     // Validate the PDF and other fields
     //     $data = $request->validate([
-    //         'file' => 'mimes:pdf|max:512', // Max file size: 2MB
+    //         'file' => 'mimes:pdf|max:51200', // Max file size: 2MB
     //         'type_document' => 'required|max:255', // Type of document
     //         // 'candidate_id' => 'required|exists:candidates,id', // Ensure candidate exists
     //         'candidate_name' => 'required|max:255', // Candidate name
     //     ], [
     //         'file.mimes' => 'File harus berupa PDF.',
-    //         'file.max' => 'Ukuran file maksimal adalah 500KB.',
+    //         'file.max' => 'Ukuran file maksimal adalah 50MB.',
     //     ]);
 
     //     // Fetch the existing document (if any)

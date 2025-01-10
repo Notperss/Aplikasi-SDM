@@ -266,7 +266,7 @@
             <!-- Additional Information -->
             <p class="mb-0 mt-3" style="font-size: 70%"> * Latar Belakang Foto Warna Merah</p>
             <p class="mb-0" style="font-size: 70%"> * Ekstensi File : jpg, jpeg, png</p>
-            <p class="mb-0" style="font-size: 70%"> * Ukuran File Maks. 500KB</p>
+            <p class="mb-0" style="font-size: 70%"> * Ukuran File Maks. 50MB</p>
             <p class="mb-0" style="font-size: 70%"> * Pastikan foto wajah terlihat jelas</p>
           </div>
         </div>
@@ -522,7 +522,7 @@
             <!-- Additional Information -->
             <p class="mb-0 mt-3" style="font-size: 70%"> * Latar Belakang Foto Warna Merah</p>
             <p class="mb-0" style="font-size: 70%"> * Ekstensi File : jpg, jpeg, png</p>
-            <p class="mb-0" style="font-size: 70%"> * Ukuran File Maks. 500KB</p>
+            <p class="mb-0" style="font-size: 70%"> * Ukuran File Maks. 50MB</p>
             <p class="mb-0" style="font-size: 70%"> * Dimensi Foto 4x6</p>
             <p class="mb-0" style="font-size: 70%"> * Pastikan Foto Wajah Terlihat Jelas</p>
           </div>
@@ -530,6 +530,19 @@
           <div class="card mt-3">
             <div class="card-content">
               <div class="card-body">
+
+                <div class="form-group">
+                  <label for="date_applied">Tanggal Lamaran Diterima <code>*</code></label>
+                  <input type="date" id="date_applied" value="{{ old('date_applied') }}"
+                    class="form-control @error('date_applied') is-invalid @enderror" name="date_applied">
+                  @error('date_applied')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
+                </div>
 
                 <div class="mb-3">
                   <label for="file_cv" class="form-label">CV <code>*</code></label>
@@ -575,7 +588,7 @@
                 </div>
                 <p class="card-text text-sm">
                   * Ekstensi File : pdf <br>
-                  * Ukuran File Maks. 500KB
+                  * Ukuran File Maks. 50MB
                 </p>
               </div>
             </div>
@@ -617,7 +630,7 @@
 
                 <div class="form-group">
                   <label for="phone_number">No. Telpon <code>*</code></label>
-                  <input type="text" id="phone_number" value="{{ old('phone_number') }}" maxlength="14"
+                  <input type="text" id="phone_number" value="{{ old('phone_number') }}"
                     oninput="this.value = this.value.replace(/\D+/g, '')"
                     class="form-control @error('phone_number') is-invalid @enderror" name="phone_number">
                   @error('phone_number')
@@ -919,10 +932,10 @@
                     <option value="D-3" {{ old('last_educational') == 'D-3' ? 'selected' : '' }}> D-3 </option>
                     <option value="D-2" {{ old('last_educational') == 'D-2' ? 'selected' : '' }}> D-2 </option>
                     <option value="D-1" {{ old('last_educational') == 'D-1' ? 'selected' : '' }}> D-1 </option>
-                    <option value="MA" {{ old('last_educational') == 'MA' ? 'selected' : '' }}> MA </option>
+                    {{-- <option value="MA" {{ old('last_educational') == 'MA' ? 'selected' : '' }}> MA </option>
                     <option value="SMK" {{ old('last_educational') == 'SMK' ? 'selected' : '' }}> SMK </option>
+                    <option value="MTS" {{ old('last_educational') == 'MTS' ? 'selected' : '' }}> MTS </option> --}}
                     <option value="SMA" {{ old('last_educational') == 'SMA' ? 'selected' : '' }}> SMA </option>
-                    <option value="MTS" {{ old('last_educational') == 'MTS' ? 'selected' : '' }}> MTS </option>
                     <option value="SMP" {{ old('last_educational') == 'SMP' ? 'selected' : '' }}> SMP </option>
                     <option value="SD" {{ old('last_educational') == 'SD' ? 'selected' : '' }}> SD </option>
                   </select>

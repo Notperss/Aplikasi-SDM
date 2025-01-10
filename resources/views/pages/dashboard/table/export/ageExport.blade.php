@@ -140,11 +140,12 @@
               <tr>
                 <th style="width: 50; background-color: #b5b5b5b5">Unit Kerja</th>
                 <th style="width: 20; background-color: #b5b5b5b5">Total Karyawan</th>
-                <th style="width: 10; background-color: #b5b5b5b5">&lt; 20</th>
-                <th style="width: 10; background-color: #b5b5b5b5">20-25</th>
-                <th style="width: 10; background-color: #b5b5b5b5">25-35</th>
-                <th style="width: 10; background-color: #b5b5b5b5">35-50</th>
-                <th style="width: 10; background-color: #b5b5b5b5">&gt; 50</th>
+                <th style="width: 10; background-color: #b5b5b5b5">&lt; 25</th>
+                <th style="width: 10; background-color: #b5b5b5b5">25-30</th>
+                <th style="width: 10; background-color: #b5b5b5b5">30-35</th>
+                <th style="width: 10; background-color: #b5b5b5b5">35-40</th>
+                <th style="width: 10; background-color: #b5b5b5b5">40-45</th>
+                <th style="width: 10; background-color: #b5b5b5b5">&gt; 45</th>
               </tr>
             </thead>
             <tbody>
@@ -152,11 +153,12 @@
                 use Carbon\Carbon;
                 $totals = [
                     'employees' => 0,
-                    'below20' => 0,
-                    '2025' => 0,
-                    '2535' => 0,
-                    '3550' => 0,
-                    'above50' => 0,
+                    'below25' => 0,
+                    '2530' => 0,
+                    '3035' => 0,
+                    '3540' => 0,
+                    '4045' => 0,
+                    'above45' => 0,
                 ];
 
                 $groupedDirectorates = $directorates
@@ -180,12 +182,13 @@
                   @foreach ($directorate->divisions as $division)
                     @php
                       $counts = [
-                          'total' => 0,
-                          'below20' => 0,
-                          '2025' => 0,
-                          '2535' => 0,
-                          '3550' => 0,
-                          'above50' => 0,
+                          'employees' => 0,
+                          'below25' => 0,
+                          '2530' => 0,
+                          '3035' => 0,
+                          '3540' => 0,
+                          '4045' => 0,
+                          'above45' => 0,
                       ];
 
                       foreach ($division->positions as $position) {
@@ -196,23 +199,26 @@
                               $counts['total']++;
                               $totals['employees']++;
 
-                              if ($age < 20) {
-                                  $counts['below20']++;
-                              } elseif ($age < 25) {
-                                  $counts['2025']++;
+                              if ($age < 25) {
+                                  $counts['below25']++;
+                              } elseif ($age < 30) {
+                                  $counts['2530']++;
                               } elseif ($age < 35) {
-                                  $counts['2535']++;
-                              } elseif ($age < 50) {
-                                  $counts['3550']++;
+                                  $counts['3035']++;
+                              } elseif ($age < 40) {
+                                  $counts['3540']++;
+                              } elseif ($age < 45) {
+                                  $counts['4045']++;
                               } else {
-                                  $counts['above50']++;
+                                  $counts['above45']++;
                               }
 
-                              $totals['below20'] += $age < 20 ? 1 : 0;
-                              $totals['2025'] += $age >= 20 && $age < 25 ? 1 : 0;
-                              $totals['2535'] += $age >= 25 && $age < 35 ? 1 : 0;
-                              $totals['3550'] += $age >= 35 && $age < 50 ? 1 : 0;
-                              $totals['above50'] += $age >= 50 ? 1 : 0;
+                              $totals['below25'] += $age < 25 ? 1 : 0;
+                              $totals['2530'] += $age >= 25 && $age < 30 ? 1 : 0;
+                              $totals['3035'] += $age >= 30 && $age < 35 ? 1 : 0;
+                              $totals['3540'] += $age >= 35 && $age < 40 ? 1 : 0;
+                              $totals['4045'] += $age >= 40 && $age < 45 ? 1 : 0;
+                              $totals['above45'] += $age >= 45 ? 1 : 0;
                           }
                       }
                     @endphp
@@ -220,11 +226,12 @@
                     <tr>
                       <td class="pl-4">{{ $division->name }}</td>
                       <td>{{ $counts['total'] }}</td>
-                      <td>{{ $counts['below20'] }}</td>
-                      <td>{{ $counts['2025'] }}</td>
-                      <td>{{ $counts['2535'] }}</td>
-                      <td>{{ $counts['3550'] }}</td>
-                      <td>{{ $counts['above50'] }}</td>
+                      <td>{{ $counts['below25'] }}</td>
+                      <td>{{ $counts['2530'] }}</td>
+                      <td>{{ $counts['3035'] }}</td>
+                      <td>{{ $counts['3540'] }}</td>
+                      <td>{{ $counts['4045'] }}</td>
+                      <td>{{ $counts['above45'] }}</td>
                     </tr>
                   @endforeach
                 @endforeach
@@ -237,17 +244,268 @@
               <tr class="table-primary">
                 <td class="text-bold-500 text-center">TOTAL</td>
                 <td>{{ $totals['employees'] }}</td>
-                <td>{{ $totals['below20'] }}</td>
-                <td>{{ $totals['2025'] }}</td>
-                <td>{{ $totals['2535'] }}</td>
-                <td>{{ $totals['3550'] }}</td>
-                <td>{{ $totals['above50'] }}</td>
+                <td>{{ $totals['below25'] }}</td>
+                <td>{{ $totals['2530'] }}</td>
+                <td>{{ $totals['3035'] }}</td>
+                <td>{{ $totals['3540'] }}</td>
+                <td>{{ $totals['4045'] }}</td>
+                <td>{{ $totals['above45'] }}</td>
               </tr>
             </tbody>
           </table>
         </div>
 
         <div class="col-md-12">
+          <h3>OFFICE</h3>
+          <table class="table table-sm table-bordered" style="font-size: 80%">
+            <thead>
+              <tr>
+                <th style="width: 50; background-color: #b5b5b5b5">Unit Kerja</th>
+                <th style="width: 20; background-color: #b5b5b5b5">Total Karyawan</th>
+                <th style="width: 10; background-color: #b5b5b5b5">&lt; 25</th>
+                <th style="width: 10; background-color: #b5b5b5b5">25-30</th>
+                <th style="width: 10; background-color: #b5b5b5b5">30-35</th>
+                <th style="width: 10; background-color: #b5b5b5b5">35-40</th>
+                <th style="width: 10; background-color: #b5b5b5b5">40-45</th>
+                <th style="width: 10; background-color: #b5b5b5b5">&gt; 45</th>
+              </tr>
+            </thead>
+            <tbody>
+              @php
+                $totals = [
+                    'employees' => 0,
+                    'below25' => 0,
+                    '2530' => 0,
+                    '3035' => 0,
+                    '3540' => 0,
+                    '4045' => 0,
+                    'above45' => 0,
+                ];
+
+                $groupedDirectorates = $directorates
+                    ->groupBy('is_non')
+                    ->sortKeysUsing(fn($a, $b) => [1, 2] <=> [$a, $b]);
+              @endphp
+
+              @forelse ($groupedDirectorates as $isNon => $directoratesGroup)
+                <tr>
+                  <td colspan="7" class="text-bold-500 text-center"
+                    style="font-weight: bold; background-color: #969696b5">
+                    {{ $isNon == 1 ? 'DIREKTORAT' : ($isNon == 2 ? 'NON-DIREKTORAT' : 'LAIN-LAIN') }}
+                  </td>
+                </tr>
+
+                @foreach ($directoratesGroup as $directorate)
+                  <tr>
+                    <td class="text-bold-500" style="font-weight: bold;" colspan="7">{{ $directorate->name }}</td>
+                  </tr>
+
+                  @foreach ($directorate->divisions as $division)
+                    @php
+                      $counts = [
+                          'employees' => 0,
+                          'below25' => 0,
+                          '2530' => 0,
+                          '3035' => 0,
+                          '3540' => 0,
+                          '4045' => 0,
+                          'above45' => 0,
+                      ];
+
+                      foreach ($division->positions as $position) {
+                          $employee = $position->employee;
+                          if (
+                              $employee &&
+                              $employee->employee_status === 'AKTIF' &&
+                              $employee->employeeCategory->name === 'OFFICE'
+                          ) {
+                              $age = $employee->dob ? Carbon::parse($employee->dob)->age : null;
+
+                              $counts['total']++;
+                              $totals['employees']++;
+
+                              if ($age < 25) {
+                                  $counts['below25']++;
+                              } elseif ($age < 30) {
+                                  $counts['2530']++;
+                              } elseif ($age < 35) {
+                                  $counts['3035']++;
+                              } elseif ($age < 40) {
+                                  $counts['3540']++;
+                              } elseif ($age < 45) {
+                                  $counts['4045']++;
+                              } else {
+                                  $counts['above45']++;
+                              }
+
+                              $totals['below25'] += $age < 25 ? 1 : 0;
+                              $totals['2530'] += $age >= 25 && $age < 30 ? 1 : 0;
+                              $totals['3035'] += $age >= 30 && $age < 35 ? 1 : 0;
+                              $totals['3540'] += $age >= 35 && $age < 40 ? 1 : 0;
+                              $totals['4045'] += $age >= 40 && $age < 45 ? 1 : 0;
+                              $totals['above45'] += $age >= 45 ? 1 : 0;
+                          }
+                      }
+                    @endphp
+
+                    <tr>
+                      <td class="pl-4">{{ $division->name }}</td>
+                      <td>{{ $counts['total'] }}</td>
+                      <td>{{ $counts['below25'] }}</td>
+                      <td>{{ $counts['2530'] }}</td>
+                      <td>{{ $counts['3035'] }}</td>
+                      <td>{{ $counts['3540'] }}</td>
+                      <td>{{ $counts['4045'] }}</td>
+                      <td>{{ $counts['above45'] }}</td>
+                    </tr>
+                  @endforeach
+                @endforeach
+              @empty
+                <tr>
+                  <td colspan="7" class="text-center">No data available in table</td>
+                </tr>
+              @endforelse
+
+              <tr class="table-primary">
+                <td class="text-bold-500 text-center">TOTAL</td>
+                <td>{{ $totals['employees'] }}</td>
+                <td>{{ $totals['below25'] }}</td>
+                <td>{{ $totals['2530'] }}</td>
+                <td>{{ $totals['3035'] }}</td>
+                <td>{{ $totals['3540'] }}</td>
+                <td>{{ $totals['4045'] }}</td>
+                <td>{{ $totals['above45'] }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="col-md-12">
+          <h3>NON-OFFICE</h3>
+          <table class="table table-sm table-bordered" style="font-size: 80%">
+            <thead>
+              <tr>
+                <th style="width: 50; background-color: #b5b5b5b5">Unit Kerja</th>
+                <th style="width: 20; background-color: #b5b5b5b5">Total Karyawan</th>
+                <th style="width: 10; background-color: #b5b5b5b5">&lt; 25</th>
+                <th style="width: 10; background-color: #b5b5b5b5">25-30</th>
+                <th style="width: 10; background-color: #b5b5b5b5">30-35</th>
+                <th style="width: 10; background-color: #b5b5b5b5">35-40</th>
+                <th style="width: 10; background-color: #b5b5b5b5">40-45</th>
+                <th style="width: 10; background-color: #b5b5b5b5">&gt; 45</th>
+              </tr>
+            </thead>
+            <tbody>
+              @php
+                $totals = [
+                    'employees' => 0,
+                    'below25' => 0,
+                    '2530' => 0,
+                    '3035' => 0,
+                    '3540' => 0,
+                    '4045' => 0,
+                    'above45' => 0,
+                ];
+
+                $groupedDirectorates = $directorates
+                    ->groupBy('is_non')
+                    ->sortKeysUsing(fn($a, $b) => [1, 2] <=> [$a, $b]);
+              @endphp
+
+              @forelse ($groupedDirectorates as $isNon => $directoratesGroup)
+                <tr>
+                  <td colspan="7" class="text-bold-500 text-center"
+                    style="font-weight: bold; background-color: #969696b5">
+                    {{ $isNon == 1 ? 'DIREKTORAT' : ($isNon == 2 ? 'NON-DIREKTORAT' : 'LAIN-LAIN') }}
+                  </td>
+                </tr>
+
+                @foreach ($directoratesGroup as $directorate)
+                  <tr>
+                    <td class="text-bold-500" style="font-weight: bold;" colspan="7">{{ $directorate->name }}</td>
+                  </tr>
+
+                  @foreach ($directorate->divisions as $division)
+                    @php
+                      $counts = [
+                          'employees' => 0,
+                          'below25' => 0,
+                          '2530' => 0,
+                          '3035' => 0,
+                          '3540' => 0,
+                          '4045' => 0,
+                          'above45' => 0,
+                      ];
+
+                      foreach ($division->positions as $position) {
+                          $employee = $position->employee;
+                          if (
+                              $employee &&
+                              $employee->employee_status === 'AKTIF' &&
+                              $employee->employeeCategory->name === 'NON-OFFICE'
+                          ) {
+                              $age = $employee->dob ? Carbon::parse($employee->dob)->age : null;
+
+                              $counts['total']++;
+                              $totals['employees']++;
+
+                              if ($age < 25) {
+                                  $counts['below25']++;
+                              } elseif ($age < 30) {
+                                  $counts['2530']++;
+                              } elseif ($age < 35) {
+                                  $counts['3035']++;
+                              } elseif ($age < 40) {
+                                  $counts['3540']++;
+                              } elseif ($age < 45) {
+                                  $counts['4045']++;
+                              } else {
+                                  $counts['above45']++;
+                              }
+
+                              $totals['below25'] += $age < 25 ? 1 : 0;
+                              $totals['2530'] += $age >= 25 && $age < 30 ? 1 : 0;
+                              $totals['3035'] += $age >= 30 && $age < 35 ? 1 : 0;
+                              $totals['3540'] += $age >= 35 && $age < 40 ? 1 : 0;
+                              $totals['4045'] += $age >= 40 && $age < 45 ? 1 : 0;
+                              $totals['above45'] += $age >= 45 ? 1 : 0;
+                          }
+                      }
+                    @endphp
+
+                    <tr>
+                      <td class="pl-4">{{ $division->name }}</td>
+                      <td>{{ $counts['total'] }}</td>
+                      <td>{{ $counts['below25'] }}</td>
+                      <td>{{ $counts['2530'] }}</td>
+                      <td>{{ $counts['3035'] }}</td>
+                      <td>{{ $counts['3540'] }}</td>
+                      <td>{{ $counts['4045'] }}</td>
+                      <td>{{ $counts['above45'] }}</td>
+                    </tr>
+                  @endforeach
+                @endforeach
+              @empty
+                <tr>
+                  <td colspan="7" class="text-center">No data available in table</td>
+                </tr>
+              @endforelse
+
+              <tr class="table-primary">
+                <td class="text-bold-500 text-center">TOTAL</td>
+                <td>{{ $totals['employees'] }}</td>
+                <td>{{ $totals['below25'] }}</td>
+                <td>{{ $totals['2530'] }}</td>
+                <td>{{ $totals['3035'] }}</td>
+                <td>{{ $totals['3540'] }}</td>
+                <td>{{ $totals['4045'] }}</td>
+                <td>{{ $totals['above45'] }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        {{-- <div class="col-md-12">
           <h3>OFFICE</h3>
           <table class="table table-sm table-bordered" style="font-size: 80%">
             <thead>
@@ -479,7 +737,7 @@
               </tr>
             </tbody>
           </table>
-        </div>
+        </div> --}}
 
 
         {{-- <div class="col-md-12">
@@ -806,7 +1064,7 @@
                                   'level' => $position->level->name,
                                   'position' => $position->name,
                                   'category' => optional($employee->employeeCategory)->name,
-                                  'dob' => Carbon::parse($employee->dob)->translatedFormat('d M Y'),
+                                  'dob' => Carbon::parse($employee->dob)->translatedFormat('d-m-Y'),
                                   'age' => Carbon::parse($employee->dob)->age,
                               ];
                           }
@@ -875,7 +1133,7 @@
                                   'level' => $position->level->name,
                                   'position' => $position->name,
                                   'category' => optional($employee->employeeCategory)->name,
-                                  'dob' => Carbon::parse($employee->dob)->translatedFormat('d M Y'),
+                                  'dob' => Carbon::parse($employee->dob)->translatedFormat('d-m-Y'),
                                   'age' => Carbon::parse($employee->dob)->age,
                               ];
                           }

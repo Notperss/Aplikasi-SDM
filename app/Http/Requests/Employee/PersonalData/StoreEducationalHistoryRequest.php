@@ -29,7 +29,7 @@ class StoreEducationalHistoryRequest extends FormRequest
             'year_from' => 'required|integer|min:1900|max:'.date('Y'),
             'year_to' => 'nullable|integer|min:1900|max:'.date('Y'),
             'gpa' => 'nullable|numeric|min:0',
-            'file_ijazah' => 'mimes:pdf|max:512',
+            'file_ijazah' => 'mimes:pdf|max:51200',
 
         ];
     }
@@ -60,7 +60,7 @@ class StoreEducationalHistoryRequest extends FormRequest
             'gpa.max' => 'GPA tidak boleh lebih dari 4.0.',
 
             'file_ijazah.mimes' => 'Ekstensi file ijazah harus berupa pdf.',
-            'file_ijazah.max' => 'Ukuran file ijazah maksimal adalah 500KB.',
+            'file_ijazah.max' => 'Ukuran file ijazah maksimal adalah 50MB.',
         ];
     }
 

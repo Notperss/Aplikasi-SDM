@@ -68,17 +68,17 @@
                 @enderror
               </div>
 
-              <div class="mb-2">
+              {{-- <div class="mb-2">
                 <label class="form-label" for="year_out">Tahun Keluar</label>
                 <input type="text" id="year_out" name="year_out"
                   class="form-control @error('year_out') is-invalid @enderror" />
-                {{-- <input type="text" oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="4"
+                <input type="text" oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="4"
                     id="year_out" name="year_out" value="{{ old('year_out') }}"
-                    class="form-control  @error('year_out') is-invalid @enderror" /> --}}
+                    class="form-control  @error('year_out') is-invalid @enderror" />
                 @error('year_out')
                   <a style="color: red"><small>{{ $message }}</small></a>
                 @enderror
-              </div>
+              </div> --}}
 
 
 

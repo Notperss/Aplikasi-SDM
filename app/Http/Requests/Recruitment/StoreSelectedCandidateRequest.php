@@ -10,7 +10,7 @@ class StoreSelectedCandidateRequest extends FormRequest
     /**
      * Tentukan apakah pengguna diizinkan untuk membuat permintaan ini.
      */
-    public function authorize() : bool
+    public function authorize(): bool
     {
         return true;
     }
@@ -20,7 +20,7 @@ class StoreSelectedCandidateRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules() : array
+    public function rules(): array
     {
         if ($this->has('candidates')) {
             // Decode the JSON string into an array
@@ -42,7 +42,7 @@ class StoreSelectedCandidateRequest extends FormRequest
             'interviewer' => 'required|string', // Memastikan ID kandidat ada di database
             'start_selection' => 'nullable|date', // Memastikan ID kandidat ada di database
             'end_selection' => 'nullable|date', // Memastikan ID kandidat ada di database
-            'file_selection' => 'mimes:pdf|max:512',
+            'file_selection' => 'mimes:pdf|max:51200',
             'description' => 'nullable|string||max:510',
 
         ];
@@ -53,7 +53,7 @@ class StoreSelectedCandidateRequest extends FormRequest
      *
      * @return array<string, string>
      */
-    public function messages() : array
+    public function messages(): array
     {
         return [
             'candidates.required' => 'Silakan pilih setidaknya satu kandidat.',
@@ -74,7 +74,7 @@ class StoreSelectedCandidateRequest extends FormRequest
             'end_selection.date' => 'Tanggal selesai seleksi harus berupa tanggal yang valid.',
 
             'file_selection.mimes' => 'File seleksi harus berupa PDF.',
-            'file_selection.max' => 'Ukuran file seleksi tidak boleh lebih dari 500KB.',
+            'file_selection.max' => 'Ukuran file seleksi tidak boleh lebih dari 50MB.',
         ];
     }
 }

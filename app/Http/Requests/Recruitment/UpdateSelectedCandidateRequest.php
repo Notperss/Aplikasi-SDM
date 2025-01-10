@@ -10,7 +10,7 @@ class UpdateSelectedCandidateRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize() : bool
+    public function authorize(): bool
     {
         return true;
     }
@@ -20,7 +20,7 @@ class UpdateSelectedCandidateRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [
             // 'candidates' => 'required|array|min:1', // Validate that the array of candidates exists and isn't empty
@@ -34,12 +34,12 @@ class UpdateSelectedCandidateRequest extends FormRequest
             'start_selection' => 'nullable|date', // Memastikan ID kandidat ada di database
             'end_selection' => 'nullable|date',
             'description' => 'nullable|string||max:510',
-            'file_selection' => 'mimes:pdf|max:512',
+            'file_selection' => 'mimes:pdf|max:51200',
 
         ];
     }
 
-    public function messages() : array
+    public function messages(): array
     {
         return [
             'candidates.required' => 'Silakan pilih setidaknya satu kandidat.',
@@ -60,7 +60,7 @@ class UpdateSelectedCandidateRequest extends FormRequest
             'end_selection.date' => 'Tanggal selesai seleksi harus berupa tanggal yang valid.',
 
             'file_selection.mimes' => 'File seleksi harus berupa PDF.',
-            'file_selection.max' => 'Ukuran file seleksi tidak boleh lebih dari 500KB.',
+            'file_selection.max' => 'Ukuran file seleksi tidak boleh lebih dari 50MB.',
         ];
     }
 }

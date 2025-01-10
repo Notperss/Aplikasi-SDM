@@ -32,7 +32,7 @@
                       <td class="text-bold-500">{{ $loop->iteration }}</td>
                       <td class="text-bold-500">{{ $employeeAward->name_award }}</td>
                       <td class="text-bold-500">
-                        {{ Carbon\Carbon::parse($employeeAward->date_award)->translatedFormat('d M Y') }}</td>
+                        {{ Carbon\Carbon::parse($employeeAward->date_award)->translatedFormat('d-m-Y') }}</td>
                       <td class="text-bold-500">
                         @if ($employeeAward->file_award)
                           <a href="{{ Storage::url($employeeAward->file_award) }}" target="_blank">

@@ -39,7 +39,7 @@
             <!-- Additional Information -->
             <p class="mb-0 mt-3" style="font-size: 70%"> * Latar Belakang Foto Warna Merah</p>
             <p class="mb-0" style="font-size: 70%"> * Ekstensi File : jpg, jpeg, png</p>
-            <p class="mb-0" style="font-size: 70%"> * Ukuran File Maks. 500KB</p>
+            <p class="mb-0" style="font-size: 70%"> * Ukuran File Maks. 50MB</p>
             <p class="mb-0" style="font-size: 70%"> * Dimensi Foto 4x6</p>
             <p class="mb-0" style="font-size: 70%"> * Pastikan Foto Wajah Terlihat Jelas</p>
           </div>
@@ -84,7 +84,7 @@
                 </div>
                 <p class="card-text text-sm">
                   * Ekstensi File : pdf <br>
-                  * Ukuran File Maks. 500KB
+                  * Ukuran File Maks. 50MB
                 </p>
               </div>
             </div>

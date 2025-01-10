@@ -41,6 +41,19 @@
             <div class="card-content">
               <div class="card-body">
 
+                <div class="form-group">
+                  <label for="date_applied">Tanggal Lamaran Diterima <code>*</code></label>
+                  <input type="date" id="date_applied" value="{{ old('date_applied', $candidate->date_applied) }}"
+                    class="form-control @error('date_applied') is-invalid @enderror" name="date_applied">
+                  @error('date_applied')
+                    <a style="color: red">
+                      <small>
+                        {{ $message }}
+                      </small>
+                    </a>
+                  @enderror
+                </div>
+
                 <div class="mb-3">
                   <label for="file_cv" class="form-label">CV <code>*</code></label> <br>
                   @can('candidate.update')
@@ -129,8 +142,8 @@
                   <label for="file_surat_sehat" class="form-label">SURAT KETERANGAN SEHAT <br>/ BEBAS
                     NARKOBA</label><br>
                   @can('candidate.update')
-                    <input class="form-control form-control-sm mb-1" accept=".pdf" type="file" id="file_surat_sehat"
-                      name="file_surat_sehat">
+                    <input class="form-control form-control-sm mb-1" accept=".pdf" type="file"
+                      id="file_surat_sehat" name="file_surat_sehat">
                   @endcan
                   @if ($candidate->file_surat_sehat)
                     <a href="{{ asset('storage/' . $candidate->file_surat_sehat) }}" target="_blank"
@@ -214,7 +227,7 @@
                 <div class="form-group">
                   <label for="phone_number">No. Telp <code>*</code></label>
                   <input type="text" id="phone_number"
-                    value="{{ old('phone_number', $candidate->phone_number) }}" maxlength="13"
+                    value="{{ old('phone_number', $candidate->phone_number) }}"
                     oninput="this.value = this.value.replace(/\D+/g, '')"
                     class="form-control @error('phone_number') is-invalid @enderror" name="phone_number">
                   @error('phone_number')
@@ -298,7 +311,8 @@
                 <div class="form-group">
                   <label for="recommended_position">Rekomendasi Penempatan</label>
                   <input type="text" value="{{ old('recommended_position', $candidate->recommended_position) }}"
-                    id="recommended_position" class="form-control @error('recommended_position') is-invalid @enderror"
+                    id="recommended_position"
+                    class="form-control @error('recommended_position') is-invalid @enderror"
                     name="recommended_position">
                   @error('recommended_position')
                     <a style="color: red">
@@ -538,17 +552,17 @@
                     <option value="D-1"
                       {{ old('last_educational', $candidate->last_educational) == 'D-1' ? 'selected' : '' }}> D-1
                     </option>
-                    <option value="MA"
+                    {{-- <option value="MA"
                       {{ old('last_educational', $candidate->last_educational) == 'MA' ? 'selected' : '' }}> MA
                     </option>
                     <option value="SMK"
                       {{ old('last_educational', $candidate->last_educational) == 'SMK' ? 'selected' : '' }}> SMK
                     </option>
-                    <option value="SMA"
-                      {{ old('last_educational', $candidate->last_educational) == 'SMA' ? 'selected' : '' }}> SMA
-                    </option>
                     <option value="MTS"
                       {{ old('last_educational', $candidate->last_educational) == 'MTS' ? 'selected' : '' }}> MTS
+                    </option> --}}
+                    <option value="SMA"
+                      {{ old('last_educational', $candidate->last_educational) == 'SMA' ? 'selected' : '' }}> SMA
                     </option>
                     <option value="SMP"
                       {{ old('last_educational', $candidate->last_educational) == 'SMP' ? 'selected' : '' }}> SMP
@@ -644,7 +658,8 @@
                       <option value="MANAJEMEN" {{ $candidate->candidate_from == 'MANAJEMEN' ? 'selected' : '' }}>
                         Manajemen
                       </option>
-                      <option value="UMUM"{{ $candidate->candidate_from == 'UMUM' ? 'selected' : '' }}>Umum</option>
+                      <option value="UMUM"{{ $candidate->candidate_from == 'UMUM' ? 'selected' : '' }}>Umum
+                      </option>
                     </select>
                     @error('candidate_from')
                       <a style="color: red">
@@ -896,7 +911,359 @@
         </div>
       </div>
   </form>
+
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="d-flex justify-content-between align-items-center ">
+            <h4 class="card-title">Riwayat Pekerjaan</h4>
+
+
+            <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
+              data-bs-target="#modal-form-add-job-history">
+              <i class="bi bi-plus-lg"></i>
+              Add
+            </button>
+            {{-- @include('pages.candidate.personal-data.form.job-history.modal-create') --}}
+
+          </div>
+          <!-- Table with outer spacing -->
+          <div class="table-responsive">
+            <table class="table" style="font-size: 80%;">
+              <thead>
+                <tr>
+                  <th>Nama Perusahaan</th>
+                  <th>Jabatan </th>
+                  <th>Kota</th>
+                  <th>Periode</th>
+                  <th>Keterangan</th>
+                  <th style="width: 13%"></th>
+                </tr>
+              </thead>
+              <tbody>
+                @forelse ($candidate->jobHistories as $candidateJobHistory)
+                  <tr>
+                    <td>{{ $candidateJobHistory->company_name }}</td>
+                    <td class="text-bold-500">{{ $candidateJobHistory->position }}</td>
+                    <td class="text-bold-500">{{ $candidateJobHistory->city }}</td>
+                    <td class="text-bold-500">{{ $candidateJobHistory->period }}</td>
+                    <td class="text-bold-500">{{ $candidateJobHistory->reason }}</td>
+                    {{-- <td class="text-bold-500 text-center">
+                      @if ($candidateJobHistory->file)
+                        <a href="{{ asset('storage/' . $candidateJobHistory->file) }}" target="_blank"
+                          class="text-sm">
+                          Lihat
+                        </a>
+                      @else
+                        <span>-</span>
+                      @endif
+                    </td> --}}
+                    <td>
+                      <div class="demo-inline-spacing">
+                        <a data-bs-toggle="modal"
+                          data-bs-target="#modal-form-edit-job-history-{{ $candidateJobHistory->id }}"
+                          class="btn btn-icon btn-sm btn-secondary text-white">
+                          <i class="bi bi-pencil-square"></i>
+                        </a>
+                        {{-- @include('pages.candidate.personal-data.form.job-history.modal-edit') --}}
+
+                        <!-- Modals add menu -->
+                        <div id="modal-form-edit-job-history-{{ $candidateJobHistory->id }}" class="modal fade"
+                          tabindex="-1"
+                          aria-labelledby="modal-form-edit-job-history-{{ $candidateJobHistory->id }}-label"
+                          aria-hidden="true" style="display: none;">
+                          <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                              <form action="{{ route('candidateJobHistory.update', $candidateJobHistory) }}"
+                                method="post" enctype="multipart/form-data">
+                                @csrf
+                                @method('PUT')
+
+                                <div class="modal-header">
+                                  <h5 class="modal-title"
+                                    id="modal-form-edit-job-history-{{ $candidateJobHistory->id }}-label">
+                                    Edit Data Pengalaman Kerja
+                                  </h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"> </button>
+                                </div>
+
+                                <div class="card-body">
+                                  <div class="row justify-content-center">
+                                    <div class="col-md-12"> <!-- Make form smaller with col-md-6 and center it -->
+                                      <input type="hidden" name="name" value="{{ $candidate->name }}">
+
+                                      <div class="mb-2">
+                                        <label class="form-label" for="company_name">Nama Perusahaan</label>
+                                        <input id="company_name" value="{{ $candidateJobHistory->company_name }}"
+                                          name="company_name"
+                                          class="form-control @error('company_name') is-invalid @enderror" required>
+                                        @error('company_name')
+                                          <a style="color: red"><small>{{ $message }}</small></a>
+                                        @enderror
+                                      </div>
+
+                                      <div class="mb-2">
+                                        <label class="form-label" for="position">Posisi / Jabatan</label>
+                                        <input id="position" value="{{ $candidateJobHistory->position }}"
+                                          name="position"
+                                          class="form-control @error('position') is-invalid @enderror" required>
+                                        @error('position')
+                                          <a style="color: red"><small>{{ $message }}</small></a>
+                                        @enderror
+                                      </div>
+
+                                      <div class="mb-2">
+                                        <label class="form-label" for="city">Kota</label>
+                                        <input type="text" value="{{ $candidateJobHistory->city }}"
+                                          id="city" name="city"
+                                          class="form-control @error('city') is-invalid @enderror" required />
+                                        @error('city')
+                                          <a style="color: red"><small>{{ $message }}</small></a>
+                                        @enderror
+                                      </div>
+
+                                      <div class=" mb-2">
+                                        <label for="period">Periode</label>
+                                        <input type="text" value="{{ $candidateJobHistory->period }}"
+                                          oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="4"
+                                          id="year" name="period" value="{{ old('period') }}"
+                                          class="form-control  @error('period') is-invalid @enderror" />
+                                        @error('period')
+                                          <a style="color: red"><small>{{ $message }}</small></a>
+                                        @enderror
+                                      </div>
+
+                                      {{-- <div class="mb-2">
+                                        <label for="salary">Gaji Terakhir</label>
+                                        <div class="input-group mb-3">
+                                          <span class="input-group-text" id="salary">Rp. </span>
+                                          <input type="text" id="salary"
+                                            value="{{ old('salary', $candidateJobHistory->salary) }}"
+                                            oninput="this.value = this.value.replace(/\D+/g, '')"
+                                            class="form-control @error('salary') is-invalid @enderror"
+                                            name="salary">
+                                        </div>
+                                        @error('salary')
+                                          <a style="color: red"><small>{{ $message }}</small></a>
+                                        @enderror
+                                      </div> --}}
+
+                                      <div class="mb-2">
+                                        <label class="form-label" for="reason">Keterangan Tambahan</label>
+                                        <textarea id="reason" name="reason" class="form-control @error('reason') is-invalid @enderror" rows="2"
+                                          required>{{ $candidateJobHistory->reason }}</textarea>
+                                        @error('reason')
+                                          <a style="color: red"><small>{{ $message }}</small></a>
+                                        @enderror
+                                      </div>
+
+                                      {{-- <div class="mb-2">
+                                        <label for="file" class="form-label">File</label>
+                                        <input class="form-control" accept=".pdf" type="file" id="file"
+                                          name="file">
+
+                                        <div class="text-center my-3" style="height: 30px;">
+                                          <a href="{{ Storage::url($candidateJobHistory->file) }}" target="_blank">
+                                            {{ pathinfo($candidateJobHistory->file, PATHINFO_FILENAME) }}
+                                          </a>
+                                        </div>
+                                      </div> --}}
+
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-primary ">Save</button>
+                                </div>
+                              </form>
+
+                            </div><!-- /.modal-content -->
+                          </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+
+
+                        <a class="btn btn-sm btn-light-danger mx-2"
+                          onclick="deleteJobHistory('{{ $candidateJobHistory->id }}')"><i
+                            class="bi bi-trash"></i></a>
+
+                        <form id="deleteJobHistoryForm_{{ $candidateJobHistory->id }}"
+                          action="{{ route('candidateJobHistory.destroy', $candidateJobHistory) }}" method="POST">
+                          @method('DELETE')
+                          @csrf
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                @empty
+                  <tr>
+                    <td class="text-center" colspan="9">No data available in table</td>
+                  </tr>
+                @endforelse
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-form-add-job-history" class="modal fade" tabindex="-1"
+    aria-labelledby="modal-form-add-job-history-label" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <form action="{{ route('candidateJobHistory.store') }}" method="post" enctype="multipart/form-data">
+          @csrf
+
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal-form-add-job-history-label">Tambah Data Pengalaman Kerja</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+          </div>
+
+          <div class="card-body">
+            <div class="row justify-content-center">
+              <div class="col-md-11"> <!-- Make form smaller with col-md-6 and center it -->
+                <input type="hidden" name="candidate_id" value="{{ $candidate->id }}">
+                <input type="hidden" name="name" value="{{ $candidate->name }}">
+
+                <div class="mb-2">
+                  <label class="form-label" for="company_name">Nama Perusahaan <code>*</code></label>
+                  <input id="company_name" name="company_name"
+                    class="form-control @error('company_name') is-invalid @enderror" required>
+                  @error('company_name')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div>
+
+                <div class="mb-2">
+                  <label class="form-label" for="position">Posisi / Jabatan <code>*</code></label>
+                  <input id="position" name="position" class="form-control @error('position') is-invalid @enderror"
+                    required>
+                  @error('position')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div>
+
+
+
+                {{-- <div class="mb-2">
+                <label class="form-label" for="company_type">Jenis Perusahaan</label>
+                <input type="text" id="company_type" name="company_type"
+                  class="form-control @error('company_type') is-invalid @enderror" required />
+                @error('company_type')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div> --}}
+
+                <div class="mb-2">
+                  <label class="form-label" for="city">Kota</label>
+                  <input type="text" id="city" name="city"
+                    class="form-control @error('city') is-invalid @enderror" />
+                  @error('city')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div>
+
+                <div class="mb-2">
+                  <label for="period">Periode <code>*</code></label>
+
+                  <input type="text" id="period" name="period"
+                    class="form-control @error('period') is-invalid @enderror" required />
+                  {{-- <input type="text" oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="4"
+                    id="year" name="period" value="{{ old('period') }}"
+                    class="form-control  @error('period') is-invalid @enderror" required /> --}}
+                  @error('period')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div>
+
+                {{-- <div class="mb-2">
+                <label class="form-label" for="year_out">Tahun Keluar</label>
+                <input type="text" id="year_out" name="year_out"
+                  class="form-control @error('year_out') is-invalid @enderror" />
+                <input type="text" oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="4"
+                    id="year_out" name="year_out" value="{{ old('year_out') }}"
+                    class="form-control  @error('year_out') is-invalid @enderror" />
+                @error('year_out')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div> --}}
+
+
+
+
+                {{-- <div class="mb-2">
+                  <label for="salary">Gaji Terakhir</label>
+                  <div class="input-group mb-3">
+                    <span class="input-group-text" id="salary">Rp. </span>
+                    <input type="text" id="salary" value="{{ old('salary') }}"
+                      oninput="this.value = this.value.replace(/\D+/g, '')"
+                      class="form-control @error('salary') is-invalid @enderror" name="salary">
+                  </div>
+                  @error('salary')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div> --}}
+
+                <div class="mb-2">
+                  <label class="form-label" for="reason">Keterangan Tambahan</label>
+                  <textarea id="reason" name="reason" class="form-control @error('reason') is-invalid @enderror" rows="2"></textarea>
+                  @error('reason')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div>
+
+                {{-- <div class="mb-2">
+                  <label for="file" class="form-label">File</label>
+                  <input class="form-control" accept=".pdf" type="file" id="file" name="file">
+                </div> --}}
+                {{-- <div class="mb-2">
+                <label class="form-label" for="job_description">Deskripsi Pekerjaan / Tanggung Jawab</label>
+                <textarea id="job_description" name="job_description"
+                  class="form-control @error('job_description') is-invalid @enderror" rows="3" required></textarea>
+                @error('job_description')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div> --}}
+              </div>
+            </div>
+          </div>
+
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary ">Save</button>
+          </div>
+        </form>
+
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+
 </section>
+
+<script>
+  function deleteJobHistory(getId) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // If the user clicks "Yes, delete it!", submit the corresponding form
+        document.getElementById('deleteJobHistoryForm_' + getId).submit();
+      }
+    });
+  }
+</script>
+
 
 <script>
   function previewImage(event) {

@@ -22,13 +22,13 @@
                 <small>{{ $message }}</small>
               </a>
             @enderror
-            {{-- <x-form.validation.error name="name" /> --}}
+            {{--  --}}
           </div>
 
           <div class="mb-3">
             <label for="icon" class="form-label">Icon</label>
             <input type="text" class="form-control @error('icon') is-invalid @enderror" id="icon"
-              placeholder="Boxicons (eg: bx-home-smile)" value="{{ $menuGroup->icon }}" name="icon" required>
+              placeholder="Bootstrap Icons (eg: bi-home-smile)" value="{{ $menuGroup->icon }}" name="icon" required>
             @error('icon')
               <a style="color: red">
                 <small>{{ $message }}</small>

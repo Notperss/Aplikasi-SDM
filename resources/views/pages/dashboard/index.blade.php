@@ -774,6 +774,10 @@
               <a class="nav-link" id="age-tab" data-bs-toggle="tab" href="#age" role="tab"
                 aria-controls="age" aria-selected="false">Usia</a>
             </li>
+            <li class="nav-item" role="presentation">
+              <a class="nav-link" id="religion-tab" data-bs-toggle="tab" href="#religion" role="tab"
+                aria-controls="religion" aria-selected="false">Agama</a>
+            </li>
           </ul>
           <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="employee" role="tabpanel" aria-labelledby="employee-tab">
@@ -790,6 +794,9 @@
             </div>
             <div class="tab-pane fade" id="age" role="tabpanel" aria-labelledby="age-tab">
               @include('pages.dashboard.table.age')
+            </div>
+            <div class="tab-pane fade" id="religion" role="tabpanel" aria-labelledby="religion-tab">
+              @include('pages.dashboard.table.religion')
             </div>
           </div>
         </div>

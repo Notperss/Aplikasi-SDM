@@ -4,6 +4,7 @@ namespace App\Models\Recruitment;
 
 use App\Models\Employee\Employee;
 use App\Models\Position\Position;
+use App\Models\Recruitment\PersonalData\CandidateJobHistory;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -14,7 +15,7 @@ class Candidate extends Model
 {
     use HasFactory, SoftDeletes, LogsActivity;
 
-    public function getActivitylogOptions() : LogOptions
+    public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
             ->logOnly([
@@ -85,7 +86,7 @@ class Candidate extends Model
             ->useLogName('candidate-log'); // Specify the log name
     }
 
-    public function getDescriptionForEvent(string $eventName) : string
+    public function getDescriptionForEvent(string $eventName): string
     {
         return "{$this->name} has been {$eventName}";
     }
@@ -172,6 +173,10 @@ class Candidate extends Model
     public function employee()
     {
         return $this->hasOne(Employee::class);
+    }
+    public function jobHistories()
+    {
+        return $this->hasMany(CandidateJobHistory::class)->latest();
     }
 
 }

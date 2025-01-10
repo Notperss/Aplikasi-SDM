@@ -48,13 +48,13 @@ class EmployeeKpiController extends Controller
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         
-                            <a class="dropdown-item" href="' . route('employeeKpi.edit', $item) . '">Edit</a>
+                            <a class="dropdown-item" href="'.route('employeeKpi.edit', $item).'">Edit</a>
                             
-                            <button class="dropdown-item" onclick="deleteKpi(' . $item->id . ')">Hapus</button>
-                            <form id="deleteKpiForm_' . $item->id . '"
-                                  action="' . route('employeeKpi.destroy', $item->id) . '"
+                            <button class="dropdown-item" onclick="deleteKpi('.$item->id.')">Hapus</button>
+                            <form id="deleteKpiForm_'.$item->id.'"
+                                  action="'.route('employeeKpi.destroy', $item->id).'"
                                   method="POST">
-                                ' . method_field('delete') . csrf_field() . '
+                                '.method_field('delete').csrf_field().'
                             </form>
                         </div>
                     </div>
@@ -62,7 +62,7 @@ class EmployeeKpiController extends Controller
             ';
                 })->editColumn('file', function ($item) {
                     if ($item->file) {
-                        return '<a class="btn btn-sm btn-primary" href="' . asset('storage/' . $item->file) . '" target="_blank" > Lihat </a>';
+                        return '<a class="btn btn-sm btn-primary" href="'.asset('storage/'.$item->file).'" target="_blank" > Lihat </a>';
                     } else {
                         return '<span> - </span>';
                     }
@@ -73,7 +73,7 @@ class EmployeeKpiController extends Controller
                         return '<span class="badge bg-danger">Kontrak Tidak Diperpanjang</span>';
                     }
                 })->editColumn('kpi_date', function ($item) {
-                    return $item->kpi_date ? Carbon::parse($item->kpi_date)->translatedFormat('d M Y') : ' ';
+                    return $item->kpi_date ? Carbon::parse($item->kpi_date)->translatedFormat('d-m-Y') : ' ';
                 })->rawColumns(['action', 'file', 'contract_recommendation', 'kpi_date'])
                 ->toJson();
         }
@@ -135,7 +135,7 @@ class EmployeeKpiController extends Controller
             if ($request->hasFile('file')) {
                 $file = $request->file('file');
                 $extension = $file->getClientOriginalExtension();
-                $file_name = 'file_kpi_' . time() . '.' . $extension; // Generate a unique file name
+                $file_name = 'file_kpi_'.time().'.'.$extension; // Generate a unique file name
                 $file_path = $file->storeAs('files/employee/file_kpi', $file_name, 'public_local');
             }
 
@@ -177,7 +177,7 @@ class EmployeeKpiController extends Controller
             DB::rollback();
 
             // Log the error for debugging
-            Log::error('Error storing training: ' . $e->getMessage());
+            Log::error('Error storing training: '.$e->getMessage());
 
             // Redirect back with an error message
             return redirect()->back()
@@ -228,7 +228,7 @@ class EmployeeKpiController extends Controller
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $extension = $file->getClientOriginalExtension();
-            $file_name = 'file_kpi_' . time() . '.' . $extension; // Construct the file name
+            $file_name = 'file_kpi_'.time().'.'.$extension; // Construct the file name
             $data['file'] = $file->storeAs('files/employee/file_kpi', $file_name, 'public_local'); // Store the file
             // delete sertifikat
             if ($path_file != null || $path_file != '') {

@@ -69,7 +69,7 @@
                 @enderror
               </div>
 
-              <div class=" mb-2">
+              {{-- <div class=" mb-2">
                 <label class="form-label" for="year_out">Tahun Keluar</label>
                 <input type="text" value="{{ $employeeJobHistory->year_out }}"
                   oninput="this.value = this.value.replace(/\D+/g, '')" maxlength="4" id="year_out" name="year_out"
@@ -77,7 +77,7 @@
                 @error('year_out')
                   <a style="color: red"><small>{{ $message }}</small></a>
                 @enderror
-              </div>
+              </div> --}}
 
 
 

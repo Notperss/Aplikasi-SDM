@@ -38,7 +38,7 @@ class ApprovalController extends Controller
                     // Role-based button (equivalent to @role)
                     if (auth()->user()->hasAnyRole(['staff', 'ka-si', 'ka-dep', 'super-admin']) && $item->selected_candidate_id && $item->is_approve === 1 && $item->selectedCandidate->is_hire === null) {
                         $url = route('employee.newEmployee', encrypt($item->selected_candidate_id)); // Adjust if necessary
-                        $buttons .= '<a class="btn btn-sm btn-info mx-1" title="Tambahkan ke karyawan" href="' . $url . '">
+                        $buttons .= '<a class="btn btn-sm btn-info mx-1" title="Tambahkan ke karyawan" href="'.$url.'">
                         <i class="bi bi-person-plus-fill"></i>
                     </a>';
                     }
@@ -47,41 +47,41 @@ class ApprovalController extends Controller
                         // Dropdown menu
                         $dropdownHidden = $item->is_approve === null ? '' : 'hidden';
                         $buttons .= '
-        <div class="btn-group mb-1" ' . $dropdownHidden . '>
+        <div class="btn-group mb-1" '.$dropdownHidden.'>
             <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton' . $item->id . '"
+                <button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton'.$item->id.'"
                         data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="bi bi-three-dots-vertical"></i>
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton' . $item->id . '">
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton'.$item->id.'">
                     <button class="dropdown-item"
-                            onclick="confirmAction(\'approve\', \'Apakah Anda yakin ingin menyetujui?\', ' . $item->id . ')">
+                            onclick="confirmAction(\'approve\', \'Apakah Anda yakin ingin menyetujui?\', '.$item->id.')">
                         Approve
                     </button>
                     <button class="dropdown-item"
-                            onclick="confirmAction(\'reject\', \'Apakah Anda yakin ingin menolak?\', ' . $item->id . ')">
+                            onclick="confirmAction(\'reject\', \'Apakah Anda yakin ingin menolak?\', '.$item->id.')">
                         Reject
                     </button>
                     <!-- Approve Form -->
-                    <form id="approveForm_' . $item->id . '"
-                        action="' . route('approval.update', $item->id) . '"
+                    <form id="approveForm_'.$item->id.'"
+                        action="'.route('approval.update', $item->id).'"
                         method="POST" style="display: none;">
-                        ' . csrf_field() . '
-                        ' . method_field('patch') . '
-                        <input type="hidden" name="employee_career_id" value="' . $item->employee_career_id . '">
-                        <input type="hidden" name="employee_id" value="' . $item->employee_id . '">
-                        <input type="hidden" name="selected_candidate_id" value="' . $item->selected_candidate_id . '">
+                        '.csrf_field().'
+                        '.method_field('patch').'
+                        <input type="hidden" name="employee_career_id" value="'.$item->employee_career_id.'">
+                        <input type="hidden" name="employee_id" value="'.$item->employee_id.'">
+                        <input type="hidden" name="selected_candidate_id" value="'.$item->selected_candidate_id.'">
                         <input type="hidden" name="is_approve" value="1"> <!-- Approve value -->
                     </form>
                     <!-- Reject Form -->
-                    <form id="rejectForm_' . $item->id . '"
-                        action="' . route('approval.update', $item->id) . '"
+                    <form id="rejectForm_'.$item->id.'"
+                        action="'.route('approval.update', $item->id).'"
                         method="POST" style="display: none;">
-                        ' . csrf_field() . '
-                        ' . method_field('patch') . '
-                        <input type="hidden" name="employee_career_id" value="' . $item->employee_career_id . '">
-                        <input type="hidden" name="employee_id" value="' . $item->employee_id . '">
-                        <input type="hidden" name="selected_candidate_id" value="' . $item->selected_candidate_id . '">
+                        '.csrf_field().'
+                        '.method_field('patch').'
+                        <input type="hidden" name="employee_career_id" value="'.$item->employee_career_id.'">
+                        <input type="hidden" name="employee_id" value="'.$item->employee_id.'">
+                        <input type="hidden" name="selected_candidate_id" value="'.$item->selected_candidate_id.'">
                         <input type="hidden" name="is_approve" value="0"> <!-- Reject value -->
                     </form>
                 </div>
@@ -110,7 +110,7 @@ class ApprovalController extends Controller
                     if ($path_photo) {
                         return '
             <div class="fixed-frame">
-                <img src="' . asset('storage/' . $path_photo) . '" data-fancybox alt="User Photo"
+                <img src="'.asset('storage/'.$path_photo).'" data-fancybox alt="User Photo"
                 class="framed-image" style="cursor: pointer">
             </div>';
                     }
@@ -139,7 +139,7 @@ class ApprovalController extends Controller
                         ?? '<span class="badge bg-secondary">-</span>';
                 })
                 ->editColumn('is_approve', function ($item) {
-                    $status = '<span class="badge bg-primary mb-1">' . $item->description . '</span> <br>';
+                    $status = '<span class="badge bg-primary mb-1">'.$item->description.'</span> <br>';
 
                     if ($item->is_approve === 1) {
                         $appr = '<span class="badge bg-success">Disetujui</span>';
@@ -149,10 +149,10 @@ class ApprovalController extends Controller
                         $appr = '<span class="badge bg-secondary">Pending</span>';
                     }
 
-                    return $status . $appr;
+                    return $status.$appr;
 
                 })->editColumn('created_at', function ($item) {
-                    return $item->created_at ? Carbon::parse($item->created_at)->translatedFormat('d M Y') : '-';
+                    return $item->created_at ? Carbon::parse($item->created_at)->translatedFormat('d-m-Y') : '-';
 
                 })->rawColumns(['action', 'employee_name', 'is_approve', 'employee_nik', 'employee_position', 'employee_division', 'photo'])
                 ->toJson();

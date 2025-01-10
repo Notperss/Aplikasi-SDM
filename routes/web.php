@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Route;
 use App\Exports\EmployeeCategoryExport;
+use App\Exports\ReligionExport;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\Position\LevelController;
@@ -32,6 +33,7 @@ use App\Http\Controllers\ManagementAccess\MenuItemController;
 use App\Http\Controllers\ManagementAccess\MenuGroupController;
 use App\Http\Controllers\ManagementAccess\PermissionController;
 use App\Http\Controllers\Recruitment\HistorySelectionController;
+use App\Http\Controllers\FolderDivision\FolderDivisionController;
 use App\Http\Controllers\Recruitment\SelectedCandidateController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeKpiController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeDutyController;
@@ -43,6 +45,7 @@ use App\Http\Controllers\Employee\PersonalData\EmployeeSanctionController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeJobHistoryController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeFamilyDetailController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeSocialPlatformController;
+use App\Http\Controllers\Recruitment\PersonalData\CandidateJobHistoryController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeTrainingAttendedController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeEducationalHistoryController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeLanguageProficiencyController;
@@ -103,6 +106,9 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::get('/hired-candidates', [SelectedCandidateController::class, 'hiredCandidates'])->name('selectedCandidate.hiredCandidates');
     // Route::patch('/selectedCandidate/approve/{id}', [SelectedCandidateController::class, 'approve'])->name('selectedCandidate.approve');
     // Route::patch('/selectedCandidate/reject/{id}', [SelectedCandidateController::class, 'reject'])->name('selectedCandidate.reject');
+
+    Route::resource('candidateJobHistory', CandidateJobHistoryController::class)->only('store', 'update', 'destroy');
+
 
     Route::patch('/selected-candidate/{id}/update-approval', [SelectedCandidateController::class, 'updateApprovalStatus'])->name('selectedCandidate.updateApprovalStatus');
 
@@ -203,6 +209,10 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
         return Excel::download(new AgeExport(), 'UsiaExport.xlsx');
     });
 
+    Route::get('/export-religions', function () {
+        return Excel::download(new ReligionExport(), 'AgamaExport.xlsx');
+    });
+
     Route::get('/export-educational', function () {
         $directorates = App\Models\WorkUnit\Directorate::with(['divisions.positions.employee'])->get();
         return Excel::download(new EducationalExport($directorates), 'educationExport.xlsx');
@@ -212,6 +222,17 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     //     $directorates = App\Models\WorkUnit\Directorate::with(['divisions.positions.employee'])->get();
     //     return Excel::download(new PositionExport($directorates), 'educationExport.xlsx');
     // });
+    Route::resource('folder', FolderDivisionController::class);
+
+    Route::controller(FolderDivisionController::class)->group(function () {
+        Route::post('/folder/form', 'form_upload')->name('folder.form_upload');
+        Route::post('/folder/upload', 'upload')->name('folder.upload');
+        Route::delete('/folder/{id}/delete_file', 'delete_file')->name('folder.delete_file');
+        Route::get('/lock-folder/{id}', 'lockFolder')->name('lockFolder');
+        Route::get('/lock-folder-file/{id}', 'lockFolderFile')->name('lockFolderFile');
+        Route::put('/move/{id}', 'moveFile')->name('folder.moveFile');
+        // Route::get('/send-mail', 'sendMails')->name('sendMails');
+    });
 
 
 });

@@ -34,9 +34,9 @@
                   @forelse ($employee->kpis as $employeeKpi)
                     <tr>
                       <td class="text-bold-500">{{ $loop->iteration }}</td>
-                      <td class="text-bold-500">{{ $employeeKpi->contract->contract_number }}</td>
+                      <td class="text-bold-500">{{ $employeeKpi->contract->contract_number ?? '-' }}</td>
                       <td class="text-bold-500">
-                        {{ $employeeKpi->kpi_date ? Carbon\Carbon::parse($employeeKpi->kpi_date)->translatedFormat('d M Y') : '' }}
+                        {{ $employeeKpi->kpi_date ? Carbon\Carbon::parse($employeeKpi->kpi_date)->translatedFormat('d-m-Y') : '' }}
                       </td>
                       <td class="text-bold-500">{{ $employeeKpi->grade }}</td>
                       <td class="text-bold-500">

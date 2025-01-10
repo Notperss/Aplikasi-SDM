@@ -22,7 +22,7 @@
                 </small>
               </a>
             @enderror
-            {{-- <x-form.validation.error name="name" /> --}}
+            {{--  --}}
           </div>
 
           <div class="mb-3">

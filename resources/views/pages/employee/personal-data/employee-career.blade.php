@@ -36,18 +36,18 @@
                     <tr>
                       <td class="text-bold-500">{{ $loop->iteration }}</td>
                       <td class="text-bold-500">
-                        {{ Carbon\Carbon::parse($employeeCareer->start_date)->translatedFormat('l, d F Y') }}
+                        {{ Carbon\Carbon::parse($employeeCareer->start_date)->translatedFormat('d-m-Y') }}
                       </td>
                       <td class="text-bold-500">
                         @if ($employeeCareer->is_approve)
                           @if ($employeeCareer->position_id)
-                            {{ $employeeCareer->end_date ? Carbon\Carbon::parse($employeeCareer->end_date)->translatedFormat('l, d F Y') : 'Sekarang' }}
+                            {{ $employeeCareer->end_date ? Carbon\Carbon::parse($employeeCareer->end_date)->translatedFormat('d-m-Y') : 'Sekarang' }}
                           @else
                             -
                           @endif
                         @endif
                       </td>
-                      <td class="text-bold-500">{{ $employeeCareer->placement ?? '' }}</td>
+                      <td class="text-bold-500">DIVISI {{ $employeeCareer->position->division->name ?? '' }}</td>
                       <td class="text-bold-500">{{ $employeeCareer->position->name ?? '' }}</td>
                       <td class="text-bold-500">{{ $employeeCareer->type ?? '' }}</td>
                       <td class="text-bold-500">
@@ -143,10 +143,10 @@
                     <tr>
                       <td class="text-bold-500">{{ $loop->iteration }}</td>
                       <td class="text-bold-500">
-                        {{ Carbon\Carbon::parse($employeeCareer->start_date)->translatedFormat('l, d F Y') }}
+                        {{ Carbon\Carbon::parse($employeeCareer->start_date)->translatedFormat('d-m-Y') }}
                       </td>
                       <td class="text-bold-500">
-                        {{ $employeeCareer->end_date ? Carbon\Carbon::parse($employeeCareer->end_date)->translatedFormat('l, d F Y') : '-' }}
+                        {{ $employeeCareer->end_date ? Carbon\Carbon::parse($employeeCareer->end_date)->translatedFormat('d-m-Y') : '-' }}
                       </td>
                       <td class="text-bold-500">{{ $employeeCareer->placement ?? '' }}</td>
                       <td class="text-bold-500">{{ $employeeCareer->position_name ?? '' }}</td>

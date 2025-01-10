@@ -37,10 +37,10 @@
                       <td class="text-bold-500">{{ $employeeTrainingAttended->organizer_name }}</td>
                       <td class="text-bold-500">{{ $employeeTrainingAttended->city }}</td>
                       <td class="text-bold-500">
-                        {{ $employeeTrainingAttended->start_date ? Carbon\Carbon::parse($employeeTrainingAttended->start_date)->translatedFormat('d M Y') : '' }}
+                        {{ $employeeTrainingAttended->start_date ? Carbon\Carbon::parse($employeeTrainingAttended->start_date)->translatedFormat('d-m-Y') : '' }}
                       </td>
                       <td class="text-bold-500">
-                        {{ $employeeTrainingAttended->end_date ? Carbon\Carbon::parse($employeeTrainingAttended->end_date)->translatedFormat('d M Y') : '' }}
+                        {{ $employeeTrainingAttended->end_date ? Carbon\Carbon::parse($employeeTrainingAttended->end_date)->translatedFormat('d-m-Y') : '' }}
                       </td>
                       <td class="text-bold-500">
                         @if ($employeeTrainingAttended->file_sertifikat)

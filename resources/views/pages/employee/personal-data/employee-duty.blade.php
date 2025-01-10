@@ -35,9 +35,9 @@
                       <td class="text-bold-500">{{ $loop->iteration }}</td>
                       <td class="text-bold-500">{{ $employeeDuty->name_duty }}</td>
                       <td class="text-bold-500">
-                        {{ Carbon\Carbon::parse($employeeDuty->start_date)->translatedFormat('d M Y') }}</td>
+                        {{ Carbon\Carbon::parse($employeeDuty->start_date)->translatedFormat('d-m-Y') }}</td>
                       <td class="text-bold-500">
-                        {{ Carbon\Carbon::parse($employeeDuty->end_date)->translatedFormat('d M Y') }}</td>
+                        {{ Carbon\Carbon::parse($employeeDuty->end_date)->translatedFormat('d-m-Y') }}</td>
                       <td class="text-bold-500">{{ $employeeDuty->location }}</td>
                       <td class="text-bold-500">{{ $employeeDuty->description }}</td>
                       <td class="text-bold-500">

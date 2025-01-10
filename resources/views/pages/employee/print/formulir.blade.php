@@ -1,5 +1,6 @@
-<div style="padding: 5px; font-family: Arial, sans-serif; border: 1px solid #ddd; border-radius: 5px;">
-  <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px; font-family: Arial, sans-serif;">
+<div style="padding: 2px; font-family: Arial, sans-serif; border: 1px solid #ddd; border-radius: 2px; ">
+  <table
+    style="width: 100%; border-collapse: collapse; margin-bottom: 5px; font-family: Arial, sans-serif; text-transform: uppercase; font-size: 90%;">
     <!-- Header Section -->
     <tr>
       <td style="width: 20%; text-align: center; border: 1px solid #ddd; padding: 10px;">
@@ -38,7 +39,7 @@
             <td style="font-weight: bold; ">Jabatan</td>
             <td>:</td>
             <td style="">{{ $employee->position->name ?? '-' }}</td>
-            {{-- <td style="">{{ Carbon\Carbon::parse($employee->dob)->translatedFormat('d M Y') }}</td> --}}
+            {{-- <td style="">{{ Carbon\Carbon::parse($employee->dob)->translatedFormat('d-m-Y') }}</td> --}}
           </tr>
           <tr>
             <td style="font-weight: bold; ">Unit Kerja</td>
@@ -51,7 +52,7 @@
   </table>
 
   <!-- Informasi Data Personal -->
-  <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px;">
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px; text-transform: uppercase; font-size: 90%;">
     <thead>
       <tr>
         <th colspan="4" style=" text-align: left; border: 1px solid #ddd; background-color: #c7c3c3;">
@@ -63,7 +64,7 @@
       <tr>
         <td style="border: 1px solid #ddd; width: 20%;"><strong>Tempat, Tanggal Lahir</strong></td>
         <td style="border: 1px solid #ddd;">: {{ $employee->pob }},
-          {{ Carbon\Carbon::parse($employee->dob)->translatedFormat('d M Y') }}
+          {{ Carbon\Carbon::parse($employee->dob)->translatedFormat('d-m-Y') }}
           ({{ Carbon\Carbon::parse($employee->dob)->age }} Tahun)</td>
         <td style="border: 1px solid #ddd; width: 15%;"><strong>Jenis Kelamin</strong></td>
         <td style="border: 1px solid #ddd;">: {{ $employee->gender }}</td>
@@ -113,7 +114,7 @@
   </table>
 
   <!-- Informasi Pendidikan -->
-  <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px;">
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px; text-transform: uppercase; font-size: 90%;">
     <thead>
       <tr>
         <th colspan="5" style="text-align: left; border: 1px solid #ddd; background-color: #c7c3c3;">
@@ -152,8 +153,8 @@
 
 
 
-      @if ($employee->educationalHistories->count() < 5)
-        @for ($i = 0; $i < 5 - $employee->educationalHistories->count(); $i++)
+      @if ($employee->educationalHistories->count() < 4)
+        @for ($i = 0; $i < 4 - $employee->educationalHistories->count(); $i++)
           <tr>
             <td style="border: 1px solid #ddd;">&nbsp;</td>
             <td style="border: 1px solid #ddd;">&nbsp;</td>
@@ -168,7 +169,7 @@
   </table>
 
   <!-- Informasi Keluarga -->
-  <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px;">
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px; text-transform: uppercase; font-size: 90%;">
     <thead>
       <tr>
         <th colspan="5" style=" text-align: left; border: 1px solid #ddd; background-color: #c7c3c3;">
@@ -207,7 +208,7 @@
           </td>
           <td style="border: 1px solid #ddd;">{{ $family->relation }}</td>
           <td style="border: 1px solid #ddd;">
-            {{ Carbon\Carbon::parse($family->dob_family)->translatedFormat('d M Y') }}
+            {{ Carbon\Carbon::parse($family->dob_family)->translatedFormat('d-m-Y') }}
           </td>
           <td style="border: 1px solid #ddd;">{{ $family->job }}</td>
         </tr>
@@ -241,7 +242,7 @@
   </table>
 
   <!-- Pengalaman Kerja CMNP rehire -->
-  <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px;">
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px; text-transform: uppercase; font-size: 90%;">
     <thead>
       <tr>
         <th colspan="4" style=" text-align: left; border: 1px solid #ddd; background-color: #c7c3c3;">
@@ -258,11 +259,13 @@
       @forelse ($employee->employeeCareers->where('cmnp_career', 0) as $career)
         <tr>
           <td style="border: 1px solid #ddd;">{{ $career->position->name ?? '' }}</td>
-          <td style="border: 1px solid #ddd;">{{ $career->position->division->name ?? '' }}</td>
           <td style="border: 1px solid #ddd;">
-            {{ $career->start_date ? Carbon\Carbon::parse($career->start_date)->translatedFormat('d M y') : '' }}
+            {{ $career->position_id ? 'Divisi ' . ($career->position->division->name ?? ($career->placement ?? '')) : '-' }}
+          </td>
+          <td style="border: 1px solid #ddd;">
+            {{ $career->start_date ? Carbon\Carbon::parse($career->start_date)->translatedFormat('d-m-Y') : '' }}
             -
-            {{ $career->end_date ? Carbon\Carbon::parse($career->end_date)->translatedFormat('d M y') : 'Sekarang' }}
+            {{ $career->end_date ? Carbon\Carbon::parse($career->end_date)->translatedFormat('d-m-Y') : 'Sekarang' }}
           </td>
         </tr>
       @empty
@@ -282,11 +285,13 @@
       @forelse ($employee->employeeCareers->where('cmnp_career', 1) as $career)
         <tr>
           <td style="border: 1px solid #ddd;">{{ $career->position_name ?? '' }}</td>
-          <td style="border: 1px solid #ddd;">{{ $career->placement ?? '' }}</td>
           <td style="border: 1px solid #ddd;">
-            {{ $career->start_date ? Carbon\Carbon::parse($career->start_date)->translatedFormat('d M y') : '' }}
+            {{ $career->placement ?? '' }}
+          </td>
+          <td style="border: 1px solid #ddd;">
+            {{ $career->start_date ? Carbon\Carbon::parse($career->start_date)->translatedFormat('d-m-Y') : '' }}
             -
-            {{ $career->end_date ? Carbon\Carbon::parse($career->end_date)->translatedFormat('d M y') : '' }}</td>
+            {{ $career->end_date ? Carbon\Carbon::parse($career->end_date)->translatedFormat('d-m-Y') : '' }}</td>
         </tr>
       @empty
       @endforelse
@@ -345,10 +350,11 @@
         @endfor
       @endif
     </tbody>
-  </table> --}}
+  </table>s --}}
 
   <!-- Pengalaman Kerja -->
-  <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px;">
+  <table
+    style="width: 100%; border-collapse: collapse; margin-bottom: 5px; text-transform: uppercase; font-size: 90%;">
     <thead>
       <tr>
         <th colspan="4" style=" text-align: left; border: 1px solid #ddd; background-color: #c7c3c3;">
@@ -358,8 +364,8 @@
       <tr>
         <th style="border: 1px solid #ddd;">Perusahaan</th>
         <th style="border: 1px solid #ddd;">Jabatan/Posisi</th>
-        <th style="border: 1px solid #ddd;">Tahun Masuk</th>
-        <th style="border: 1px solid #ddd;">Tahun Keluar</th>
+        <th style="border: 1px solid #ddd;">Periode</th>
+        {{-- <th style="border: 1px solid #ddd;">Tahun Keluar</th> --}}
       </tr>
     </thead>
     <tbody>
@@ -367,8 +373,8 @@
         <tr>
           <td style="border: 1px solid #ddd;">{{ $job->company_name }}</td>
           <td style="border: 1px solid #ddd;">{{ $job->position }}</td>
-          <td style="border: 1px solid #ddd;">{{ $job->year_from }}</td>
-          <td style="border: 1px solid #ddd;">{{ $job->year_to }}</td>
+          <td style="border: 1px solid #ddd;">{{ $job->period }}</td>
+          {{-- <td style="border: 1px solid #ddd;">{{ $job->year_to }}</td> --}}
         </tr>
       @empty
         {{-- @for ($i = 0; $i < 2; $i++)
@@ -389,7 +395,7 @@
             <td style="border: 1px solid #ddd;">&nbsp;</td>
             <td style="border: 1px solid #ddd;">&nbsp;</td>
             <td style="border: 1px solid #ddd;">&nbsp;</td>
-            <td style="border: 1px solid #ddd;">&nbsp;</td>
+            {{-- <td style="border: 1px solid #ddd;">&nbsp;</td> --}}
           </tr>
         @endfor
       @endif
@@ -397,7 +403,7 @@
   </table>
 
   <!-- Informasi Kontak Darurat -->
-  <table style="width: 100%; border-collapse: collapse;">
+  <table style="width: 100%; border-collapse: collapse; text-transform: uppercase; font-size: 90%;">
     <thead>
       <tr>
         <th colspan="4" style=" text-align: left; border: 1px solid #ddd; background-color: #c7c3c3;">
@@ -455,7 +461,7 @@
           Jakarta,
         </p>
 
-        <div style="margin-top: 40px; text-align: left; line-height: 1;">
+        <div style="margin-top: 40px; text-align: left; line-height: 1;  text-transform: uppercase; font-size: 90%;">
           <p style="margin: 0; font-weight: bold;">{{ $employee->name }}</p>
           <div style="border-bottom: 1px solid #000; width: 200px;"></div>
           <p style="margin: 0;">{{ $employee->nik }}</p>
@@ -468,6 +474,5 @@
       </td>
     </tr>
   </table>
-
 
 </div>

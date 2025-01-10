@@ -39,7 +39,7 @@
         <tr>
           <td><strong>Tanggal Lahir</strong></td>
           <td><strong>:</strong></td>
-          <td>{{ Carbon\Carbon::parse($employee->dob)->translatedFormat('d M Y') }}</td>
+          <td>{{ Carbon\Carbon::parse($employee->dob)->translatedFormat('d-m-Y') }}</td>
         </tr>
         <tr>
           <td><strong>Usia</strong></td>
@@ -49,7 +49,7 @@
         <tr>
           <td><strong>Tanggal Bekerja</strong></td>
           <td><strong>:</strong></td>
-          <td>{{ Carbon\Carbon::parse($employee->date_joining)->translatedFormat('d M Y') }}</td>
+          <td>{{ Carbon\Carbon::parse($employee->date_joining)->translatedFormat('d-m-Y') }}</td>
         </tr>
         <tr>
           <td><strong>Masa Kerja</strong></td>
@@ -114,10 +114,12 @@
         @foreach ($educational as $education) --}}
         @foreach ($employee->educationalHistories as $education)
           <tr>
-            <td style="padding: 5px; border: 1px solid #ddd;">{{ $education->school_level ?? '' }}</td>
-            <td style="padding: 5px; border: 1px solid #ddd;">{{ $education->school_name ?? '' }}</td>
-            <td style="padding: 5px; border: 1px solid #ddd;">{{ $education->study ?? '' }}</td>
-            <td style="padding: 5px; border: 1px solid #ddd;">{{ $education->year_to ?? '' }}</td>
+            <td style="padding: 5px; border: 1px solid #ddd;">{{ ucwords(strtolower($education->school_level ?? '')) }}
+            </td>
+            <td style="padding: 5px; border: 1px solid #ddd;">{{ ucwords(strtolower($education->school_name ?? '')) }}
+            </td>
+            <td style="padding: 5px; border: 1px solid #ddd;">{{ ucwords(strtolower($education->study ?? '')) }}</td>
+            <td style="padding: 5px; border: 1px solid #ddd;">{{ ucwords(strtolower($education->year_to ?? '')) }}</td>
           </tr>
         @endforeach
       </tbody>
@@ -145,15 +147,19 @@
           <tr>
             <td style="border: 1px solid #ddd;">
 
-              {{ Carbon\Carbon::parse($career->start_date)->translatedFormat('d M Y') }} -
+              {{ Carbon\Carbon::parse($career->start_date)->translatedFormat('d-m-Y') }} -
 
               @if ($career->position_id)
-                {{ $career->end_date ? Carbon\Carbon::parse($career->end_date)->translatedFormat('d M Y') : 'Sekarang' }}
+                {{ $career->end_date ? Carbon\Carbon::parse($career->end_date)->translatedFormat('d-m-Y') : 'Sekarang' }}
               @endif
 
             </td>
-            <td style="border: 1px solid #ddd;">{{ $career->position->name ?? ($career->type ?? '') }}</td>
-            <td style="border: 1px solid #ddd;">{{ $career->placement ?? ($career->position->division->name ?? '') }}
+            <td style="border: 1px solid #ddd;">
+              {{ ucwords(strtolower($career->position->name ?? ($career->type ?? ''))) }}</td>
+            <td style="border: 1px solid #ddd;">
+              {{ $career->position_id ? 'Divisi ' . ucwords(strtolower($career->position->division->name ?? ($career->placement ?? ''))) : '-' }}
+
+
             </td>
           </tr>
         @endforeach
@@ -173,7 +179,7 @@
           Efektif Tanggal</th>
         <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Jabatan</th>
         <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Penempatan
-        </th>
+        </th>d
       </tr> --}}
       <tr>
         <th style="border: 1px solid #ddd; text-align: center; width: 30%">
@@ -188,13 +194,17 @@
           <tr>
             <td style="border: 1px solid #ddd;">
 
-              {{ Carbon\Carbon::parse($career->start_date)->translatedFormat('d M Y') }} -
-              {{ $career->end_date ? Carbon\Carbon::parse($career->end_date)->translatedFormat('d M Y') : '' }}
+              {{ Carbon\Carbon::parse($career->start_date)->translatedFormat('d-m-Y') }} -
+              {{ $career->end_date ? Carbon\Carbon::parse($career->end_date)->translatedFormat('d-m-Y') : '' }}
 
             </td>
             {{-- <td style="border: 1px solid #ddd;">{{ $career->position->name ?? ($career->type ?? '') }}</td> --}}
-            <td style="border: 1px solid #ddd;">{{ $career->position_name ?? '' }}</td>
-            <td style="border: 1px solid #ddd;">{{ $career->placement ?? ($career->position->division->name ?? '') }}
+            {{-- <td style="border: 1px solid #ddd;">{{ $career->position_name ?? '' }}</td>
+            <td style="border: 1px solid #ddd;">{{ $career->placement ?? ($career->position->division->name ?? '') }} --}}
+            <td style="border: 1px solid #ddd;">
+              {{ ucwords(strtolower($career->position_name)) }}</td>
+            <td style="border: 1px solid #ddd; ">
+              {{ ucwords(strtolower($career->placement)) }}
             </td>
           </tr>
         @endforeach
@@ -210,10 +220,12 @@
         </th>
       </tr>
       <tr>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+        {{-- <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
           Tanggal Masuk</th>
         <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
-          Tanggal Keluar</th>
+          Tanggal Keluar</th> --}}
+        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+          Periode</th>
         <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
           Jabatan</th>
         <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
@@ -224,17 +236,17 @@
       <tbody>
         @foreach ($employee->jobHistories as $employeeJobHistory)
           <tr>
-            <td style="border: 1px solid #ddd;">
+            {{-- <td style="border: 1px solid #ddd;">
               {{ $employeeJobHistory->year_from }}
             </td>
             <td style="border: 1px solid #ddd;">
               {{ $employeeJobHistory->year_to }}
-            </td>
+            </td> --}}
+            <td style="border: 1px solid #ddd;">{{ $employeeJobHistory->period ?? '' }}</td>
             <td style="border: 1px solid #ddd;">{{ $employeeJobHistory->position ?? '' }}</td>
             <td style="border: 1px solid #ddd;">{{ $employeeJobHistory->company_name }}
             </td>
             {{-- <td style="border: 1px solid #ddd;">{{ $career->position->name ?? ($career->type ?? '') }}</td> --}}
-
           </tr>
         @endforeach
       </tbody>
@@ -269,7 +281,7 @@
             <td style="border: 1px solid #ddd;">{{ $training->organizer_name }}</td>
             <td style="border: 1px solid #ddd;">{{ $training->city }}</td>
             <td style="border: 1px solid #ddd;">
-              {{ $training->end_date ? Carbon\Carbon::parse($training->end_date)->translatedFormat('d M Y') : '' }}
+              {{ $training->end_date ? Carbon\Carbon::parse($training->end_date)->translatedFormat('d-m-Y') : '' }}
             </td>
           </tr>
         @endforeach
@@ -305,7 +317,7 @@
             <td style="border: 1px solid #ddd;">{{ $training->organizer_name }}</td>
             <td style="border: 1px solid #ddd;">{{ $training->city }}</td>
             <td style="border: 1px solid #ddd;">
-              {{ $training->end_date ? Carbon\Carbon::parse($training->end_date)->translatedFormat('d M Y') : '' }}
+              {{ $training->end_date ? Carbon\Carbon::parse($training->end_date)->translatedFormat('d-m-Y') : '' }}
             </td>
           </tr>
         @endforeach

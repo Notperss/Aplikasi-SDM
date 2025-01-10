@@ -71,9 +71,9 @@ class EmployeeTrainingAttendedController extends Controller
                         return '<span> - </span>';
                     }
                 })->editColumn('start_date', function ($item) {
-                    return $item->start_date ? Carbon::parse($item->start_date)->translatedFormat('d M Y') : ' ';
+                    return $item->start_date ? Carbon::parse($item->start_date)->translatedFormat('d-m-Y') : ' ';
                 })->editColumn('end_date', function ($item) {
-                    return $item->end_date ? Carbon::parse($item->end_date)->translatedFormat('d M Y') : ' ';
+                    return $item->end_date ? Carbon::parse($item->end_date)->translatedFormat('d-m-Y') : ' ';
                 })
                 ->rawColumns(['action', 'file', 'start_date', 'end_date'])
                 ->toJson();

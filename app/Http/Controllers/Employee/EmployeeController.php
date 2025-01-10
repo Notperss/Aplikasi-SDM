@@ -190,6 +190,7 @@ class EmployeeController extends Controller
 
                         // Calculate days until contract expiration
                         $contractEndDate = $latestContractData->end_date; // Assuming `end_date` exists in your contract model
+                        $dateExpired = $contractEndDate ? Carbon::parse($contractEndDate)->translatedFormat('d-m-Y') : '-';
                         $daysToExpire = $contractEndDate ? floor(now()->diffInDays(Carbon::parse($contractEndDate), false)) : null;
 
                         $daysToExpireText = $daysToExpire !== null
@@ -201,11 +202,12 @@ class EmployeeController extends Controller
                         $color = $daysToExpire !== null
                             ? ($daysToExpire > 0
                                 ? "secondary"
-                                : "danger")
+                                : "light-danger")
                             : "Tanggal akhir kontrak tidak tersedia";
 
-                        $latestContract = '<small><span class="badge bg-secondary">Kontrak Ke - '.$contractSequence.'</span></small> <br>'
-                            .'<small><span class="badge bg-light-'.$color.'">'.$daysToExpireText.'</span></small>';
+                        $latestContract = '<small><span class="badge bg-light-dark">Kontrak Ke - '.$contractSequence.'</span></small> <br>
+                        '.'<small><span class="badge bg-'.$color.'">'.$daysToExpireText.'</span></small><br>
+                           <small><span class="badge bg-light-secondary">'.$dateExpired.'</span></small>';
                     }
 
                     // Return the concatenated result
@@ -216,7 +218,7 @@ class EmployeeController extends Controller
                     $dob = Carbon::parse($item->dob);
                     $age = $dob->diff(Carbon::now());
                     return '<span class="badge bg-light-primary" style="font-size: 110%">'.$item->nik.'</span>
-                    <br><small>Tgl Lahir : '.Carbon::parse($item->dob)->translatedFormat('d M Y').'</small>
+                    <br><small>Tgl Lahir : '.Carbon::parse($item->dob)->translatedFormat('d-m-Y').'</small>
                     <br><small>Usia : '.$age->y.' tahun </small>
                     <br><small>Status : '.$item->marital_status.'</small>
                     <br><small>Masa Kerja : </small>
@@ -465,9 +467,7 @@ class EmployeeController extends Controller
         $candidate = Candidate::find($selectedCandidate->candidate_id);
 
         if (! $candidate->employee) {
-            Employee::create([
-                // "nik" => 000000,
-
+            $employee = Employee::create([
                 'position_id' => $selectedCandidate->position_id,
                 'date_joining' => now(),
                 'candidate_id' => $candidate->id,
@@ -530,6 +530,8 @@ class EmployeeController extends Controller
 
         }
 
+        // dd($candidate->employee);
+
         $positions = Position::where('id', $selectedCandidate->position_id)->latest()->get();
 
         $employeeCategories = EmployeeCategory::latest()->get();
@@ -567,6 +569,22 @@ class EmployeeController extends Controller
                     'file_path' => $candidate->photo,
                     'main_photo' => true,
                 ]);
+            }
+
+            if ($candidate->jobHistories) {
+                foreach ($candidate->jobHistories as $jobHistory) {
+                    $jobHistoryData = [
+                        'employee_id' => $candidate->employee->id,
+                        'company_name' => $jobHistory->company_name,
+                        'city' => $jobHistory->city,
+                        'period' => $jobHistory->period,
+                        'position' => $jobHistory->position,
+                        'reason' => $jobHistory->reason,
+                        'job_description' => $jobHistory->job_description,
+                    ];
+
+                    EmployeeJobHistory::create($jobHistoryData);
+                }
             }
 
             $candidate->employee->update($data);

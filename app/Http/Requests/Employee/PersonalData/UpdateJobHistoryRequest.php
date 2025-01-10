@@ -34,7 +34,7 @@ class UpdateJobHistoryRequest extends FormRequest
             'salary' => 'nullable|numeric|min:0',
             'reason' => 'nullable|string|max:255',
             'job_description' => 'nullable|string|max:1000',
-            'file' => 'nullable|mimes:pdf|max:512',
+            'file' => 'nullable|mimes:pdf|max:51200',
         ];
     }
 
@@ -76,7 +76,7 @@ class UpdateJobHistoryRequest extends FormRequest
             'job_description.required' => 'Deskripsi pekerjaan wajib diisi.',
 
             'file.mimes' => 'Ekstensi file harus berupa pdf.',
-            'file.max' => 'Ukuran file maksimal adalah 500KB.',
+            'file.max' => 'Ukuran file maksimal adalah 50MB.',
         ];
     }
 
