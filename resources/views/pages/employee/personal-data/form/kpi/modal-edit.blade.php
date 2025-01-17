@@ -32,9 +32,7 @@
 
               <div class="mb-2">
                 <label class="form-label" for="grade">Nilai <code>*</code></label>
-                <input id="grade"
-                  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')" name="grade"
-                  value="{{ old('grade', $employeeKpi->grade) }}"
+                <input id="grade" name="grade" value="{{ old('grade', $employeeKpi->grade) }}"
                   class="form-control @error('grade') is-invalid @enderror" required>
                 @error('grade')
                   <a style="color: red"><small>{{ $message }}</small></a>

@@ -1207,6 +1207,20 @@
                     @enderror
                   </div>
                 </div>
+                <div class="row">
+                  <div class="form-group">
+                    <label for="note">Catatan</label>
+                    <textarea type="text" id="note" class="form-control  @error('note') is-invalid @enderror"
+                      name="note" rows="5">{{ old('note') }}</textarea>
+                    @error('note')
+                      <a style="color: red">
+                        <small>
+                          {{ $message }}
+                        </small>
+                      </a>
+                    @enderror
+                  </div>
+                </div>
 
               </div>
 
@@ -1252,6 +1266,8 @@
         </div>
       </div>
     </div>
+
+
 
 
   </form>

@@ -45,11 +45,9 @@
             <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
               <h6 class="text-muted font-semibold">Total Semua Karyawan</h6>
               <h4 class="font-extrabold mb-0">
-                @role('super-admin')
-                  {{ DB::table('employees')->where('employee_status', 'AKTIF')->count() }}
-                @else
-                  {{ DB::table('employees')->where('employee_status', 'AKTIF')->where('company_id', auth()->user()->company_id)->count() }}
-                @endrole
+
+                {{ $allActiveEmployee }}
+
               </h4>
             </div>
           </div>
@@ -78,13 +76,11 @@
               </div>
             </div>
             <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <h6 class="text-muted font-semibold">Karyawan Aktif Bulan Ini</h6>
+              <h6 class="text-muted font-semibold">Karyawan Masuk Bulan Ini</h6>
               <h4 class="font-extrabold mb-0">
-                @role('super-admin')
-                  {{ DB::table('employees')->where('employee_status', 'AKTIF')->whereMonth('created_at', now()->month)->count() }}
-                @else
-                  {{ DB::table('employees')->where('company_id', auth()->user()->company_id)->where('employee_status', 'AKTIF')->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count() }}
-                @endrole
+
+                {{ $activePermonth }}
+
               </h4>
             </div>
           </div>
@@ -110,13 +106,11 @@
               </div>
             </div>
             <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <h6 class="text-muted font-semibold">Karyawan Inaktif Bulan Ini</h6>
+              <h6 class="text-muted font-semibold">Karyawan Keluar Bulan Ini</h6>
               <h4 class="font-extrabold mb-0">
-                @role('super-admin')
-                  {{ DB::table('employees')->where('employee_status', '!=', 'AKTIF')->whereMonth('created_at', now()->month)->count() }}
-                @else
-                  {{ DB::table('employees')->where('company_id', auth()->user()->company_id)->where('employee_status', '!=', 'AKTIF')->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count() }}
-                @endrole
+
+                {{ $nonActivePermonth }}
+
               </h4>
               </h6>
             </div>
@@ -145,13 +139,11 @@
               </div>
             </div>
             <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <h6 class="text-muted font-semibold">Karyawan Aktif Tahun Ini</h6>
+              <h6 class="text-muted font-semibold">Karyawan Masuk Tahun Ini</h6>
               <h4 class="font-extrabold mb-0">
-                @role('super-admin')
-                  {{ DB::table('employees')->where('employee_status', 'AKTIF')->whereYear('created_at', now()->year)->count() }}
-                @else
-                  {{ DB::table('employees')->where('company_id', auth()->user()->company_id)->where('employee_status', 'AKTIF')->whereYear('created_at', now()->year)->count() }}
-                @endrole
+
+                {{ $activePeryear }}
+
               </h4>
             </div>
           </div>
@@ -178,13 +170,10 @@
               </div>
             </div>
             <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <h6 class="text-muted font-semibold">Karyawan Inaktif Tahun Ini</h6>
+              <h6 class="text-muted font-semibold">Karyawan Keluar Tahun Ini</h6>
               <h4 class="font-extrabold mb-0">
-                @role('super-admin')
-                  {{ DB::table('employees')->where('employee_status', '!=', 'AKTIF')->whereYear('created_at', now()->year)->count() }}
-                @else
-                  {{ DB::table('employees')->where('company_id', auth()->user()->company_id)->where('employee_status', '!=', 'AKTIF')->whereYear('created_at', now()->year)->count() }}
-                @endrole
+                {{ $nonActivePeryear }}
+
               </h4>
             </div>
           </div>
@@ -220,17 +209,7 @@
                 </svg>
               </div>
             </div>
-            {{-- <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <h6 class="text-muted font-semibold">Karyawan Pensiun Tahun Ini</h6>
-              <h4 class="font-extrabold mb-0">
-                @role('super-admin')
-                  {{ DB::table('employees')->where('employee_status', '=', 'AKTIF')->whereYear('created_at', now()->year)->count() }}
-                @else
-                  {{ DB::table('employees')->where('company_id', auth()->user()->company_id)->where('employee_status', '!=', 'AKTIF')->whereYear('created_at', now()->year)->count() }}
-                @endrole
-              </h4>
-            </div> --}}
-            @php
+            {{-- @php
               $currentYear = Carbon\Carbon::now()->year;
 
               $retirementCount = \App\Models\Employee\Employee::query()
@@ -241,11 +220,13 @@
                       $query->where('company_id', auth()->user()->company_id);
                   })
                   ->count();
-            @endphp
+            @endphp --}}
 
             <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <h6 class="text-muted font-semibold">Karyawan Pensiun Tahun Ini</h6>
-              <h4 class="font-extrabold mb-0">{{ $retirementCount }}</h4>
+              <h6 class="text-muted font-semibold"><small>Karyawan Pensiun Tahun Ini <br>Usia >= 55 Tahun</small></h6>
+              <h4 class="font-extrabold mb-0">
+                {{ $retirementCount }}
+              </h4>
             </div>
 
 
@@ -255,398 +236,6 @@
     </div>
   </div>
 
-  {{-- <div class="row">
-    <h5>Data karyawan Perbulan</h5>
-    <div class="col-6 col-lg-2 col-md-6">
-      <div class="card">
-        <div class="card-body px-4 py-4-5">
-          <div class="row">
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
-              <div class=" mb-2" style="background-color: #fff">
-
-              </div>
-            </div>
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <h6 class="text-muted font-semibold">Karyawan Baru</h6>
-              <h4 class="font-extrabold mb-0">
-                @role('super-admin')
-                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('selected_candidate_id')->whereNull('approvals.is_approve')->whereMonth('employee_careers.start_date', now()->month)->count() }}
-                @else
-                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('selected_candidate_id')->whereNull('approvals.is_approve')->whereMonth('employee_careers.start_date', now()->month)->where('approvals.company_id', auth()->user()->company_id)->count() }}
-                @endrole
-              </h4>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-lg-2 col-md-6">
-      <div class="card">
-        <div class="card-body px-4 py-4-5">
-          <div class="row">
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
-              <div class=" mb-2" style="background-color: #953b3bcc">
-              </div>
-            </div>
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <h6 class="text-muted font-semibold">Buka Verifikasi</h6>
-              <h4 class="font-extrabold mb-0">
-                @role('super-admin')
-                  {{ DB::table('approvals')->whereNotNull('employee_id')->where('is_approve', 1)->whereMonth('created_at', now()->month)->count() }}
-                @else
-                  {{ DB::table('approvals')->whereNotNull('employee_id')->where('is_approve', 1)->whereMonth('created_at', now()->month)->where('company_id', auth()->user()->company_id)->count() }}
-                @endrole
-              </h4>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-lg-2 col-md-6">
-      <div class="card">
-        <div class="card-body px-4 py-4-5">
-          <div class="row">
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
-              <div class=" mb-2" style="background-color: #314299ec">
-              </div>
-            </div>
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <h6 class="text-muted font-semibold">Promosi</h6>
-              <h4 class="font-extrabold mb-0">
-                @role('super-admin')
-                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'PROMOSI')->count() }}
-                @else
-                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'PROMOSI')->where('company_id', auth()->user()->company_id)->count() }}
-                @endrole
-              </h4>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-lg-2 col-md-6">
-      <div class="card">
-        <div class="card-body px-4 py-4-5">
-          <div class="row">
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
-              <div class=" mb-2" style="background-color: #57a042cc">
-              </div>
-            </div>
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <h6 class="text-muted font-semibold">Demosi</h6>
-              <h4 class="font-extrabold mb-0">
-                @role('super-admin')
-                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'DEMOSI')->count() }}
-                @else
-                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'DEMOSI')->where('company_id', auth()->user()->company_id)->count() }}
-                @endrole
-              </h4>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-lg-2 col-md-6">
-      <div class="card">
-        <div class="card-body px-4 py-4-5">
-          <div class="row">
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
-              <div class=" mb-2" style="background-color: #7b20a2cc">
-              </div>
-            </div>
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <h6 class="text-muted font-semibold">Mutasi</h6>
-              <h4 class="font-extrabold mb-0">
-                @role('super-admin')
-                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'MUTASI')->count() }}
-                @else
-                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'MUTASI')->where('company_id', auth()->user()->company_id)->count() }}
-                @endrole
-              </h4>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-lg-2 col-md-6">
-      <div class="card">
-        <div class="card-body px-4 py-4-5">
-          <div class="row">
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
-              <div class=" mb-2" style="background-color: #b4237fcc">
-              </div>
-            </div>
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <h6 class="text-muted font-semibold">Rotasi</h6>
-              <h4 class="font-extrabold mb-0">
-                @role('super-admin')
-                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'ROTASI')->count() }}
-                @else
-                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'ROTASI')->where('company_id', auth()->user()->company_id)->count() }}
-                @endrole
-              </h4>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-lg-2 col-md-6">
-      <div class="card">
-        <div class="card-body px-4 py-4-5">
-          <div class="row">
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
-              <div class=" mb-2" style="background-color: #b4a623cc">
-              </div>
-            </div>
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <h6 class="text-muted font-semibold">Pensiun</h6>
-              <h4 class="font-extrabold mb-0">
-                @role('super-admin')
-                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'PENSIUN')->count() }}
-                @else
-                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'PENSIUN')->where('company_id', auth()->user()->company_id)->count() }}
-                @endrole
-              </h4>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-lg-2 col-md-6">
-      <div class="card">
-        <div class="card-body px-4 py-4-5">
-          <div class="row">
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
-              <div class=" mb-2" style="background-color: #2b0f70cc">
-              </div>
-            </div>
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <h6 class="text-muted font-semibold">Resign</h6>
-              <h4 class="font-extrabold mb-0">
-                @role('super-admin')
-                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'RESIGN')->count() }}
-                @else
-                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'RESIGN')->where('company_id', auth()->user()->company_id)->count() }}
-                @endrole
-              </h4>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-lg-2 col-md-6">
-      <div class="card">
-        <div class="card-body px-4 py-4-5">
-          <div class="row">
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
-              <div class=" mb-2" style="background-color: #8e0321cc">
-              </div>
-            </div>
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <h6 class="text-muted font-semibold">Non-Aktif</h6>
-              <h4 class="font-extrabold mb-0">
-                @role('super-admin')
-                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'NON-AKTIF')->count() }}
-                @else
-                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'NON-AKTIF')->where('company_id', auth()->user()->company_id)->count() }}
-                @endrole
-              </h4>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-  </div> --}}
-
-  {{-- <div class="col-12 mb-4 text-center">
-    <div class="col-md-4 mx-auto">
-      <form method="GET" action="{{ route('dashboard.index') }}">
-        <div class="d-flex justify-content-between align-items-center">
-          <select name="month" class="form-control w-48" onchange="this.form.submit()">
-            @for ($i = 1; $i <= 12; $i++)
-              <option value="{{ $i }}" {{ $i == $selectedMonth ? 'selected' : '' }}>
-                {{ Carbon\Carbon::create()->month($i)->format('F') }}
-              </option>
-            @endfor
-          </select>
-
-          <select name="year" class="form-control w-48" onchange="this.form.submit()">
-            @for ($i = Carbon\Carbon::now()->year - 5; $i <= Carbon\Carbon::now()->year + 5; $i++)
-              <option value="{{ $i }}" {{ $i == $selectedYear ? 'selected' : '' }}>
-                {{ $i }}
-              </option>
-            @endfor
-          </select>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div class="row">
-    <h5 class="col-12 mb-4 text-center text-primary">Data Karyawan Perbulan</h5>
-
-    <div class="col-6 col-lg-2 col-md-6 mb-4">
-      <div class="card shadow-sm border-light rounded">
-        <div class="card-body text-center">
-          <h6 class="text-muted font-semibold">Karyawan Baru</h6>
-          <h4 class="font-extrabold mb-0">{{ $data['karyawan_baru'] }}</h4>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-lg-2 col-md-6 mb-4">
-      <div class="card shadow-sm border-light rounded">
-        <div class="card-body text-center">
-          <h6 class="text-muted font-semibold">Buka Verifikasi</h6>
-          <h4 class="font-extrabold mb-0">{{ $data['buka_verifikasi'] }}</h4>
-        </div>
-      </div>
-    </div>
-
-    @foreach ($data['categories'] as $label => $count)
-      <div class="col-6 col-lg-2 col-md-6 mb-4">
-        <div class="card shadow-sm border-light rounded">
-          <div class="card-body text-center">
-            <h6 class="text-muted font-semibold">{{ $label }}</h6>
-            <h4 class="font-extrabold mb-0">{{ $count }}</h4>
-          </div>
-        </div>
-      </div>
-    @endforeach
-  </div>
-
-  <div class="row">
-    <h5 class="col-12 mb-4 text-center text-primary">Data Karyawan Pertahun</h5>
-
-    <div class="col-6 col-lg-2 col-md-6 mb-4">
-      <div class="card shadow-sm border-light rounded">
-        <div class="card-body text-center">
-          <h6 class="text-muted font-semibold">Karyawan Baru</h6>
-          <h4 class="font-extrabold mb-0">{{ $data['karyawan_baru'] }}</h4>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-lg-2 col-md-6 mb-4">
-      <div class="card shadow-sm border-light rounded">
-        <div class="card-body text-center">
-          <h6 class="text-muted font-semibold">Buka Verifikasi</h6>
-          <h4 class="font-extrabold mb-0">{{ $data['buka_verifikasi'] }}</h4>
-        </div>
-      </div>
-    </div>
-
-    @foreach ($data['categories'] as $label => $count)
-      <div class="col-6 col-lg-2 col-md-6 mb-4">
-        <div class="card shadow-sm border-light rounded">
-          <div class="card-body text-center">
-            <h6 class="text-muted font-semibold">{{ $label }}</h6>
-            <h4 class="font-extrabold mb-0">{{ $count }}</h4>
-          </div>
-        </div>
-      </div>
-    @endforeach
-  </div> --}}
-
-  {{-- <div class="col-12 mb-4 text-center">
-    <div class="col-md-4 mx-auto">
-      <form method="GET" action="{{ route('dashboard.index') }}">
-        <div class="d-flex justify-content-between align-items-center">
-          <select name="month" class="form-control w-48" onchange="this.form.submit()">
-            @for ($i = 1; $i <= 12; $i++)
-              <option value="{{ $i }}" {{ $i == $selectedMonth ? 'selected' : '' }}>
-                {{ Carbon\Carbon::create()->month($i)->format('F') }}
-              </option>
-            @endfor
-          </select>
-
-          <select name="year" class="form-control w-48" onchange="this.form.submit()">
-            @for ($i = Carbon\Carbon::now()->year - 5; $i <= Carbon\Carbon::now()->year + 5; $i++)
-              <option value="{{ $i }}" {{ $i == $selectedYear ? 'selected' : '' }}>
-                {{ $i }}
-              </option>
-            @endfor
-          </select>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div class="row">
-    <h5 class="col-12 mb-4 text-center text-primary">Data Karyawan Perbulan</h5>
-
-    <div class="col-6 col-lg-2 col-md-6 mb-4">
-      <div class="card shadow-sm border-light rounded">
-        <div class="card-body text-center">
-          <h6 class="text-muted font-semibold">Karyawan Baru</h6>
-          <h4 class="font-extrabold mb-0">{{ $data['karyawan_baru'] }}</h4>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-lg-2 col-md-6 mb-4">
-      <div class="card shadow-sm border-light rounded">
-        <div class="card-body text-center">
-          <h6 class="text-muted font-semibold">Buka Verifikasi</h6>
-          <h4 class="font-extrabold mb-0">{{ $data['buka_verifikasi'] }}</h4>
-        </div>
-      </div>
-    </div>
-
-    @foreach ($data['categories'] as $label => $count)
-      <div class="col-6 col-lg-2 col-md-6 mb-4">
-        <div class="card shadow-sm border-light rounded">
-          <div class="card-body text-center">
-            <h6 class="text-muted font-semibold">{{ $label }}</h6>
-            <h4 class="font-extrabold mb-0">{{ $count }}</h4>
-          </div>
-        </div>
-      </div>
-    @endforeach
-  </div>
-
-  <div class="row">
-    <h5 class="col-12 mb-4 text-center text-primary">Data Karyawan Pertahun</h5>
-
-    <div class="col-6 col-lg-2 col-md-6 mb-4">
-      <div class="card shadow-sm border-light rounded">
-        <div class="card-body text-center">
-          <h6 class="text-muted font-semibold">Karyawan Baru</h6>
-          <h4 class="font-extrabold mb-0">{{ $data['karyawan_baru'] }}</h4>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6 col-lg-2 col-md-6 mb-4">
-      <div class="card shadow-sm border-light rounded">
-        <div class="card-body text-center">
-          <h6 class="text-muted font-semibold">Buka Verifikasi</h6>
-          <h4 class="font-extrabold mb-0">{{ $data['buka_verifikasi'] }}</h4>
-        </div>
-      </div>
-    </div>
-
-    @foreach ($data['categories'] as $label => $count)
-      <div class="col-6 col-lg-2 col-md-6 mb-4">
-        <div class="card shadow-sm border-light rounded">
-          <div class="card-body text-center">
-            <h6 class="text-muted font-semibold">{{ $label }}</h6>
-            <h4 class="font-extrabold mb-0">{{ $count }}</h4>
-          </div>
-        </div>
-      </div>
-    @endforeach
-  </div> --}}
 
   <div class="col-12 mb-4 text-center">
     <div class="col-md-4 mx-auto">
@@ -677,7 +266,7 @@
 
   <div class="row">
     <h5 class="col-12 mb-4 text-center text-primary">
-      Data Karyawan Perbulan
+      Data Log Karyawan Perbulan
       ({{ \Carbon\Carbon::create()->month((int) $selectedMonth)->locale('id')->translatedFormat('F') }} -
       {{ $selectedYear }} )
     </h5>
@@ -714,7 +303,7 @@
   </div>
 
   <div class="row">
-    <h5 class="col-12 mb-4 text-center text-primary">Data Karyawan Pertahun ({{ $selectedYear }})</h5>
+    <h5 class="col-12 mb-4 text-center text-primary">Data Log Karyawan Pertahun ({{ $selectedYear }})</h5>
 
     <div class="col-6 col-lg-2 col-md-6 mb-4">
       <div class="card shadow-sm border-light rounded">
@@ -749,9 +338,7 @@
   <div class="row">
     <div class="col-md-12">
       <div class="card">
-        {{-- <div class="card-header">
-          <h5 class="card-title">Horizontal Navs</h5>
-        </div> --}}
+
         <div class="card-body">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
@@ -779,7 +366,7 @@
                 aria-controls="religion" aria-selected="false">Agama</a>
             </li>
           </ul>
-          <div class="tab-content" id="myTabContent">
+          {{-- <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="employee" role="tabpanel" aria-labelledby="employee-tab">
               @include('pages.dashboard.table.employee-categories')
             </div>
@@ -798,7 +385,72 @@
             <div class="tab-pane fade" id="religion" role="tabpanel" aria-labelledby="religion-tab">
               @include('pages.dashboard.table.religion')
             </div>
+          </div> --}}
+
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="employee" role="tabpanel" aria-labelledby="employee-tab"
+              data-url="{{ route('dashboard.employee') }}">
+              <!-- Loading Spinner -->
+              <div class="d-flex justify-content-center align-items-center" id="employee-loader">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+              <!-- Content will be loaded dynamically -->
+            </div>
+            <div class="tab-pane fade" id="gender" role="tabpanel" aria-labelledby="gender-tab"
+              data-url="{{ route('dashboard.gender') }}">
+              <!-- Loading Spinner -->
+              <div class="d-flex justify-content-center align-items-center" id="gender-loader">
+                <div class="spinner-border text-primary">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+              <!-- Content will be loaded dynamically -->
+            </div>
+            <div class="tab-pane fade" id="educational" role="tabpanel" aria-labelledby="educational-tab"
+              data-url="{{ route('dashboard.educational') }}">
+              <!-- Loading Spinner -->
+              <div class="d-flex justify-content-center align-items-center" id="educational-loader">
+                <div class="spinner-border text-primary">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+              <!-- Content will be loaded dynamically -->
+            </div>
+            <div class="tab-pane fade" id="position" role="tabpanel" aria-labelledby="position-tab"
+              data-url="{{ route('dashboard.position') }}">
+              <!-- Loading Spinner -->
+              <div class="d-flex justify-content-center align-items-center" id="position-loader">
+                <div class="spinner-border text-primary">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+              <!-- Content will be loaded dynamically -->
+            </div>
+            <div class="tab-pane fade" id="age" role="tabpanel" aria-labelledby="age-tab"
+              data-url="{{ route('dashboard.age') }}">
+              <!-- Loading Spinner -->
+              <div class="d-flex justify-content-center align-items-center" id="age-loader">
+                <div class="spinner-border text-primary">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+              <!-- Content will be loaded dynamically -->
+            </div>
+            <div class="tab-pane fade" id="religion" role="tabpanel" aria-labelledby="religion-tab"
+              data-url="{{ route('dashboard.religion') }}">
+              <!-- Loading Spinner -->
+              <div class="d-flex justify-content-center align-items-center" id="religion-loader">
+                <div class="spinner-border text-primary">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+              <!-- Content will be loaded dynamically -->
+            </div>
           </div>
+
+
         </div>
       </div>
     </div>
@@ -1024,14 +676,14 @@
         </div>
         <div class="card-body" style="word-break: break-all">
           <div class="table-responsive">
-            <table class="table" id="table3" style="font-size: 80%">
+            <table class="table" id="table10" style="font-size: 80%">
               <thead>
                 <tr>
                   <th scope="col" style="width: 5%">#</th>
                   <th scope="col"></th>
                   <th scope="col">NIK</th>
                   <th scope="col">Nama</th>
-                  <th scope="col">Jabatan</th>
+                  {{-- <th scope="col">Jabatan</th> --}}
                   <th scope="col">No. Kontrak</th>
                   <th scope="col">Tgl Mulai</th>
                   <th scope="col">Tgl Berakhir</th>
@@ -1067,9 +719,9 @@
                       {{ $contract->employee->name ?? 'N/A' }}
                     </td>
 
-                    <td>
+                    {{-- <td>
                       {{ $contract->employee->position->name ?? 'N/A' }}
-                    </td>
+                    </td> --}}
 
                     <td>
                       {{ $contract->contract_number ?? 'N/A' }}
@@ -1105,7 +757,7 @@
                         @endif
                       @else
                         <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                          data-bs-target="#modal-form-add-kpi">
+                          data-bs-target="#modal-form-add-kpi{{ $contract->employee->id }}">
                           <i class="bi bi-plus-lg"></i>
                           PK
                         </button>
@@ -1130,7 +782,7 @@
           <div class="d-flex justify-content-between align-items-center">
             <h5 class="fw-normal mb-0 text-body">Daftar Kontrak Sudah Berakhir</h5>
 
-            <div class="row">
+            {{-- <div class="row">
               <!-- Export Button -->
               <a id="export-contracts-button" class="btn btn-outline-primary block mb-1"
                 href="{{ route('contract.exportExpired') }}">
@@ -1166,13 +818,158 @@
                 <button id="reset-filters" class="btn btn-secondary ">Reset</button>
               </div>
 
-            </div>
+            </div> --}}
           </div>
 
         </div>
+
         <div class="card-body" style="word-break: break-all">
+
+          <div class="d-flex justify-content-between align-items-center my-2">
+            {{-- <div>
+              <label for="start-date" class="me-2">Start Date:</label>
+              <input type="date" id="start-date" class="form-control form-control-sm" placeholder="Start Date"
+                style="width: 150px; display: inline-block;">
+
+              <label for="end-date" class="me-2">End Date:</label>
+              <input type="date" id="end-date" class="form-control form-control-sm" placeholder="End Date"
+                style="width: 150px; display: inline-block;">
+
+
+              <button id="filter-date" class="btn btn-primary btn-sm ms-2">Filter</button>
+            </div> --}}
+            <div>
+              <label for="month" class="me-2">Month:</label>
+              <select id="month" class="form-control form-control-sm"
+                style="width: 150px; display: inline-block;">
+                @foreach (range(1, 12) as $month)
+                  <option value="{{ $month }}" {{ $month == date('n') ? 'selected' : '' }}>
+                    {{ DateTime::createFromFormat('!m', $month)->format('F') }}
+                  </option>
+                @endforeach
+              </select>
+
+              <label for="year" class="me-2">Year:</label>
+              <select id="year" class="form-control form-control-sm"
+                style="width: 150px; display: inline-block;">
+                @for ($year = 2015; $year <= date('Y'); $year++)
+                  <option value="{{ $year }}" {{ $year == date('Y') ? 'selected' : '' }}>
+                    {{ $year }}
+                  </option>
+                @endfor
+              </select>
+
+              <button id="filter-date" class="btn btn-primary btn-sm ms-2">Filter</button>
+              <button id="reset-filters" class="btn btn-secondary btn-sm ms-2 ">Reset</button>
+
+            </div>
+
+            <a href="{{ route('contract.exportExpired', ['start_date' => request('start_date'), 'end_date' => request('end_date')]) }}"
+              class="btn btn-success btn-md" id="export-button">
+              Export
+            </a>
+          </div>
           <div id="contracts-list">
-            @include('pages.dashboard.contract-expired-list', ['contractsExpired' => $contractsExpired])
+            {{-- @include('pages.dashboard.contract-expired-list', ['contractsExpired' => $contractsExpired]) --}}
+            <table class="table" id="table-expired-contract" style="font-size: 80%; width:100%">
+              <thead>
+                <tr>
+                  <th scope="col" style="width: 1%">#</th>
+                  <th scope="col" style="width: 10%">NIK</th>
+                  <th scope="col" style="width: 15%">Nama</th>
+                  <th scope="col">No. Kontrak</th>
+                  <th scope="col">Tgl Mulai </th>
+                  <th scope="col">Tgl Berakhir</th>
+                  <th scope="col">Durasi</th>
+                  <th scope="col">Kontrak Ke- </th>
+                  <th scope="col">Divisi</th>
+                  <th scope="col" class="text-center" style="width: 7%">PK</th>
+                  <th scope="col" style="width: 10%"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {{-- @foreach ($contractsExpired as $contract)
+                  <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>
+                      @if ($contract->employee->photo)
+                        <div class="fixed-frame">
+                          <img src="{{ asset('storage/' . $contract->employee->photo) }}" data-fancybox
+                            alt="Icon User" class="framed-image" style="cursor: pointer">
+                        </div>
+                      @else
+                        <div class="fixed-frame">
+                          No Image
+                        </div>
+                      @endif
+                    </td>
+                    <td>
+                      {{ $contract->employee->nik ?? 'N/A' }}
+                    </td>
+                    <td>
+                      {{ $contract->employee->name ?? 'N/A' }}
+                    </td>
+                    <td>
+                      {{ $contract->employee->position->name ?? 'N/A' }}
+                    </td>
+                    <td>
+                      {{ $contract->contract_number ?? 'N/A' }}
+                    </td>
+                    <td>
+                      {{ Carbon\Carbon::parse($contract->start_date)->translatedFormat('d-m-Y') ?? 'N/A' }}
+                    </td>
+                    <td>
+                      {{ Carbon\Carbon::parse($contract->end_date)->translatedFormat('d-m-Y') ?? 'N/A' }}
+                    </td>
+                    <td>
+                      {{ $contract->duration ?? 'N/A' }} Bulan
+                    </td>
+                    <td>
+                      {{ $contract->contract_sequence_number ?? 'N/A' }}
+                    </td>
+                    <td>{{ $contract->employee->position->division->code ?? 'N/A' }}</td>
+                    <td class="text-center">
+                      @if ($contract->contractKpi)
+                        {{ $contract->contractKpi->grade }} <br>
+                        @if ($contract->contractKpi->contract_recommendation)
+                          <span class="badge bg-success">Kontrak Di Perpanjang</span>
+                        @else
+                          <span class="badge bg-danger">Kontrak tidak diperpanjang</span>
+                        @endif
+                      @else
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                          data-bs-target="#modal-form-add-kpi">
+                          <i class="bi bi-plus-lg"></i>
+                          PK
+                        </button>
+                        @include('pages.employee.personal-data.form.kpi.modal-create')
+                      @endif
+                    </td>
+                    <td>
+                      @php
+                        // Fetch the latest contract for the employee
+                        $latestContract = $contract
+                            ->where('employee_id', $contract->employee->id)
+                            ->orderBy('start_date', 'desc')
+                            ->first();
+                      @endphp
+
+                      @if ($latestContract && $latestContract->start_date >= now())
+                        <p>Kontrak diperbarui</p>
+                      @else
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                          data-bs-target="#modal-form-add-contract">
+                          <i class="bi bi-plus-lg"></i>
+                          Kontrak
+                        </button>
+                        @include('pages.employee.personal-data.form.employee-contract.modal-create')
+                      @endif
+
+                    </td>
+                @endforeach --}}
+              </tbody>
+            </table>
+
           </div>
         </div>
       </div>
@@ -1186,235 +983,6 @@
 <script src="{{ asset('dist/assets/extensions/apexcharts/apexcharts.min.js') }}"></script>
 
 
-{{-- <script>
-  var employeeActiveData = @json($employeeActiveData); // Active employee data
-  var employeeNonActiveData = @json($employeeNonActiveData); // Non-active employee data
-
-  // Calculate total employees per month
-  var totalData = employeeActiveData.map((val, index) => val + employeeNonActiveData[index]);
-
-  var options = {
-    chart: {
-      type: 'bar',
-      height: 400,
-      stacked: true,
-    },
-    series: [{
-        name: 'Karyawan Aktif',
-        data: employeeActiveData,
-      },
-      {
-        name: 'Karyawan Non-Aktif',
-        data: employeeNonActiveData,
-      },
-      // {
-      //   name: 'total',
-      //   data: totalData,
-      //   color: 'transparent',
-      // },
-    ],
-    xaxis: {
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    },
-    plotOptions: {
-      bar: {
-        horizontal: false,
-      },
-    },
-    colors: ['#1E90FF', '#FF6347'],
-    dataLabels: {
-      enabled: true,
-      style: {
-        fontSize: ['16px'],
-        colors: ['#fff', '#fff', '#ff9900'] // Set label colors (black in this example for clarity)
-      },
-      formatter: function(val, opts) {
-        return val;
-      },
-    },
-    legend: {
-      position: 'top',
-    },
-  };
-
-  var chart = new ApexCharts(document.querySelector("#employee-data"), options);
-  chart.render();
-</script> --}}
-
-
-{{-- <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Data passed from the controller
-    var employeeActiveData = @json($employeeActiveData); // e.g., [10, 20, 15, ..., 5]
-    var employeeNonActiveData = @json($employeeNonActiveData); // e.g., [2, 5, 3, ..., 1]
-
-    var options = {
-      chart: {
-        type: 'bar',
-        height: 350,
-        stacked: true, // Enable stacking
-      },
-      series: [{
-          name: 'Karyawan Aktif',
-          data: employeeActiveData,
-        },
-        {
-          name: 'Karyawan Non-Aktif',
-          data: employeeNonActiveData,
-        }
-      ],
-      xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-          'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-        ],
-      },
-      plotOptions: {
-        bar: {
-          horizontal: false, // Keep bars vertical
-          dataLabels: {
-            position: 'top', // Position data labels at the top of each segment
-          },
-        },
-      },
-      dataLabels: {
-        enabled: true,
-        formatter: function(val) {
-          return val;
-        },
-        style: {
-          colors: ['#fff']
-        }
-      },
-      colors: ['#1E90FF', '#FF6347'], // Customize colors
-      legend: {
-        position: 'top',
-      },
-      title: {
-        text: `Employee Data for the Year {{ date('Y') }}`,
-        align: 'center',
-        style: {
-          fontSize: '20px',
-          fontWeight: 'bold',
-          color: '#e3a520',
-        }
-      },
-      tooltip: {
-        y: {
-          formatter: function(val) {
-            return val + " Karyawan";
-          }
-        }
-      },
-    };
-
-    var chart = new ApexCharts(document.querySelector("#employee-data"), options);
-    chart.render();
-    // Year selection and chart update logic
-    document.getElementById('year-select').addEventListener('change', function() {
-      var selectedYear = this.value;
-
-      fetch(`/employee-chart-data/${selectedYear}`)
-        .then(response => response.json())
-        .then(data => {
-          chart.updateSeries([{
-              name: 'Karyawan Aktif',
-              data: data.employeeActiveData,
-            },
-            {
-              name: 'Karyawan Non-Aktif',
-              data: data.employeeNonActiveData,
-            }
-          ]);
-          chart.updateOptions({
-            title: {
-              text: `Employee Data for the Year ${selectedYear}`,
-            }
-          });
-        })
-        .catch(error => console.error('Error fetching data:', error));
-    });
-  });
-</script> --}}
-
-<script>
-  // document.addEventListener('DOMContentLoaded', () => {
-  //   const monthSelect = document.getElementById('month-select-contract');
-  //   const yearSelect = document.getElementById('year-select-contract');
-  //   const contractsList = document.getElementById('contracts-list');
-
-  //   function fetchFilteredContracts() {
-  //     const month = monthSelect.value;
-  //     const year = yearSelect.value;
-
-  //     fetch(`/contracts/expired?month=${month}&year=${year}`)
-  //       .then(response => response.text())
-  //       .then(html => {
-  //         contractsList.innerHTML = html;
-  //       })
-  //       .catch(error => console.error('Error fetching filtered contracts:', error));
-  //   }
-
-  //   monthSelect.addEventListener('change', fetchFilteredContracts);
-  //   yearSelect.addEventListener('change', fetchFilteredContracts);
-  // });
-
-  document.addEventListener('DOMContentLoaded', () => {
-    const monthSelect = document.getElementById('month-select-contract');
-    const yearSelect = document.getElementById('year-select-contract');
-    const contractsList = document.getElementById('contracts-list');
-    const resetButton = document.getElementById('reset-filters');
-    const exportButton = document.getElementById('export-contracts-button'); // Add this line
-
-    // Function to fetch filtered contracts based on selected month and year
-    function fetchFilteredContracts() {
-      const month = monthSelect.value;
-      const year = yearSelect.value;
-
-      const url = `{{ route('contracts.expired') }}?month=${month}&year=${year}`;
-
-      fetch(url)
-        .then(response => response.text())
-        .then(html => {
-          contractsList.innerHTML = html; // Update the contracts list with the fetched data
-        })
-        .catch(error => console.error('Error fetching filtered contracts:', error));
-    }
-
-    // Function to update the export button's href dynamically
-    const updateExportHref = () => {
-      const selectedMonth = monthSelect.value;
-      const selectedYear = yearSelect.value;
-      const baseHref =
-        "{{ route('contract.exportExpired') }}"; // This should be replaced with the correct server-side route
-      exportButton.href = `${baseHref}?month=${selectedMonth}&year=${selectedYear}`; // Update export button href
-    };
-
-    // Function to reset filters to current month and year
-    function resetFilters() {
-      monthSelect.value = new Date().getMonth() + 1; // Reset to current month (1-based)
-      yearSelect.value = new Date().getFullYear(); // Reset to current year
-      fetchFilteredContracts(); // Fetch the unfiltered data for the current month and year
-    }
-
-    // Add event listeners for changing month and year
-    monthSelect.addEventListener('change', () => {
-      fetchFilteredContracts(); // Fetch data when month changes
-      updateExportHref(); // Update export button URL when month changes
-    });
-
-    yearSelect.addEventListener('change', () => {
-      fetchFilteredContracts(); // Fetch data when year changes
-      updateExportHref(); // Update export button URL when year changes
-    });
-
-    // Add event listener for reset button
-    resetButton.addEventListener('click', resetFilters);
-
-    // Initial fetch to load contracts with default values
-    fetchFilteredContracts();
-    updateExportHref(); // Initialize export button href on page load
-  });
-</script>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -1429,11 +997,11 @@
         stacked: true,
       },
       series: [{
-          name: 'Karyawan Aktif',
+          name: 'Karyawan Masuk',
           data: employeeActiveData
         },
         {
-          name: 'Karyawan Non-Aktif',
+          name: 'Karyawan Keluar',
           data: employeeNonActiveData
         }
       ],
@@ -1568,4 +1136,333 @@
 @endsection
 
 @push('after-script')
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const tabs = document.querySelectorAll('.nav-link');
+
+    // Function to load content dynamically
+    function loadTabContent(tab) {
+      const targetId = tab.getAttribute('href').substring(1); // Get the tab content ID
+      const targetTab = document.getElementById(targetId);
+      const loader = targetTab.querySelector('#' + targetId + '-loader'); // Find the loader
+      const url = targetTab.getAttribute('data-url');
+
+      // Show the loader while content is being fetched
+      loader.style.display = 'flex';
+      loader.classList.add('mt-3');
+
+      // Check if content is already loaded
+      if (!targetTab.dataset.loaded) {
+        // Fetch content using AJAX
+        fetch(url)
+          .then(response => response.text())
+          .then(data => {
+            targetTab.innerHTML = data;
+            targetTab.dataset.loaded = true; // Mark as loaded
+            loader.style.display = 'none'; // Hide the loader
+          })
+          .catch(error => {
+            console.error('Error loading tab content:', error);
+            loader.style.display = 'none'; // Hide the loader in case of error
+          });
+      } else {
+        loader.style.display = 'none'; // Hide the loader if content is already loaded
+      }
+    }
+
+    // Load content for the active tab on page load
+    const activeTab = document.querySelector('.nav-link.active');
+    if (activeTab) {
+      loadTabContent(activeTab);
+    }
+
+    // Add click event listener for other tabs
+    tabs.forEach(tab => {
+      tab.addEventListener('click', function() {
+        loadTabContent(tab);
+      });
+    });
+  });
+</script>
+{{-- <script>
+  jQuery(document).ready(function($) {
+    const table = $('#table-expired-contract').DataTable({
+      processing: true,
+      serverSide: true,
+      ordering: true,
+      pageLength: 10,
+      lengthMenu: [
+        [10, 25, 50, 100, -1],
+        [10, 25, 50, 100, 'All']
+      ],
+      ajax: {
+        url: "{{ route('dashboard.index') }}",
+        data: function(d) {
+          d.month = $('#month').val();
+          d.year = $('#year').val();
+          // d.employee_status = $('#employee-status').val();
+        }
+      },
+      columns: [{
+          data: 'DT_RowIndex',
+          name: 'DT_RowIndex',
+          orderable: false,
+          searchable: false,
+          width: '5%'
+        },
+
+        {
+          data: 'employee.nik',
+          name: 'employee.nik'
+        },
+        {
+          data: 'employee.name',
+          name: 'employee.name'
+        },
+        {
+          data: 'contract_number',
+          name: 'contract_number',
+          // orderable: false,
+        },
+        {
+          data: 'start_date',
+          name: 'start_date',
+          // orderable: false,
+        },
+        {
+          data: 'end_date',
+          name: 'end_date',
+          // orderable: false,
+        },
+        {
+          data: 'duration',
+          name: 'duration',
+          // orderable: false,
+          // searchable: false
+        },
+        {
+          data: 'contract_sequence_number',
+          name: 'contract_sequence_number',
+          // orderable: false,
+          // searchable: false
+        },
+        {
+          data: 'employee.position.division.code',
+          name: 'employee.position.division.code',
+          // orderable: false,
+          // searchable: false
+        },
+        {
+          data: 'pk',
+          name: 'pk'
+        },
+        {
+          data: 'contract',
+          name: 'contract',
+          orderable: false,
+          searchable: false,
+        }
+      ],
+      columnDefs: [{
+        className: 'text-center',
+        targets: [0, 1, 3, 4, 5, 6, 7, 8]
+      }]
+    });
+
+    // Reload table on filter button click
+    $('#filter-date').on('click', function() {
+      table.ajax.reload();
+
+      // Update export button URL
+      const month = $('#month').val();
+      const year = $('#year').val();
+      // const employeeStatus = $('#employee-status').val();
+
+      let exportUrl = "{{ route('contract.exportExpired') }}";
+      const params = [];
+
+      if (startDate) params.push(`start_date=${startDate}`);
+      if (endDate) params.push(`end_date=${endDate}`);
+      // if (employeeStatus) params.push(`employee_status=${employeeStatus}`);
+
+      if (params.length) exportUrl += `?${params.join('&')}`;
+
+      $('.btn-success').attr('href', exportUrl);
+    });
+  });
+</script> --}}
+
+<script>
+  jQuery(document).ready(function($) {
+    const table = $('#table-expired-contract').DataTable({
+      processing: true,
+      serverSide: true,
+      ordering: true,
+      pageLength: 10,
+      lengthMenu: [
+        [10, 25, 50, 100, -1],
+        [10, 25, 50, 100, 'All']
+      ],
+      ajax: {
+        url: "{{ route('dashboard.index') }}",
+        data: function(d) {
+          d.month = $('#month').val();
+          d.year = $('#year').val();
+        }
+      },
+      columns: [{
+          data: 'DT_RowIndex',
+          name: 'DT_RowIndex',
+          orderable: false,
+          searchable: false,
+          width: '5%'
+        },
+        {
+          data: 'employee.nik',
+          name: 'employee.nik'
+        },
+        {
+          data: 'employee.name',
+          name: 'employee.name'
+        },
+        {
+          data: 'contract_number',
+          name: 'contract_number'
+        },
+        {
+          data: 'start_date',
+          name: 'start_date',
+          render: function(data, type, row) {
+            if (data) {
+              const date = new Date(data); // Parse the date string
+              const formattedDate = date.toLocaleDateString('en-GB'); // Format as d-m-Y (British format)
+              return formattedDate;
+            }
+            return '-'; // Return '-' if the date is not available
+          },
+          searchable: false,
+        },
+        {
+          data: 'end_date',
+          name: 'end_date',
+          render: function(data, type, row) {
+            if (data) {
+              const date = new Date(data); // Parse the date string
+              const formattedDate = date.toLocaleDateString('en-GB'); // Format as d-m-Y (British format)
+              return formattedDate;
+            }
+            return '-'; // Return '-' if the date is not available
+          },
+          searchable: false,
+        },
+
+        {
+          data: 'duration',
+          name: 'duration',
+          orderable: false,
+          searchable: false
+        },
+        {
+          data: 'contract_sequence_number',
+          name: 'contract_sequence_number',
+          orderable: false,
+          searchable: false
+        },
+
+        {
+          data: 'employee.position.division.code',
+          name: 'employee.position.division.code'
+        },
+        {
+          data: 'pk',
+          name: 'pk',
+          orderable: false,
+          searchable: false
+        },
+        {
+          data: 'contract',
+          name: 'contract',
+          orderable: false,
+          searchable: false
+        }
+      ],
+      columnDefs: [{
+        className: 'text-center',
+        targets: [0, 1, 3, 4, 5, 6, 7, 8]
+      }]
+    });
+
+    // Reload table and update export button on filter button click
+    // $('#filter-date').on('click', function() {
+    //   table.ajax.reload();
+
+    //   const month = $('#month').val();
+    //   const year = $('#year').val();
+
+    //   // Construct export URL with parameters
+    //   let exportUrl = "{{ route('contract.exportExpired') }}";
+    //   const params = [];
+
+    //   if (month) params.push(`month=${month}`);
+    //   if (year) params.push(`year=${year}`);
+
+    //   if (params.length) exportUrl += `?${params.join('&')}`;
+
+    //   // Update the export button URL
+    //   $('.btn-success').attr('href', exportUrl);
+    // });
+
+    $('#filter-date').on('click', function() {
+      // Reload the DataTable with the selected filters
+      table.ajax.reload();
+
+      // Get the selected month and year values
+      const month = $('#month').val();
+      const year = $('#year').val();
+
+      // Construct the export URL with query parameters
+      let exportUrl = "{{ route('contract.exportExpired') }}";
+      const params = [];
+
+      if (month) params.push(`month=${month}`);
+      if (year) params.push(`year=${year}`);
+
+      // Append query parameters to the URL
+      if (params.length) {
+        exportUrl += `?${params.join('&')}`;
+      }
+
+      // Update the export button's href attribute
+      $('.btn-success').attr('href', exportUrl);
+    });
+
+    // Reset filters to current month and year
+    $('#reset-filters').on('click', function() {
+      // Reset month and year dropdowns to current values
+      const now = new Date();
+      const defaultMonth = now.getMonth() + 1; // JavaScript months are 0-based
+      const defaultYear = now.getFullYear();
+
+      $('#month').val(defaultMonth);
+      $('#year').val(defaultYear);
+
+      // Reload the DataTable with the default values (current month and year)
+      table.ajax.reload();
+
+      // Reset the export URL
+      let exportUrl = "{{ route('contract.exportExpired') }}";
+      const params = [
+        `month=${defaultMonth}`,
+        `year=${defaultYear}`
+      ];
+
+      exportUrl += `?${params.join('&')}`;
+
+      // Update the export button's href attribute
+      $('.btn-success').attr('href', exportUrl);
+    });
+
+
+  });
+</script>
 @endpush

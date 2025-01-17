@@ -29,6 +29,7 @@
               <th>#</th>
               <th>User</th>
               <th>Email</th>
+              <th>Company</th>
               <th>Role</th>
               <th>Status</th>
               <th>Actions</th>
@@ -40,6 +41,7 @@
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
+                <td>{{ $user->company->name }}</td>
                 <td>
                   @foreach ($user->roles as $role)
                     <span class="badge bg-light-info me-1">{{ $role->name }}</span>

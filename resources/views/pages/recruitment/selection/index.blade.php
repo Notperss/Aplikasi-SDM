@@ -14,12 +14,12 @@
           <h5 class="fw-normal mb-0 text-body">Daftar Seleksi</h5>
 
           @role('staff|super-admin')
-            <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
-              data-bs-target="#modal-form-add-selection">
-              <i class="bi bi-plus-lg"></i>
-              Seleksi
-            </button>
           @endrole
+          <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
+            data-bs-target="#modal-form-add-selection">
+            <i class="bi bi-plus-lg"></i>
+            Seleksi
+          </button>
 
         </div>
       </div>
@@ -93,7 +93,8 @@
                   </td>
                   <td>
                     @if ($selection->file_selection)
-                      <a href="{{ Storage::url($selection->file_selection) }}" target="_blank">
+                      <a href="{{ asset('storage/' . $selection->file_selection) }}" target="_blank">
+                        {{-- <a href="{{ Storage::url($selection->file_selection) }}" target="_blank"> --}}
                         Lihat
                       </a>
                     @else
@@ -155,7 +156,7 @@
                               (($selection->is_approve == 2 && auth()->user()->hasRole('manager')) || Auth::user()->hasRole('super-admin')))
                         @role('ka-dep|manager|super-admin')
                           <div class="dropdown">
-                            <button class="btn btn-sm btn-primary dropdown-toggle me-1" type="button"
+                            <button class="btn btn-sm btn-secondary dropdown-toggle me-1" type="button"
                               id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"
                               aria-expanded="false">
                               <i class="bi bi-three-dots-vertical"></i>

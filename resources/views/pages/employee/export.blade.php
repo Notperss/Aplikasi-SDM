@@ -1,16 +1,25 @@
 <table>
   <thead>
     <tr>
-      <th style="width: 30;">NIK</th>
+      <th style="width: 15;">NIK</th>
       <th style="width: 30;">Nama Lengkap</th>
-      <th style="width: 30;">Tempat, Tanggal Lahir</th>
+      <th style="width: 30;">Tempat Lahir</th>
+      <th style="width: 15;">Tanggal Lahir</th>
       <th style="width: 30;">Jenis Kelamin</th>
-      <th style="width: 30;">Kategori Karyawan</th>
+      <th style="width: 20;">Kategori Karyawan</th>
       <th style="width: 30;">Status Karyawan</th>
+      <th style="width: 30;">Level</th>
       <th style="width: 30;">Jabatan</th>
       <th style="width: 30;">Divisi</th>
-      <th style="width: 30;">TMT Masuk</th>
-      <th style="width: 30;">TMT Keluar</th>
+
+      <th style="width: 15;">TMT Masuk</th>
+      <th style="width: 30;">No.Kontrak</th>
+      <th style="width: 30;">Tgl Awal Kontrak</th>
+      <th style="width: 30;">Tgl Akhir Kontrak</th>
+      <th style="width: 15;">Durasi</th>
+      <th style="width: 15;">Kontrak Ke-</th>
+
+      <th style="width: 15;">TMT Keluar</th>
 
       <th style="width: 30;">Hubungan Kerja</th>
       <th style="width: 30;">Tipe Waktu Pekerjaan</th>
@@ -27,14 +36,14 @@
       <th style="width: 30;">No. Telp1</th>
       <th style="width: 30;">No. Telp2</th>
       <th style="width: 30;">Status Perkawinan</th>
-      <th style="width: 30;">Agama</th>
+      <th style="width: 15;">Agama</th>
       <th style="width: 30;">Kewarganegaraan</th>
-      <th style="width: 30;">Suku Bangsa</th>
-      <th style="width: 30;">Gol. Darah</th>
+      <th style="width: 15;">Suku Bangsa</th>
+      <th style="width: 15;">Gol. Darah</th>
       <th style="width: 30;">Pendidikan Terakhir</th>
       <th style="width: 30;">Jurusan Pendidikan</th>
       <th style="width: 30;">Alamat KTP</th>
-      <th style="width: 30;">Kode Pos KTP</th>
+      <th style="width: 15;">Kode Pos KTP</th>
       <th style="width: 30;">Alamat Domisili</th>
       <th style="width: 30;">SIM A</th>
       <th style="width: 30;">SIM B</th>
@@ -43,15 +52,23 @@
       <th style="width: 30;">Masa Pensiun</th>
       <th style="width: 30;">Sisa Tahun Menuju pensiun</th>
       <th style="width: 30;">Keterangan Keluar</th>
+      <th style="width: 5;"></th>
+      <th style="width: 20;">Pendidikan Terakhir</th>
+      <th style="width: 30;">Jurusan</th>
+      <th style="width: 30;">Institusi/Nama Sekolah</th>
+      <th style="width: 30;">Tempat</th>
+      <th style="width: 15;">GPA/NEM</th>
+      <th style="width: 15;">Tahun Masuk</th>
+      <th style="width: 15;">Tahun Keluar</th>
+      <th style="width: 15;">Lulus/Tidak</th>
     </tr>
   </thead>
   <tbody>
     @foreach ($employees as $employee)
       @php
 
-        $retirementDate = \Carbon\Carbon::parse($employee->dob)
-            ->addYears(55)
-            ->addMonths(3);
+        $retirementDate = \Carbon\Carbon::parse($employee->dob)->addYears(55);
+        // ->addMonths(3);
 
         $currentDate = \Carbon\Carbon::now();
         $diff = $currentDate->diff($retirementDate);
@@ -63,16 +80,23 @@
       <tr>
         <td>{{ $employee->nik ?? '-' }}</td>
         <td>{{ $employee->name ?? '-' }}</td>
-        <td>{{ $employee->pob ?? '-' }},
-          {{ $employee->dob ? \Carbon\Carbon::parse($employee->dob)->format('d-m-Y') : '' }}</td>
+        <td>{{ $employee->pob ?? '-' }}</td>
+        <td>{{ $employee->dob ? \Carbon\Carbon::parse($employee->dob)->format('d-m-Y') : '' }}</td>
         <td>{{ $employee->gender ?? '-' }}</td>
         <td>{{ $employee->employeeCategory->name ?? '-' }}</td>
         <td>{{ $employee->employee_status ?? '-' }}</td>
+        <td>{{ $employee->position->level->name ?? '-' }}</td>
         <td>{{ $employee->position->name ?? '-' }}</td>
         <td>{{ $employee->position->division->name ?? '-' }}</td>
-        <td>{{ $employee->date_joining ? \Carbon\Carbon::parse($employee->date_joining)->format('d-m-Y') : '-' }}</td>
-        <td>{{ $employee->date_leaving ? \Carbon\Carbon::parse($employee->date_leaving)->format('d-m-Y') : '-' }}</td>
 
+        <td>{{ $employee->date_joining ? \Carbon\Carbon::parse($employee->date_joining)->format('d-m-Y') : '-' }}</td>
+        <td>{{ $employee->contracts->first()->contract_number ?? '-' }}</td>
+        <td>{{ $employee->contracts->first()->start_date ?? '-' }}</td>
+        <td>{{ $employee->contracts->first()->end_date ?? '-' }}</td>
+        <td>{{ $employee->contracts->first()->duration ?? '-' }}</td>
+        <td>{{ $employee->contracts->first()->contract_sequence_number ?? '-' }}</td>
+
+        <td>{{ $employee->date_leaving ? \Carbon\Carbon::parse($employee->date_leaving)->format('d-m-Y') : '-' }}</td>
 
         <td>{{ $employee->work_relationship ?? '-' }}</td>
         <td>{{ $employee->work_status ?? '-' }}</td>
@@ -117,6 +141,15 @@
             @endif
           @endforeach
         </td>
+        <td></td>
+        <td>{{ $employee->educationalHistories->first()->school_level ?? '-' }}</td>
+        <td>{{ $employee->educationalHistories->first()->study ?? '-' }}</td>
+        <td>{{ $employee->educationalHistories->first()->school_name ?? '-' }}</td>
+        <td>{{ $employee->educationalHistories->first()->city ?? '-' }}</td>
+        <td>{{ $employee->educationalHistories->first()->gpa ?? '-' }}</td>
+        <td>{{ $employee->educationalHistories->first()->year_from ?? '-' }}</td>
+        <td>{{ $employee->educationalHistories->first()->year_to ?? '-' }}</td>
+        <td>{{ $employee->educationalHistories->first()->graduate ?? '-' }}</td>
 
       </tr>
     @endforeach

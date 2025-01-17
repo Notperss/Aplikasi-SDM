@@ -9,7 +9,7 @@ class UpdateTrainingAttendedRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize() : bool
+    public function authorize(): bool
     {
         return true;
     }
@@ -19,7 +19,7 @@ class UpdateTrainingAttendedRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [
             // 'employee_id' => 'required|exists:employees,id',
@@ -28,10 +28,11 @@ class UpdateTrainingAttendedRequest extends FormRequest
             // 'year' => 'required|digits:4|integer|min:1900|max:' . date('Y'),
             'city' => 'nullable|max:255',
             'file_sertifikat' => 'nullable|mimes:pdf,jpeg,jpg,png|max:2048',
+            'is_printable' => 'nullable|boolean',
         ];
     }
 
-    public function messages() : array
+    public function messages(): array
     {
         return [
             'employee_id.required' => 'ID karyawan wajib diisi.',

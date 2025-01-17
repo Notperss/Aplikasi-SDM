@@ -10,7 +10,7 @@
 
     <!-- Biodata Details -->
     <div>
-      <table style="border-collapse: collapse; text-align: left;">
+      <table style="border-collapse: collapse; text-align: left;text-transform: uppercase">
         <tr>
           <td><strong>Nama</strong></td>
           <td><strong>:</strong></td>
@@ -270,17 +270,19 @@
         <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
           Tempat/Kota
         </th>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center; width: 15%">
           Tanggal
         </th>
       </tr>
       <tbody>
-        @foreach ($employee->trainingAttendeds->where('is_certificated', 0) as $training)
+        @foreach ($employee->trainingAttendeds->where('is_certificated', 0)->where('is_printable', 1) as $training)
           <tr>
             <td style="border: 1px solid #ddd;">{{ $training->training_name }}</td>
             <td style="border: 1px solid #ddd;">{{ $training->organizer_name }}</td>
             <td style="border: 1px solid #ddd;">{{ $training->city }}</td>
             <td style="border: 1px solid #ddd;">
+              {{ $training->start_date ? Carbon\Carbon::parse($training->start_date)->translatedFormat('d-m-Y') : '' }}
+              -
               {{ $training->end_date ? Carbon\Carbon::parse($training->end_date)->translatedFormat('d-m-Y') : '' }}
             </td>
           </tr>
@@ -306,7 +308,7 @@
         <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
           Tempat/Kota
         </th>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center; width: 15%">
           Masa Berlaku
         </th>
       </tr>

@@ -1,179 +1,74 @@
 <!-- Modals add menu -->
-<div id="modal-form-add-selection" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-  aria-labelledby="modal-form-add-selection-label" aria-hidden="true" style="display: none;">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+<div id="modal-form-export-candidate" class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  aria-labelledby="modal-form-export-candidate-label" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog modal-xl">
     <div class="modal-content">
-      <form id="selectedCandidatesForm" action="{{ route('selection.store') }}" method="post"
-        enctype="multipart/form-data">
-        @csrf
-
-        <div class="modal-header">
-          <h5 class="modal-title" id="modal-form-add-selection-label">Tambah Seleksi</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
-        </div>
-
-        <div class="card-body">
-          <div class="row justify-content-center">
-            <div class="col-md-11"> <!-- Make form smaller with col-md-6 and center it -->
-
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="my-2">
-                    <label class="form-label" for="name">Nama Seleksi <code>*</code></label>
-                    <textarea id="name" name="name" value="{{ old('name') }}"
-                      class="form-control @error('name') is-invalid @enderror" rows="3" required> {{ old('name') }} </textarea>
-                    @error('name')
-                      <a style="color: red"><small>{{ $message }}</small></a>
-                    @enderror
-                  </div>
-                </div>
-
-                <div class="col-md-6">
-
-                  <div class="my-2">
-                    <label class="form-label" for="position_id">Jabatan <code>*</code></label>
-                    <select id="position_id" name="position_id[]"
-                      class="form-control choices @error('position_id') is-invalid @enderror multiple-remove"
-                      multiple="multiple" required>
-                      <option value="" disabled>Choose</option>
-                      @foreach ($positions as $position)
-                        <option value="{{ $position->id }}" {{ old('position_id') ? 'selection' : '' }}>
-                          {{ $position->name }}</option>
-                      @endforeach
-                    </select>
-                    @error('position_id')
-                      <a style="color: red"><small>{{ $message }}</small></a>
-                    @enderror
-                  </div>
-
-                  {{-- <div class="mb-2">
-                    <label class="form-label" for="interviewer">Pewawancara <code>*</code></label>
-                    <textarea id="interviewer" name="interviewer" value="{{ old('interviewer') }}"
-                      class="form-control @error('interviewer') is-invalid @enderror" rows="3" required> </textarea>
-                    @error('interviewer')
-                      <a style="color: red"><small>{{ $message }}</small></a>
-                    @enderror
-                  </div> --}}
-                </div>
-                <div class="col-md-6">
-
-                  <div class="my-2">
-                    <label class="form-label" for="division_id">Divisi Pemohon <code>*</code></label>
-                    <select id="division_id" name="division_id" value="{{ old('division_id') }}"
-                      class="form-control choices @error('division_id') is-invalid @enderror" required>
-                      <option value="" selected disabled>Choose</option>
-                      @foreach ($divisions as $division)
-                        <option value="{{ $division->id }}"
-                          {{ old('division_id') == $division->id ? 'selected' : '' }}>
-                          {{ $division->name }}
-                        </option>
-                      @endforeach
-                    </select>
-                    @error('division_id')
-                      <a style="color: red"><small>{{ $message }}</small></a>
-                    @enderror
-                  </div>
 
 
-                  <div class="my-2">
-                    <label class="form-label" for="start_selection">Tgl Mulai Seleksi</label>
-                    <input type="date" id="start_selection" name="start_selection"
-                      value="{{ old('start_selection') }}"
-                      class="form-control @error('start_selection') is-invalid @enderror">
-                    @error('start_selection')
-                      <a style="color: red"><small>{{ $message }}</small></a>
-                    @enderror
-                  </div>
-                  {{-- <div class="mb-2">
-                    <label class="form-label" for="end_selection">Tgl Selesai Seleksi</label>
-                    <input type="date" id="end_selection" name="end_selection" value="{{ old('end_selection') }}"
-                      class="form-control @error('end_selection') is-invalid @enderror">
-                    @error('end_selection')
-                      <a style="color: red"><small>{{ $message }}</small></a>
-                    @enderror
-                  </div> --}}
-                </div>
-                <div class="col-md-12">
-                  <div class="mb-2">
-                    <label class="form-label" for="interviewer">Pewawancara <code>*</code></label>
-                    <textarea id="interviewer" name="interviewer" value="{{ old('interviewer') }}"
-                      class="form-control @error('interviewer') is-invalid @enderror" rows="3" required> </textarea>
-                    @error('interviewer')
-                      <a style="color: red"><small>{{ $message }}</small></a>
-                    @enderror
-                  </div>
-                  <div class="mb-2">
-                    <label class="form-label" for="description">Keterangan</label>
-                    <textarea id="description" name="description" rows="5"
-                      class="form-control @error('description') is-invalid @enderror">{{ old('description') }} </textarea>
-                    @error('description')
-                      <a style="color: red"><small>{{ $message }}</small></a>
-                    @enderror
-                  </div>
-                  <div class="my-2">
-                    <label class="form-label" for="fptk_number">Nomor FPTK <code>*</code></label>
-                    <input id="fptk_number" name="fptk_number" value="{{ old('fptk_number') }}"
-                      class="form-control @error('fptk_number') is-invalid @enderror" required>
-                    @error('fptk_number')
-                      <a style="color: red"><small>{{ $message }}</small></a>
-                    @enderror
-                  </div>
-                  <div class="mb-2">
-                    <label for="file_fptk" class="form-label">File FPTK</label>
-                    <input class="form-control @error('file_fptk') is-invalid @enderror" accept=".pdf" type="file"
-                      id="file_fptk" name="file_fptk">
-                    @error('file_fptk')
-                      <a style="color: red"><small>{{ $message }}</small></a>
-                    @enderror
-                  </div>
-                </div>
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-form-export-candidate-label">Export Pelamar</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+      </div>
 
-              </div>
+      <div class="card-body">
+        <div class="row justify-content-center">
+          <div class="col-md-11"> <!-- Make form smaller with col-md-6 and center it -->
 
-              <hr>
-
+            <div class="d-flex justify-content-between align-items-center my-2">
               <a class="btn btn-primary btn-md" onclick="openMyModal2()">
                 <i class="bi bi-plus-lg"></i>
-                Kandidat
+                Pelamar
               </a>
-
-              <input type="hidden" name="candidates" id="candidatesInput">
-
-              <div class="col-md-12">
-                <table class="table table-striped" id="selectedCandidatesTable" style="font-size: 85%">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Pelamar</th>
-                      <th>Email</th>
-                      <th>Phone</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <!-- Selected candidates will be appended here -->
-                  </tbody>
-                </table>
-              </div>
+              {{-- <a href="{{ route('employee.export') }}" class="btn btn-success btn-md" id="export-button">
+                  Export
+                </a> --}}
+              <form id="selectedCandidatesForm" action="{{ route('export.candidates') }}" method="POST">
+                @csrf
+                <input type="hidden" name="candidates" id="candidatesInput">
+                <button type="submit" class="btn btn-success">Export to Excel</button>
+              </form>
 
             </div>
+
+            <input type="hidden" name="candidates" id="candidatesInput">
+
+            <div class="col-md-12">
+              <table class="table table-striped" id="selectedCandidatesTable" style="font-size: 80%">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Pelamar</th>
+                    <th>Email</th>
+                    <th>Telp</th>
+                    <th>Pendidikan</th>
+                    <th>Jurusan</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Selected candidates will be appended here -->
+                </tbody>
+              </table>
+            </div>
+
           </div>
         </div>
+      </div>
 
 
-        <div class="modal-footer">
-          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary ">Save</button>
-        </div>
-      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary ">Save</button>
+      </div>
+
 
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
 
-<div id="modal-form-add-candidate" class="modal fade" tabindex="-1"
-  aria-labelledby="modal-form-add-candidate-label" aria-hidden="true" style="display: none;">
+<div id="modal-form-add-candidate" class="modal fade" tabindex="-1" aria-labelledby="modal-form-add-candidate-label"
+  aria-hidden="true" style="display: none;">
   <div class="modal-dialog modal-dialog-centered modal-fullscreen">
     <div class="modal-content">
 
@@ -187,7 +82,7 @@
 
         <div class="card-body">
           <div class="table-responsive">
-            <table class="table table-striped" id="table-candidate" style="font-size: 85%; width: 100%">
+            <table class="table table-striped" id="table-export-candidate" style="font-size: 85%; width: 100%">
               <thead>
                 <tr>
                   <th scope="col">#</th>
@@ -195,8 +90,6 @@
                   <th scope="col">Pelamar</th>
                   <th scope="col">Usia</th>
                   <th scope="col">Jenis Kelamin</th>
-                  {{-- <th scope="col">Phone</th>
-                  <th scope="col">Posisi yang dilamar</th> --}}
                   <th scope="col">Pendidikan</th>
                   <th scope="col">Jurusan</th>
                   <th scope="col">Penyandang Disabilitas</th>
@@ -228,8 +121,7 @@
                     </select>
                   </th>
                   <th scope="col">
-                    <select type="text" id="genderFilter" class="form-control form-control-sm"
-                      style="width: 100%">
+                    <select type="text" id="genderFilter" class="form-control form-control-sm" style="width: 100%">
                       <option value="" selected>Semua</option>
                       <option value="LAKI-LAKI">LAKI-LAKI</option>
                       <option value="PEREMPUAN">PEREMPUAN</option>
@@ -349,176 +241,10 @@
 </script>
 
 @push('after-script')
-  {{-- <script>
-    jQuery(document).ready(function($) {
-      $('#table-candidate').DataTable({
-        processing: true,
-        serverSide: true,
-        ordering: true,
-        pageLength: 10, // Show all records by default
-        lengthMenu: [
-          [10, 25, 50, 100, -1],
-          [10, 25, 50, 100, 'All']
-        ], // Add 'All' option to the length menu
-        ajax: {
-          url: "{{ route('selection.index') }}",
-        },
-        columns: [{
-            data: 'DT_RowIndex',
-            name: 'DT_RowIndex',
-            orderable: false,
-            searchable: false,
-            width: '5%',
-          }, {
-            data: 'photo',
-            name: 'photo',
-          },
-          {
-            data: 'name',
-            name: 'name',
-          },
-          {
-            data: 'gender',
-            name: 'gender',
-          },
-          {
-            data: 'phone_number',
-            name: 'phone_number',
-          },
-          {
-            data: 'applied_position',
-            name: 'applied_position',
-          },
-          {
-            data: 'last_educational',
-            name: 'last_educational',
-          },
-          {
-            data: 'study',
-            name: 'study',
-          },
-          {
-            data: 'disability',
-            name: 'disability',
-          },
-          {
-            data: 'marital_status',
-            name: 'marital_status',
-          },
-          {
-            data: 'tag',
-            name: 'tag',
-          },
-          {
-            data: 'action',
-            name: 'action',
-            orderable: false,
-            searchable: false,
-            className: 'no-print' // Add this class to exclude the column from printing
-          },
-        ],
-        columnDefs: [{
-          className: 'text-center',
-          targets: '_all'
-        }, ],
-      });
-    });
-  </script>
-
-  <script>
-    // Function to handle candidate selection and toggling button
-    document.querySelectorAll('.pilih-candidate').forEach(button => {
-      button.addEventListener('click', function() {
-        const id = this.getAttribute('data-id');
-        const name = this.getAttribute('data-name');
-        const email = this.getAttribute('data-email');
-        const phone = this.getAttribute('data-phone');
-
-        // If the button is in 'Pilih' state
-        if (this.textContent.trim() === 'Pilih') {
-          // Check if the candidate is already added
-          if (document.querySelector(`#selectedCandidatesTable tbody tr[data-id="${id}"]`)) {
-            alert('Candidate already added!');
-            return;
-          }
-
-          // Append the candidate to the selected table
-          const row = `
-          <tr data-id="${id}">
-            <td>${name}</td>
-            <td>${email}</td>
-            <td>${phone}</td>
-            <td><button type="button" class="btn btn-sm btn-danger remove-candidate">Remove</button></td>
-          </tr>
-        `;
-          document.querySelector('#selectedCandidatesTable tbody').insertAdjacentHTML('beforeend', row);
-
-          // Change button text to 'Remove'
-          this.textContent = 'Remove';
-          this.classList.remove('btn-primary');
-          this.classList.add('btn-danger');
-        }
-        // If the button is in 'Remove' state
-        else {
-          // Remove the candidate from the selected table
-          const row = document.querySelector(`#selectedCandidatesTable tbody tr[data-id="${id}"]`);
-          if (row) {
-            row.remove();
-          }
-
-          // Change button text back to 'Pilih'
-          this.textContent = 'Pilih';
-          this.classList.remove('btn-danger');
-          this.classList.add('btn-primary');
-        }
-      });
-    });
-
-    // Use event delegation for removing a candidate directly from the table
-    document.querySelector('#selectedCandidatesTable').addEventListener('click', function(event) {
-      if (event.target.classList.contains('remove-candidate')) {
-        const row = event.target.closest('tr');
-        const id = row.getAttribute('data-id');
-
-        // Remove the row
-        row.remove();
-
-        // Change the corresponding 'Remove' button back to 'Pilih'
-        const button = document.querySelector(`.pilih-candidate[data-id="${id}"]`);
-        if (button) {
-          button.textContent = 'Pilih';
-          button.classList.remove('btn-danger');
-          button.classList.add('btn-primary');
-        }
-      }
-    });
-
-    // Handle form submission to send selected candidates
-    document.getElementById('selectedCandidatesForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-
-      const candidates = [];
-      const rows = document.querySelectorAll('#selectedCandidatesTable tbody tr');
-
-      rows.forEach(row => {
-        const id = row.getAttribute('data-id');
-        candidates.push({
-          id: id,
-        });
-      });
-
-      // Set the hidden input value to the JSON string of candidates
-      document.getElementById('candidatesInput').value = JSON.stringify(candidates);
-
-      // Submit the form
-      this.submit();
-    });
-  </script> --}}
-
   <script>
     // Initialize DataTable for candidate listing
     jQuery(document).ready(function($) {
-      const table = $('#table-candidate').DataTable({
+      const table = $('#table-export-candidate').DataTable({
         searching: false,
         processing: true,
         serverSide: true,
@@ -671,12 +397,14 @@
       let counter = 1;
 
       // Delegate event handling for 'Pilih' buttons
-      $('#table-candidate').on('click', '.pilih-candidate', function() {
+      $('#table-export-candidate').on('click', '.pilih-candidate', function() {
         const button = $(this);
         const id = button.data('id');
         const name = button.data('name');
         const email = button.data('email');
         const phone = button.data('phone');
+        const education = button.data('education');
+        const study = button.data('study');
 
         // If the button is in 'Pilih' state
         if (button.text().trim() === 'Pilih') {
@@ -693,6 +421,8 @@
           <td>${name}</td>
           <td>${email}</td>
           <td>${phone}</td>
+          <td>${education}</td>
+          <td>${study}</td>
           <td><button type="button" class="btn btn-sm btn-danger remove-candidate">Remove</button></td>
         </tr>`;
           $('#selectedCandidatesTable tbody').append(row);
@@ -762,69 +492,3 @@
     });
   </script>
 @endpush
-
-{{-- <script>
-  // Function to append selected candidate to the table
-  document.querySelectorAll('.pilih-candidate').forEach(button => {
-    button.addEventListener('click', function() {
-      const id = this.getAttribute('data-id');
-      const name = this.getAttribute('data-name');
-      const email = this.getAttribute('data-email');
-      const phone = this.getAttribute('data-phone');
-
-      // Check if the candidate is already added
-      if (document.querySelector(`#selectedCandidatesTable tbody tr[data-id="${id}"]`)) {
-        alert('Candidate already added!');
-        return;
-      }
-
-      // Append the candidate to the selected table
-      const row = `
-        <tr data-id="${id}">
-          <td>${name}</td>
-          <td>${email}</td>
-          <td>${phone}</td>
-          <td><button type="button" class="btn btn-sm btn-danger remove-candidate">Remove</button></td>
-        </tr>
-      `;
-      document.querySelector('#selectedCandidatesTable tbody').insertAdjacentHTML('beforeend', row);
-
-      // Attach remove functionality
-      attachRemoveFunctionality();
-    });
-  });
-
-  // Attach functionality to remove a candidate from the selected list
-  function attachRemoveFunctionality() {
-    document.querySelectorAll('.remove-candidate').forEach(button => {
-      button.addEventListener('click', function() {
-        this.closest('tr').remove();
-      });
-    });
-  }
-
-  // Handle form submission to send selected candidates
-  document.getElementById('selectedCandidatesForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    const candidates = [];
-    const rows = document.querySelectorAll('#selectedCandidatesTable tbody tr');
-
-    rows.forEach(row => {
-      const id = row.getAttribute('data-id');
-      const name = row.cells[0].textContent;
-      const email = row.cells[1].textContent;
-      const phone = row.cells[2].textContent;
-
-      candidates.push({
-        id: id,
-      });
-    });
-
-    // Set the hidden input value to the JSON string of candidates
-    document.getElementById('candidatesInput').value = JSON.stringify(candidates);
-
-    // Submit the form
-    this.submit();
-  });
-</script> --}}

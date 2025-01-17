@@ -66,6 +66,9 @@
                         ROTASI</option>
                       <option value="MUTASI" {{ old('type', $employeeCareer->type) == 'MUTASI' ? 'selected' : '' }}>
                         MUTASI</option>
+                      <option value="RESTRUKTUR ORGANISASI"
+                        {{ old('type', $employeeCareer->type) == 'RESTRUKTUR ORGANISASI' ? 'selected' : '' }}>
+                        RESTRUKTUR ORGANISASI</option>
                       <option value="NON-AKTIF"
                         {{ old('type', $employeeCareer->type) == 'NON-AKTIF' ? 'selected' : '' }}>NON-AKTIF</option>
                       <option value="RESIGN" {{ old('type', $employeeCareer->type) == 'RESIGN' ? 'selected' : '' }}>

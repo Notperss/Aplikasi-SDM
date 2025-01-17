@@ -1,6 +1,6 @@
 <!-- Modals add menu -->
-<div id="modal-form-add-kpi" class="modal fade" tabindex="-1" aria-labelledby="modal-form-add-kpi-label" aria-hidden="true"
-  style="display: none;">
+<div id="modal-form-add-kpi{{ $contract->employee->id ?? '' }}" class="modal fade" tabindex="-1"
+  aria-labelledby="modal-form-add-kpi{{ $contract->employee->id ?? '' }}-label" aria-hidden="true" style="display: none;">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <form action="{{ route('employeeKpi.store') }}" method="post" enctype="multipart/form-data">
@@ -19,6 +19,26 @@
               <input type="hidden" name="name" value="{{ $contract->employee->name ?? $employee->name }}">
 
               <div class="col-12 mb-2">
+                <label class="form-label" for="name">NIK</label>
+                <input type="text" id="name" value="{{ $contract->employee->nik ?? $employee->nik }}"
+                  class="form-control @error('name') is-invalid @enderror"
+                  @if (!$contract->employee->name ?? !$employee->name) hidden @endif readonly>
+                @error('name')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div>
+
+              <div class="col-12 mb-2">
+                <label class="form-label" for="name">Nama Karyawan</label>
+                <input type="text" id="name" value="{{ $contract->employee->name ?? $employee->name }}"
+                  class="form-control @error('name') is-invalid @enderror"
+                  @if (!$contract->employee->name ?? !$employee->name) hidden @endif readonly>
+                @error('name')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div>
+
+              <div class="col-12 mb-2">
                 <label class="form-label" for="kpi_date">Tanggal PK <code>*</code></label>
                 <input type="date" id="kpi_date" name="kpi_date" maxlength="4" value="{{ old('kpi_date') }}"
                   class="form-control @error('kpi_date') is-invalid @enderror">
@@ -29,9 +49,8 @@
 
               <div class="mb-2">
                 <label class="form-label" for="grade">Nilai <code>*</code></label>
-                <input id="grade"
-                  oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')" name="grade"
-                  value="{{ old('grade') }}" class="form-control @error('grade') is-invalid @enderror" required>
+                <input id="grade" name="grade" value="{{ old('grade') }}"
+                  class="form-control @error('grade') is-invalid @enderror" required>
                 @error('grade')
                   <a style="color: red"><small>{{ $message }}</small></a>
                 @enderror

@@ -26,6 +26,7 @@
                     <th>Tanggal Mulai</th>
                     <th>Tanggal Akhir</th>
                     <th>File</th>
+                    <th>Print</th>
                     <th style="width: 13%"></th>
                   </tr>
                 </thead>
@@ -49,6 +50,13 @@
                           </a>
                         @else
                           <span>-</span>
+                        @endif
+                      </td>
+                      <td class="text-bold-500">
+                        @if ($employeeTrainingAttended->is_printable)
+                          <span class="badge bg-success">V</span>
+                        @else
+                          <span class="badge bg-danger">X</span>
                         @endif
                       </td>
                       <td>

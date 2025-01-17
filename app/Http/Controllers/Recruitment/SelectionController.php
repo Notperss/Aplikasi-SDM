@@ -107,7 +107,7 @@ class SelectionController extends Controller
 
             foreach ($filters as $requestKey => $dbColumn) {
                 if ($request->filled($requestKey)) {
-                    $candidates->where($dbColumn, 'like', '%' . $request->$requestKey . '%');
+                    $candidates->where($dbColumn, 'like', '%'.$request->$requestKey.'%');
                 }
             }
 
@@ -117,9 +117,9 @@ class SelectionController extends Controller
                 ->addColumn('action', function ($item) {
                     return '
                              <div class="btn-group mb-1">
-                              <button class="btn btn-sm btn-primary pilih-candidate" data-id="' . $item->id . '"
-                                data-name="' . $item->name . '" data-email="' . $item->email . '"
-                                data-phone="' . $item->phone_number . '">
+                              <button class="btn btn-sm btn-primary pilih-candidate" data-id="'.$item->id.'"
+                                data-name="'.$item->name.'" data-email="'.$item->email.'"
+                                data-phone="'.$item->phone_number.'" data-education="'.$item->last_educational.'" data-study="'.$item->study.'">
                                 Pilih
                               </button>
                             </div>
@@ -128,7 +128,7 @@ class SelectionController extends Controller
                 ->editColumn('photo', function ($item) {
                     return $item->photo
                         ? '<div class="fixed-frame">
-                                <img src="' . asset('storage/' . $item->photo) . '" data-fancybox alt="Icon User" class="framed-image" style="cursor: pointer">
+                                <img src="'.asset('storage/'.$item->photo).'" data-fancybox alt="Icon User" class="framed-image" style="cursor: pointer">
                             </div>'
                         : 'No Image';
                 })->editColumn('age', function ($item) {
@@ -140,12 +140,12 @@ class SelectionController extends Controller
                         $ageYears = $dob->age;
                         $ageMonths = $dob->diffInMonths($now) % 12; // Get the remaining months after years
     
-                        return $ageYears . ' Tahun ' . $ageMonths . ' Bulan';
+                        return $ageYears.' Tahun '.$ageMonths.' Bulan';
                     }
                     return 'N/A'; // Return 'N/A' if dob is not available
                 })->editColumn('selectionCount', function ($item) {
 
-                    return '<a href="' . route('selection.getCandidateHistory', $item->id) . '">' . $item->selectedCandidates->count() . '</a>';
+                    return '<a href="'.route('selection.getCandidateHistory', $item->id).'">'.$item->selectedCandidates->count().'</a>';
                 })
                 ->rawColumns(['action', 'photo', 'age', 'selectionCount'])
                 ->toJson();
@@ -175,14 +175,14 @@ class SelectionController extends Controller
         if ($request->hasFile('file_selection')) {
             $file = $request->file('file_selection'); // Get the file from the request
             $extension = $file->getClientOriginalExtension(); // Get the file extension
-            $file_name = 'file_selection_' . $data['name'] . '_' . time() . '.' . $extension; // Construct the file name
+            $file_name = 'file_selection_'.$data['name'].'_'.time().'.'.$extension; // Construct the file name
             $data['file_selection'] = $file->storeAs('files/selection/file_selection', $file_name, 'public_local'); // Store the file
         }
 
         if ($request->hasFile('file_fptk')) {
             $file = $request->file('file_fptk'); // Get the file from the request
             $extension = $file->getClientOriginalExtension(); // Get the file extension
-            $file_name = 'file_fptk_' . $data['name'] . '_' . time() . '.' . $extension; // Construct the file name
+            $file_name = 'file_fptk_'.$data['name'].'_'.time().'.'.$extension; // Construct the file name
             $data['file_fptk'] = $file->storeAs('files/fptk/file_fptk', $file_name, 'public_local'); // Store the file
         }
 
@@ -263,7 +263,7 @@ class SelectionController extends Controller
         if ($request->hasFile('file_selection')) {
             $file = $request->file('file_selection');
             $extension = $file->getClientOriginalExtension();
-            $file_name = 'file_selection_' . $data['name'] . '_' . time() . '.' . $extension; // Construct the file name
+            $file_name = 'file_selection_'.$data['name'].'_'.time().'.'.$extension; // Construct the file name
             $data['file_selection'] = $file->storeAs('files/selection/file_selection', $file_name, 'public_local'); // Store the file
             // delete selection
             if ($path_selection != null || $path_selection != '') {
@@ -276,7 +276,7 @@ class SelectionController extends Controller
         if ($request->hasFile('file_fptk')) {
             $file = $request->file('file_fptk');
             $extension = $file->getClientOriginalExtension();
-            $file_name = 'file_fptk_' . $data['name'] . '_' . time() . '.' . $extension; // Construct the file name
+            $file_name = 'file_fptk_'.$data['name'].'_'.time().'.'.$extension; // Construct the file name
             $data['file_fptk'] = $file->storeAs('files/fptk/file_fptk', $file_name, 'public_local'); // Store the file
             // delete fptk
             if ($path_fptk != null || $path_fptk != '') {
@@ -467,7 +467,7 @@ class SelectionController extends Controller
         if ($request->hasFile('file_selection')) {
             $file = $request->file('file_selection');
             $extension = $file->getClientOriginalExtension();
-            $file_name = 'file_selection_' . time() . '.' . $extension; // Construct the file name
+            $file_name = 'file_selection_'.time().'.'.$extension; // Construct the file name
             $new_file_path = $file->storeAs('files/file_selection', $file_name, 'public_local'); // Store the file
 
             // Delete the old file if it exists
@@ -568,7 +568,7 @@ class SelectionController extends Controller
 
             foreach ($filters as $requestKey => $dbColumn) {
                 if ($request->filled($requestKey)) {
-                    $candidates->where($dbColumn, 'like', '%' . $request->$requestKey . '%');
+                    $candidates->where($dbColumn, 'like', '%'.$request->$requestKey.'%');
                 }
             }
 
@@ -579,7 +579,7 @@ class SelectionController extends Controller
                     return '
                         <div class="btn-group mb-1">
                             <button type="button" class="btn btn-sm btn-primary"
-                                    onclick="addCandidate(' . $item->id . ', \'' . $item->name . '\')">
+                                    onclick="addCandidate('.$item->id.', \''.$item->name.'\')">
                                 Pilih
                             </button>
                         </div>
@@ -588,7 +588,7 @@ class SelectionController extends Controller
                 ->editColumn('photo', function ($item) {
                     if ($item->photo) {
                         return ' <div class="fixed-frame">
-                    <img src="' . asset('storage/' . $item->photo) . '" data-fancybox alt="Icon User"
+                    <img src="'.asset('storage/'.$item->photo).'" data-fancybox alt="Icon User"
                       class="framed-image" style="cursor: pointer">
                   </div>';
                     } else {
@@ -603,12 +603,12 @@ class SelectionController extends Controller
                         $ageYears = $dob->age;
                         $ageMonths = $dob->diffInMonths($now) % 12; // Get the remaining months after years
     
-                        return $ageYears . ' Tahun ' . $ageMonths . ' Bulan';
+                        return $ageYears.' Tahun '.$ageMonths.' Bulan';
                     }
                     return 'N/A'; // Return 'N/A' if dob is not available
                 })->editColumn('selectionCount', function ($item) {
 
-                    return '<a href="' . route('selection.getCandidateHistory', $item->id) . '" target="_blank">' . $item->selectedCandidates->count() . '</a>';
+                    return '<a href="'.route('selection.getCandidateHistory', $item->id).'" target="_blank">'.$item->selectedCandidates->count().'</a>';
                 })
                 ->rawColumns(['action', 'photo', 'selectionCount'])
                 ->toJson();

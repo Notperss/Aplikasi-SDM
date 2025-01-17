@@ -31,7 +31,7 @@
       </th>
       <th scope="col" style="background: #7ae4fe; font-weight:bold; width: 20;text-align: center;">TANGGAL AKHIR
       </th>
-      <th scope="col" style="background: #7ae4fe; font-weight:bold; width: 7;text-align: center;">KPI
+      <th scope="col" style="background: #7ae4fe; font-weight:bold; width: 7;text-align: center;">PK
       </th>
       <th scope="col" style="background: #7ae4fe; font-weight:bold; width: 30;text-align: center;">REKOMENDASI
         KONTRAK</th>

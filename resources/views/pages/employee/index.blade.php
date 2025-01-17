@@ -15,13 +15,13 @@
 
     <div class="card-header">
       @role('manager|ka-dep|super-admin')
-        <div class="d-flex justify-content-between align-items-center ">
-          <h5 class="fw-normal mb-0 text-body">Daftar Karyawan</h5>
-          <a href="{{ route('employee.create') }}" class="btn btn-primary btn-md">
-            <i class="bi bi-plus-lg"></i>
-            Karyawan</a>
-        </div>
       @endrole
+      <div class="d-flex justify-content-between align-items-center ">
+        <h5 class="fw-normal mb-0 text-body">Daftar Karyawan</h5>
+        <a href="{{ route('employee.create') }}" class="btn btn-primary btn-md">
+          <i class="bi bi-plus-lg"></i>
+          Karyawan</a>
+      </div>
 
 
       <div class="d-flex justify-content-between align-items-center my-2">
@@ -37,8 +37,8 @@
           <label for="employee-status" class="me-2">Status:</label>
           <select id="employee-status" class="form-select form-select-sm" style="width: 200px; display: inline-block;">
             <option value="">Semua</option>
-            <option value="AKTIF">Aktif</option>
-            <option value="NONAKTIF">Nonaktif</option>
+            <option value="AKTIF">Masuk</option>
+            <option value="NONAKTIF">Keluar</option>
           </select>
 
           <button id="filter-date" class="btn btn-primary btn-sm ms-2">Filter</button>

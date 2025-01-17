@@ -81,6 +81,7 @@ class Candidate extends Model
                 'sim_c',
                 'expired_sim_c',
                 'file_sim_c',
+                'note',
             ]) // Specify the attributes you want to log
             ->logOnlyDirty() // Log only changed attributes
             ->useLogName('candidate-log'); // Specify the log name
@@ -157,6 +158,7 @@ class Candidate extends Model
 
         'is_hire',
         'is_selection',
+        'note',
     ];
 
     protected $casts = ['is_hire' => 'boolean', 'is_selection' => 'boolean'];

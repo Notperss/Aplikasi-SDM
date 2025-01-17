@@ -46,7 +46,7 @@
 
               @forelse ($groupedDirectorates as $isNon => $directoratesGroup)
                 <tr>
-                  <td colspan="7" class="text-bold-500 text-center">
+                  <td colspan="9" class="text-bold-500 text-center">
                     {{ $isNon == 1 ? 'DIREKTORAT' : ($isNon == 2 ? 'NON-DIREKTORAT' : 'LAIN-LAIN') }}
                   </td>
                 </tr>
@@ -141,7 +141,7 @@
                 @endforeach
               @empty
                 <tr>
-                  <td class="text-bold-500 text-center" colspan="7">No data available in table</td>
+                  <td class="text-bold-500 text-center" colspan="9">No data available in table</td>
                 </tr>
               @endforelse
 
@@ -199,7 +199,7 @@
 
               @forelse ($groupedDirectorates as $isNon => $directoratesGroup)
                 <tr>
-                  <td colspan="7" class="text-bold-500 text-center">
+                  <td colspan="9" class="text-bold-500 text-center">
                     {{ $isNon == 1 ? 'DIREKTORAT' : ($isNon == 2 ? 'NON-DIREKTORAT' : 'LAIN-LAIN') }}
                   </td>
                 </tr>
@@ -304,7 +304,7 @@
                 @endforeach
               @empty
                 <tr>
-                  <td class="text-bold-500 text-center" colspan="7">No data available in table</td>
+                  <td class="text-bold-500 text-center" colspan="9">No data available in table</td>
                 </tr>
               @endforelse
 
@@ -362,7 +362,7 @@
 
               @forelse ($groupedDirectorates as $isNon => $directoratesGroup)
                 <tr>
-                  <td colspan="7" class="text-bold-500 text-center">
+                  <td colspan="9" class="text-bold-500 text-center">
                     {{ $isNon == 1 ? 'DIREKTORAT' : ($isNon == 2 ? 'NON-DIREKTORAT' : 'LAIN-LAIN') }}
                   </td>
                 </tr>
@@ -467,7 +467,7 @@
                 @endforeach
               @empty
                 <tr>
-                  <td class="text-bold-500 text-center" colspan="7">No data available in table</td>
+                  <td class="text-bold-500 text-center" colspan="9">No data available in table</td>
                 </tr>
               @endforelse
 

@@ -78,6 +78,15 @@
 
               </div>
 
+              <div class="mb-3">
+                <div class="form-check form-switch form-switch-right form-switch-md">
+                  <label for="status" class="form-label">Print</label>
+                  <input class="form-check-input code-switcher" type="checkbox" id="tables-small-showcode"
+                    name="is_printable" value="1">
+                </div>
+                {{-- <x-form.validation.error name="status" /> --}}
+              </div>
+
             </div>
           </div>
         </div>

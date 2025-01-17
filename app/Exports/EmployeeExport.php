@@ -23,7 +23,7 @@ class EmployeeExport implements FromView, WithColumnFormatting
         $this->employeeStatus = $employeeStatus;
     }
 
-    public function view() : View
+    public function view(): View
     {
         $employees = Employee::with('employeeCategory', 'employeeCareers')
             ->when(! Auth::user()->hasRole('super-admin'), function ($query) {
@@ -46,17 +46,28 @@ class EmployeeExport implements FromView, WithColumnFormatting
         return view('pages.employee.export', compact('employees'));
     }
 
-    public function columnFormats() : array
+    public function columnFormats(): array
     {
         return [
-            'K' => NumberFormat::FORMAT_NUMBER, // Adjust the column (e.g., 'A') for the numeric data
-            'L' => NumberFormat::FORMAT_NUMBER,
-            'M' => NumberFormat::FORMAT_NUMBER,
-            'N' => NumberFormat::FORMAT_NUMBER,
-            'O' => NumberFormat::FORMAT_NUMBER,
-            'P' => NumberFormat::FORMAT_NUMBER,
+            // 'K' => NumberFormat::FORMAT_NUMBER, // Adjust the column (e.g., 'A') for the numeric data
+            // 'L' => NumberFormat::FORMAT_NUMBER,
+            // 'M' => NumberFormat::FORMAT_NUMBER,
+            // 'N' => NumberFormat::FORMAT_NUMBER,
+            // 'O' => NumberFormat::FORMAT_NUMBER,
+            // 'P' => NumberFormat::FORMAT_NUMBER,
+            // 'U' => NumberFormat::FORMAT_NUMBER,
+            // 'V' => NumberFormat::FORMAT_NUMBER,
+            'S' => NumberFormat::FORMAT_NUMBER,
+            'T' => NumberFormat::FORMAT_NUMBER,
             'U' => NumberFormat::FORMAT_NUMBER,
             'V' => NumberFormat::FORMAT_NUMBER,
+            'W' => NumberFormat::FORMAT_NUMBER,
+            'X' => NumberFormat::FORMAT_NUMBER,
+            'AC' => NumberFormat::FORMAT_NUMBER,
+            'AD' => NumberFormat::FORMAT_NUMBER,
+            'AO' => NumberFormat::FORMAT_NUMBER,
+            'AP' => NumberFormat::FORMAT_NUMBER,
+            'AQ' => NumberFormat::FORMAT_NUMBER,
             // Add other columns as needed
         ];
     }

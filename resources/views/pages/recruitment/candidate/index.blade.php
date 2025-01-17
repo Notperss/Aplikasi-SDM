@@ -16,14 +16,15 @@
       <div class="d-flex justify-content-between align-items-center ">
         <h5 class="fw-normal mb-0 text-body">Daftar Pelamar</h5>
         @can('candidate.store')
-          {{-- <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
-              data-bs-target="#modal-form-add-candidate">
+          <div>
+            <a href="{{ route('candidate.create') }}" class="btn btn-primary btn-md">
               <i class="bi bi-plus-lg"></i>
-              Add Candidate
-            </button> --}}
-          <a href="{{ route('candidate.create') }}" class="btn btn-primary btn-md">
-            <i class="bi bi-plus-lg"></i>
-            Pelamar</a>
+              Pelamar</a>
+            <button type="button" class="btn btn-success btn-md" data-bs-toggle="modal"
+              data-bs-target="#modal-form-export-candidate">
+              Export Pelamar
+            </button>
+          </div>
         @endcan
       </div>
     </div>
@@ -34,10 +35,13 @@
             <tr>
               <th></th>
               <th></th>
-              <th>Pelamar</th>
+              <th>Nama</th>
               <th>Email</th>
-              <th>Phone</th>
-              <th>Date Applied</th>
+              <th>Telp</th>
+              <th>Pendidikan</th>
+              <th>Jurusan</th>
+              <th>Tgl Lamaran Diterima</th>
+              <th>File CV</th>
               {{-- <th>Status</th> --}}
               <th></th>
             </tr>
@@ -97,6 +101,8 @@
   </div>
 </section>
 
+@include('pages.recruitment.candidate.export-candidate')
+
 @push('after-script')
   <script>
     jQuery(document).ready(function($) {
@@ -136,8 +142,22 @@
             name: 'phone_number',
           },
           {
+            data: 'last_educational',
+            name: 'last_educational',
+          },
+          {
+            data: 'study',
+            name: 'study',
+          },
+          {
             data: 'date_applieds',
             name: 'date_applied',
+          },
+          {
+            data: 'file',
+            name: 'file',
+            orderable: false,
+            searchable: false,
           },
           {
             data: 'action',

@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Recruitment;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Exports\CandidatesExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Recruitment\Candidate;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
@@ -63,10 +65,19 @@ class CandidateController extends Controller
                     } else {
                         return 'No Image';
                     }
+                })->editColumn('file', function ($item) {
+                    if ($item->file_cv) {
+                        return ' <div>
+                    <a href="'.asset('storage/'.$item->file_cv).'" data-fancybox alt="Icon User"
+                      class="btn btn-primary" style="cursor: pointer">File</a>
+                  </div>';
+                    } else {
+                        return '-';
+                    }
                 })->editColumn('date_applieds', function ($item) {
-                    return ''.Carbon::parse($item->date_applied)->translatedFormat('d-m-Y').'';
+                    return $item->date_applied ? Carbon::parse($item->date_applied)->translatedFormat('d-m-Y') : '-';
                 })
-                ->rawColumns(['action', 'photo'])
+                ->rawColumns(['action', 'file'])
                 ->toJson();
         }
 
@@ -340,4 +351,17 @@ class CandidateController extends Controller
     //     // Return success message
     //     return back()->with('success', 'Candidate document has been uploaded or updated successfully!');
     // }
+
+    public function export(Request $request)
+    {
+        // Decode the selected candidates' IDs
+        $candidateIds = json_decode($request->input('candidates'), true);
+
+        if (empty($candidateIds)) {
+            return back()->with('error', 'No candidates selected for export.');
+        }
+
+        // Pass the selected candidates' IDs to the export class
+        return Excel::download(new CandidatesExport($candidateIds), 'selected_candidates.xlsx');
+    }
 }

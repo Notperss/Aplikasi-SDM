@@ -81,12 +81,21 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::get('division/{id}', [DashboardController::class, 'getDivisionEmployee'])->name('getDivisionEmployee');
     // Route::get('/filter-data-approvals', [DashboardController::class, 'filterData'])->name('filter.approval');
 
+    Route::get('/dashboard/employee', [DashboardController::class, 'employee'])->name('dashboard.employee');
+    Route::get('/dashboard/gender', [DashboardController::class, 'gender'])->name('dashboard.gender');
+    Route::get('/dashboard/educational', [DashboardController::class, 'educational'])->name('dashboard.educational');
+    Route::get('/dashboard/position', [DashboardController::class, 'position'])->name('dashboard.position');
+    Route::get('/dashboard/age', [DashboardController::class, 'age'])->name('dashboard.age');
+    Route::get('/dashboard/religion', [DashboardController::class, 'religion'])->name('dashboard.religion');
+
+
     Route::resource('activity-log', ActivityLogController::class)->only('index');
 
     Route::resource('candidate', CandidateController::class);
     Route::prefix('candidate')->group(function () {
         Route::get('additional-details/{candidate}', [CandidateController::class, 'additionalDetails'])->name('additional-details');
         Route::post('/upload/{candidate}', [CandidateController::class, 'uploadDocument'])->name('upload.document');
+        Route::post('/export-candidates', [CandidateController::class, 'export'])->name('export.candidates');
     });
 
     Route::resource('selection', SelectionController::class)->except('create');
@@ -190,6 +199,10 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
 
 
     Route::resource('approval', ApprovalController::class)->only('index', 'store', 'update', 'destroy', );
+    Route::get('/form-update-status/{id}', [ApprovalController::class, 'formUpdateStatus'])->name('approval.formUpdateStatus');
+    Route::put('/update-status/{id}', [ApprovalController::class, 'updateStatus'])->name('approval.updateStatus');
+
+
 
 
     Route::get('/export-directorates', function () {

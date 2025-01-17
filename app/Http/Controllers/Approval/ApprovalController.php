@@ -8,6 +8,7 @@ use App\Models\Approval\Approval;
 use App\Models\Employee\Employee;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Recruitment\Candidate;
 use Yajra\DataTables\Facades\DataTables;
 use App\Models\Recruitment\SelectedCandidate;
 use App\Models\Employee\PersonalData\EmployeeCareer;
@@ -40,6 +41,14 @@ class ApprovalController extends Controller
                         $url = route('employee.newEmployee', encrypt($item->selected_candidate_id)); // Adjust if necessary
                         $buttons .= '<a class="btn btn-sm btn-info mx-1" title="Tambahkan ke karyawan" href="'.$url.'">
                         <i class="bi bi-person-plus-fill"></i>
+                    </a>';
+                    }
+
+                    if ($item->is_approve !== null) {
+                        // $url = route('employee.newEmployee', encrypt($item->selected_candidate_id)); // Adjust if necessary
+                        $url = route('approval.formUpdateStatus', encrypt($item->id)); // Adjust if necessary
+                        $buttons .= '<a class="btn btn-sm btn-secondary mx-1" title="Tambah Catatan" href="'.$url.'">
+                        <i class="bi bi-pencil"></i>
                     </a>';
                     }
 
@@ -296,4 +305,44 @@ class ApprovalController extends Controller
     {
         //
     }
+
+
+    public function formUpdateStatus($id)
+    {
+
+        $approval = Approval::findOrFail(decrypt($id));
+        return view('pages.approval.edit', compact('approval'));
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        // $data = $request['note'];
+
+        // dd($data);
+
+        $approval = Approval::findOrFail(decrypt($id));
+
+        $approval->update([
+            'note' => $request['note'],]);
+
+        if ($approval->selected_candidate_id) {
+            $candidateId = $approval->selectedCandidate->candidate_id;
+            // dd($candidateId);
+            $candidate = Candidate::findOrFail($candidateId);
+
+            if ($approval->note) {
+                $updateNote = $candidate->note.','.$request['note'];
+                // dd($candidateId);
+            } else {
+                $updateNote = $request['note'];
+            }
+
+            $candidate->update([
+                'note' => $updateNote,
+            ]);
+        }
+        return redirect()->back()->with('success', 'data has been updated successfully!.');
+    }
+
+
 }

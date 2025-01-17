@@ -60,6 +60,8 @@
                       <option value="DEMOSI" {{ old('type') == 'DEMOSI' ? 'selected' : '' }}>DEMOSI</option>
                       <option value="ROTASI" {{ old('type') == 'ROTASI' ? 'selected' : '' }}>ROTASI</option>
                       <option value="MUTASI" {{ old('type') == 'MUTASI' ? 'selected' : '' }}>MUTASI</option>
+                      <option value="RESTRUKTUR ORGANISASI"
+                        {{ old('type') == 'RESTRUKTUR ORGANISASI' ? 'selected' : '' }}>RESTRUKTUR ORGANISASI</option>
                       <option value="NON-AKTIF" {{ old('type') == 'NON-AKTIF' ? 'selected' : '' }}>NON-AKTIF</option>
                       <option value="RESIGN" {{ old('type') == 'RESIGN' ? 'selected' : '' }}>RESIGN</option>
                       <option value="PENSIUN" {{ old('type') == 'PENSIUN' ? 'selected' : '' }}>PENSIUN</option>

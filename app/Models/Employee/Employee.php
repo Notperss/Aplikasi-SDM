@@ -274,7 +274,7 @@ class Employee extends Model
     }
     public function kpis()
     {
-        return $this->hasMany(EmployeeKpi::class)->latest();
+        return $this->hasMany(EmployeeKpi::class)->orderBy('kpi_date', 'desc');
     }
     public function employeeDuties()
     {

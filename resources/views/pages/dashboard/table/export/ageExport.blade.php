@@ -168,7 +168,7 @@
 
               @forelse ($groupedDirectorates as $isNon => $directoratesGroup)
                 <tr>
-                  <td colspan="7" class="text-bold-500 text-center"
+                  <td colspan="8" class="text-bold-500 text-center"
                     style="font-weight: bold; background-color: #969696b5">
                     {{ $isNon == 1 ? 'DIREKTORAT' : ($isNon == 2 ? 'NON-DIREKTORAT' : 'LAIN-LAIN') }}
                   </td>
@@ -176,13 +176,14 @@
 
                 @foreach ($directoratesGroup as $directorate)
                   <tr>
-                    <td class="text-bold-500" style="font-weight: bold;" colspan="7">{{ $directorate->name }}</td>
+                    <td class="text-bold-500" style="font-weight: bold;" colspan="8">{{ $directorate->name }}</td>
                   </tr>
 
                   @foreach ($directorate->divisions as $division)
                     @php
                       $counts = [
                           'employees' => 0,
+                          'total' => 0,
                           'below25' => 0,
                           '2530' => 0,
                           '3035' => 0,
@@ -237,7 +238,7 @@
                 @endforeach
               @empty
                 <tr>
-                  <td colspan="7" class="text-center">No data available in table</td>
+                  <td colspan="8" class="text-center">No data available in table</td>
                 </tr>
               @endforelse
 
@@ -289,7 +290,7 @@
 
               @forelse ($groupedDirectorates as $isNon => $directoratesGroup)
                 <tr>
-                  <td colspan="7" class="text-bold-500 text-center"
+                  <td colspan="8" class="text-bold-500 text-center"
                     style="font-weight: bold; background-color: #969696b5">
                     {{ $isNon == 1 ? 'DIREKTORAT' : ($isNon == 2 ? 'NON-DIREKTORAT' : 'LAIN-LAIN') }}
                   </td>
@@ -297,13 +298,14 @@
 
                 @foreach ($directoratesGroup as $directorate)
                   <tr>
-                    <td class="text-bold-500" style="font-weight: bold;" colspan="7">{{ $directorate->name }}</td>
+                    <td class="text-bold-500" style="font-weight: bold;" colspan="8">{{ $directorate->name }}</td>
                   </tr>
 
                   @foreach ($directorate->divisions as $division)
                     @php
                       $counts = [
                           'employees' => 0,
+                          'total' => 0,
                           'below25' => 0,
                           '2530' => 0,
                           '3035' => 0,
@@ -362,7 +364,7 @@
                 @endforeach
               @empty
                 <tr>
-                  <td colspan="7" class="text-center">No data available in table</td>
+                  <td colspan="8" class="text-center">No data available in table</td>
                 </tr>
               @endforelse
 
@@ -414,7 +416,7 @@
 
               @forelse ($groupedDirectorates as $isNon => $directoratesGroup)
                 <tr>
-                  <td colspan="7" class="text-bold-500 text-center"
+                  <td colspan="8" class="text-bold-500 text-center"
                     style="font-weight: bold; background-color: #969696b5">
                     {{ $isNon == 1 ? 'DIREKTORAT' : ($isNon == 2 ? 'NON-DIREKTORAT' : 'LAIN-LAIN') }}
                   </td>
@@ -422,13 +424,14 @@
 
                 @foreach ($directoratesGroup as $directorate)
                   <tr>
-                    <td class="text-bold-500" style="font-weight: bold;" colspan="7">{{ $directorate->name }}</td>
+                    <td class="text-bold-500" style="font-weight: bold;" colspan="8">{{ $directorate->name }}</td>
                   </tr>
 
                   @foreach ($directorate->divisions as $division)
                     @php
                       $counts = [
                           'employees' => 0,
+                          'total' => 0,
                           'below25' => 0,
                           '2530' => 0,
                           '3035' => 0,
@@ -487,7 +490,7 @@
                 @endforeach
               @empty
                 <tr>
-                  <td colspan="7" class="text-center">No data available in table</td>
+                  <td colspan="8" class="text-center">No data available in table</td>
                 </tr>
               @endforelse
 
@@ -1094,7 +1097,7 @@
           </tbody>
         </table>
 
-        <table>
+        {{-- <table>
           <tr>
             <td colspan="9" style="font-size: 18px; background-color: #a5a4a4; text-align: center">Usia Diatas 50
               Tahun</td>
@@ -1161,4 +1164,150 @@
               </tr>
             @endforeach
           </tbody>
+        </table> --}}
+
+        <table>
+          <tr>
+            <td colspan="10" style="font-size: 18px; background-color: #a5a4a4; text-align: center">Karyawan yang akan
+              ber-usia 55 tahun Ini ( {{ now()->year }} )
+            </td>
+          </tr>
+          <thead>
+            <tr>
+              <th style=" background-color: #b5b5b5b5">No.</th>
+              <th style=" background-color: #b5b5b5b5">Directorate</th>
+              <th style="background-color: #b5b5b5b5">Division</th>
+              <th style="background-color: #b5b5b5b5">NIK</th>
+              <th style="background-color: #b5b5b5b5">Nama Karyawan</th>
+              <th style="background-color: #b5b5b5b5">Level Jabatan</th>
+              <th style="background-color: #b5b5b5b5">Jabatan</th>
+              <th style="background-color: #b5b5b5b5">Kategori Karyawan</th>
+              <th style="background-color: #b5b5b5b5">Tanggal Lahir</th>
+              <th style="background-color: #b5b5b5b5">Usia</th>
+            </tr>
+          </thead>
+          <tbody>
+            @php
+              // Collect all employees in an array
+              $employees = [];
+              foreach ($directorates as $directorate) {
+                  foreach ($directorate->divisions as $division) {
+                      foreach ($division->positions as $position) {
+                          $employee = $position->employee;
+                          if (
+                              $employee &&
+                              $employee->employee_status === 'AKTIF' &&
+                              Carbon::parse(optional($position->employee)->dob)->year === now()->year - 55
+                          ) {
+                              $employees[] = [
+                                  'directorate' => $directorate->name,
+                                  'division' => $division->name,
+                                  'nik' => $employee->nik,
+                                  'name' => $employee->name,
+                                  'level' => $position->level->name,
+                                  'position' => $position->name,
+                                  'category' => optional($employee->employeeCategory)->name,
+                                  'dob' => Carbon::parse($employee->dob)->translatedFormat('d-m-Y'),
+                                  'age' => Carbon::parse($employee->dob)->age,
+                              ];
+                          }
+                      }
+                  }
+              }
+
+              // Sort the employees array by gender (assuming you want 'LAKI-LAKI' first)
+              usort($employees, function ($a, $b) {
+                  return $a['age'] <=> $b['age'];
+              });
+            @endphp
+
+            @foreach ($employees as $employee)
+              <tr>
+                <td>{{ $loop->iteration }}</td>
+                <td>{{ $employee['directorate'] }}</td>
+                <td>{{ $employee['division'] }}</td>
+                <td>{{ $employee['nik'] }}</td>
+                <td>{{ $employee['name'] }}</td>
+                <td>{{ $employee['level'] }}</td>
+                <td>{{ $employee['position'] }}</td>
+                <td>{{ $employee['category'] }}</td>
+                <td>{{ $employee['dob'] }}</td>
+                <td>{{ $employee['age'] }}</td>
+              </tr>
+            @endforeach
+          </tbody>
         </table>
+
+        <table>
+          <tr>
+            <td colspan="10" style="font-size: 18px; background-color: #a5a4a4; text-align: center">Karyawan Usia
+              Diatas 55 Tahun
+            </td>
+          </tr>
+          <thead>
+            <tr>
+              <th style=" background-color: #b5b5b5b5">No.</th>
+              <th style=" background-color: #b5b5b5b5">Directorate</th>
+              <th style="background-color: #b5b5b5b5">Division</th>
+              <th style="background-color: #b5b5b5b5">NIK</th>
+              <th style="background-color: #b5b5b5b5">Nama Karyawan</th>
+              <th style="background-color: #b5b5b5b5">Level Jabatan</th>
+              <th style="background-color: #b5b5b5b5">Jabatan</th>
+              <th style="background-color: #b5b5b5b5">Kategori Karyawan</th>
+              <th style="background-color: #b5b5b5b5">Tanggal Lahir</th>
+              <th style="background-color: #b5b5b5b5">Usia</th>
+            </tr>
+          </thead>
+          <tbody>
+            @php
+              // Collect all employees in an array
+              $employees = [];
+              foreach ($directorates as $directorate) {
+                  foreach ($directorate->divisions as $division) {
+                      foreach ($division->positions as $position) {
+                          $employee = $position->employee;
+                          if (
+                              $employee &&
+                              $employee->employee_status === 'AKTIF' &&
+                              Carbon::parse(optional($position->employee)->dob)->age >= 55
+                          ) {
+                              $employees[] = [
+                                  'directorate' => $directorate->name,
+                                  'division' => $division->name,
+                                  'nik' => $employee->nik,
+                                  'name' => $employee->name,
+                                  'level' => $position->level->name,
+                                  'position' => $position->name,
+                                  'category' => optional($employee->employeeCategory)->name,
+                                  'dob' => Carbon::parse($employee->dob)->translatedFormat('d-m-Y'),
+                                  'age' => Carbon::parse($employee->dob)->age,
+                              ];
+                          }
+                      }
+                  }
+              }
+
+              // Sort the employees array by gender (assuming you want 'LAKI-LAKI' first)
+              usort($employees, function ($a, $b) {
+                  return $a['age'] <=> $b['age'];
+              });
+            @endphp
+
+            @foreach ($employees as $employee)
+              <tr>
+                <td>{{ $loop->iteration }}</td>
+                <td>{{ $employee['directorate'] }}</td>
+                <td>{{ $employee['division'] }}</td>
+                <td>{{ $employee['nik'] }}</td>
+                <td>{{ $employee['name'] }}</td>
+                <td>{{ $employee['level'] }}</td>
+                <td>{{ $employee['position'] }}</td>
+                <td>{{ $employee['category'] }}</td>
+                <td>{{ $employee['dob'] }}</td>
+                <td>{{ $employee['age'] }}</td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+
+        {{-- keterangan seminar,ganti text card dashboard,print candidate, modif seleksi, --}}

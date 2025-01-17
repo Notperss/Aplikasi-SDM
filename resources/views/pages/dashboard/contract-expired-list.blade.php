@@ -1,4 +1,4 @@
-<table class="table" id="table10" style="font-size: 80%">
+<table class="table" id="example" style="font-size: 80%">
   <thead>
     <tr>
       <th scope="col" style="width: 5%">#</th>
@@ -17,7 +17,7 @@
     </tr>
   </thead>
   <tbody>
-    @forelse ($contractsExpired as $contract)
+    @foreach ($contractsExpired as $contract)
       <tr>
         <td>{{ $loop->iteration }}</td>
         <td>
@@ -97,11 +97,25 @@
 
         </td>
 
-      </tr>
+        {{-- </tr>
     @empty
       <tr>
-        <td class="text-center" colspan="12">No data available in table</td>
-      </tr>
-    @endforelse
+        <td class="text-center" colspan="13">No data available in table</td>
+      </tr> --}}
+    @endforeach
   </tbody>
 </table>
+
+@push('after-script')
+  <script>
+    $('#example').DataTable({
+      "order": [],
+      "paging": true,
+      "lengthMenu": [
+        [5, 10, 25, 50, 100, -1],
+        [5, 10, 25, 50, 100, "All"]
+      ],
+      "pageLength": 10
+    });
+  </script>
+@endpush

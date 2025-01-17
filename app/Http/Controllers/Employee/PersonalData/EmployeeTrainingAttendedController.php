@@ -132,6 +132,7 @@ class EmployeeTrainingAttendedController extends Controller
                         'end_date' => $request->end_date,
                         'file_sertifikat' => $file_path, // Attach file path if the certificate is uploaded
                         'is_certificated' => $request->is_certificated ?? 0, // Attach file path if the certificate is uploaded
+                        'is_printable' => $request->is_printable ?? 0, // Attach file path if the certificate is uploaded
                     ]);
                 }
             } else {
@@ -146,6 +147,7 @@ class EmployeeTrainingAttendedController extends Controller
                     'end_date' => $request->end_date,
                     'file_sertifikat' => $file_path, // Attach file path if the certificate is uploaded
                     'is_certificated' => $request->is_certificated ?? 0, // Attach file path if the certificate is uploaded
+                    'is_printable' => $request->is_printable ?? 0, // Attach file path if the certificate is uploaded
                 ]);
             }
 
@@ -190,7 +192,8 @@ class EmployeeTrainingAttendedController extends Controller
      */
     public function update(UpdateTrainingAttendedRequest $request, EmployeeTrainingAttended $employeeTrainingAttended)
     {
-        $data = $request->all();
+        $data = $request->except(['is_printable']);
+        // dd($data);
         $path_sertifikat = $employeeTrainingAttended->file_sertifikat;
 
         if ($request->hasFile('file_sertifikat')) {
@@ -205,7 +208,13 @@ class EmployeeTrainingAttendedController extends Controller
         } else {
             $data['file_sertifikat'] = $path_sertifikat;
         }
-        $employeeTrainingAttended->update($data);
+        $employeeTrainingAttended->update(array_merge(
+            $data,
+            [
+                'is_printable' => ! blank($request->is_printable) ? true : false,
+            ]
+        ));
+
         return redirect()->back()->with('success', 'Data has been updated successfully!');
     }
 

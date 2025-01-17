@@ -157,6 +157,29 @@
         <div class="card-body px-4 py-4-5">
           <div class="row">
             <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
+              <div class=" mb-2" style="background-color: #b4237fcc">
+              </div>
+            </div>
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+              <h6 class="text-muted font-semibold">Restruktur Organisasi</h6>
+              <h4 class="font-extrabold mb-0">
+                @role('super-admin')
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'RESTRUKTUR ORGANISASI')->count() }}
+                @else
+                  {{ DB::table('approvals')->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')->whereNotNull('approvals.employee_career_id')->whereNull('approvals.is_approve')->where('employee_careers.type', 'RESTRUKTUR ORGANISASI')->where('company_id', auth()->user()->company_id)->count() }}
+                @endrole
+              </h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-6 col-lg-2 col-md-6">
+      <div class="card">
+        <div class="card-body px-4 py-4-5">
+          <div class="row">
+            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
               <div class=" mb-2" style="background-color: #b4a623cc">
               </div>
             </div>
@@ -240,6 +263,7 @@
             <th>Nama Lengkap</th>
             <th>Jabatan</th>
             <th>Divisi</th>
+            <th>Catatan</th>
             <th>Status</th>
             <th>Dibuat</th>
             <th></th>
@@ -345,6 +369,10 @@
             searchable: false,
           },
           {
+            data: 'note',
+            name: 'note',
+          },
+          {
             data: 'is_approve',
             name: 'is_approve',
           },
@@ -357,7 +385,8 @@
             name: 'action',
             orderable: false,
             searchable: false,
-            className: 'no-print' // Add this class to exclude the column from printing
+            className: 'no-print',
+            width: '10%', // Add this class to exclude the column from printing
           },
         ],
         columnDefs: [{
@@ -407,11 +436,3 @@
   /* Optional: ensure the image corners match the frame */
 }
 </style>
-
-
-{{--
-- tambah kpi di contract dashboard v
-- export semua data karyawan v
-- filter karyawan non-aktif,pensiun, dan aktif v
-- Kontrak Berakhir Bulan Depan +2 builan v
---}}

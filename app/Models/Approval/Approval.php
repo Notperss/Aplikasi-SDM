@@ -21,6 +21,7 @@ class Approval extends Model
         'position_id',
         'employee_id',
         'company_id',
+        'note',
     ];
 
     public function selectedCandidate()

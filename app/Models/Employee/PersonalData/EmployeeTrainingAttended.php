@@ -21,7 +21,10 @@ class EmployeeTrainingAttended extends Model
         'city',
         'file_sertifikat',
         'is_certificated',
+        'is_printable',
     ];
+
+    protected $casts = ['is_hire' => 'is_printable',];
 
     public function employee()
     {

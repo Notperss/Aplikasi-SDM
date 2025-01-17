@@ -1,6 +1,7 @@
 <!-- Modals add menu -->
-<div id="modal-form-add-contract" class="modal fade" tabindex="-1" aria-labelledby="modal-form-add-contract-label"
-  aria-hidden="true" style="display: none;">
+<div id="modal-form-add-contract{{ $contract->employee->id ?? '' }}" class="modal fade" tabindex="-1"
+  aria-labelledby="modal-form-add-contract{{ $contract->employee->id ?? '' }}-label" aria-hidden="true"
+  style="display: none;">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <form action="{{ route('contract.store') }}" method="post" enctype="multipart/form-data">
@@ -16,6 +17,27 @@
             <div class="col-md-11"> <!-- Make form smaller with col-md-6 and center it -->
 
               <input type="hidden" name="employee_id" value="{{ $employee->id ?? $contract->employee->id }}">
+              <input type="hidden" value="{{ $employee->name ?? $contract->employee->name }}">
+
+              <div class="row">
+                <div class="col-3 mb-2">
+                  <label class="form-label" for="name">NIK</label>
+                  <input type="text" id="name" value="{{ $contract->employee->nik ?? $employee->nik }}"
+                    class="form-control @error('name') is-invalid @enderror" readonly>
+                  @error('name')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div>
+
+                <div class="col-9 mb-2">
+                  <label class="form-label" for="name">Nama Karyawan</label>
+                  <input type="text" id="name" value="{{ $contract->employee->name ?? $employee->name }}"
+                    class="form-control @error('name') is-invalid @enderror" readonly>
+                  @error('name')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div>
+              </div>
 
               <div class="row">
                 <div class="my-2">

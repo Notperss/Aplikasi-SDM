@@ -280,13 +280,13 @@
                   </div>
                   <div class="form-group col-md-6">
                     <!-- Display Masa Pensiun (Retirement Date) -->
-                    <label for="date_joining">Masa Pensiun</label>
+                    <label for="date_joining">Masa Pensiun <code>(55 Tahun)</code></label>
                     <input type="text" value="{{ $retirementDate->translatedFormat('l, d F Y') }}"
                       class="form-control @error('date_joining') is-invalid @enderror" readonly>
                   </div>
                   <div class="form-group col-md-6">
                     <!-- Display Sisa Tahun Menuju Pensiun (Remaining Time Until Retirement) -->
-                    <label for="remaining_time">Sisa Tahun Menuju Pensiun</label>
+                    <label for="remaining_time">Sisa Tahun Menuju Pensiun </label>
                     <input type="text" value="{{ $remainingYears }} tahun {{ $remainingMonths }} bulan"
                       class="form-control" readonly>
                   </div>

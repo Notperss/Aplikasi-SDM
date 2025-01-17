@@ -1,6 +1,6 @@
 <div style="padding: 2px; font-family: Arial, sans-serif; border: 1px solid #ddd; border-radius: 2px; ">
   <table
-    style="width: 100%; border-collapse: collapse; margin-bottom: 5px; font-family: Arial, sans-serif; text-transform: uppercase; font-size: 90%;">
+    style="width: 100%; border-collapse: collapse; margin-bottom: 5px; font-family: Arial, sans-serif; text-transform: uppercase; font-size: 80%;">
     <!-- Header Section -->
     <tr>
       <td style="width: 20%; text-align: center; border: 1px solid #ddd; padding: 10px;">
@@ -52,7 +52,7 @@
   </table>
 
   <!-- Informasi Data Personal -->
-  <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px; text-transform: uppercase; font-size: 90%;">
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px; text-transform: uppercase; font-size: 80%;">
     <thead>
       <tr>
         <th colspan="4" style=" text-align: left; border: 1px solid #ddd; background-color: #c7c3c3;">
@@ -114,7 +114,7 @@
   </table>
 
   <!-- Informasi Pendidikan -->
-  <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px; text-transform: uppercase; font-size: 90%;">
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px; text-transform: uppercase; font-size: 80%;">
     <thead>
       <tr>
         <th colspan="5" style="text-align: left; border: 1px solid #ddd; background-color: #c7c3c3;">
@@ -169,7 +169,7 @@
   </table>
 
   <!-- Informasi Keluarga -->
-  <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px; text-transform: uppercase; font-size: 90%;">
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px; text-transform: uppercase; font-size: 80%;">
     <thead>
       <tr>
         <th colspan="5" style=" text-align: left; border: 1px solid #ddd; background-color: #c7c3c3;">
@@ -242,7 +242,7 @@
   </table>
 
   <!-- Pengalaman Kerja CMNP rehire -->
-  <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px; text-transform: uppercase; font-size: 90%;">
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 5px; text-transform: uppercase; font-size: 80%;">
     <thead>
       <tr>
         <th colspan="4" style=" text-align: left; border: 1px solid #ddd; background-color: #c7c3c3;">
@@ -252,7 +252,7 @@
       <tr>
         <th style="border: 1px solid #ddd;">Jabatan</th>
         <th style="border: 1px solid #ddd;">Penempatan</th>
-        <th style="border: 1px solid #ddd;">Efektif Tanggal</th>
+        <th style="border: 1px solid #ddd; width: 13%">Efektif Tanggal</th>
       </tr>
     </thead>
     <tbody>
@@ -354,7 +354,7 @@
 
   <!-- Pengalaman Kerja -->
   <table
-    style="width: 100%; border-collapse: collapse; margin-bottom: 5px; text-transform: uppercase; font-size: 90%;">
+    style="width: 100%; border-collapse: collapse; margin-bottom: 5px; text-transform: uppercase; font-size: 80%;">
     <thead>
       <tr>
         <th colspan="4" style=" text-align: left; border: 1px solid #ddd; background-color: #c7c3c3;">
@@ -403,7 +403,7 @@
   </table>
 
   <!-- Informasi Kontak Darurat -->
-  <table style="width: 100%; border-collapse: collapse; text-transform: uppercase; font-size: 90%;">
+  <table style="width: 100%; border-collapse: collapse; text-transform: uppercase; font-size: 80%;">
     <thead>
       <tr>
         <th colspan="4" style=" text-align: left; border: 1px solid #ddd; background-color: #c7c3c3;">
@@ -461,7 +461,7 @@
           Jakarta,
         </p>
 
-        <div style="margin-top: 40px; text-align: left; line-height: 1;  text-transform: uppercase; font-size: 90%;">
+        <div style="margin-top: 40px; text-align: left; line-height: 1;  text-transform: uppercase; font-size: 80%;">
           <p style="margin: 0; font-weight: bold;">{{ $employee->name }}</p>
           <div style="border-bottom: 1px solid #000; width: 200px;"></div>
           <p style="margin: 0;">{{ $employee->nik }}</p>
