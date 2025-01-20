@@ -136,9 +136,9 @@
           <td style="border: 1px solid #ddd;">{{ $education->school_level ?? '' }}</td>
           <td style="border: 1px solid #ddd;">{{ $education->school_name ?? '' }}</td>
           {{-- <td style="border: 1px solid #ddd;">{{ $education->study ?? '' }}</td> --}}
-          <td style="border: 1px solid #ddd;">{{ $education->year_to ?? '' }}</td>
-          <td style="border: 1px solid #ddd;">{{ $education->year_from ?? '' }}</td>
-          <td style="border: 1px solid #ddd;">{{ $education->graduate ?? '' }}</td>
+          <td style="border: 1px solid #ddd;text-align: center">{{ $education->year_from ?? '' }}</td>
+          <td style="border: 1px solid #ddd;text-align: center">{{ $education->year_to ?? '' }}</td>
+          <td style="border: 1px solid #ddd;text-align: center">{{ $education->graduate ?? '' }}</td>
         </tr>
       @empty
         {{-- @for ($i = 0; $i < 3; $i++)
@@ -197,7 +197,7 @@
       @forelse ($employee->familyDetails->where('emergency_contact', 0) as $family)
         <tr>
           <td style="border: 1px solid #ddd;">{{ $family->name }}</td>
-          <td style="border: 1px solid #ddd;">
+          <td style="border: 1px solid #ddd; text-align: center">
             @if ($family->gender == 'LAKI-LAKI')
               <span>L</span>
             @elseif ($family->gender == 'PEREMPUAN')
@@ -206,8 +206,8 @@
               -
             @endif
           </td>
-          <td style="border: 1px solid #ddd;">{{ $family->relation }}</td>
-          <td style="border: 1px solid #ddd;">
+          <td style="border: 1px solid #ddd;text-align: center">{{ $family->relation }}</td>
+          <td style="border: 1px solid #ddd;text-align: center">
             {{ Carbon\Carbon::parse($family->dob_family)->translatedFormat('d-m-Y') }}
           </td>
           <td style="border: 1px solid #ddd;">{{ $family->job }}</td>

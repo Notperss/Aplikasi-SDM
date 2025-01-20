@@ -594,35 +594,6 @@ class EmployeeController extends Controller
             return redirect()->route('employee.index')->with('error', 'Employee record not found for the given candidate.');
         }
     }
-    public function getEmployeeChartData($year)
-    {
-        $companyId = Auth::user()->company_id;
-        $isSuperAdmin = Auth::user()->hasRole('super-admin');
-
-        $employeeActiveData = [];
-        $employeeNonActiveData = [];
-
-        // Populate example data or fetch from database (you would replace this part)
-        for ($month = 1; $month <= 12; $month++) {
-            $employeeActiveData[] = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
-                $query->where('company_id', $companyId);
-            })->where('employee_status', 'AKTIF')
-                ->whereYear('date_joining', $year)
-                ->whereMonth('date_joining', $month)
-                ->count();
-
-            $employeeNonActiveData[] = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
-                $query->where('company_id', $companyId);
-            })->where('employee_status', '!=', 'AKTIF')
-                ->whereYear('date_joining', $year)
-                ->whereMonth('date_joining', $month)
-                ->count();
-        }
-        return response()->json([
-            'employeeActiveData' => $employeeActiveData,
-            'employeeNonActiveData' => $employeeNonActiveData,
-        ]);
-    }
 
     public function getEmployeeAttendances(Request $request)
     {

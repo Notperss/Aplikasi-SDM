@@ -644,7 +644,7 @@
     </div>
   @endforeach
 
-  <div class="row">
+  {{-- <div class="row">
     <div class="col-12">
       <div class="card">
         <div class="card-header">
@@ -666,7 +666,39 @@
         </div>
       </div>
     </div>
+  </div> --}}
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="d-flex justify-content-between align-items-center">
+            <h4>Data Karyawan Pertahun</h4>
+            <div class="col-md-2">
+              <label for="year-select">Pilih Tahun</label>
+              <select id="year-select" class="form-control" aria-label="Pilih Tahun">
+                @for ($year = 2015; $year <= date('Y'); $year++)
+                  <option value="{{ $year }}" {{ $year == date('Y') ? 'selected' : '' }}>{{ $year }}
+                  </option>
+                @endfor
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div id="employee-data" class="text-center">
+            <div id="loader" class="d-none">
+              <div class="spinner-border text-primary">
+                <span class="sr-only">Loading...</span>
+              </div>
+              <p>Memuat data, harap tunggu...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+
 
   <div class="row">
     <div class="col-12">
@@ -989,6 +1021,7 @@
     // Data passed from the controller
     var employeeActiveData = @json($employeeActiveData);
     var employeeNonActiveData = @json($employeeNonActiveData);
+    var monthlyEmployeeData = @json($monthlyEmployeeData);
 
     var options = {
       chart: {
@@ -1003,7 +1036,11 @@
         {
           name: 'Karyawan Keluar',
           data: employeeNonActiveData
-        }
+        },
+        {
+          name: 'Karyawan Bekerja',
+          data: monthlyEmployeeData
+        },
       ],
       xaxis: {
         categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -1025,7 +1062,7 @@
           colors: ['#fff']
         }
       },
-      colors: ['#1E90FF', '#FF6347'],
+      colors: ['#1E90FF', '#FF6347', '#ffa200'],
       legend: {
         position: 'top'
       },
@@ -1059,12 +1096,16 @@
         .then(response => response.json())
         .then(data => {
           chart.updateSeries([{
-              name: 'Karyawan Aktif',
+              name: 'Karyawan Masuk',
               data: data.employeeActiveData
             },
             {
-              name: 'Karyawan Non-Aktif',
+              name: 'Karyawan Keluar',
               data: data.employeeNonActiveData
+            },
+            {
+              name: 'Karyawan Bekerja',
+              data: data.monthlyEmployeeData
             }
           ]);
           chart.updateOptions({
@@ -1073,7 +1114,14 @@
             }
           });
         })
-        .catch(error => console.error('Error fetching data:', error));
+        .catch(error => {
+          console.error('Error fetching data:', error);
+          alert('Gagal mengambil data. Silakan coba lagi.');
+        })
+        .finally(() => {
+          // Hide loader
+          document.getElementById('loader').style.display = 'none';
+        });
     });
   });
 </script>

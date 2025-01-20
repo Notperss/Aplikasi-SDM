@@ -127,7 +127,7 @@ class DashboardController extends Controller
         $currentYear = date('Y');
         $employeeActiveData = [];
         $employeeNonActiveData = [];
-
+        $monthlyEmployeeData = [];
         // Fetch employee data per month for the current year
         for ($month = 1; $month <= 12; $month++) {
             $employeeActiveData[] = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
@@ -140,9 +140,34 @@ class DashboardController extends Controller
             $employeeNonActiveData[] = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
                 $query->where('employees.company_id', $companyId);
             })->where('employees.employee_status', '!=', 'AKTIF')->join('positions', 'employees.position_id', '=', 'positions.id')
-                ->whereYear('employees.date_joining', $currentYear)
-                ->whereMonth('employees.date_joining', $month)
+                ->whereYear('employees.date_leaving', $currentYear)
+                ->whereMonth('employees.date_leaving', $month)
                 ->count();
+
+            $employeeCount = DB::table('employees')
+                ->when(! $isSuperAdmin, function ($query) use ($companyId) {
+                    $query->where('company_id', $companyId);
+                })
+                ->where(function ($query) use ($currentYear, $month) {
+                    $query->whereYear('date_joining', '<', $currentYear)
+                        ->orWhere(function ($query) use ($currentYear, $month) {
+                            $query->whereYear('date_joining', '=', $currentYear)
+                                ->whereMonth('date_joining', '<=', $month);
+                        });
+                })
+                ->where(function ($query) use ($currentYear, $month) {
+                    $query->whereNull('date_leaving')
+                        ->orWhere(function ($query) use ($currentYear, $month) {
+                            $query->whereYear('date_leaving', '>', $currentYear)
+                                ->orWhere(function ($query) use ($currentYear, $month) {
+                                    $query->whereYear('date_leaving', '=', $currentYear)
+                                        ->whereMonth('date_leaving', '>=', $month);
+                                });
+                        });
+                })
+                ->count();
+
+            $monthlyEmployeeData[] = $employeeCount;
 
 
             // $employeeNonActiveData[] = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
@@ -319,6 +344,7 @@ class DashboardController extends Controller
             'companies',
             'employeeActiveData',
             'employeeNonActiveData',
+            'monthlyEmployeeData',
             'contractsIncoming',
             'contractsExpired',
             'selectedMonth',
@@ -383,6 +409,65 @@ class DashboardController extends Controller
     public function destroy(string $id)
     {
         abort(404);
+    }
+
+    public function getEmployeeChartData($year)
+    {
+        $companyId = Auth::user()->company_id;
+        $isSuperAdmin = Auth::user()->hasRole('super-admin');
+
+        $employeeActiveData = [];
+        $employeeNonActiveData = [];
+        $monthlyEmployeeData = [];
+
+        // Populate example data or fetch from database (you would replace this part)
+        for ($month = 1; $month <= 12; $month++) {
+            $employeeActiveData[] = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
+                $query->where('company_id', $companyId);
+            })->where('employee_status', 'AKTIF')
+                ->whereYear('date_joining', $year)
+                ->whereMonth('date_joining', $month)
+                ->count();
+
+            $employeeNonActiveData[] = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
+                $query->where('company_id', $companyId);
+            })->where('employee_status', '!=', 'AKTIF')
+                ->whereYear('date_leaving', $year)
+                ->whereMonth('date_leaving', $month)
+                ->count();
+
+            $employeeCount = DB::table('employees')
+                ->when(! $isSuperAdmin, function ($query) use ($companyId) {
+                    $query->where('company_id', $companyId);
+                })
+                ->where(function ($query) use ($year, $month) {
+                    $query->whereYear('date_joining', '<', $year)
+                        ->orWhere(function ($query) use ($year, $month) {
+                            $query->whereYear('date_joining', '=', $year)
+                                ->whereMonth('date_joining', '<=', $month);
+                        });
+                })
+                ->where(function ($query) use ($year, $month) {
+                    $query->whereNull('date_leaving')
+                        ->orWhere(function ($query) use ($year, $month) {
+                            $query->whereYear('date_leaving', '>', $year)
+                                ->orWhere(function ($query) use ($year, $month) {
+                                    $query->whereYear('date_leaving', '=', $year)
+                                        ->whereMonth('date_leaving', '>=', $month);
+                                });
+                        });
+                })
+                ->count();
+
+            $monthlyEmployeeData[] = $employeeCount;
+        }
+
+
+        return response()->json([
+            'employeeActiveData' => $employeeActiveData,
+            'employeeNonActiveData' => $employeeNonActiveData,
+            'monthlyEmployeeData' => $monthlyEmployeeData,
+        ]);
     }
 
     public function getDivisionEmployee($id)

@@ -80,6 +80,7 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::resource('dashboard', DashboardController::class)->only('index', );
     Route::get('division/{id}', [DashboardController::class, 'getDivisionEmployee'])->name('getDivisionEmployee');
     // Route::get('/filter-data-approvals', [DashboardController::class, 'filterData'])->name('filter.approval');
+    Route::get('/employee-chart-data/{year}', [DashboardController::class, 'getEmployeeChartData'])->name('employee-chart-data');
 
     Route::get('/dashboard/employee', [DashboardController::class, 'employee'])->name('dashboard.employee');
     Route::get('/dashboard/gender', [DashboardController::class, 'gender'])->name('dashboard.gender');
@@ -179,7 +180,6 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::resource('employee', EmployeeController::class);
     Route::get('/new-employee/{id}', [EmployeeController::class, 'newEmployee'])->name('employee.newEmployee');
     Route::put('/update-new-employee/{id}', [EmployeeController::class, 'updateNewEmployee'])->name('employee.updateNewEmployee');
-    Route::get('/employee-chart-data/{year}', [EmployeeController::class, 'getEmployeeChartData'])->name('employee-chart-data');
     Route::get('/employee-attendance', [EmployeeController::class, 'getEmployeeAttendances'])->name('employee.attendances');
     Route::get('export-attendance', [EmployeeController::class, 'attendanceExport'])->name('export.attendanceEmployee');
     Route::post('upload-photo', [EmployeeController::class, 'uploadPhoto'])->name('employee.uploadPhoto');

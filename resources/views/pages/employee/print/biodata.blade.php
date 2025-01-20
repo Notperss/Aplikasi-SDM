@@ -119,7 +119,8 @@
             <td style="padding: 5px; border: 1px solid #ddd;">{{ ucwords(strtolower($education->school_name ?? '')) }}
             </td>
             <td style="padding: 5px; border: 1px solid #ddd;">{{ ucwords(strtolower($education->study ?? '')) }}</td>
-            <td style="padding: 5px; border: 1px solid #ddd;">{{ ucwords(strtolower($education->year_to ?? '')) }}</td>
+            <td style="padding: 5px; border: 1px solid #ddd;text-align: center">
+              {{ ucwords(strtolower($education->year_to ?? '')) }}</td>
           </tr>
         @endforeach
       </tbody>
