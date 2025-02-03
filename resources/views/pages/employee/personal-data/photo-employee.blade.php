@@ -42,15 +42,19 @@
                      <span class="text-success small">Main Photo</span>
                    @endif
 
-                   <!-- Delete Button -->
-                   <form method="POST" action="{{ route('employeePhoto.destroy', $employeePhoto->id) }}">
-                     @csrf
-                     @method('DELETE')
-                     <button type="submit" class="btn btn-danger btn-sm"
-                       onclick="return confirm('Are you sure you want to delete this photo?');">
-                       Delete
-                     </button>
-                   </form>
+
+                   @if (!$employee->is_verified)
+                     <!-- Delete Button -->
+                     <form method="POST" action="{{ route('employeePhoto.destroy', $employeePhoto->id) }}">
+                       @csrf
+                       @method('DELETE')
+                       <button type="submit" class="btn btn-danger btn-sm"
+                         onclick="return confirm('Are you sure you want to delete this photo?');">
+                         Delete
+                       </button>
+                     </form>
+                   @endif
+
                  </div>
                </div>
              @empty

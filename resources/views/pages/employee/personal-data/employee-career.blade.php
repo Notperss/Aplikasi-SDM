@@ -70,7 +70,7 @@
                         @endif
                       </td>
                       <td>
-                        @if ($employeeCareer->is_approve === null)
+                        @if ($employeeCareer->is_approve === null && !$employee->is_verified)
                           <div class="demo-inline-spacing">
 
                             <a data-bs-toggle="modal" data-bs-target="#modal-form-edit-career-{{ $employeeCareer->id }}"
@@ -171,7 +171,7 @@
                         @endif
                       </td> --}}
                       <td>
-                        @if ($employeeCareer->is_approve === null)
+                        @if ($employeeCareer->is_approve === null && !$employee->is_verified)
                           <div class="demo-inline-spacing">
 
                             <a data-bs-toggle="modal"

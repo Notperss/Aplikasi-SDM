@@ -56,26 +56,26 @@
                         @endif
                       </td>
                       <td>
+                        @if (!$employee->is_verified)
+                          <div class="demo-inline-spacing">
 
-                        <div class="demo-inline-spacing">
+                            <a data-bs-toggle="modal" data-bs-target="#modal-form-edit-kpi-{{ $employeeKpi->id }}"
+                              class="btn btn-sm btn-icon btn-secondary text-white">
+                              <i class="bi bi-pencil-square"></i>
+                            </a>
+                            @include('pages.employee.personal-data.form.kpi.modal-edit')
 
-                          <a data-bs-toggle="modal" data-bs-target="#modal-form-edit-kpi-{{ $employeeKpi->id }}"
-                            class="btn btn-sm btn-icon btn-secondary text-white">
-                            <i class="bi bi-pencil-square"></i>
-                          </a>
-                          @include('pages.employee.personal-data.form.kpi.modal-edit')
+                            <a class="btn btn-sm btn-light-danger mx-2" onclick="deleteKpi('{{ $employeeKpi->id }}')"><i
+                                class="bi bi-trash"></i></a>
 
-                          <a class="btn btn-sm btn-light-danger mx-2" onclick="deleteKpi('{{ $employeeKpi->id }}')"><i
-                              class="bi bi-trash"></i></a>
+                            <form id="deleteKpiForm_{{ $employeeKpi->id }}"
+                              action="{{ route('employeeKpi.destroy', $employeeKpi->id) }}" method="POST">
+                              @method('DELETE')
+                              @csrf
+                            </form>
 
-                          <form id="deleteKpiForm_{{ $employeeKpi->id }}"
-                            action="{{ route('employeeKpi.destroy', $employeeKpi->id) }}" method="POST">
-                            @method('DELETE')
-                            @csrf
-                          </form>
-
-                        </div>
-
+                          </div>
+                        @endif
                       </td>
                     </tr>
                   @empty

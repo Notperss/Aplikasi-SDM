@@ -107,6 +107,13 @@
                       <i class="bi bi-card-checklist"></i>
                     </a>
 
+                    @if ($selection->is_finished)
+                      <a class="btn btn-sm btn-warning mx-1"
+                        href="{{ route('selectedCandidate.resultSelection', $selection) }}">
+                        <i class="bi bi-card-checklist"></i>
+                      </a>
+                    @endif
+
                     <div class="btn-group">
 
                       @if ($selection->is_finished == 0 || auth()->user()->hasRole('super-admin'))
