@@ -53,7 +53,7 @@
               <div class="row">
                 <div class="col-md-6">
 
-                  <div class="my-2">
+                  {{-- <div class="my-2">
                     <label class="form-label" for="nik_employee">NIK Karyawan <code>*</code></label>
                     <input id="nik_employee" name="nik_employee"
                       value="{{ $employee->nik ?? $contract->employee->nik }}"
@@ -61,7 +61,7 @@
                     @error('nik_employee')
                       <a style="color: red"><small>{{ $message }}</small></a>
                     @enderror
-                  </div>
+                  </div> --}}
 
                   <div class="my-2">
                     <label class="form-label" for="start_date">Tanggal Awal <code>*</code></label>
@@ -101,14 +101,14 @@
                     @enderror
                   </div>
 
-                  <div class="my-2">
-                    <label for="file" class="form-label">File</label>
-                    <input class="form-control @error('file') is-invalid @enderror" accept=".pdf" type="file"
-                      id="file" name="file">
-                    @error('file')
-                      <a style="color: red"><small>{{ $message }}</small></a>
-                    @enderror
-                  </div>
+                </div>
+                <div class="col-md-12">
+                  <label for="file" class="form-label">File</label>
+                  <input class="form-control @error('file') is-invalid @enderror" accept=".pdf" type="file"
+                    id="file" name="file">
+                  @error('file')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
                 </div>
               </div>
 

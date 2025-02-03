@@ -64,8 +64,9 @@
                         DEMOSI</option>
                       <option value="ROTASI" {{ old('type', $employeeCareer->type) == 'ROTASI' ? 'selected' : '' }}>
                         ROTASI</option>
-                      <option value="MUTASI" {{ old('type', $employeeCareer->type) == 'MUTASI' ? 'selected' : '' }}>
-                        MUTASI</option>
+                      <option value="PENUGASAN"
+                        {{ old('type', $employeeCareer->type) == 'PENUGASAN' ? 'selected' : '' }}>
+                        PENUGASAN</option>
                       <option value="RESTRUKTUR ORGANISASI"
                         {{ old('type', $employeeCareer->type) == 'RESTRUKTUR ORGANISASI' ? 'selected' : '' }}>
                         RESTRUKTUR ORGANISASI</option>

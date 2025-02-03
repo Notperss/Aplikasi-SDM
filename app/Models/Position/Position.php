@@ -93,7 +93,7 @@ class Position extends Model
     }
     public function employee()
     {
-        return $this->hasOne(Employee::class);
+        return $this->hasOne(Employee::class)->where('employee_status', '=', 'AKTIF');
     }
     public function careers()
     {

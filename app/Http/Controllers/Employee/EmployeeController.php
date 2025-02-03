@@ -52,10 +52,26 @@ class EmployeeController extends Controller
                     $query->where('employee_status', $request->employee_status);
                 }
             })
-            ->whereNotNull('nik')
             ->when($request->filled(['start_date', 'end_date']), function ($query) use ($request) {
-                $query->whereBetween('date_joining', [$request->start_date, $request->end_date]);
+                $startDate = $request->start_date;
+                $endDate = $request->end_date;
+
+                if ($request->employee_status === 'NONAKTIF') {
+                    // Filter by date_leaving for non-active employees
+                    $query->whereBetween('date_leaving', [$startDate, $endDate]);
+                } elseif ($request->employee_status === 'AKTIF') {
+                    // Filter by date_joining for active employees
+                    $query->whereBetween('date_joining', [$startDate, $endDate]);
+                } else {
+                    // Filter for both active and non-active employees
+                    $query->where(function ($subQuery) use ($startDate, $endDate) {
+                        $subQuery->whereBetween('date_joining', [$startDate, $endDate])
+                            ->orWhereBetween('date_leaving', [$startDate, $endDate]);
+                    });
+                }
             })
+
+            ->whereNotNull('nik')
             ->join('positions', 'employees.position_id', '=', 'positions.id') // Join positions
             ->join('divisions', 'positions.division_id', '=', 'divisions.id') // Join divisions
             ->join('levels', 'positions.level_id', '=', 'levels.id') // Join levels
@@ -97,8 +113,10 @@ class EmployeeController extends Controller
                         '.csrf_field().method_field('PATCH').'
                     </form>
                     <a class="dropdown-item" href="javascript:void(0);"
-                        onclick="document.getElementById(\'verifiedForm_'.$item->id.'\').submit();"
-                        '.($isVerified ? 'hidden' : '').'>Verified</a>
+                    onclick="if(confirm(\'Are you sure you want to verify this employee?\')) {
+                     document.getElementById(\'verifiedForm_'.$item->id.'\').submit();
+                    }"
+                    '.($isVerified ? 'hidden' : '').'>Verified</a>
                     ' : '').'
 
                     <!-- Unverified Form -->
@@ -106,7 +124,8 @@ class EmployeeController extends Controller
                         '.csrf_field().method_field('PATCH').'
                     </form>
                     <a class="dropdown-item" href="javascript:void(0);"
-                        onclick="document.getElementById(\'unverifiedForm_'.$item->id.'\').submit();"
+                        onclick="if(confirm(\'Are you sure you want to Unverify this employee?\'))
+                        {document.getElementById(\'unverifiedForm_'.$item->id.'\').submit();}"
                         '.(! $isVerified
                         ? 'hidden'
                         : ($item->approvals->where('description', 'Buka Verifikasi')->whereNull('is_approve')->first()

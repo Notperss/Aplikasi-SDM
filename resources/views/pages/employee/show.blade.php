@@ -266,7 +266,7 @@
                     @enderror
                   </div>
                   <div class="form-group col-md-6">
-                    <label for="date_joining">Date Of Joining</label>
+                    <label for="date_joining">TMT Masuk</label>
                     <input type="text" id="date_joining"
                       value="{{ Carbon\Carbon::parse($employee->date_joining)->translatedFormat('l, d F Y') }}"
                       class="form-control @error('date_joining') is-invalid @enderror" name="date_joining" readonly>
@@ -292,7 +292,7 @@
                   </div>
                   @if ($employee->date_leaving)
                     <div class="form-group col-md-6">
-                      <label for="date_leaving">Date Of Leaving</label>
+                      <label for="date_leaving">TMT Keluar</label>
                       <input type="text" id="date_leaving"
                         value="{{ Carbon\Carbon::parse($employee->date_leaving)->translatedFormat('l, d F Y') }}"
                         class="form-control @error('date_leaving') is-invalid @enderror" name="date_leaving" readonly>
@@ -482,7 +482,7 @@
                     @enderror
                   </div>
                   <div class="form-group col-md-6">
-                    <label for="date_joining">Date Of Joining <code>*</code></label>
+                    <label for="date_joining">TMT Masuk <code>*</code></label>
                     <input type="date" id="date_joining" value="{{ $employee->date_joining }}"
                       class="form-control @error('date_joining') is-invalid @enderror" name="date_joining" required>
                     @error('date_joining')

@@ -1,14 +1,18 @@
 <?php
 
 use App\Exports\AgeExport;
+use Illuminate\Http\Request;
 use App\Exports\GenderExport;
 use App\Exports\PositionExport;
+use App\Exports\ReligionExport;
+use App\Exports\ApprovalLogExport;
 use App\Exports\EducationalExport;
+use App\Exports\EmployeeInOutExport;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Route;
+use App\Exports\DivisionEmployeeExport;
 use App\Exports\EmployeeCategoryExport;
-use App\Exports\ReligionExport;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\Position\LevelController;
@@ -82,12 +86,27 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     // Route::get('/filter-data-approvals', [DashboardController::class, 'filterData'])->name('filter.approval');
     Route::get('/employee-chart-data/{year}', [DashboardController::class, 'getEmployeeChartData'])->name('employee-chart-data');
 
-    Route::get('/dashboard/employee', [DashboardController::class, 'employee'])->name('dashboard.employee');
-    Route::get('/dashboard/gender', [DashboardController::class, 'gender'])->name('dashboard.gender');
-    Route::get('/dashboard/educational', [DashboardController::class, 'educational'])->name('dashboard.educational');
-    Route::get('/dashboard/position', [DashboardController::class, 'position'])->name('dashboard.position');
-    Route::get('/dashboard/age', [DashboardController::class, 'age'])->name('dashboard.age');
-    Route::get('/dashboard/religion', [DashboardController::class, 'religion'])->name('dashboard.religion');
+    Route::get('/dashboard/employee-category', [DashboardController::class, 'employeeCategory'])->name('dashboard.employeeCategory');
+    Route::get('/dashboard/employee-gender', [DashboardController::class, 'gender'])->name('dashboard.gender');
+    Route::get('/dashboard/employee-educational', [DashboardController::class, 'educational'])->name('dashboard.educational');
+    Route::get('/dashboard/employee-level-position', [DashboardController::class, 'position'])->name('dashboard.position');
+    Route::get('/dashboard/employee-age', [DashboardController::class, 'age'])->name('dashboard.age');
+    Route::get('/dashboard/employee-religion', [DashboardController::class, 'religion'])->name('dashboard.religion');
+
+    Route::get('/approval/log', [DashboardController::class, 'approvalLog'])->name('approval.log');
+
+
+    Route::get('/employee-in-out', [DashboardController::class, 'employeeInOut'])->name('employeeInOut');
+    Route::get('/employee-in-per-month', [DashboardController::class, 'employeeDataPerMonth'])->name('employeeDataPerMonth');
+
+    // Route::get('/employees-by-level', [DashboardController::class, 'getEmployeesByLevel']);
+    Route::get('/employees-by-level-and-division', [DashboardController::class, 'getEmployeesByLevelAndDivision'])->name('getEmployeesByLevelAndDivision');
+
+
+    // Route::get('/employee-out-per-month', [DashboardController::class, 'employeeOutMonth'])->name('employeeOutMonth');
+    // Route::get('/employee-out-per-year', [DashboardController::class, 'employeeOutYear'])->name('employeeOutYear');
+    // Route::get('/employee-in-per-year', [DashboardController::class, 'employeeInYear'])->name('employeeInYear');
+    // Route::get('/employee-retirement', [DashboardController::class, 'employeeRetirement'])->name('employeeRetirement');
 
 
     Route::resource('activity-log', ActivityLogController::class)->only('index');
@@ -226,10 +245,25 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
         return Excel::download(new ReligionExport(), 'AgamaExport.xlsx');
     });
 
+    Route::get('/export-employee-in-out', function (Request $request) {
+        return Excel::download(new EmployeeInOutExport($request), 'EmployeeInOutExport.xlsx');
+    });
+
+    Route::get('/export-division-employee/{id}', function ($id) {
+        return Excel::download(new DivisionEmployeeExport($id), 'DivisionEmployeeExport.xlsx');
+    });
+
     Route::get('/export-educational', function () {
         $directorates = App\Models\WorkUnit\Directorate::with(['divisions.positions.employee'])->get();
         return Excel::download(new EducationalExport($directorates), 'educationExport.xlsx');
     });
+
+    Route::get('/export-approval-log', function (Request $request) {
+        $type = $request->input('type');
+        $year = $request->input('year', now()->year);
+
+        return Excel::download(new ApprovalLogExport($type, $year), 'ApprovalLogExport.xlsx');
+    })->name('export.approvalLog');
 
     // Route::get('/export-positions', function () {
     //     $directorates = App\Models\WorkUnit\Directorate::with(['divisions.positions.employee'])->get();

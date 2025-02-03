@@ -101,6 +101,11 @@ class SelectionController extends Controller
                 $candidates->where('marital_status', 'like', $request->marital_status);
             }
 
+            if ($request->filled('seleksi')) {
+                $candidates = $candidates->withCount('selectedCandidates') // Preload the count of selectedCandidates
+                    ->having('selected_candidates_count', '=', $request->seleksi); // Filter based on count
+            }
+
             if ($request->filled('last_educational')) {
                 $candidates->where('last_educational', 'like', $request->last_educational);
             }

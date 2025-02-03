@@ -171,7 +171,16 @@
                         Cerai Mati</option>
                     </select>
                   </th>
-                  <th scope="col" colspan="2">
+                  <th scope="col">
+                    <select type="text" id="seleksiFilter" class="form-control form-control-sm"
+                      style="width: 100%">
+                      <option value="" selected>Semua</option>
+                      @for ($i = 1; $i <= 5; $i++)
+                        <option value="{{ $i }}">{{ $i }}</option>
+                      @endfor
+                    </select>
+                  </th>
+                  <th scope="col">
                     <textarea type="text" class="form-control form-control-sm" id="tagSearch" placeholder="search Tag ..."></textarea>
                   </th>
                   <th scope="col">
@@ -268,6 +277,7 @@
             d.disability = $('#disabilitySearch').val();
             d.marital_status = $('#maritalFilter').val();
             d.tag = $('#tagSearch').val();
+            d.seleksi = $('#seleksiFilter').val();
             console.log(d);
           }
         },
@@ -375,6 +385,9 @@
       $('#maritalFilter').change(function() {
         table.draw();
       });
+      $('#seleksiFilter').change(function() {
+        table.draw();
+      });
       $('#tagSearch').keyup(function() {
         table.draw();
       });
@@ -390,6 +403,7 @@
         $('#studySearch').val(''); // Clear the regarding search input
         $('#disabilitySearch').val(''); // Clear the regarding search input
         $('#maritalFilter').val(''); // Clear the regarding search input
+        $('#seleksiFilter').val(''); // Clear the regarding search input
         $('#tagSearch').val(''); // Clear the regarding search input
         table.draw(); // Redraw the table
       });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Models\Approval\Approval;
 use App\Models\Employee\Contract;
 use App\Models\Employee\Employee;
 use App\Models\Position\Position;
@@ -12,6 +13,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\WorkUnit\Directorate;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\EmployeePerMonthExport;
 use App\Models\ManagementAccess\Company;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -31,6 +34,11 @@ class DashboardController extends Controller
 
         $nextMonthEnd = Carbon::now()->endOfMonth()->addMonths(2); // End of next month
         $today = Carbon::now();
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+
+        $selectedMonth = $request->input('month', $currentMonth);
+        $selectedYear = $request->input('year', $currentYear);
 
         $contracts = Contract::when(! $isSuperAdmin, function ($query) use ($companyId) {
             $query->where('company_id', $companyId);
@@ -124,51 +132,115 @@ class DashboardController extends Controller
             $query->where('id', $companyId);
         })->orderBy('name', 'asc')->get();
 
-        $currentYear = date('Y');
+        // $currentYear = date('Y');
         $employeeActiveData = [];
         $employeeNonActiveData = [];
         $monthlyEmployeeData = [];
+
         // Fetch employee data per month for the current year
         for ($month = 1; $month <= 12; $month++) {
-            $employeeActiveData[] = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $employeeActive = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
                 $query->where('employees.company_id', $companyId);
             })->where('employees.employee_status', 'AKTIF')->join('positions', 'employees.position_id', '=', 'positions.id')
-                ->whereYear('employees.date_joining', $currentYear)
+                ->whereYear('employees.date_joining', $selectedYear)
                 ->whereMonth('employees.date_joining', $month)
                 ->count();
 
-            $employeeNonActiveData[] = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $employeeNonActive = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
                 $query->where('employees.company_id', $companyId);
             })->where('employees.employee_status', '!=', 'AKTIF')->join('positions', 'employees.position_id', '=', 'positions.id')
-                ->whereYear('employees.date_leaving', $currentYear)
+                ->whereYear('employees.date_leaving', $selectedYear)
                 ->whereMonth('employees.date_leaving', $month)
                 ->count();
 
-            $employeeCount = DB::table('employees')
-                ->when(! $isSuperAdmin, function ($query) use ($companyId) {
-                    $query->where('company_id', $companyId);
-                })
-                ->where(function ($query) use ($currentYear, $month) {
-                    $query->whereYear('date_joining', '<', $currentYear)
-                        ->orWhere(function ($query) use ($currentYear, $month) {
-                            $query->whereYear('date_joining', '=', $currentYear)
-                                ->whereMonth('date_joining', '<=', $month);
-                        });
-                })
-                ->where(function ($query) use ($currentYear, $month) {
-                    $query->whereNull('date_leaving')
-                        ->orWhere(function ($query) use ($currentYear, $month) {
-                            $query->whereYear('date_leaving', '>', $currentYear)
-                                ->orWhere(function ($query) use ($currentYear, $month) {
-                                    $query->whereYear('date_leaving', '=', $currentYear)
-                                        ->whereMonth('date_leaving', '>=', $month);
-                                });
-                        });
-                })
-                ->count();
+            // if ($selectedYear != $currentYear) {
+            //     $employeeCount = DB::table('employees')
+            //         ->when(! $isSuperAdmin, function ($query) use ($companyId) {
+            //             $query->where('company_id', $companyId);
+            //         })
+            //         ->where(function ($query) use ($selectedYear, $month) {
+            //             $query->whereYear('date_joining', '<', $selectedYear)
+            //                 ->orWhere(function ($query) use ($selectedYear, $month) {
+            //                     $query->whereYear('date_joining', '=', $selectedYear)
+            //                         ->whereMonth('date_joining', '<=', $month);
+            //                 });
+            //         })
+            //         ->where(function ($query) use ($selectedYear, $month) {
+            //             $query->whereNull('date_leaving')
+            //                 ->orWhere(function ($query) use ($selectedYear, $month) {
+            //                     $query->whereYear('date_leaving', '>', $selectedYear)
+            //                         ->orWhere(function ($query) use ($selectedYear, $month) {
+            //                             $query->whereYear('date_leaving', '=', $selectedYear)
+            //                                 ->whereMonth('date_leaving', '>=', $month);
+            //                         });
+            //                 });
+            //         })
+            //         ->count();
+            // } else {
 
-            $monthlyEmployeeData[] = $employeeCount;
+            //     if ($month <= $currentMonth) {
+            //         $employeeCount = DB::table('employees')
+            //             ->when(! $isSuperAdmin, function ($query) use ($companyId) {
+            //                 $query->where('company_id', $companyId);
+            //             })
+            //             ->where(function ($query) use ($selectedYear, $month) {
+            //                 $query->whereYear('date_joining', '<', $selectedYear)
+            //                     ->orWhere(function ($query) use ($selectedYear, $month) {
+            //                         $query->whereYear('date_joining', '=', $selectedYear)
+            //                             ->whereMonth('date_joining', '<=', $month);
+            //                     });
+            //             })
+            //             ->where(function ($query) use ($selectedYear, $month) {
+            //                 $query->whereNull('date_leaving')
+            //                     ->orWhere(function ($query) use ($selectedYear, $month) {
+            //                         $query->whereYear('date_leaving', '>', $selectedYear)
+            //                             ->orWhere(function ($query) use ($selectedYear, $month) {
+            //                                 $query->whereYear('date_leaving', '=', $selectedYear)
+            //                                     ->whereMonth('date_leaving', '>=', $month);
+            //                             });
+            //                     });
+            //             })
+            //             ->count();
+            //     } else {
+            //         $employeeCount = 0; // Default value for future months
+            //     }
+            // }
 
+
+            $employeeCount = 0; // Default value for future months
+
+            if ($selectedYear != $currentYear || ($selectedYear == $currentYear && $month <= $currentMonth)) {
+                $employeeCount = DB::table('employees')
+                    ->when(! $isSuperAdmin, function ($query) use ($companyId) {
+                        $query->where('company_id', $companyId);
+                    })
+                    ->where(function ($query) use ($selectedYear, $month) {
+                        $query->whereYear('date_joining', '<', $selectedYear)
+                            ->orWhere(function ($query) use ($selectedYear, $month) {
+                                $query->whereYear('date_joining', '=', $selectedYear)
+                                    ->whereMonth('date_joining', '<=', $month);
+                            });
+                    })
+                    ->where(function ($query) use ($selectedYear, $month) {
+                        $query->whereNull('date_leaving')
+                            ->orWhere(function ($query) use ($selectedYear, $month) {
+                                $query->whereYear('date_leaving', '>', $selectedYear)
+                                    ->orWhere(function ($query) use ($selectedYear, $month) {
+                                        $query->whereYear('date_leaving', '=', $selectedYear)
+                                            ->whereMonth('date_leaving', '>=', $month);
+                                    });
+                            });
+                    })
+                    ->count();
+            }
+
+            $employeeActiveData[] = $employeeActive;
+            $employeeNonActiveData[] = $employeeNonActive;
+            $monthlyEmployeeData[] = $employeeCount - $employeeNonActive;
+            // $monthlyEmployeeData[] = ($employeeCount + $employeeActive) - $employeeNonActive;
+            $monthlyEmployeeActive[$month] = $employeeCount - $employeeNonActive;
+            $employeeIn[$month] = $employeeActive;
+            $employeeOut[$month] = $employeeNonActive;
 
             // $employeeNonActiveData[] = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
             //     $query->where('company_id', $companyId);
@@ -178,12 +250,10 @@ class DashboardController extends Controller
             //     ->count();
         }
         // Get the current month and year
-        $currentMonth = Carbon::now()->month;
-        $currentYear = Carbon::now()->year;
+
 
         // Get the requested month and year from the input, or default to current month and year
-        $selectedMonth = $request->input('month', $currentMonth);
-        $selectedYear = $request->input('year', $currentYear);
+
 
         // Base query for employee career approvals
         $query = DB::table('approvals')
@@ -219,14 +289,14 @@ class DashboardController extends Controller
                 })
                 ->count(),
             'categories' => [
-                'Promosi' => 'PROMOSI',
-                'Demosi' => 'DEMOSI',
-                'Restruktur Organisasi' => 'RESTRUKTUR ORGANISASI',
-                'Mutasi' => 'MUTASI',
-                'Rotasi' => 'ROTASI',
-                'Pensiun' => 'PENSIUN',
-                'Resign' => 'RESIGN',
-                'Non-Aktif' => 'NON-AKTIF',
+                'PROMOSI' => 'PROMOSI',
+                'DEMOSI' => 'DEMOSI',
+                'ROTASI' => 'ROTASI',
+                'PENUGASAN' => 'PENUGASAN',
+                'RESTRUKTUR ORGANISASI' => 'RESTRUKTUR ORGANISASI',
+                'PENSIUN' => 'PENSIUN',
+                'RESIGN' => 'RESIGN',
+                'NON-AKTIF' => 'NON-AKTIF',
             ],
         ];
 
@@ -268,14 +338,14 @@ class DashboardController extends Controller
                 })
                 ->count(),
             'categories' => [
-                'Promosi' => 'PROMOSI',
-                'Demosi' => 'DEMOSI',
-                'Restruktur Organisasi' => 'RESTRUKTUR ORGANISASI',
-                'Mutasi' => 'MUTASI',
-                'Rotasi' => 'ROTASI',
-                'Pensiun' => 'PENSIUN',
-                'Resign' => 'RESIGN',
-                'Non-Aktif' => 'NON-AKTIF',
+                'PROMOSI' => 'PROMOSI',
+                'DEMOSI' => 'DEMOSI',
+                'ROTASI' => 'ROTASI',
+                'PENUGASAN' => 'PENUGASAN',
+                'RESTRUKTUR ORGANISASI' => 'RESTRUKTUR ORGANISASI',
+                'PENSIUN' => 'PENSIUN',
+                'RESIGN' => 'RESIGN',
+                'NON-AKTIF' => 'NON-AKTIF',
             ],
         ];
 
@@ -302,25 +372,29 @@ class DashboardController extends Controller
         // Count active employees added this month
         $activePermonth = (clone $employees)
             ->where('employee_status', 'AKTIF')
-            ->whereMonth('created_at', now()->month)
+            ->whereMonth('date_joining', now()->month)
+            ->whereYear('date_joining', now()->year)
+
             ->count();
 
         // Count non-active employees added this month
         $nonActivePermonth = (clone $employees)
             ->where('employee_status', '!=', 'AKTIF')
-            ->whereMonth('created_at', now()->month)
+            ->whereMonth('date_leaving', now()->month)
+            ->whereYear('date_leaving', now()->year)
+
             ->count();
 
         // Count active employees added this year
         $activePeryear = (clone $employees)
             ->where('employee_status', 'AKTIF')
-            ->whereYear('created_at', now()->year)
+            ->whereYear('date_joining', now()->year)
             ->count();
 
         // Count non-active employees added this year
         $nonActivePeryear = (clone $employees)
             ->where('employee_status', '!=', 'AKTIF')
-            ->whereYear('created_at', now()->year)
+            ->whereYear('date_leaving', now()->year)
             ->count();
 
         // Count employees retiring this year
@@ -328,7 +402,7 @@ class DashboardController extends Controller
             ->where('employee_status', 'AKTIF')
             ->get() // Retrieve as a collection
             ->filter(function ($employee) {
-                $retirementDate = Carbon::parse($employee->dob)->addYears(55)->addMonths(3);
+                $retirementDate = Carbon::parse($employee->dob)->addYears(55);
                 return $retirementDate->year === now()->year;
             })
             ->count();
@@ -345,6 +419,9 @@ class DashboardController extends Controller
             'employeeActiveData',
             'employeeNonActiveData',
             'monthlyEmployeeData',
+            'monthlyEmployeeActive',
+            'employeeIn',
+            'employeeOut',
             'contractsIncoming',
             'contractsExpired',
             'selectedMonth',
@@ -360,8 +437,6 @@ class DashboardController extends Controller
             'retirementCount',
         ));
     }
-
-    // search kontrak di dashboard, print candidate
 
     /**
      * Show the form for creating a new resource.
@@ -422,44 +497,78 @@ class DashboardController extends Controller
 
         // Populate example data or fetch from database (you would replace this part)
         for ($month = 1; $month <= 12; $month++) {
-            $employeeActiveData[] = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $employeeActive = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
                 $query->where('company_id', $companyId);
             })->where('employee_status', 'AKTIF')
                 ->whereYear('date_joining', $year)
                 ->whereMonth('date_joining', $month)
                 ->count();
 
-            $employeeNonActiveData[] = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $employeeNonActive = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
                 $query->where('company_id', $companyId);
             })->where('employee_status', '!=', 'AKTIF')
                 ->whereYear('date_leaving', $year)
                 ->whereMonth('date_leaving', $month)
                 ->count();
 
-            $employeeCount = DB::table('employees')
-                ->when(! $isSuperAdmin, function ($query) use ($companyId) {
-                    $query->where('company_id', $companyId);
-                })
-                ->where(function ($query) use ($year, $month) {
-                    $query->whereYear('date_joining', '<', $year)
-                        ->orWhere(function ($query) use ($year, $month) {
-                            $query->whereYear('date_joining', '=', $year)
-                                ->whereMonth('date_joining', '<=', $month);
-                        });
-                })
-                ->where(function ($query) use ($year, $month) {
-                    $query->whereNull('date_leaving')
-                        ->orWhere(function ($query) use ($year, $month) {
-                            $query->whereYear('date_leaving', '>', $year)
-                                ->orWhere(function ($query) use ($year, $month) {
-                                    $query->whereYear('date_leaving', '=', $year)
-                                        ->whereMonth('date_leaving', '>=', $month);
-                                });
-                        });
-                })
-                ->count();
+            if ($year != now()->year) {
 
-            $monthlyEmployeeData[] = $employeeCount;
+                $employeeCount = DB::table('employees')
+                    ->when(! $isSuperAdmin, function ($query) use ($companyId) {
+                        $query->where('company_id', $companyId);
+                    })
+                    ->where(function ($query) use ($year, $month) {
+                        $query->whereYear('date_joining', '<', $year)
+                            ->orWhere(function ($query) use ($year, $month) {
+                                $query->whereYear('date_joining', '=', $year)
+                                    ->whereMonth('date_joining', '<=', $month);
+                            });
+                    })
+                    ->where(function ($query) use ($year, $month) {
+                        $query->whereNull('date_leaving')
+                            ->orWhere(function ($query) use ($year, $month) {
+                                $query->whereYear('date_leaving', '>', $year)
+                                    ->orWhere(function ($query) use ($year, $month) {
+                                        $query->whereYear('date_leaving', '=', $year)
+                                            ->whereMonth('date_leaving', '>=', $month);
+                                    });
+                            });
+                    })
+                    ->count();
+            } else {
+
+                if ($month <= now()->month) {
+                    $employeeCount = DB::table('employees')
+                        ->when(! $isSuperAdmin, function ($query) use ($companyId) {
+                            $query->where('company_id', $companyId);
+                        })
+                        ->where(function ($query) use ($year, $month) {
+                            $query->whereYear('date_joining', '<', $year)
+                                ->orWhere(function ($query) use ($year, $month) {
+                                    $query->whereYear('date_joining', '=', $year)
+                                        ->whereMonth('date_joining', '<=', $month);
+                                });
+                        })
+                        ->where(function ($query) use ($year, $month) {
+                            $query->whereNull('date_leaving')
+                                ->orWhere(function ($query) use ($year, $month) {
+                                    $query->whereYear('date_leaving', '>', $year)
+                                        ->orWhere(function ($query) use ($year, $month) {
+                                            $query->whereYear('date_leaving', '=', $year)
+                                                ->whereMonth('date_leaving', '>=', $month);
+                                        });
+                                });
+                        })
+                        ->count();
+                } else {
+                    $employeeCount = 0; // Default value for future months
+                }
+            }
+
+            $employeeActiveData[] = $employeeActive;
+            $employeeNonActiveData[] = $employeeNonActive;
+            // $monthlyEmployeeData[] = ($employeeCount + $employeeActive) - $employeeNonActive;
+            $monthlyEmployeeData[] = $employeeCount - $employeeNonActive;
         }
 
 
@@ -489,7 +598,7 @@ class DashboardController extends Controller
         return view('pages.dashboard.employeesDivision', compact('positions', 'divisionId'));
     }
 
-    public function employee()
+    public function employeeCategory()
     {
         $companyId = Auth::user()->company_id;
         $isSuperAdmin = Auth::user()->hasRole('super-admin');
@@ -555,4 +664,233 @@ class DashboardController extends Controller
         return view('pages.dashboard.table.religion', compact('directorates'));
     }
 
+    public function employeeInOut(Request $request)
+    {
+
+        // dd($request->status);
+
+        if ($request->status === 'retirement') {
+            $employees = Employee::when(! Auth::user()->hasRole('super-admin'), function ($query) {
+                $query->where('company_id', Auth::user()->company_id);
+            })->where('employee_status', 'AKTIF')
+                ->get() // Retrieve as a collection
+                ->filter(function ($employee) {
+                    $retirementDate = Carbon::parse($employee->dob)->addYears(55);
+                    return $retirementDate->year === now()->year;
+                });
+        } else {
+            $employees = Employee::when(! Auth::user()->hasRole('super-admin'), function ($query) {
+                $query->where('company_id', Auth::user()->company_id);
+            })
+                ->when($request->status, function ($q) use ($request) {
+                    if ($request->status === 'employeeIn') {
+                        $q->where('employee_status', 'AKTIF')
+                            ->whereYear('date_joining', now()->year)
+                            ->when($request->isMonth, function ($q) {
+                                $q->whereMonth('date_joining', now()->month);
+                            });
+                    } else {
+                        $q->where('employee_status', '!=', 'AKTIF')
+                            ->whereYear('date_leaving', now()->year)
+                            ->when($request->isMonth, function ($q) {
+                                $q->whereMonth('date_leaving', now()->month);
+                            });
+                    }
+                })
+                ->get();
+        }
+
+        return view('pages.dashboard.employee.employees', compact('employees'));
+    }
+
+    public function approvalLog(Request $request)
+    {
+
+        // dd($request->all());
+        // Get the current month and year if not provided
+        // $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+        // $selectedMonth = $request->input('month', $currentMonth);
+        $selectedYear = $request->input('year', $currentYear);
+
+        // Determine the query conditions
+        $approvalQuery = Approval::query();
+
+        $type = $request->type;
+
+        if (! in_array($request->type, ['KARYAWAN BARU', 'BUKA VERIFIKASI'])) {
+            $approvalQuery->join('employee_careers', 'approvals.employee_career_id', '=', 'employee_careers.id')
+                ->where('employee_careers.type', $type)
+                // ->whereMonth('employee_careers.start_date', $selectedMonth)
+                ->whereYear('employee_careers.start_date', $selectedYear);
+        } else {
+            // Check if selected_candidate_id is not null
+            if ($request->type === 'KARYAWAN BARU') {
+                $approvalQuery->whereNotNull('selected_candidate_id')
+                    ->where('is_approve', 1)
+                    // ->whereMonth('created_at', $selectedMonth)
+                    ->whereYear('created_at', $selectedYear);
+            } elseif ($request->type === 'BUKA VERIFIKASI') {
+                // If no selected_candidate_id, check for employee_id
+                $approvalQuery->whereNotNull('employee_id')
+                    ->where('is_approve', 1)
+                    // ->whereMonth('created_at', $selectedMonth)
+                    ->whereYear('created_at', $selectedYear);
+            }
+        }
+
+        // Apply company restriction for non-super-admin users
+        if (! Auth::user()->hasRole('super-admin')) {
+            $approvalQuery->where('company_id', Auth::user()->company_id);
+        }
+
+        // Execute the query
+        $approvals = $approvalQuery->get();
+
+        // Return the view with data
+        return view('pages.dashboard.approval.log-approval', compact('approvals', 'type'));
+    }
+
+    public function employeeDataPerMonth(Request $request)
+    {
+        $companyId = Auth::user()->company_id;
+        $isSuperAdmin = Auth::user()->hasRole('super-admin');
+        // Get the current month and year if not provided
+        $currentMonth = Carbon::now()->month;
+        $currentYear = Carbon::now()->year;
+        $selectedMonth = $request->input('month', $currentMonth);
+        $selectedYear = $request->input('year', $currentYear);
+
+        // Fetch employee data per month for the current year
+        for ($month = 1; $month <= 12; $month++) {
+            // $employeeActive = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
+            //     $query->where('employees.company_id', $companyId);
+            // })->where('employees.employee_status', 'AKTIF')->join('positions', 'employees.position_id', '=', 'positions.id')
+            //     ->whereYear('employees.date_joining', $selectedYear)
+            //     ->whereMonth('employees.date_joining', $month)
+            //     ->get();
+
+            // $employeeNonActive = DB::table('employees')->when(! $isSuperAdmin, function ($query) use ($companyId) {
+            //     $query->where('employees.company_id', $companyId);
+            // })->where('employees.employee_status', '!=', 'AKTIF')->join('positions', 'employees.position_id', '=', 'positions.id')
+            //     ->whereYear('employees.date_leaving', $selectedYear)
+            //     ->whereMonth('employees.date_leaving', $month)
+            //     ->get();
+
+            $employees = collect();
+
+            if ($selectedYear != $currentYear || ($selectedYear == $currentYear && $selectedMonth <= $currentMonth)) {
+                $employees = Employee::with('employeePhotos')
+                    ->when(! $isSuperAdmin, function ($query) use ($companyId) {
+                        $query->where('company_id', $companyId);
+                    })
+                    ->where(function ($query) use ($selectedYear, $selectedMonth) {
+                        $query->whereYear('date_joining', '<', $selectedYear)
+                            ->orWhere(function ($query) use ($selectedYear, $selectedMonth) {
+                                $query->whereYear('date_joining', '=', $selectedYear)
+                                    ->whereMonth('date_joining', '<=', $selectedMonth);
+                            });
+                    })
+                    ->where(function ($query) use ($selectedYear, $selectedMonth) {
+                        $query->whereNull('date_leaving')
+                            ->orWhere(function ($query) use ($selectedYear, $selectedMonth) {
+                                $query->whereYear('date_leaving', '>', $selectedYear)
+                                    ->orWhere(function ($query) use ($selectedYear, $selectedMonth) {
+                                        $query->whereYear('date_leaving', '=', $selectedYear)
+                                            ->whereMonth('date_leaving', '>=', $selectedMonth);
+                                    });
+                            });
+                    })
+                    ->get();
+            }
+
+            if ($request->has('export')) {
+                return Excel::download(new EmployeePerMonthExport($employees, $selectedMonth, $selectedYear), 'employee-per-month.xlsx');
+            }
+
+
+            // if (request()->ajax()) {
+            //     return DataTables::of($employees)
+            //         ->addIndexColumn()
+            //         ->editColumn('photo', function ($item) {
+            //             $mainPhoto = $item->employeePhotos->where('main_photo', true)->first();
+
+            //             if ($mainPhoto) {
+            //                 return '
+            //     <div class="fixed-frame">
+            //         <img src="'.asset('storage/'.$mainPhoto->file_path).'" data-fancybox alt="Icon User"
+            //         class="framed-image" style="cursor: pointer">
+            //     </div>';
+            //             } else {
+            //                 return 'No Image';
+            //             }
+            //         })->editColumn('employeeCategory', function ($item) {
+            //             $categoryName = $item->employeeCategory->name ?? '-';
+            //             $levelId = $item->position->level->id ?? '-';
+
+            //             $badgeColors = [
+            //                 1 => 'bg-light-primary',
+            //                 2 => 'bg-light-success',
+            //                 3 => 'bg-light-warning',
+            //                 4 => 'bg-light-danger',
+            //                 5 => 'bg-light-info',
+            //             ];
+
+            //             $badgeClass = $badgeColors[$levelId] ?? 'badge-secondary';
+
+            //             if (in_array($levelId, [1, 2, 3, 4, 5])) {
+            //                 return '<span>'.$categoryName.'</span><br>
+            //     <span class="badge '.$badgeClass.'">'.$item->position->level->name.'</span>';
+            //             }
+
+            //             return '<span>'.$categoryName.'</span>';
+
+            //         })->editColumn('position', function ($item) {
+            //             return $item->position->name ?? '-';
+            //         })->editColumn('division', function ($item) {
+            //             return $item->position->division->name ?? '-';
+            //         })->editColumn('is_verified', function ($item) {
+            //             // Initialize variables
+            //             $verified = '-';
+            //             // Determine verification badge
+            //             if ($item->is_verified == 0) {
+            //                 $verified = '<span class="badge bg-danger">Unverified</span> <br>';
+            //             } elseif ($item->is_verified == 1) {
+            //                 $verified = '<span class="badge bg-success">Verified</span> <br>';
+            //             }
+
+            //             // Return the concatenated result
+            //             return $verified;
+            //         })
+            //         ->rawColumns(['action', 'photo', 'is_verified', 'employeeCategory', 'employee_nik'])
+            //         ->toJson();
+            // }
+
+        }
+
+        return view('pages.dashboard.employee.employee-per-month',
+            compact(
+                'employees',
+                'selectedMonth',
+                'selectedYear',
+            ));
+
+    }
+
+    public function getEmployeesByLevelAndDivision(Request $request)
+    {
+        $levelName = $request->query('level_name');
+        $divisionId = $request->query('division_id');
+
+        $employees = Employee::where('employee_status', 'AKTIF')->whereHas('position.level', function ($query) use ($levelName) {
+            $query->where('name', $levelName);
+        })
+            ->whereHas('position.division', function ($query) use ($divisionId) {
+                $query->where('id', $divisionId);
+            })
+            ->with('position', 'position.level', 'position.division', 'employeeCategory')
+            ->get();
+
+        return response()->json($employees);
+    }
 }

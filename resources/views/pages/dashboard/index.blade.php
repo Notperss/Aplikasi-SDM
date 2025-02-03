@@ -42,14 +42,17 @@
                 </svg>
               </div>
             </div>
+
             <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <h6 class="text-muted font-semibold">Total Semua Karyawan</h6>
+              <h6 class="text-muted font-semibold">TOTAL SEMUA KARYAWAN</h6>
               <h4 class="font-extrabold mb-0">
 
                 {{ $allActiveEmployee }}
 
               </h4>
             </div>
+
+            </a>
           </div>
         </div>
       </div>
@@ -75,14 +78,18 @@
                 </svg>
               </div>
             </div>
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <h6 class="text-muted font-semibold">Karyawan Masuk Bulan Ini</h6>
-              <h4 class="font-extrabold mb-0">
 
-                {{ $activePermonth }}
+            <a href="{{ route('employeeInOut', ['status' => 'employeeIn', 'isMonth' => true]) }}">
+              <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                <h6 class="text-muted font-semibold">KARYAWAN MASUK BULAN INI</h6>
+                <h4 class="font-extrabold mb-0">
 
-              </h4>
-            </div>
+                  {{ $activePermonth }}
+
+                </h4>
+              </div>
+            </a>
+
           </div>
         </div>
       </div>
@@ -105,15 +112,17 @@
                 </svg>
               </div>
             </div>
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <h6 class="text-muted font-semibold">Karyawan Keluar Bulan Ini</h6>
-              <h4 class="font-extrabold mb-0">
+            <a href="{{ route('employeeInOut', ['status' => 'employeeOut', 'isMonth' => true]) }}">
+              <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                <h6 class="text-muted font-semibold">KARYAWAN KELUAR BULAN INI</h6>
+                <h4 class="font-extrabold mb-0">
 
-                {{ $nonActivePermonth }}
+                  {{ $nonActivePermonth }}
 
-              </h4>
-              </h6>
-            </div>
+                </h4>
+                </h6>
+              </div>
+            </a>
           </div>
         </div>
       </div>
@@ -138,14 +147,16 @@
                 </svg>
               </div>
             </div>
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <h6 class="text-muted font-semibold">Karyawan Masuk Tahun Ini</h6>
-              <h4 class="font-extrabold mb-0">
+            <a href="{{ route('employeeInOut', ['status' => 'employeeIn']) }}">
+              <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                <h6 class="text-muted font-semibold">KARYAWAN MASUK TAHUN INI</h6>
+                <h4 class="font-extrabold mb-0">
 
-                {{ $activePeryear }}
+                  {{ $activePeryear }}
 
-              </h4>
-            </div>
+                </h4>
+              </div>
+            </a>
           </div>
         </div>
       </div>
@@ -169,13 +180,16 @@
                 </svg>
               </div>
             </div>
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <h6 class="text-muted font-semibold">Karyawan Keluar Tahun Ini</h6>
-              <h4 class="font-extrabold mb-0">
-                {{ $nonActivePeryear }}
+            <a href="{{ route('employeeInOut', ['status' => 'employeeOut']) }}">
 
-              </h4>
-            </div>
+              <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                <h6 class="text-muted font-semibold">KARYAWAN KELUAR TAHUN INI</h6>
+                <h4 class="font-extrabold mb-0">
+                  {{ $nonActivePeryear }}
+
+                </h4>
+              </div>
+            </a>
           </div>
         </div>
       </div>
@@ -221,13 +235,16 @@
                   })
                   ->count();
             @endphp --}}
+            <a href="{{ route('employeeInOut', ['status' => 'retirement']) }}">
 
-            <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <h6 class="text-muted font-semibold"><small>Karyawan Pensiun Tahun Ini <br>Usia >= 55 Tahun</small></h6>
-              <h4 class="font-extrabold mb-0">
-                {{ $retirementCount }}
-              </h4>
-            </div>
+              <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
+                <h6 class="text-muted font-semibold"><small>KARYAWAN PENSIUN TAHUN INI, <br>(USIA >= 55 TAHUN)</small>
+                </h6>
+                <h4 class="font-extrabold mb-0">
+                  {{ $retirementCount }}
+                </h4>
+              </div>
+            </a>
 
 
           </div>
@@ -235,7 +252,6 @@
       </div>
     </div>
   </div>
-
 
   <div class="col-12 mb-4 text-center">
     <div class="col-md-4 mx-auto">
@@ -250,7 +266,7 @@
           </select>
 
           <select name="year" class="form-control w-48" onchange="this.form.submit()">
-            @for ($i = Carbon\Carbon::now()->year - 5; $i <= Carbon\Carbon::now()->year + 5; $i++)
+            @for ($i = Carbon\Carbon::now()->year - 5; $i <= Carbon\Carbon::now()->year; $i++)
               <option value="{{ $i }}" {{ $i == $selectedYear ? 'selected' : '' }}>
                 {{ $i }}
               </option>
@@ -275,8 +291,10 @@
     <div class="col-6 col-lg-2 col-md-6 mb-4">
       <div class="card shadow-sm border-light rounded">
         <div class="card-body text-center">
-          <h6 class="text-muted font-semibold">Karyawan Baru</h6>
-          <h4 class="font-extrabold mb-0">{{ $dataPerMonth['karyawan_baru'] }}</h4>
+          <h6 class="text-muted font-semibold">KARYAWAN BARU</h6>
+          <h4 class="font-extrabold mb-0">
+            {{ $dataPerMonth['karyawan_baru'] }}
+          </h4>
         </div>
       </div>
     </div>
@@ -284,7 +302,7 @@
     <div class="col-6 col-lg-2 col-md-6 mb-4">
       <div class="card shadow-sm border-light rounded">
         <div class="card-body text-center">
-          <h6 class="text-muted font-semibold">Buka Verifikasi</h6>
+          <h6 class="text-muted font-semibold">BUKA VERIFIKASI</h6>
           <h4 class="font-extrabold mb-0">{{ $dataPerMonth['buka_verifikasi'] }}</h4>
         </div>
       </div>
@@ -308,8 +326,10 @@
     <div class="col-6 col-lg-2 col-md-6 mb-4">
       <div class="card shadow-sm border-light rounded">
         <div class="card-body text-center">
-          <h6 class="text-muted font-semibold">Karyawan Baru</h6>
-          <h4 class="font-extrabold mb-0">{{ $dataPerYear['karyawan_baru'] }}</h4>
+          <h6 class="text-muted font-semibold">KARYAWAN BARU</h6>
+          <a href="{{ route('approval.log', ['year' => $selectedYear, 'type' => 'KARYAWAN BARU']) }}">
+            <h4 class="font-extrabold mb-0">{{ $dataPerYear['karyawan_baru'] }}</h4>
+          </a>
         </div>
       </div>
     </div>
@@ -317,8 +337,12 @@
     <div class="col-6 col-lg-2 col-md-6 mb-4">
       <div class="card shadow-sm border-light rounded">
         <div class="card-body text-center">
-          <h6 class="text-muted font-semibold">Buka Verifikasi</h6>
-          <h4 class="font-extrabold mb-0">{{ $dataPerYear['buka_verifikasi'] }}</h4>
+          <h6 class="text-muted font-semibold">BUKA VERIFIKASI</h6>
+          <h4 class="font-extrabold mb-0">
+            <a href="{{ route('approval.log', ['year' => $selectedYear, 'type' => 'BUKA VERIFIKASI']) }}">
+              {{ $dataPerYear['buka_verifikasi'] }}
+            </a>
+          </h4>
         </div>
       </div>
     </div>
@@ -328,11 +352,55 @@
         <div class="card shadow-sm border-light rounded">
           <div class="card-body text-center">
             <h6 class="text-muted font-semibold">{{ $label }}</h6>
-            <h4 class="font-extrabold mb-0">{{ $count }}</h4>
+            <h4 class="font-extrabold mb-0">
+              <a href="{{ route('approval.log', ['year' => $selectedYear, 'type' => $label]) }}">
+                {{ $count }}
+              </a>
+            </h4>
           </div>
         </div>
       </div>
     @endforeach
+  </div>
+
+  <div class="row">
+    <h5 class="col-12 mb-4 text-center text-primary">Data Aktif Karyawan Pertahun ({{ $selectedYear }})</h5>
+
+    @for ($month = 1; $month <= 12; $month++)
+      <div class="col-6 col-lg-2 col-md-6 mb-4">
+        <div class="card shadow-sm border-light rounded">
+          <div class="card-body text-center">
+            {{-- <h6 class="text-muted font-semibold">{{ \Carbon\Carbon::create()->month($month)->format('F') }}</h6>
+            <h4 class="font-extrabold mb-0"> --}}
+
+            <div class="d-flex justify-content-between align-items-center">
+              <h6 class="text-muted font-semibold">
+                <a href="{{ route('employeeDataPerMonth', ['year' => $selectedYear, 'month' => $month]) }}">
+                  {{ strtoupper(\Carbon\Carbon::create()->locale('id')->month($month)->translatedFormat('F')) }}</a>
+              </h6>
+              <span class="h6"> {{ $monthlyEmployeeActive[$month] }} </span>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+              <h6 class="text-muted font-semibold" style="font-size: 80%">
+                MASUK
+              </h6>
+              <span class="h6"> {{ $employeeIn[$month] }} </span>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+              <h6 class="text-muted font-semibold" style="font-size: 80%">
+                KELUAR
+              </h6>
+              <span class="h6"> {{ $employeeOut[$month] }} </span>
+            </div>
+
+            <!-- You can add additional data here if needed -->
+            </h4>
+          </div>
+        </div>
+      </div>
+    @endfor
   </div>
 
   <div class="row">
@@ -366,30 +434,10 @@
                 aria-controls="religion" aria-selected="false">Agama</a>
             </li>
           </ul>
-          {{-- <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="employee" role="tabpanel" aria-labelledby="employee-tab">
-              @include('pages.dashboard.table.employee-categories')
-            </div>
-            <div class="tab-pane fade show" id="gender" role="tabpanel" aria-labelledby="gender-tab">
-              @include('pages.dashboard.table.gender')
-            </div>
-            <div class="tab-pane fade" id="educational" role="tabpanel" aria-labelledby="educational-tab">
-              @include('pages.dashboard.table.educational')
-            </div>
-            <div class="tab-pane fade" id="position" role="tabpanel" aria-labelledby="position-tab">
-              @include('pages.dashboard.table.position')
-            </div>
-            <div class="tab-pane fade" id="age" role="tabpanel" aria-labelledby="age-tab">
-              @include('pages.dashboard.table.age')
-            </div>
-            <div class="tab-pane fade" id="religion" role="tabpanel" aria-labelledby="religion-tab">
-              @include('pages.dashboard.table.religion')
-            </div>
-          </div> --}}
 
           <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="employee" role="tabpanel" aria-labelledby="employee-tab"
-              data-url="{{ route('dashboard.employee') }}">
+              data-url="{{ route('dashboard.employeeCategory') }}">
               <!-- Loading Spinner -->
               <div class="d-flex justify-content-center align-items-center" id="employee-loader">
                 <div class="spinner-border text-primary" role="status">
@@ -468,6 +516,7 @@
               <div class="row">
                 <div class="col-md-12">
                   @php
+
                     $positionsWithActiveEmployeeCount = $division
                         ->positions()
                         ->whereHas('employee', function ($query) {
@@ -507,6 +556,22 @@
                         })
                         ->count();
 
+                    $levelsWithCounts = $division
+                        ->positions()
+                        ->whereHas('employee', function ($query) {
+                            $query
+                                ->where('employee_status', 'AKTIF')
+                                ->when(!Auth::user()->hasRole('super-admin'), function ($query) {
+                                    $query->where('company_id', Auth::user()->company_id);
+                                });
+                        })
+                        ->with('level')
+                        ->get()
+                        ->sortBy('level.id')
+                        ->groupBy('level.name') // Group positions by level name
+                        ->map(function ($positions) {
+                            return $positions->count(); // Count positions for each level
+                        });
                   @endphp
                   <div class="d-flex justify-content-between align-items-center">
                     <h6 class="text-muted font-semibold">
@@ -528,6 +593,23 @@
                     </h6>
                     <span class="h5"> {{ $positionsWithActiveEmployeeNonOfficeCount }} </span>
                   </div>
+
+                  <hr>
+
+                  @foreach ($levelsWithCounts as $levelName => $count)
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#employeeLevelModal"
+                      data-level-name="{{ $levelName }}" data-division-id="{{ $division->id }}">
+
+                      <div class="d-flex justify-content-between align-items-center ">
+                        <h6 class="text-muted font-semibold" style="font-size: 75%">
+                          {{ $levelName ?? 'No Level Assigned' }}
+                        </h6>
+                        <span style="font-size: 85%">{{ $count }}</span>
+                      </div>
+                    </a>
+                    @include('pages.dashboard.modal-level-division')
+                  @endforeach
+
                   {{-- <h6 class="text-muted font-semibold">
                     <a href="{{ route('getDivisionEmployee', $division->id) }}"> {{ $division->code }}</a>
                   </h6>
@@ -594,6 +676,23 @@
                       })
                       ->count();
 
+                  $levelsWithCounts = $division
+                      ->positions()
+                      ->whereHas('employee', function ($query) {
+                          $query
+                              ->where('employee_status', 'AKTIF')
+                              ->when(!Auth::user()->hasRole('super-admin'), function ($query) {
+                                  $query->where('company_id', Auth::user()->company_id);
+                              });
+                      })
+                      ->with('level')
+                      ->get()
+                      ->sortBy('level.id')
+                      ->groupBy('level.name')
+                      ->map(function ($positions) {
+                          return $positions->count(); // Count positions for each level
+                      });
+
                 @endphp
                 <div class="col-md-12">
                   {{-- <h6 class="text-muted font-semibold">
@@ -622,6 +721,23 @@
                     </h6>
                     <span class="h5"> {{ $positionsWithActiveEmployeeNonOfficeCount }} </span>
                   </div>
+
+                  <hr>
+
+                  @foreach ($levelsWithCounts as $levelName => $count)
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#employeeLevelModal"
+                      data-level-name="{{ $levelName }}" data-division-id="{{ $division->id }}">
+
+                      <div class="d-flex justify-content-between align-items-center ">
+                        <h6 class="text-muted font-semibold" style="font-size: 75%">
+                          {{ $levelName ?? 'No Level Assigned' }}
+                        </h6>
+                        <span style="font-size: 85%">{{ $count }}</span>
+                      </div>
+                    </a>
+                    @include('pages.dashboard.modal-level-division')
+                  @endforeach
+
                 </div>
               </div>
             </div>
@@ -673,8 +789,8 @@
       <div class="card">
         <div class="card-header">
           <div class="d-flex justify-content-between align-items-center">
-            <h4>Data Karyawan Pertahun</h4>
-            <div class="col-md-2">
+            {{-- <h4>Data Karyawan Pertahun</h4> --}}
+            {{--   <div class="col-md-2">
               <label for="year-select">Pilih Tahun</label>
               <select id="year-select" class="form-control" aria-label="Pilih Tahun">
                 @for ($year = 2015; $year <= date('Y'); $year++)
@@ -682,7 +798,7 @@
                   </option>
                 @endfor
               </select>
-            </div>
+            </div> --}}
           </div>
         </div>
         <div class="card-body">
@@ -871,7 +987,7 @@
               <button id="filter-date" class="btn btn-primary btn-sm ms-2">Filter</button>
             </div> --}}
             <div>
-              <label for="month" class="me-2">Month:</label>
+              <label for="month" class="me-2">Bulan:</label>
               <select id="month" class="form-control form-control-sm"
                 style="width: 150px; display: inline-block;">
                 @foreach (range(1, 12) as $month)
@@ -881,10 +997,10 @@
                 @endforeach
               </select>
 
-              <label for="year" class="me-2">Year:</label>
+              <label for="year" class="me-2">Tahun:</label>
               <select id="year" class="form-control form-control-sm"
                 style="width: 150px; display: inline-block;">
-                @for ($year = 2015; $year <= date('Y'); $year++)
+                @for ($year = 2020; $year <= date('Y'); $year++)
                   <option value="{{ $year }}" {{ $year == date('Y') ? 'selected' : '' }}>
                     {{ $year }}
                   </option>
@@ -1010,11 +1126,99 @@
 
   </div>
 
+
 </div>
 
 <script src="{{ asset('dist/assets/extensions/apexcharts/apexcharts.min.js') }}"></script>
 
+{{-- <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var employeeLevelModal = document.getElementById('employeeLevelModal');
+    employeeLevelModal.addEventListener('show.bs.modal', function(event) {
+      // Button that triggered the modal
+      var button = event.relatedTarget;
 
+      // Extract level name from the button's data attribute
+      var levelName = button.getAttribute('data-level-name');
+      var divisionId = button.getAttribute('data-division-id');
+
+      // Update the modal title
+      document.getElementById('modalLevelName').textContent = levelName;
+
+      // Fetch employee data via AJAX
+      fetch(
+          `/employees-by-level-and-division?level_name=${encodeURIComponent(levelName)}&division_id=${encodeURIComponent(divisionId)}`
+        )
+        .then(response => response.json())
+        .then(data => {
+          var employeeList = document.getElementById('employeeList');
+          employeeList.innerHTML = ''; // Clear previous data
+
+          // Populate the table with employee data
+          data.forEach(employee => {
+            var row = `<tr>
+                            <td>${employee.name}</td>
+                            <td>${employee.position.name}</td>
+                            <td>${employee.position.level.name}</td>
+                            <td>${employee.employeeCategory.name}</td>
+                        </tr>`;
+            employeeList.insertAdjacentHTML('beforeend', row);
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching employee data:', error);
+        });
+    });
+  });
+</script> --}}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var employeeLevelModal = document.getElementById('employeeLevelModal');
+    employeeLevelModal.addEventListener('show.bs.modal', function(event) {
+      var button = event.relatedTarget;
+      var levelName = button.getAttribute('data-level-name');
+      var divisionId = button.getAttribute('data-division-id');
+
+      document.getElementById('modalLevelName').textContent = levelName;
+
+      fetch("{{ route('getEmployeesByLevelAndDivision') }}?level_name=" + encodeURIComponent(levelName) +
+          "&division_id=" + encodeURIComponent(divisionId))
+
+        .then(response => response.json())
+        .then(data => {
+          var employeeList = document.getElementById('employeeList');
+          employeeList.innerHTML = '';
+
+          data.forEach(employee => {
+            var row = `<tr>
+                            <td>${employee.nik}</td>
+                            <td>${employee.name}</td>
+                            <td>${employee.position.name}</td>
+                            <td>${employee.position.level.name}</td>
+                            <td>${employee.position.division.name}</td>
+                        </tr>`;
+            employeeList.insertAdjacentHTML('beforeend', row);
+          });
+
+          $('#employeeTable').DataTable({
+            paging: true,
+            searching: true,
+            ordering: true,
+            info: true,
+            destroy: true,
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching employee data:', error);
+        });
+    });
+
+    employeeLevelModal.addEventListener('hidden.bs.modal', function() {
+      $('#employeeTable').DataTable().destroy();
+    });
+  });
+</script>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -1067,7 +1271,7 @@
         position: 'top'
       },
       title: {
-        text: `Employee Data for the Year {{ date('Y') }}`,
+        text: `Data Karyawan Pertahun ({{ $selectedYear }})`,
         align: 'center',
         style: {
           fontSize: '20px',
@@ -1088,41 +1292,41 @@
     chart.render();
 
     // Year selection and chart update logic
-    document.getElementById('year-select').addEventListener('change', function() {
-      var selectedYear = this.value;
+    // document.getElementById('year-select').addEventListener('change', function() {
+    //   var selectedYear = this.value;
 
-      // Use route() helper for dynamic URL generation
-      fetch(`{{ route('employee-chart-data', ['year' => '__YEAR__']) }}`.replace('__YEAR__', selectedYear))
-        .then(response => response.json())
-        .then(data => {
-          chart.updateSeries([{
-              name: 'Karyawan Masuk',
-              data: data.employeeActiveData
-            },
-            {
-              name: 'Karyawan Keluar',
-              data: data.employeeNonActiveData
-            },
-            {
-              name: 'Karyawan Bekerja',
-              data: data.monthlyEmployeeData
-            }
-          ]);
-          chart.updateOptions({
-            title: {
-              text: `Employee Data for the Year ${selectedYear}`
-            }
-          });
-        })
-        .catch(error => {
-          console.error('Error fetching data:', error);
-          alert('Gagal mengambil data. Silakan coba lagi.');
-        })
-        .finally(() => {
-          // Hide loader
-          document.getElementById('loader').style.display = 'none';
-        });
-    });
+    //   // Use route() helper for dynamic URL generation
+    //   fetch(`{{ route('employee-chart-data', ['year' => '__YEAR__']) }}`.replace('__YEAR__', selectedYear))
+    //     .then(response => response.json())
+    //     .then(data => {
+    //       chart.updateSeries([{
+    //           name: 'Karyawan Masuk',
+    //           data: data.employeeActiveData
+    //         },
+    //         {
+    //           name: 'Karyawan Keluar',
+    //           data: data.employeeNonActiveData
+    //         },
+    //         {
+    //           name: 'Karyawan Bekerja',
+    //           data: data.monthlyEmployeeData
+    //         }
+    //       ]);
+    //       chart.updateOptions({
+    //         title: {
+    //           text: `Employee Data for the Year ${selectedYear}`
+    //         }
+    //       });
+    //     })
+    //     .catch(error => {
+    //       console.error('Error fetching data:', error);
+    //       alert('Gagal mengambil data. Silakan coba lagi.');
+    //     })
+    //     .finally(() => {
+    //       // Hide loader
+    //       document.getElementById('loader').style.display = 'none';
+    //     });
+    // });
   });
 </script>
 
@@ -1180,11 +1384,10 @@
   }
 </script>
 
-
 @endsection
 
 @push('after-script')
-<script>
+{{-- <script>
   document.addEventListener('DOMContentLoaded', function() {
     const tabs = document.querySelectorAll('.nav-link');
 
@@ -1196,7 +1399,7 @@
       const url = targetTab.getAttribute('data-url');
 
       // Show the loader while content is being fetched
-      loader.style.display = 'flex';
+      // loader.style.display = 'flex';
       loader.classList.add('mt-3');
 
       // Check if content is already loaded
@@ -1231,7 +1434,79 @@
       });
     });
   });
+
+  
+</script> --}}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const tabs = document.querySelectorAll('.nav-link');
+
+    // Function untuk load content dalam tab
+    function loadTabContent(tab) {
+      const targetId = tab.getAttribute('href').substring(1); // Ambil ID tab content
+      const targetTab = document.getElementById(targetId);
+      const loader = targetTab.querySelector('#' + targetId + '-loader'); // Loader
+      const url = targetTab.getAttribute('data-url');
+
+      // Tampilkan loader saat konten sedang dimuat
+      if (loader) {
+        loader.style.display = 'block';
+      }
+
+      // Cek apakah data sudah dimuat sebelumnya
+      if (!targetTab.dataset.loaded) {
+        fetch(url)
+          .then(response => response.text())
+          .then(data => {
+            targetTab.innerHTML = data; // Masukkan konten ke dalam tab
+            targetTab.dataset.loaded = true; // Tandai sudah dimuat
+
+            // Sembunyikan loader setelah selesai
+            if (loader) {
+              loader.style.display = 'none';
+            }
+
+            // Inisialisasi DataTables jika ada dalam tab yang baru dimuat
+            $(targetTab).find('.dataTable').DataTable({
+              "paging": true,
+              "lengthChange": true,
+              "searching": true,
+              "ordering": true,
+              "info": true,
+              "autoWidth": false
+            });
+          })
+          .catch(error => {
+            console.error('Error loading tab content:', error);
+            if (loader) {
+              loader.style.display = 'none';
+            }
+          });
+      } else {
+        if (loader) {
+          loader.style.display = 'none';
+        }
+      }
+    }
+
+    // Load konten tab yang aktif saat halaman pertama kali dimuat
+    const activeTab = document.querySelector('.nav-link.active');
+    if (activeTab) {
+      loadTabContent(activeTab);
+    }
+
+    // Tambahkan event listener untuk klik tab
+    tabs.forEach(tab => {
+      tab.addEventListener('click', function(event) {
+        event.preventDefault(); // Mencegah reload saat klik tab
+        loadTabContent(tab);
+      });
+    });
+  });
 </script>
+
+
 {{-- <script>
   jQuery(document).ready(function($) {
     const table = $('#table-expired-contract').DataTable({

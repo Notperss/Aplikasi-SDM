@@ -205,7 +205,7 @@
                 @enderror
               </div>
               <div class="form-group col-md-6">
-                <label for="date_joining">Date Of Joining <code>*</code></label>
+                <label for="date_joining">TMT Masuk <code>*</code></label>
                 <input type="date" id="date_joining" value="{{ now()->format('Y-m-d') }}"
                   class="form-control @error('date_joining') is-invalid @enderror" name="date_joining">
                 @error('date_joining')

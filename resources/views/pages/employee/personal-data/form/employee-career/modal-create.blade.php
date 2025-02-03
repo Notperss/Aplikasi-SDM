@@ -74,7 +74,7 @@
                       <option value="PROMOSI" {{ old('type') == 'PROMOSI' ? 'selected' : '' }}>PROMOSI</option>
                       <option value="DEMOSI" {{ old('type') == 'DEMOSI' ? 'selected' : '' }}>DEMOSI</option>
                       <option value="ROTASI" {{ old('type') == 'ROTASI' ? 'selected' : '' }}>ROTASI</option>
-                      <option value="MUTASI" {{ old('type') == 'MUTASI' ? 'selected' : '' }}>MUTASI</option>
+                      <option value="PENUGASAN" {{ old('type') == 'PENUGASAN' ? 'selected' : '' }}>PENUGASAN</option>
                       <option value="RESTRUKTUR ORGANISASI"
                         {{ old('type') == 'RESTRUKTUR ORGANISASI' ? 'selected' : '' }}>RESTRUKTUR ORGANISASI</option>
                       <option value="NON-AKTIF" {{ old('type') == 'NON-AKTIF' ? 'selected' : '' }}>NON-AKTIF</option>

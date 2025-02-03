@@ -3,8 +3,7 @@
 @section('content')
 
 @section('breadcrumb')
-  <x-breadcrumb title="Karyawan Divisi {{ $divisionId->name ?? 'N/A' }}" page="Karyawan" active="Karyawan "
-    route="{{ route('dashboard.index') }}" />
+  <x-breadcrumb title="Karyawan" page="Karyawan" active="Karyawan " route="{{ route('dashboard.index') }}" />
 @endsection
 
 <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
@@ -15,11 +14,10 @@
   <div class="card">
     <div class="card-header">
       <div class="d-flex justify-content-between align-items-center ">
-        <h5 class="fw-normal mb-0 text-body">Daftar Karyawan Divisi
-          {{ $divisionId->name ?? 'N/A' }}
-          ( {{ $divisionId->code ?? 'N/A' }} )
+        <h5 class="fw-normal mb-0 text-body">Daftar Karyawan
         </h5>
-        <a href="{{ url('/export-division-employee', $divisionId->id) }}" class="btn btn-sm btn-success">
+        <a href="{{ url('/export-employee-in-out') }}?status={{ request('status') }}&isMonth={{ request('isMonth') }}"
+          class="btn btn-sm btn-success">
           Export
         </a>
       </div>
@@ -42,14 +40,14 @@
           </tr>
         </thead>
         <tbody>
-          @foreach ($positions as $pos)
+          @foreach ($employees as $employee)
             <tr>
               <td>
                 {{ $loop->iteration }}
               </td>
               <td>
                 @php
-                  $mainPhoto = $pos->employee->employeePhotos->where('main_photo', true)->first();
+                  $mainPhoto = $employee->employeePhotos->where('main_photo', true)->first();
                 @endphp
                 @if ($mainPhoto)
                   <div class="fixed-frame">
@@ -61,18 +59,18 @@
                 @endif
               </td>
               <td>
-                {{ $pos->employee->nik ?? '' }}
+                {{ $employee->nik ?? '' }}
               </td>
               <td>
-                {{ $pos->employee->name ?? '' }}
+                {{ $employee->name ?? '' }}
               </td>
               <td>
-                {{ $pos->name ?? '' }}
+                {{ $employee->position->name ?? '' }}
               </td>
               <td>
                 @php
-                  $categoryName = $pos->employee->employeeCategory->name ?? '-';
-                  $levelId = $pos->level->id ?? '-';
+                  $categoryName = $employee->employeeCategory->name ?? '-';
+                  $levelId = $employee->position->level->id ?? '-';
 
                   $badgeColors = [
                       1 => 'bg-light-primary',
@@ -87,24 +85,24 @@
 
                 @if (in_array($levelId, [1, 2, 3, 4, 5]))
                   <span>{{ $categoryName }}</span><br>
-                  <span class="badge {{ $badgeClass }}">{{ $pos->level->name }}</span>
+                  <span class="badge {{ $badgeClass }}">{{ $employee->position->level->name }}</span>
                 @endif
 
 
                 {{-- <span class="badge bg-light-primary">asoidjhoa</span> --}}
-                {{-- {{ $pos->employee->employeeCategory->name ?? '' }} --}}
+                {{-- {{ $employee->employeeCategory->name ?? '' }} --}}
               </td>
               <td>
-                @if ($pos->employee->is_verified == 0)
+                @if ($employee->is_verified == 0)
                   <span class="badge bg-danger">Unverified</span>
-                @elseif ($pos->employee->is_verified == 1)
+                @elseif ($employee->is_verified == 1)
                   <span class="badge bg-success">Verified</span>
                 @else
                   -
                 @endif
               </td>
               <td>
-                <a href="{{ route('employee.show', $pos->employee->id) }}" class="btn btn-sm btn-primary">Lihat</a>
+                <a href="{{ route('employee.show', $employee->id) }}" class="btn btn-sm btn-primary">Lihat</a>
               </td>
             </tr>
           @endforeach
