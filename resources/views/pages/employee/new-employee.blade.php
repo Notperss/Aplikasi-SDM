@@ -543,7 +543,7 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="religion">Agama</label>
+                  <label for="religion">Agama <code>*</code></label>
                   <select id="religion" name="religion"
                     class="form-control @error('religion') is-invalid @enderror">
                     <option value="" disabled selected>Select Religion</option>

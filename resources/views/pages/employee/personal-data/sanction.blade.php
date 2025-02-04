@@ -42,7 +42,10 @@
                       </td>
                       <td class="text-bold-500">
                         @if ($sanction->file_sanction)
-                          <a href="{{ Storage::url($sanction->file_sanction) }}" target="_blank">
+                          {{-- <a href="{{ Storage::url($sanction->file_sanction) }}" target="_blank">
+                            Lihat
+                          </a> --}}
+                          <a href="{{ asset('storage/' . $sanction->file_sanction) }}" target="_blank" class="text-sm">
                             Lihat
                           </a>
                         @else

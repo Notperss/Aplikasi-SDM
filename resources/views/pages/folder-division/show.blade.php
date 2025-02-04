@@ -34,13 +34,13 @@
           class="bi bi-plus-lg"></i>
         Add Folder</a>
     @endcan --}}
-
-    <button type="button" class="btn btn-primary btn-md my-2" data-bs-toggle="modal"
-      data-bs-target="#modal-form-add-folder">
-      <i class="bi bi-plus-lg"></i>
-      Add Folder
-    </button>
-
+    @role('assistant-manager|manager|super-admin')
+      <button type="button" class="btn btn-primary btn-md my-2" data-bs-toggle="modal"
+        data-bs-target="#modal-form-add-folder">
+        <i class="bi bi-plus-lg"></i>
+        Add Folder
+      </button>
+    @endrole
     @include('pages.folder-division.add-folder')
 
     <div class="row">
@@ -51,25 +51,27 @@
             <div class="container d-flex justify-content-between">
 
               @if (!$descendant->is_lock)
-                <a href="#" onclick="deleteFolder({{ $descendant->id }})">
-                  <i class="bi bi-x"></i>
-                </a>
+                @role('assistant-manager|manager|super-admin')
+                  <a href="#" onclick="deleteFolder({{ $descendant->id }})">
+                    <i class="bi bi-x"></i>
+                  </a>
 
-                <a data-bs-toggle="modal" data-bs-target="#modal-form-edit-menu-{{ $descendant->id }}" class="ms-auto"
-                  title="Edit"> <i class="bi bi-three-dots"></i></a>
-                @include('pages.folder-division.edit-descendants')
-                <form id="deleteForm_{{ $descendant->id }}" action="{{ route('folder.destroy', $descendant->id) }}"
-                  method="POST" style="display:inline;">
-                  @csrf
-                  @method('DELETE')
-                </form>
+                  <a data-bs-toggle="modal" data-bs-target="#modal-form-edit-menu-{{ $descendant->id }}" class="ms-auto"
+                    title="Edit"> <i class="bi bi-three-dots"></i></a>
+                  @include('pages.folder-division.edit-descendants')
+                  <form id="deleteForm_{{ $descendant->id }}" action="{{ route('folder.destroy', $descendant->id) }}"
+                    method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                  </form>
 
-                {{-- @if ($descendant->is_lock == false) --}}
-                <a href="{{ route('lockFolder', $descendant->id) }}" class="position-absolute"
-                  style="bottom: 10px; right: 10px;" title="Kunci Folder"
-                  onclick="return confirm('Apakah anda yakin mengunci folder?')">
-                  <i class="bi bi-unlock"></i>
-                </a>
+                  {{-- @if ($descendant->is_lock == false) --}}
+                  <a href="{{ route('lockFolder', $descendant->id) }}" class="position-absolute"
+                    style="bottom: 10px; right: 10px;" title="Kunci Folder"
+                    onclick="return confirm('Apakah anda yakin mengunci folder?')">
+                    <i class="bi bi-unlock"></i>
+                  </a>
+                @endrole
               @else
                 @role('super-admin')
                   <a href="{{ route('lockFolder', $descendant->id) }}" class="position-absolute"
@@ -199,29 +201,35 @@
                           </button>
                         @endrole
                       @else
-                        <a onclick="return confirm('Apakah kamu yakin akan membuka kunci arsip?')"
-                          href="{{ route('lockFolderFile', $file->id) }}" class="btn btn-danger btn-sm"
-                          title="Kunci File">
-                          <i class="bi bi-unlock"></i>
-                        </a>
+                        @role('senior-officer|assistant-manager|manager|super-admin')
+                          <a onclick="return confirm('Apakah kamu yakin akan membuka kunci arsip?')"
+                            href="{{ route('lockFolderFile', $file->id) }}" class="btn btn-danger btn-sm"
+                            title="Kunci File">
+                            <i class="bi bi-unlock"></i>
+                          </a>
+                        @else
+                          <a class="btn btn-danger btn-sm" title="Kunci File">
+                            <i class="bi bi-unlock"></i>
+                          </a>
+                        @endrole
                       @endif
                     </td>
                     <td class="text-center">
-                      @role('super-admin')
-                        @if (!$file->is_lock)
-                          <button onclick="deleteFile({{ $file->id }})" class="btn btn-sm btn-danger">
-                            </i>Delete</button>
-                          <a data-bs-toggle="modal" data-bs-target="#modal-form-move-menu-{{ $file->id }}"
-                            class="btn btn-sm btn-primary" title="Pindah File"> Pindah</a>
-                          @include('pages.folder-division.move-file')
+                      @if (!$file->is_lock)
+                        <button onclick="deleteFile({{ $file->id }})" class="btn btn-sm btn-danger">
+                          </i>Delete</button>
+                        <a data-bs-toggle="modal" data-bs-target="#modal-form-move-menu-{{ $file->id }}"
+                          class="btn btn-sm btn-primary" title="Pindah File"> Pindah</a>
+                        @include('pages.folder-division.move-file')
 
-                          <form id="deleteFile_{{ $file->id }}"
-                            action="{{ route('folder.delete_file', $file->id) }}" method="POST"
-                            style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                          </form>
-                        @endif
+                        <form id="deleteFile_{{ $file->id }}"
+                          action="{{ route('folder.delete_file', $file->id) }}" method="POST"
+                          style="display:inline;">
+                          @csrf
+                          @method('DELETE')
+                        </form>
+                      @endif
+                      @role('super-admin')
                       @endrole
                     </td>
                     {{-- <td class="text-center">

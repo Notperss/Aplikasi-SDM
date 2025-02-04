@@ -33,6 +33,7 @@ use App\Models\Employee\PersonalData\EmployeeSocialPlatform;
 use App\Models\Employee\PersonalData\EmployeeTrainingAttended;
 use App\Models\Employee\PersonalData\EmployeeEducationalHistory;
 use App\Models\Employee\PersonalData\EmployeeLanguageProficiency;
+use Illuminate\Support\Facades\Validator;
 
 class EmployeeController extends Controller
 {
@@ -97,7 +98,7 @@ class EmployeeController extends Controller
 
                     $isVerified = $item->is_verified;
                     $deleteFormId = "deleteForm_{$item->id}";
-                    $canVerify = auth()->user()->hasAnyRole(['super-admin', 'manager', 'ka-dep']); // Check user roles
+                    $canVerify = auth()->user()->hasAnyRole(['super-admin', 'manager', 'assistant-manager']); // Check user roles
     
                     return '
         <div class="btn-group mb-1">
@@ -484,6 +485,14 @@ class EmployeeController extends Controller
         }
 
         $candidate = Candidate::find($selectedCandidate->candidate_id);
+        if (! $candidate) {
+            return redirect()->back()->with('error', 'Candidate not found.');
+        }
+
+        // if (Employee::where('candidate_id', $candidate->id)->exists()) {
+        //     return redirect()->back()->with('error', 'This candidate is already an employee.');
+        // }
+
 
         if (! $candidate->employee) {
             $employee = Employee::create([

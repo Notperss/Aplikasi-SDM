@@ -32,10 +32,10 @@
               style="width: 150px; display: inline-block;">
 
             <select id="filter-type" class="form-select form-select-sm" style="width: 200px; display: inline-block;">
-              <option value="">All Contracts</option>
-              <option value="before_end">Before Contract End</option>
-              <option value="incoming_end">Incoming Contract End</option>
-              <option value="ended">Contract Ended</option>
+              <option value="">Semua Kontrak</option>
+              <option value="before_end">Sebelum Kontrak Berakhir</option>
+              <option value="incoming_end">Kontrak Akan Berakhir</option>
+              <option value="ended">Kontrak Berakhir</option>
             </select>
 
             <button id="filter-date" class="btn btn-primary btn-sm ms-2">Filter</button>

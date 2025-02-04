@@ -37,7 +37,7 @@ class ApprovalController extends Controller
                     $buttons = '';
 
                     // Role-based button (equivalent to @role)
-                    if (auth()->user()->hasAnyRole(['staff', 'ka-si', 'ka-dep', 'super-admin']) && $item->selected_candidate_id && $item->is_approve === 1 && $item->selectedCandidate->is_hire === null) {
+                    if (auth()->user()->hasAnyRole(['staff', 'senior-officer', 'assistant-manager', 'super-admin']) && $item->selected_candidate_id && $item->is_approve === 1 && $item->selectedCandidate->is_hire === null) {
                         $url = route('employee.newEmployee', encrypt($item->selected_candidate_id)); // Adjust if necessary
                         $buttons .= '<a class="btn btn-sm btn-info mx-1" title="Tambahkan ke karyawan" href="'.$url.'">
                         <i class="bi bi-person-plus-fill"></i>
@@ -52,7 +52,7 @@ class ApprovalController extends Controller
                     </a>';
                     }
 
-                    if (auth()->user()->hasAnyRole(['manager', 'super-admin'])) {
+                    if (auth()->user()->hasAnyRole(['assistant-manager', 'super-admin'])) {
                         // Dropdown menu
                         $dropdownHidden = $item->is_approve === null ? '' : 'hidden';
                         $buttons .= '
@@ -126,9 +126,14 @@ class ApprovalController extends Controller
 
                     return 'No Image';
                 })->editColumn('employee_nik', function ($item) {
-                    return $item->employeeCareer->employee->nik
-                        ?? $item->employee->nik
-                        ?? '<span class="badge bg-secondary">-</span>';
+                    $nik = $item->employeeCareer->employee->nik ?? $item->employee->nik ?? '<span class="badge bg-secondary">-</span>';
+                    $id = $item->employeeCareer->employee->id ?? $item->employee->id ?? '';
+
+                    if ($nik && $id) {
+                        return '<a class="badge bg-primary" href="'.route('employee.show', $id).'">'.$nik.'</a>';
+                    }
+
+                    return '<span class="badge bg-secondary">-</span>';
                 })->editColumn('employee_position', function ($item) {
                     if ($item->position_id) {
                         return $item->position->name ?? '-';
@@ -229,17 +234,17 @@ class ApprovalController extends Controller
                                 'date_leaving' => $employeeCareer->start_date,
                             ]);
 
-                        // Get all careers for the employee
-                        $careers = EmployeeCareer::where('employee_id', $employeeCareer->employee_id)->where('cmnp_career', 0)->get();
+                        // // Get all careers for the employee
+                        // $careers = EmployeeCareer::where('employee_id', $employeeCareer->employee_id)->where('cmnp_career', 0)->get();
 
-                        // Update each career
-                        foreach ($careers as $career) {
-                            $career->update([
-                                'cmnp_career' => 1,
-                                'placement' => $career->position?->division->name ?? $employeeCareer->position?->division->name ?? '-',
-                                'position_name' => $career->position?->name ?? $employeeCareer->position?->name ?? '-',
-                            ]);
-                        }
+                        // // Update each career
+                        // foreach ($careers as $career) {
+                        //     $career->update([
+                        //         'cmnp_career' => 1,
+                        //         'placement' => $career->position?->division->name ?? $employeeCareer->position?->division->name ?? '-',
+                        //         'position_name' => $career->position?->name ?? $employeeCareer->position?->name ?? '-',
+                        //     ]);
+                        // }
 
                     } else {
                         Employee::where('id', $employeeCareer->employee_id)

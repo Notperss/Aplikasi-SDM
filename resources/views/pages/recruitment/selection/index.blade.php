@@ -75,9 +75,9 @@
                           @elseif ($selection->is_approve === 0)
                             <span class="badge bg-danger">Selesai - Ditolak</span><br>
                           @elseif ($selection->is_approve === 1)
-                            <span class="badge bg-secondary">Menunggu Persetujuan Kepala Departmen</span><br>
+                            <span class="badge bg-secondary">Menunggu Persetujuan Asisten Manajer</span><br>
                           @elseif ($selection->is_approve === 2)
-                            <span class="badge bg-secondary">Menunggu Persetujuan Manager</span><br>
+                            <span class="badge bg-secondary">Menunggu Persetujuan Manajer</span><br>
                           @else
                             <span class="badge bg-secondary">Pending</span>
                           @endif
@@ -107,17 +107,16 @@
                       <i class="bi bi-card-checklist"></i>
                     </a>
 
-                    @if ($selection->is_finished)
-                      <a class="btn btn-sm btn-warning mx-1"
-                        href="{{ route('selectedCandidate.resultSelection', $selection) }}">
+                    {{-- @if ($selection->is_finished)
+                      <a class="btn btn-sm btn-warning mx-1" href="{{ route('followUpSelection', $selection) }}">
                         <i class="bi bi-card-checklist"></i>
                       </a>
-                    @endif
+                    @endif --}}
 
                     <div class="btn-group">
 
                       @if ($selection->is_finished == 0 || auth()->user()->hasRole('super-admin'))
-                        @role('staff|ka-si|super-admin')
+                        @role('staff|senior-officer|super-admin')
                           <div class="dropdown">
                             <button class="btn btn-sm btn-primary dropdown-toggle me-1" type="button"
                               id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"
@@ -159,9 +158,9 @@
                       <!--APPROVE FOR MANAGER/KADEP-->
                       {{-- @if ($selection->is_approve == 1 || auth()->user()->hasRole('super-admin')) --}}
                       @if (
-                          ($selection->is_approve == 1 && auth()->user()->hasRole('ka-dep')) ||
+                          ($selection->is_approve == 1 && auth()->user()->hasRole('assistant-manager')) ||
                               (($selection->is_approve == 2 && auth()->user()->hasRole('manager')) || Auth::user()->hasRole('super-admin')))
-                        @role('ka-dep|manager|super-admin')
+                        @role('assistant-manager|manager|super-admin')
                           <div class="dropdown">
                             <button class="btn btn-sm btn-secondary dropdown-toggle me-1" type="button"
                               id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"

@@ -48,7 +48,10 @@
                       </td>
                       <td class="text-bold-500">
                         @if ($employeeKpi->file)
-                          <a href="{{ Storage::url($employeeKpi->file) }}" target="_blank">
+                          {{-- <a href="{{ Storage::url($employeeKpi->file) }}" target="_blank">
+                            Lihat
+                          </a> --}}
+                          <a href="{{ asset('storage/' . $employeeKpi->file) }}" target="_blank" class="text-sm">
                             Lihat
                           </a>
                         @else

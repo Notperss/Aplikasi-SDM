@@ -5,6 +5,7 @@
       <th style="width: 30;">Nama Lengkap</th>
       <th style="width: 30;">Tempat Lahir</th>
       <th style="width: 15;">Tanggal Lahir</th>
+      <th style="width: 15;">Usia</th>
       <th style="width: 30;">Jenis Kelamin</th>
       <th style="width: 20;">Kategori Karyawan</th>
       <th style="width: 30;">Status Karyawan</th>
@@ -71,6 +72,15 @@
         // ->addMonths(3);
 
         $currentDate = \Carbon\Carbon::now();
+
+        if ($employee->dob) {
+            $dob = \Carbon\Carbon::parse($employee->dob);
+
+            // Calculate the difference
+            $ageYears = $dob->age;
+            $ageMonths = $dob->diffInMonths($currentDate) % 12;
+        }
+
         $diff = $currentDate->diff($retirementDate);
 
         $remainingYears = $diff->y; // Whole years
@@ -82,6 +92,7 @@
         <td>{{ $employee->name ?? '-' }}</td>
         <td>{{ $employee->pob ?? '-' }}</td>
         <td>{{ $employee->dob ? \Carbon\Carbon::parse($employee->dob)->format('d-m-Y') : '' }}</td>
+        <td>{{ $ageYears . ' Tahun ' . $ageMonths . ' Bulan' }}</td>
         <td>{{ $employee->gender ?? '-' }}</td>
         <td>{{ $employee->employeeCategory->name ?? '-' }}</td>
         <td>{{ $employee->employee_status ?? '-' }}</td>

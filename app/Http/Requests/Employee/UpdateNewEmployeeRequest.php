@@ -67,7 +67,7 @@ class UpdateNewEmployeeRequest extends FormRequest
             'marital_status' => 'required|string|max:50',
             'candidate_from' => 'required|string|max:100',
             'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:51200',
-            'religion' => 'nullable|string|max:50',
+            'religion' => 'required|string|max:50',
             'nationality' => 'nullable|string|max:50',
             'height' => 'nullable|integer|min:0',
             'weight' => 'nullable|integer|min:0',

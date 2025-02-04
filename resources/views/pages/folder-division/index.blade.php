@@ -5,10 +5,12 @@
 
   <section class="section">
 
-    <button type="button" class="btn btn-primary btn-md my-2" data-bs-toggle="modal" data-bs-target="#modal-form-add-folder">
-      <i class="bi bi-plus-lg"></i>
-      Add Folder
-    </button>
+    @role('assistant-manager|manager|super-admin')
+      <button type="button" class="btn btn-primary btn-md my-2" data-bs-toggle="modal" data-bs-target="#modal-form-add-folder">
+        <i class="bi bi-plus-lg"></i>
+        Add Folder
+      </button>
+    @endrole
 
     <div class="row">
       @forelse ($folders as $folder)
@@ -17,25 +19,27 @@
 
             <div class="container d-flex justify-content-between">
               @if ($folder->is_lock == false)
-                <a href="#" onclick="showSweetAlert({{ $folder->id }})" title="Delete folder">
-                  <i class="bi bi-x"></i>
-                </a>
+                @role('assistant-manager|manager|super-admin')
+                  <a href="#" onclick="showSweetAlert({{ $folder->id }})" title="Delete folder">
+                    <i class="bi bi-x"></i>
+                  </a>
 
-                <a data-bs-toggle="modal" data-bs-target="#modal-form-edit-menu-{{ $folder->id }}" class="ms-auto"
-                  title="Edit folder"> <i class="bi bi-three-dots"></i></a>
-                @include('pages.folder-division.edit')
+                  <a data-bs-toggle="modal" data-bs-target="#modal-form-edit-menu-{{ $folder->id }}" class="ms-auto"
+                    title="Edit folder"> <i class="bi bi-three-dots"></i></a>
+                  @include('pages.folder-division.edit')
 
-                <form id="deleteForm_{{ $folder->id }}" action="{{ route('folder.destroy', $folder->id) }}"
-                  method="POST" style="display:inline;">
-                  @csrf
-                  @method('DELETE')
-                </form>
+                  <form id="deleteForm_{{ $folder->id }}" action="{{ route('folder.destroy', $folder->id) }}"
+                    method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                  </form>
 
-                <a href="{{ route('lockFolder', $folder->id) }}" class="position-absolute"
-                  style="bottom: 10px; right: 10px;" title="Kunci Folder"
-                  onclick="return confirm('Apakah anda yakin mengunci folder?')">
-                  <i class="bi bi-unlock"></i>
-                </a>
+                  <a href="{{ route('lockFolder', $folder->id) }}" class="position-absolute"
+                    style="bottom: 10px; right: 10px;" title="Kunci Folder"
+                    onclick="return confirm('Apakah anda yakin mengunci folder?')">
+                    <i class="bi bi-unlock"></i>
+                  </a>
+                @endrole
               @else
                 @role('super-admin')
                   <a href="{{ route('lockFolder', $folder->id) }}" class="position-absolute"

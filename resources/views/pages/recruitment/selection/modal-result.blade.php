@@ -93,13 +93,13 @@
             </div>
           </div>
         </div>
+        @role(['staff', 'senior-officer', 'super-admin'])
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary ">Save</button>
+          </div>
+        @endrole
         @if (!$selection->is_approve)
-          @role(['staff', 'ka-si', 'super-admin'])
-            <div class="modal-footer">
-              <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary ">Save</button>
-            </div>
-          @endrole
         @endif
       </form>
 

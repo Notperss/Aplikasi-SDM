@@ -47,7 +47,10 @@
                       <td class="text-bold-500">{{ $contract->contractKpi->grade ?? '-' }}</td>
                       <td class="text-bold-500">
                         @if ($contract->file)
-                          <a href="{{ Storage::url($contract->file) }}" target="_blank">
+                          {{-- <a href="{{ Storage::url($contract->file) }}" target="_blank">
+                            Lihat
+                          </a> --}}
+                          <a href="{{ asset('storage/' . $contract->file) }}" target="_blank" class="text-sm">
                             Lihat
                           </a>
                         @else

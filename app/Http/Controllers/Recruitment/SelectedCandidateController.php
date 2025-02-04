@@ -71,7 +71,7 @@ class SelectedCandidateController extends Controller
         if ($request->hasFile('file_selected_candidate')) {
             $file = $request->file('file_selected_candidate');
             $extension = $file->getClientOriginalExtension();
-            $file_name = 'file_result_candidate_' . $candidate->name . '_' . time() . '.' . $extension; // Construct the file name
+            $file_name = 'file_result_candidate_'.$candidate->name.'_'.time().'.'.$extension; // Construct the file name
             $data['file_selected_candidate'] = $file->storeAs('files/selection/file_selected_candidate', $file_name, 'public_local'); // Store the file
             // delete file
             if ($path_file != null || $path_file != '') {
@@ -260,4 +260,62 @@ class SelectedCandidateController extends Controller
     //     return redirect()->back()->with('error', 'Invalid request. Approval status is missing.');
     // }
 
+
+    public function followUpSelection(Selection $selection)
+    {
+
+        $companyId = Auth::user()->company_id;
+        $isSuperAdmin = Auth::user()->hasRole('super-admin');
+
+
+        $selectedPositionIds = $selection->selectedPositions
+            // ->filter(function ($position) {
+            //     return ! $position->employee; // Pastikan posisi tidak memiliki karyawan
+            // })
+            ->pluck('id')
+            ->toArray();
+
+        $positions = Position::when(! $isSuperAdmin, function ($query) use ($companyId) {
+            $query->where('company_id', $companyId);
+        })
+            ->where(function ($query) use ($selectedPositionIds) {
+                $query->whereDoesntHave('selectedPositions')
+                    ->whereDoesntHave('employee')
+                    ->orWhereIn('id', $selectedPositionIds);
+            })
+            ->orderBy('name', 'asc')
+            ->get();
+
+
+
+
+        $selectedCandidates = $selection->selectedCandidates()
+            ->where('is_approve', null)
+            ->orderBy('position_id', 'desc')->get();
+
+        $selectedPositions = $selection->selectedPositions()
+            ->where('selection_id', $selection->id)
+            ->whereDoesntHave('employee')
+
+            ->whereDoesntHave('selectedCandidates', function ($query) use ($selection) {
+                $query->where('selection_id', $selection->id);
+            })
+            ->get();
+
+
+        // $selectedPositions = $selection->selectedPositions()
+        //     ->leftJoin('selected_candidates', 'positions.id', '=', 'selected_candidates.position_id')
+        //     ->whereNull('selected_candidates.position_id')
+        //     ->select('positions.*') // Select the columns you need from the 'positions' table
+        //     ->get();
+
+
+        return view('pages.recruitment.selection.follow-up-selection',
+            compact(
+                'selection',
+                'positions',
+                'selectedPositionIds',
+                'selectedPositions',
+                'selectedCandidates'));
+    }
 }

@@ -634,8 +634,9 @@ class SelectionController extends Controller
 
             if ($selection->is_approve == 3) {
                 foreach ($selection->selectedCandidates as $selectedCandidate) {
-                    if ($selectedCandidate->position_id) {
+                    if ($selectedCandidate->position_id && $selectedCandidate->is_approve === null) {
                         Approval::create([
+                            'company_id' => $selection->company_id,
                             'selected_candidate_id' => $selectedCandidate->id,
                             'employee_career_id' => null,
                             'position_id' => $selectedCandidate->position_id,

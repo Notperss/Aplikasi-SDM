@@ -131,7 +131,8 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
 
     Route::resource('selectedCandidate', SelectedCandidateController::class)->only('store', 'show', 'edit', 'update', 'destroy');
     Route::post('/selection/store/{selection}', [SelectedCandidateController::class, 'addCandidate'])->name('selectedCandidate.addCandidate');
-    Route::get('selectedCandidate/{selection}/selection-result', [SelectedCandidateController::class, 'resultSelection'])->name('selectedCandidate.resultSelection');
+    Route::get('selected-candidate/{selection}/selection-result', [SelectedCandidateController::class, 'resultSelection'])->name('selectedCandidate.resultSelection');
+    Route::get('follow-up-candidate/{selection}/selection-result', [SelectedCandidateController::class, 'followUpSelection'])->name('followUpSelection');
     Route::get('/hired-candidates', [SelectedCandidateController::class, 'hiredCandidates'])->name('selectedCandidate.hiredCandidates');
     // Route::patch('/selectedCandidate/approve/{id}', [SelectedCandidateController::class, 'approve'])->name('selectedCandidate.approve');
     // Route::patch('/selectedCandidate/reject/{id}', [SelectedCandidateController::class, 'reject'])->name('selectedCandidate.reject');

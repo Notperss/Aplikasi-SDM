@@ -87,20 +87,21 @@
 
     <table style="width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; font-size: 14px;">
       <thead>
+        <tr>
+          <th colspan="4" style="border: 1px solid #ddd; background-color: #969696; text-align: center">
+            Pendidikan</th>
+        </tr>
+        <tr>
+          <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Tingkat
+            Pendidikan</th>
+          <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Institusi/Nama
+            Sekolah</th>
+          <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Bidang Studi
+          </th>
+          <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Tahun Lulus
+          </th>
+        </tr>
       </thead>
-      <tr>
-        <th colspan="4" style="border: 1px solid #ddd; background-color: #969696; text-align: center">
-          Pendidikan</th>
-      </tr>
-      <tr>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Tingkat
-          Pendidikan</th>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Institusi/Nama
-          Sekolah</th>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Bidang Studi
-        </th>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Tahun Lulus</th>
-      </tr>
       <tbody>
         {{-- @php
           // Filter educational histories by specific levels
@@ -114,11 +115,11 @@
         @foreach ($educational as $education) --}}
         @foreach ($employee->educationalHistories as $education)
           <tr>
-            <td style="padding: 5px; border: 1px solid #ddd;">{{ ucwords(strtolower($education->school_level ?? '')) }}
+            <td style="padding: 5px; border: 1px solid #ddd;">{{ $education->school_level ?? '' }}
             </td>
-            <td style="padding: 5px; border: 1px solid #ddd;">{{ ucwords(strtolower($education->school_name ?? '')) }}
+            <td style="padding: 5px; border: 1px solid #ddd;">{{ $education->school_name ?? '' }}
             </td>
-            <td style="padding: 5px; border: 1px solid #ddd;">{{ ucwords(strtolower($education->study ?? '')) }}</td>
+            <td style="padding: 5px; border: 1px solid #ddd;">{{ $education->study ?? '' }}</td>
             <td style="padding: 5px; border: 1px solid #ddd;text-align: center">
               {{ ucwords(strtolower($education->year_to ?? '')) }}</td>
           </tr>
@@ -128,21 +129,20 @@
 
     <table style="width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; font-size: 14px;">
       <thead>
-      </thead>
-      <tr>
-        <th colspan="4" style="border: 1px solid #ddd; background-color: #969696; text-align: center">
-          Riwayat Pangkat / Jabatan
-        </th>
-      </tr>
-      <tr>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center; width: 30%">
-          Efektif Tanggal</th>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center; width: 25%">
-          Jabatan</th>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center;width: 45%">
-          Penempatan
-        </th>
-      </tr>
+        <tr>
+          <th colspan="4" style="border: 1px solid #ddd; background-color: #969696; text-align: center">
+            Riwayat Pangkat / Jabatan
+          </th>
+        </tr>
+        <tr>
+          <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center; ">
+            Efektif Tanggal</th>
+          <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center; ">
+            Jabatan</th>
+          <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center;">
+            Penempatan
+          </th>
+        </tr>
       <tbody>
         @foreach ($employee->employeeCareers->where('is_approve', 1) as $career)
           <tr>
@@ -163,34 +163,12 @@
 
             </td>
           </tr>
+          </thead>
         @endforeach
-      </tbody>
-    </table>
-
-    <table style="width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; font-size: 14px;">
-      <thead>
-      </thead>
-      <tr>
-        <th colspan="4" style="border: 1px solid #ddd; background-color: #969696; text-align: center">
-
-        </th>
-      </tr>
-      {{-- <tr>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
-          Efektif Tanggal</th>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Jabatan</th>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Penempatan
-        </th>d
-      </tr> --}}
-      <tr>
-        <th style="border: 1px solid #ddd; text-align: center; width: 30%">
-        </th>
-        <th style="border: 1px solid #ddd; text-align: center; width: 25%">
-        </th>
-        <th style="border: 1px solid #ddd; text-align: center;width: 45%">
-        </th>
-      </tr>
-      <tbody>
+        <tr>
+          <td colspan="4" style="border: 2px solid #ddd; background-color: #969696; text-align: center">
+          </td>
+        </tr>
         @foreach ($employee->employeeCareers->where('cmnp_career', 1) as $career)
           <tr>
             <td style="border: 1px solid #ddd;">
@@ -212,28 +190,30 @@
       </tbody>
     </table>
 
+
     <table style="width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; font-size: 14px;">
       <thead>
-      </thead>
-      <tr>
-        <th colspan="5" style="border: 1px solid #ddd; background-color: #969696; text-align: center">
-          Pengalaman Kerja
-        </th>
-      </tr>
-      <tr>
-        {{-- <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+        <tr>
+          <th colspan="5" style="border: 1px solid #ddd; background-color: #969696; text-align: center">
+            Pengalaman Kerja
+          </th>
+        </tr>
+        <tr>
+          {{-- <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
           Tanggal Masuk</th>
         <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
           Tanggal Keluar</th> --}}
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
-          Periode</th>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
-          Jabatan</th>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
-          Nama Perusahaan</th>
-        {{-- <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Penempatan
+          <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+            Periode</th>
+          <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+            Jabatan</th>
+          <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+            Nama Perusahaan</th>
+          {{-- <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">Penempatan
         </th> --}}
-      </tr>
+        </tr>
+      </thead>
+
       <tbody>
         @foreach ($employee->jobHistories as $employeeJobHistory)
           <tr>
@@ -253,28 +233,30 @@
       </tbody>
     </table>
 
-    <table style="width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; font-size: 14px;">
+    <table style="width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; font-size: 14px;"
+      @if ($employee->trainingAttendeds->where('is_certificated', 0)->where('is_printable', 1)->isEmpty()) hidden @endif>
       <thead>
+        <tr>
+          <th colspan="4" style="border: 1px solid #ddd; background-color: #969696; text-align: center">
+            Kursus/Pelatihan
+          </th>
+        </tr>
+        <tr>
+          <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+            Pelatihan/Seminar
+          </th>
+          <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+            Penyelenggara
+          </th>
+          <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+            Tempat/Kota
+          </th>
+          <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center; width: 15%">
+            Tanggal
+          </th>
+        </tr>
       </thead>
-      <tr>
-        <th colspan="4" style="border: 1px solid #ddd; background-color: #969696; text-align: center">
-          Kursus/Pelatihan
-        </th>
-      </tr>
-      <tr>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
-          Pelatihan/Seminar
-        </th>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
-          Penyelenggara
-        </th>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
-          Tempat/Kota
-        </th>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center; width: 15%">
-          Tanggal
-        </th>
-      </tr>
+
       <tbody>
         @foreach ($employee->trainingAttendeds->where('is_certificated', 0)->where('is_printable', 1) as $training)
           <tr>
@@ -291,28 +273,30 @@
       </tbody>
     </table>
 
-    <table style="width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; font-size: 14px;">
+    <table style="width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; font-size: 14px;"
+      @if ($employee->trainingAttendeds->where('is_certificated', 1)->isEmpty()) hidden @endif>
+
       <thead>
+        <tr>
+          <th colspan="4" style="border: 1px solid #ddd; background-color: #969696; text-align: center">
+            Sertifikasi
+          </th>
+        </tr>
+        <tr>
+          <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+            Nama Sertifikasi
+          </th>
+          <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+            Penyelenggara
+          </th>
+          <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
+            Tempat/Kota
+          </th>
+          <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center; width: 15%">
+            Masa Berlaku
+          </th>
+        </tr>
       </thead>
-      <tr>
-        <th colspan="4" style="border: 1px solid #ddd; background-color: #969696; text-align: center">
-          Sertifikasi
-        </th>
-      </tr>
-      <tr>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
-          Nama Sertifikasi
-        </th>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
-          Penyelenggara
-        </th>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center">
-          Tempat/Kota
-        </th>
-        <th style="padding: 5px; border: 1px solid #ddd; background-color: #cfcece; text-align: center; width: 15%">
-          Masa Berlaku
-        </th>
-      </tr>
       <tbody>
         @foreach ($employee->trainingAttendeds->where('is_certificated', 1) as $training)
           <tr>

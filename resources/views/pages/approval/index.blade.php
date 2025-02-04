@@ -347,26 +347,24 @@
           {
             data: 'employee_nik',
             name: 'employee_nik',
-            orderable: false,
-            searchable: false,
+
           },
           {
             data: 'employee_name',
             name: 'employee_name',
-            orderable: false,
-            searchable: false,
+
           },
           {
             data: 'employee_position',
             name: 'employee_position',
-            orderable: false,
-            searchable: false,
+            // orderable: false,
+            // searchable: false,
           },
           {
             data: 'employee_division',
             name: 'employee_division',
-            orderable: false,
-            searchable: false,
+            // orderable: false,
+            // searchable: false,
           },
           {
             data: 'note',

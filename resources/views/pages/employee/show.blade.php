@@ -26,9 +26,9 @@
   <nav class="navbar navbar-light">
     <div class="container d-block">
       <a href="{{ route('employee.index') }}"><i class="bi bi-chevron-left"></i></a>
-      <a class="btn btn-primary ms-4" href="{{ route('employee.index') }}">
+      <button type="button" class="btn btn-primary ms-4" onclick="window.history.back();">
         Back
-      </a>
+      </button>
     </div>
   </nav>
 

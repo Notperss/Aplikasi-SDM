@@ -48,7 +48,11 @@
                       </td>
                       <td class="text-bold-500">
                         @if ($employeeTrainingAttended->file_sertifikat)
-                          <a href="{{ Storage::url($employeeTrainingAttended->file_sertifikat) }}" target="_blank">
+                          {{-- <a href="{{ Storage::url($employeeTrainingAttended->file_sertifikat) }}" target="_blank">
+                            Lihat
+                          </a> --}}
+                          <a href="{{ asset('storage/' . $employeeTrainingAttended->file_sertifikat) }}" target="_blank"
+                            class="text-sm">
                             Lihat
                           </a>
                         @else

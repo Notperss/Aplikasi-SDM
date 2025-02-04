@@ -144,7 +144,7 @@
                 <td>
                   @if ($selectedCandidate->is_hire === null)
                     <div class="btn-group mb-1">
-                      @role('staff|ka-si|super-admin')
+                      @role('staff|senior-officer|super-admin')
                         <a class="btn btn-sm btn-info mx-1" title="Tambahkan ke karyawan"
                           href="{{ route('employee.newEmployee', encrypt($selectedCandidate->id)) }}">
                           <i class="bi bi-person-plus-fill"></i>

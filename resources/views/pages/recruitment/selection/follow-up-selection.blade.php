@@ -8,49 +8,69 @@
 
 <section class="section">
 
-  <div class="card">
-    <div class="card-header">
-    </div>
-    <div class="card-body">
-      <div class="row justify-content-center">
+  <form action="{{ route('selection.update', $selection) }}" method="post" enctype="multipart/form-data">
+    @csrf
+    @method('PUT')
 
-        <div class="row">
+    <div class="card">
+      <div class="card-header">
+      </div>
+      <div class="card-body">
+        <div class="row justify-content-center">
 
-          <div class="col-md-12">
-            <div class="my-2">
-              <label class="form-label" for="name">Nama Seleksi</label>
-              <textarea id="name" name="name" value="{{ old('name', $selection->name) }}"
-                class="form-control @error('name') is-invalid @enderror" rows="3" readonly>{{ old('name', $selection->name) }}</textarea>
-              @error('name')
-                <a style="color: red"><small>{{ $message }}</small></a>
-              @enderror
-            </div>
-          </div>
+          <div class="row">
 
-          <div class="col-md-6">
-
-            <div class="my-2">
-              <label class="form-label" for="list-group">Jabatan</label>
-              <ul class="list-group">
-                @forelse ($selection->selectedPositions as $position)
-                  <div class="col-md-6">
-                    <li class="list-group-item"><i class="bi bi-dot"></i> {{ $position->name }}</li>
-                  </div>
-                @empty
-                  <div class="col-md-12">
-                    <li class="list-group-item"><i class="bi bi-dot"></i> Tidak ada jabatan yang dipilih</li>
-                  </div>
-                @endforelse
-              </ul>
-              @error('position_id')
-                <a style="color: red"><small>{{ $message }}</small></a>
-              @enderror
+            <div class="col-md-12">
+              <div class="my-2">
+                <label class="form-label" for="name">Nama Seleksi</label>
+                <textarea id="name" name="name" value="{{ old('name', $selection->name) }}"
+                  class="form-control @error('name') is-invalid @enderror" rows="3" readonly>{{ old('name', $selection->name) }}</textarea>
+                @error('name')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div>
             </div>
 
-          </div>
-          <div class="col-md-6">
+            <div class="col-md-6">
+              <div class="my-2">
+                <label class="form-label" for="position_id">Jabatan <code>*</code></label>
+                <select id="position_id" name="position_id[]"
+                  class="form-control choices @error('position_id') is-invalid @enderror multiple-remove" required
+                  multiple>
+                  <option value="" disabled>Choose</option>
 
-            {{-- <div class="my-2">
+                  @foreach ($positions as $position)
+                    <option value="{{ $position->id }}"
+                      {{ in_array($position->id, old('position_id', $selectedPositionIds)) ? 'selected' : '' }}>
+                      {{ $position->name }}
+                    </option>
+                  @endforeach
+                  {{-- @foreach ($positions as $position)
+                      <option value="{{ $position->id }}"
+                        {{ in_array($position->id, old('position_id', $position->id)) ? 'selected' : '' }}>
+                        {{ $position->name }}
+                      </option>
+                    @endforeach --}}
+                </select>
+                @error('position_id')
+                  <div style="color: red"><small>{{ $message }}</small></div>
+                @enderror
+              </div>
+
+              {{-- <div class="mb-2">
+                  <label class="form-label" for="interviewer">Pewawancara <code>*</code></label>
+                  <textarea id="interviewer" name="interviewer" rows="3"
+                    class="form-control @error('interviewer') is-invalid @enderror" required>{{ old('interviewer', $selection->interviewer) }} </textarea>
+                  @error('interviewer')
+                    <a style="color: red"><small>{{ $message }}</small></a>
+                  @enderror
+                </div> --}}
+            </div>
+
+
+            <div class="col-md-6">
+
+              {{-- <div class="my-2">
               <label class="form-label" for="position_id">Jabatan</label>
               <input id="position_id" name="position_id"
                 value="{{ implode(', ', old('position_id', $selection->selectedPositions->pluck('name')->toArray() ?? [])) }}"
@@ -60,27 +80,27 @@
               @enderror
             </div> --}}
 
-            <div class="my-2">
-              <label class="form-label" for="pic_selection">Divisi Pemohon</label>
-              <input id="pic_selection" name="pic_selection"
-                value="{{ old('pic_selection', $selection->division->name ?? '-') }}"
-                class="form-control @error('pic_selection') is-invalid @enderror" readonly>
-              @error('pic_selection')
-                <a style="color: red"><small>{{ $message }}</small></a>
-              @enderror
-            </div>
+              <div class="my-2">
+                <label class="form-label" for="pic_selection">Divisi Pemohon</label>
+                <input id="pic_selection" value="{{ old('pic_selection', $selection->division->name ?? '-') }}"
+                  class="form-control @error('pic_selection') is-invalid @enderror" readonly>
+                <input type="hidden" name="division_id" value="{{ $selection->division_id }}" hidden>
+                @error('pic_selection')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div>
 
-            <div class="my-2">
-              <label class="form-label" for="start_selection">Tgl Mulai Seleksi</label>
-              <input type="text" id="start_selection" name="start_selection"
-                value="{{ $selection->start_selection ? Carbon\Carbon::parse($selection->start_selection)->translatedFormat('l, d F Y') : '-' }}"
-                class="form-control @error('start_selection') is-invalid @enderror" readonly>
-              @error('start_selection')
-                <a style="color: red"><small>{{ $message }}</small></a>
-              @enderror
-            </div>
+              <div class="my-2">
+                <label class="form-label" for="start_selection">Tgl Mulai Seleksi</label>
+                <input type="text" id="start_selection" name="start_selections"
+                  value="{{ $selection->start_selection ? Carbon\Carbon::parse($selection->start_selection)->translatedFormat('l, d F Y') : '-' }}"
+                  class="form-control @error('start_selection') is-invalid @enderror" readonly>
+                @error('start_selection')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div>
 
-            {{-- <div class="mb-2">
+              {{-- <div class="mb-2">
               <label class="form-label" for="end_selection">Tgl Selesai Seleksi</label>
               <input type="text" id="end_selection" name="end_selection"
                 value="{{ $selection->end_selection ? Carbon\Carbon::parse($selection->end_selection)->translatedFormat('l, d F Y') : '-' }}"
@@ -90,54 +110,54 @@
               @enderror
             </div> --}}
 
-          </div>
-          <div class="col-md-12">
-
-            <div class="my-2">
-              <label class="form-label" for="interviewer">Pewawancara</label>
-              <textarea id="interviewer" name="interviewer" rows="3"
-                class="form-control @error('interviewer') is-invalid @enderror" readonly> {{ old('interviewer', $selection->interviewer) }} </textarea>
-              @error('interviewer')
-                <a style="color: red"><small>{{ $message }}</small></a>
-              @enderror
             </div>
+            <div class="col-md-12">
 
-            <div class="mb-2">
-              <label class="form-label" for="description">Keterangan</label>
-              <textarea id="description" name="description" rows="5"
-                class="form-control @error('description') is-invalid @enderror" readonly>{{ old('description', $selection->description) }} </textarea>
-              @error('description')
-                <a style="color: red"><small>{{ $message }}</small></a>
-              @enderror
-            </div>
+              <div class="my-2">
+                <label class="form-label" for="interviewer">Pewawancara</label>
+                <textarea id="interviewer" name="interviewer" rows="3"
+                  class="form-control @error('interviewer') is-invalid @enderror" readonly> {{ old('interviewer', $selection->interviewer) }} </textarea>
+                @error('interviewer')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div>
 
-            <div class="my-2">
-              <label class="form-label" for="fptk_number">Nomor FPTK</label>
-              <input type="text" id="fptk_number" name="fptk_number" value="{{ $selection->fptk_number }}"
-                class="form-control @error('fptk_number') is-invalid @enderror" readonly>
-              @error('fptk_number')
-                <a style="color: red"><small>{{ $message }}</small></a>
-              @enderror
-            </div>
+              <div class="mb-2">
+                <label class="form-label" for="description">Keterangan</label>
+                <textarea id="description" name="descriptions" rows="5"
+                  class="form-control @error('description') is-invalid @enderror" readonly>{{ old('description', $selection->description) }} </textarea>
+                @error('description')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div>
 
-            <div class="mb-2">
-              <label for="file_fptk" class="form-label">File FPTK :</label>
-              @if ($selection->file_fptk)
-                <a href="{{ asset('storage/' . $selection->file_fptk) }}" target="_blank"
-                  class="text-sm btn btn-sm btn-primary my-2 mx-3">
-                  Lihat File
-                </a>
-              @else
-                <span>-</span>
-              @endif
+              <div class="mb-2">
+                <label class="form-label" for="fptk_number">Nomor FPTK</label>
+                <input type="text" id="fptk_number" name="fptk_number" value="{{ $selection->fptk_number }}"
+                  class="form-control @error('fptk_number') is-invalid @enderror" readonly>
+                @error('fptk_number')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div>
 
-              @error('file_fptk')
-                <a style="color: red"><small>{{ $message }}</small></a>
-              @enderror
+              <div class="mb-2">
+                <label for="file_fptk" class="form-label">File FPTK :</label>
+                @if ($selection->file_fptk)
+                  <a href="{{ asset('storage/' . $selection->file_fptk) }}" target="_blank"
+                    class="text-sm btn btn-sm btn-primary my-2 mx-3">
+                    Lihat File
+                  </a>
+                @else
+                  <span>-</span>
+                @endif
 
-            </div>
+                @error('file_fptk')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
 
-            {{-- <div class="mb-2">
+              </div>
+
+              {{-- <div class="mb-2">
               <label for="file_selection" class="form-label">File Seleksi :</label>
               <input class="form-control @error('file_selection') is-invalid @enderror" accept=".pdf" type="file"
                 id="file_selection" name="file_selection">
@@ -156,11 +176,11 @@
               @enderror
 
             </div> --}}
+            </div>
+
           </div>
 
-        </div>
-
-        {{-- <div class="col-12 d-flex justify-content-end mt-4">
+          {{-- <div class="col-12 d-flex justify-content-end mt-4">
           @if (!$selection->is_approve)
             <button class="btn btn-primary me-1 mb-1" onclick="closeSelection({{ $selection->id }})">Tutup
               Seleksi</button>
@@ -176,10 +196,14 @@
           <a class="btn btn-light-secondary me-1 mb-1" href="{{ route('selection.index') }}">Cancel</a>
         </div> --}}
 
+        </div>
+        <div class="col-12 d-flex justify-content-end mt-4">
+          <button type="submit" class="btn btn-primary me-1 mb-1">Submit</button>
+          <button type="reset" class="btn btn-light-secondary me-1 mb-1">Reset</button>
+        </div>
       </div>
-
     </div>
-  </div>
+  </form>
 
   <div class="card">
     <div class="card-header">
@@ -265,11 +289,7 @@
                 <th>Phone</th>
                 {{-- <th>Status</th> --}}
                 <th>Jabatan</th>
-                <th>File</th>
-                <th>Keterangan</th>
-                @if (!$selection->is_approve)
-                  <th>Action</th>
-                @endif
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -285,23 +305,16 @@
                       No Image
                     @endif
                   </td>
-                  <td>
-                    {{ $selectedCandidate->candidate->name }} <br>
-                    @if ($selectedCandidate->is_approve === 0)
-                      <span class="badge bg-danger">Rejected</span>
-                    @elseif($selectedCandidate->is_approve === 1)
-                      <span class="badge bg-primary">Approve</span>
-                    @endif
-                  </td>
+                  <td>{{ $selectedCandidate->candidate->name }}</td>
                   <td>{{ $selectedCandidate->candidate->email }}</td>
                   <td>{{ $selectedCandidate->candidate->phone_number }}</td>
                   {{-- <td>
-                    @if ($selectedCandidate->is_approve)
-                    <span class="badge bg-primary mt-1">Disetujui</span>
-                    @elseif ($selectedCandidate->is_approve === 0)
-                    <span class="badge bg-danger mt-1">Ditolak</span>
+                      @if ($selectedCandidate->is_approve)
+                        <span class="badge bg-primary mt-1">Disetujui</span>
+                      @elseif ($selectedCandidate->is_approve === 0)
+                        <span class="badge bg-danger mt-1">Ditolak</span>
                       @else
-                      -
+                        -
                       @endif
                     </td> --}}
                   <td>
@@ -312,37 +325,25 @@
                     @endif
                   </td>
                   <td>
-                    @if ($selectedCandidate->file_selected_candidate)
-                      <a href="{{ asset('storage/' . $selectedCandidate->file_selected_candidate) }}" target="_blank"
-                        class="text-sm btn btn-sm btn-primary mt-3">
-                        Lihat File
+                    <div class="btn-group mb-1">
+
+                      <a data-bs-toggle="modal"
+                        data-bs-target="#modal-form-edit-result-selection-{{ $selectedCandidate->id }}"
+                        class="btn btn-sm btn-icon btn-secondary text-white">
+                        <i class="bi bi-pencil-square"></i>
                       </a>
-                    @else
-                      <span>-</span>
-                    @endif
-                  </td>
-                  <td>{{ $selectedCandidate->description }}</td>
-                  @if (!$selection->is_approve)
-                    <td>
-                      <div class="btn-group mb-1">
 
-                        <a data-bs-toggle="modal"
-                          data-bs-target="#modal-form-edit-result-selection-{{ $selectedCandidate->id }}"
-                          class="btn btn-sm btn-icon btn-secondary text-white">
-                          <i class="bi bi-pencil-square"></i>
-                        </a>
+                      @include('pages.recruitment.selection.modal-result')
 
-                        @include('pages.recruitment.selection.modal-result')
-
-                        @if ($selectedCandidate->position_id)
-                          @role('super-admins')
-                            <div class="dropdown">
-                              <button class="btn btn-sm btn-primary dropdown-toggle me-1" type="button"
-                                id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false">
-                                <i class="bi bi-three-dots-vertical"></i>
-                              </button>
-                              {{-- <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                      @if ($selectedCandidate->position_id)
+                        @role('super-admins')
+                          <div class="dropdown">
+                            <button class="btn btn-sm btn-primary dropdown-toggle me-1" type="button"
+                              id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"
+                              aria-expanded="false">
+                              <i class="bi bi-three-dots-vertical"></i>
+                            </button>
+                            {{-- <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                               <button class="dropdown-item"
                                 onclick="confirmAction('approve', 'Apakah Anda yakin ingin menyetujui?', {{ $selectedCandidate->id }})">
                                 Approve
@@ -370,43 +371,42 @@
 
                             </div> --}}
 
-                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <button class="dropdown-item"
-                                  onclick="confirmAction('approve', 'Apakah Anda yakin ingin menyetujui?', {{ $selectedCandidate->id }})">
-                                  Approve
-                                </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                              <button class="dropdown-item"
+                                onclick="confirmAction('approve', 'Apakah Anda yakin ingin menyetujui?', {{ $selectedCandidate->id }})">
+                                Approve
+                              </button>
 
-                                <button class="dropdown-item"
-                                  onclick="confirmAction('reject', 'Apakah Anda yakin ingin menolak?', {{ $selectedCandidate->id }})">
-                                  Reject
-                                </button>
+                              <button class="dropdown-item"
+                                onclick="confirmAction('reject', 'Apakah Anda yakin ingin menolak?', {{ $selectedCandidate->id }})">
+                                Reject
+                              </button>
 
-                                <!-- Forms for Approve and Reject actions -->
-                                <form id="approveForm_{{ $selectedCandidate->id }}"
-                                  action="{{ route('selectedCandidate.updateApprovalStatus', $selectedCandidate->id) }}"
-                                  method="POST" style="display: none;">
-                                  @csrf
-                                  @method('patch')
-                                  <input type="hidden" name="is_approve" value="1"> <!-- Approve value -->
-                                </form>
+                              <!-- Forms for Approve and Reject actions -->
+                              <form id="approveForm_{{ $selectedCandidate->id }}"
+                                action="{{ route('selectedCandidate.updateApprovalStatus', $selectedCandidate->id) }}"
+                                method="POST" style="display: none;">
+                                @csrf
+                                @method('patch')
+                                <input type="hidden" name="is_approve" value="1"> <!-- Approve value -->
+                              </form>
 
-                                <form id="rejectForm_{{ $selectedCandidate->id }}"
-                                  action="{{ route('selectedCandidate.updateApprovalStatus', $selectedCandidate->id) }}"
-                                  method="POST" style="display: none;">
-                                  @csrf
-                                  @method('patch')
-                                  <input type="hidden" name="is_approve" value="0"> <!-- Reject value -->
-                                </form>
-                              </div>
-
-
+                              <form id="rejectForm_{{ $selectedCandidate->id }}"
+                                action="{{ route('selectedCandidate.updateApprovalStatus', $selectedCandidate->id) }}"
+                                method="POST" style="display: none;">
+                                @csrf
+                                @method('patch')
+                                <input type="hidden" name="is_approve" value="0"> <!-- Reject value -->
+                              </form>
                             </div>
-                          @endrole
-                        @endif
 
-                      </div>
-                    </td>
-                  @endif
+
+                          </div>
+                        @endrole
+                      @endif
+
+                    </div>
+                  </td>
                 </tr>
               @endforeach
             </tbody>
@@ -451,23 +451,23 @@
           </div>
 
           <div class="col-12 d-flex justify-content-end mt-4">
+            @role(['staff', 'senior-officer', 'super-admin'])
+              <button class="btn btn-primary me-1 mb-1" onclick="closeSelection({{ $selection->id }})">Tutup
+                Seleksi</button>
+
+              <form id="closeSelection_{{ $selection->id }}" action="{{ route('selection.close', $selection) }}"
+                method="post" enctype="multipart/form-data">
+                @csrf
+                @method('patch')
+
+                <input class="form-control @error('file_selection') is-invalid @enderror" accept=".pdf" type="file"
+                  id="file_selection" name="file_selection" hidden>
+
+                <input type="hidden" name="selected_option" id="selectedOptionInput_{{ $selection->id }}"
+                  value="">
+              </form>
+            @endrole
             @if (!$selection->is_approve)
-              @role(['staff', 'senior-officer', 'super-admin'])
-                <button class="btn btn-primary me-1 mb-1" onclick="closeSelection({{ $selection->id }})">Tutup
-                  Seleksi</button>
-
-                <form id="closeSelection_{{ $selection->id }}" action="{{ route('selection.close', $selection) }}"
-                  method="post" enctype="multipart/form-data">
-                  @csrf
-                  @method('patch')
-
-                  <input class="form-control @error('file_selection') is-invalid @enderror" accept=".pdf"
-                    type="file" id="file_selection" name="file_selection" hidden>
-
-                  <input type="hidden" name="selected_option" id="selectedOptionInput_{{ $selection->id }}"
-                    value="">
-                </form>
-              @endrole
             @endif
             <a class="btn btn-light-secondary me-1 mb-1" href="{{ route('selection.index') }}">Cancel</a>
           </div>
@@ -506,8 +506,8 @@
       showCancelButton: true,
       confirmButtonText: 'Yes!',
       html: `
-        <label for="selectionOption">Choose an option:</label>
-        <select id="selectionOption" class="swal2-select">
+        <label for="selectionOption" hidden>Choose an option:</label>
+        <select id="selectionOption" class="swal2-select" hidden>
           <option value="1">Kandidat Terpilih</option>
           <option value="0">Tidak Ada kandidat Terpilih</option>
         </select>
