@@ -77,6 +77,7 @@ class StoreCandidateRequest extends FormRequest
             'email.required' => 'Email wajib diisi.',
             'email.string' => 'Email harus berupa teks.',
             'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email ini sudah terdaftar.',
 
             'phone_number.required' => 'Nomor telepon wajib diisi.',
             'phone_number.integer' => 'Nomor telepon harus berupa angka.',

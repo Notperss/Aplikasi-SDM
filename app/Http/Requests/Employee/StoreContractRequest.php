@@ -10,7 +10,7 @@ class StoreContractRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize() : bool
+    public function authorize(): bool
     {
         return true;
     }
@@ -20,11 +20,11 @@ class StoreContractRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules() : array
+    public function rules(): array
     {
         return [
 
-            'nik_employee' => 'required|string|max:20|exists:employees,nik', // or adjust max length based on requirements
+            'nik_employee' => 'nullable|string|max:20|exists:employees,nik', // or adjust max length based on requirements
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date', // checks that end date is after or same as start date
             'duration' => 'required|integer|min:1', // assuming duration is in number of days or months

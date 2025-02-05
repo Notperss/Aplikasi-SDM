@@ -171,7 +171,7 @@ class EmployeeKpiController extends Controller
 
             // Redirect with a success message
             return redirect()->back()
-                ->with('success', 'Data KPI Karyawan berhasil ditambahkan.');
+                ->with('success', 'Penilaian Karyawan berhasil ditambahkan.');
         } catch (\Exception $e) {
             // Rollback the transaction if something goes wrong
             DB::rollback();

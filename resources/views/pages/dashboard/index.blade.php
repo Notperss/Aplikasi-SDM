@@ -79,7 +79,7 @@
               </div>
             </div>
 
-            <a href="{{ route('employeeInOut', ['status' => 'employeeIn', 'isMonth' => true]) }}">
+            <a href="{{ route('employeeInOut', ['status' => 'Karyawan Masuk', 'isMonth' => true]) }}">
               <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
                 <h6 class="text-muted font-semibold">KARYAWAN MASUK BULAN INI</h6>
                 <h4 class="font-extrabold mb-0">
@@ -112,7 +112,7 @@
                 </svg>
               </div>
             </div>
-            <a href="{{ route('employeeInOut', ['status' => 'employeeOut', 'isMonth' => true]) }}">
+            <a href="{{ route('employeeInOut', ['status' => 'Karyawan Keluar', 'isMonth' => true]) }}">
               <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
                 <h6 class="text-muted font-semibold">KARYAWAN KELUAR BULAN INI</h6>
                 <h4 class="font-extrabold mb-0">
@@ -147,7 +147,7 @@
                 </svg>
               </div>
             </div>
-            <a href="{{ route('employeeInOut', ['status' => 'employeeIn']) }}">
+            <a href="{{ route('employeeInOut', ['status' => 'Karyawan Masuk']) }}">
               <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
                 <h6 class="text-muted font-semibold">KARYAWAN MASUK TAHUN INI</h6>
                 <h4 class="font-extrabold mb-0">
@@ -180,7 +180,7 @@
                 </svg>
               </div>
             </div>
-            <a href="{{ route('employeeInOut', ['status' => 'employeeOut']) }}">
+            <a href="{{ route('employeeInOut', ['status' => 'Karyawan Keluar']) }}">
 
               <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
                 <h6 class="text-muted font-semibold">KARYAWAN KELUAR TAHUN INI</h6>
@@ -235,13 +235,13 @@
                   })
                   ->count();
             @endphp --}}
-            <a href="{{ route('employeeInOut', ['status' => 'retirement']) }}">
+            <a href="{{ route('employeeRetirement', ['status' => 'Karyawan Pensiun Tahun Ini']) }}">
 
               <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
                 <h6 class="text-muted font-semibold"><small>KARYAWAN PENSIUN TAHUN INI, <br>(USIA >= 55 TAHUN)</small>
                 </h6>
                 <h4 class="font-extrabold mb-0">
-                  {{ $retirementCount }}
+                  {{ $upcomingRetiredCount }}
                 </h4>
               </div>
             </a>
@@ -256,7 +256,7 @@
         <div class="card-body px-4 py-4-5">
           <div class="row">
             <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12 d-flex justify-content-start ">
-              <div class="stats-icon mb-2" style="background-color: #fff">
+              <div class="stats-icon mb-2" style="background-color: #7d7979">
                 <svg id="user" width="24" height="24" viewBox="0 0 24 24" fill="none"
                   xmlns="http://www.w3.org/2000/svg">
                   <path fill-rule="evenodd" clip-rule="evenodd"
@@ -292,11 +292,11 @@
                   })
                   ->count();
             @endphp --}}
-            <a href="{{ route('employeeInOut', ['status' => 'retirement']) }}">
+            <a href="{{ route('employeeRetirement', ['status' => 'Karyawan Yang Akan Pensiun']) }}">
 
               <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-                <h6 class="text-muted font-semibold"><small>KARYAWAN PENSIUN 3 tahun ke depan, <br>(USIA >= 55
-                    TAHUN)</small>
+                <h6 class="text-muted font-semibold">
+                  <small>KARYAWAN YANG AKAN DAN SUDAH PENSIUN</small>
                 </h6>
                 <h4 class="font-extrabold mb-0">
                   {{ $retirementCount }}
@@ -631,12 +631,14 @@
                             return $positions->count(); // Count positions for each level
                         });
                   @endphp
-                  <div class="d-flex justify-content-between align-items-center">
-                    <h6 class="text-muted font-semibold">
-                      <a href="{{ route('getDivisionEmployee', $division->id) }}"> {{ $division->code }}</a>
-                    </h6>
-                    <span class="h5"> {{ $positionsWithActiveEmployeeCount }} </span>
-                  </div>
+                  <a href="{{ route('getDivisionEmployee', $division->id) }}">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <h5 class="text-muted font-semibold">
+                        {{ $division->code }}
+                      </h5>
+                      <span class="h5"> {{ $positionsWithActiveEmployeeCount }} </span>
+                    </div>
+                  </a>
 
                   <div class="d-flex justify-content-between align-items-center">
                     <h6 class="text-muted font-semibold">
@@ -759,12 +761,14 @@
                   <h4 class="font-extrabold mb-0 float-end">
                     {{ $positionsWithEmployeeCount }}
                   </h4> --}}
-                  <div class="d-flex justify-content-between align-items-center">
-                    <h6 class="text-muted font-semibold">
-                      <a href="{{ route('getDivisionEmployee', $division->id) }}"> {{ $division->code }}</a>
-                    </h6>
-                    <span class="h5"> {{ $positionsWithEmployeeCount }} </span>
-                  </div>
+                  <a href="{{ route('getDivisionEmployee', $division->id) }}">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <h5 class="text-muted font-semibold">
+                        {{ $division->code }}
+                      </h5>
+                      <span class="h5"> {{ $positionsWithEmployeeCount }} </span>
+                    </div>
+                  </a>
 
                   <div class="d-flex justify-content-between align-items-center">
                     <h6 class="text-muted font-semibold">
@@ -1033,11 +1037,11 @@
 
           <div class="d-flex justify-content-between align-items-center my-2">
             {{-- <div>
-              <label for="start-date" class="me-2">Start Date:</label>
+              <label for="start-date" class="me-2">Dari:</label>
               <input type="date" id="start-date" class="form-control form-control-sm" placeholder="Start Date"
                 style="width: 150px; display: inline-block;">
 
-              <label for="end-date" class="me-2">End Date:</label>
+              <label for="end-date" class="me-2">Sampai:</label>
               <input type="date" id="end-date" class="form-control form-control-sm" placeholder="End Date"
                 style="width: 150px; display: inline-block;">
 

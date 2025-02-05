@@ -398,12 +398,23 @@ class DashboardController extends Controller
             ->count();
 
         // Count employees retiring this year
-        $retirementCount = (clone $employees)
+        $upcomingRetiredCount = (clone $employees)
             ->where('employee_status', 'AKTIF')
             ->get() // Retrieve as a collection
             ->filter(function ($employee) {
                 $retirementDate = Carbon::parse($employee->dob)->addYears(55);
                 return $retirementDate->year === now()->year;
+            })
+            ->count();
+
+        $retirementCount = (clone $employees)
+            ->where('employee_status', 'AKTIF')
+            ->get() // Retrieve as a collection
+            ->filter(function ($employee) {
+                $retirementDate = Carbon::parse($employee->dob)->addYears(55);
+                $currentYear = now()->year;
+
+                return $retirementDate->year <= ($currentYear + 3);
             })
             ->count();
 
@@ -435,6 +446,7 @@ class DashboardController extends Controller
             'activePeryear',
             'nonActivePeryear',
             'retirementCount',
+            'upcomingRetiredCount',
         ));
     }
 
@@ -669,36 +681,61 @@ class DashboardController extends Controller
 
         // dd($request->status);
 
-        if ($request->status === 'retirement') {
-            $employees = Employee::when(! Auth::user()->hasRole('super-admin'), function ($query) {
-                $query->where('company_id', Auth::user()->company_id);
-            })->where('employee_status', 'AKTIF')
-                ->get() // Retrieve as a collection
-                ->filter(function ($employee) {
-                    $retirementDate = Carbon::parse($employee->dob)->addYears(55);
-                    return $retirementDate->year === now()->year;
-                });
-        } else {
-            $employees = Employee::when(! Auth::user()->hasRole('super-admin'), function ($query) {
-                $query->where('company_id', Auth::user()->company_id);
+        // if ($request->status === 'retirement') {
+        //     $employees = Employee::when(! Auth::user()->hasRole('super-admin'), function ($query) {
+        //         $query->where('company_id', Auth::user()->company_id);
+        //     })->where('employee_status', 'AKTIF')
+        //         ->get() // Retrieve as a collection
+        //         ->filter(function ($employee) {
+        //             $retirementDate = Carbon::parse($employee->dob)->addYears(55);
+        //             return $retirementDate->year === now()->year;
+        //         });
+        // } else {
+        $employees = Employee::when(! Auth::user()->hasRole('super-admin'), function ($query) {
+            $query->where('company_id', Auth::user()->company_id);
+        })
+            ->when($request->status, function ($q) use ($request) {
+                if ($request->status === 'Karyawan Masuk') {
+                    $q->where('employee_status', 'AKTIF')
+                        ->whereYear('date_joining', now()->year)
+                        ->when($request->isMonth, function ($q) {
+                            $q->whereMonth('date_joining', now()->month);
+                        });
+                } else {
+                    $q->where('employee_status', '!=', 'AKTIF')
+                        ->whereYear('date_leaving', now()->year)
+                        ->when($request->isMonth, function ($q) {
+                            $q->whereMonth('date_leaving', now()->month);
+                        });
+                }
             })
-                ->when($request->status, function ($q) use ($request) {
-                    if ($request->status === 'employeeIn') {
-                        $q->where('employee_status', 'AKTIF')
-                            ->whereYear('date_joining', now()->year)
-                            ->when($request->isMonth, function ($q) {
-                                $q->whereMonth('date_joining', now()->month);
-                            });
-                    } else {
-                        $q->where('employee_status', '!=', 'AKTIF')
-                            ->whereYear('date_leaving', now()->year)
-                            ->when($request->isMonth, function ($q) {
-                                $q->whereMonth('date_leaving', now()->month);
-                            });
-                    }
-                })
-                ->get();
-        }
+            ->get();
+        // }
+
+        return view('pages.dashboard.employee.employees', compact('employees'));
+    }
+
+    public function employeeRetirement(Request $request)
+    {
+        $status = request()->input('status');
+
+        $upcomingRetirement = $status === 'Karyawan Yang Akan Pensiun'; // 3 tahun ke depan
+        // $retirementThisYear = $status === 'Karyawan Pensiun Tahun Ini'; // Hanya tahun ini
+
+        $additionalYears = $upcomingRetirement ? 3 : 0; // Jika upcomingRetired, tambahkan 3 tahun, jika tidak, hanya tahun ini // Jika ada upcomingRetired, tambahkan 3 tahun, jika tidak, hanya tahun ini
+
+        $employees = Employee::when(! Auth::user()->hasRole('super-admin'), function ($query) {
+            $query->where('company_id', Auth::user()->company_id);
+        })
+            ->where('employee_status', 'AKTIF')
+            ->get() // Retrieve as a collection
+            ->filter(function ($employee) use ($additionalYears) {
+                $retirementDate = Carbon::parse($employee->dob)->addYears(55);
+                $currentYear = now()->year;
+
+                return $retirementDate->year <= ($currentYear + $additionalYears);
+            })->sortByDesc('dob');
+
 
         return view('pages.dashboard.employee.employees', compact('employees'));
     }

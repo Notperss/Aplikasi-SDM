@@ -225,9 +225,9 @@
       @endforelse
 
 
-      @if ($employee->familyDetails->where('emergency_contact', 0)->count() < 5)
+      @if ($employee->familyDetails->where('emergency_contact', 0)->count() < 3)
         {{-- Add 2 empty rows if there are no family details with relation < 3 --}}
-        @for ($i = 0; $i < 5 - $employee->familyDetails->where('emergency_contact', 0)->count(); $i++)
+        @for ($i = 0; $i < 3 - $employee->familyDetails->where('emergency_contact', 0)->count(); $i++)
           <tr>
             <td style="border: 1px solid #ddd;">&nbsp;</td>
             <td style="border: 1px solid #ddd;">&nbsp;</td>
@@ -296,11 +296,10 @@
       @empty
       @endforelse
 
-      @if ($employee->employeeCareers->count() < 5)
+      @if ($employee->employeeCareers->count() < 3)
         {{-- Add 2 empty rows if there are no family details with relation < 3 --}}
-        @for ($i = 0; $i < 5 - $employee->employeeCareers->count(); $i++)
+        @for ($i = 0; $i < 3 - $employee->employeeCareers->count(); $i++)
           <tr>
-            <td style="border: 1px solid #ddd;">&nbsp;</td>
             <td style="border: 1px solid #ddd;">&nbsp;</td>
             <td style="border: 1px solid #ddd;">&nbsp;</td>
             <td style="border: 1px solid #ddd;">&nbsp;</td>
@@ -388,9 +387,9 @@
         @endfor --}}
       @endforelse
 
-      @if ($employee->jobHistories->count() < 4)
+      @if ($employee->jobHistories->count() < 2)
         {{-- Add 2 empty rows if there are no family details with relation < 3 --}}
-        @for ($i = 0; $i < 4 - $employee->jobHistories->count(); $i++)
+        @for ($i = 0; $i < 2 - $employee->jobHistories->count(); $i++)
           <tr>
             <td style="border: 1px solid #ddd;">&nbsp;</td>
             <td style="border: 1px solid #ddd;">&nbsp;</td>

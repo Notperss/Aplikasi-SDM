@@ -191,7 +191,8 @@
     </table>
 
 
-    <table style="width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; font-size: 14px;">
+    <table style="width: 100%; border-collapse: collapse; margin-top: 10px; text-align: left; font-size: 14px;"
+      @if ($employee->jobHistories->isEmpty()) hidden @endif>
       <thead>
         <tr>
           <th colspan="5" style="border: 1px solid #ddd; background-color: #969696; text-align: center">

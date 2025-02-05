@@ -21,10 +21,11 @@
 
               <div class="row">
                 <div class="col-3 mb-2">
-                  <label class="form-label" for="name">NIK</label>
-                  <input type="text" id="name" value="{{ $contract->employee->nik ?? $employee->nik }}"
-                    class="form-control @error('name') is-invalid @enderror" readonly>
-                  @error('name')
+                  <label class="form-label" for="nik_employee">NIK</label>
+                  <input type="text" id="nik_employee" name="nik_employee"
+                    value="{{ $contract->employee->nik ?? $employee->nik }}"
+                    class="form-control @error('nik_employee') is-invalid @enderror" readonly>
+                  @error('nik_employee')
                     <a style="color: red"><small>{{ $message }}</small></a>
                   @enderror
                 </div>

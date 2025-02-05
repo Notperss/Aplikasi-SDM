@@ -26,11 +26,11 @@
 
       <div class="d-flex justify-content-between align-items-center my-2">
         <div>
-          <label for="start-date" class="me-2">Start Date:</label>
+          <label for="start-date" class="me-2">Dari:</label>
           <input type="date" id="start-date" class="form-control form-control-sm" placeholder="Start Date"
             style="width: 150px; display: inline-block;">
 
-          <label for="end-date" class="me-2">End Date:</label>
+          <label for="end-date" class="me-2">Sampai:</label>
           <input type="date" id="end-date" class="form-control form-control-sm" placeholder="End Date"
             style="width: 150px; display: inline-block;">
 

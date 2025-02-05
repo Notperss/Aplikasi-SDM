@@ -23,18 +23,18 @@
 
         <div class="d-flex justify-content-between align-items-center mb-3">
           <div>
-            <label for="start-date" class="me-2">Start Date:</label>
+            <label for="start-date" class="me-2">Dari :</label>
             <input type="date" id="start-date" class="form-control form-control-sm"
               style="width: 150px; display: inline-block;">
 
-            <label for="end-date" class="me-2">End Date:</label>
+            <label for="end-date" class="me-2">Sampai:</label>
             <input type="date" id="end-date" class="form-control form-control-sm"
               style="width: 150px; display: inline-block;">
 
-            <select id="filter-type" class="form-select form-select-sm" style="width: 200px; display: inline-block;">
+            <select id="filter-type" class="form-select form-select-sm" style="width: 300px; display: inline-block;">
               <option value="">Semua Kontrak</option>
-              <option value="before_end">Sebelum Kontrak Berakhir</option>
-              <option value="incoming_end">Kontrak Akan Berakhir</option>
+              <option value="before_end">Kontrak Belum Berakhir</option>
+              <option value="incoming_end">Kontrak Akan Berakhir (+60 Hari)</option>
               <option value="ended">Kontrak Berakhir</option>
             </select>
 
@@ -86,6 +86,23 @@
         }
       });
     }
+  </script>
+
+  <script>
+    document.getElementById('filter-type').addEventListener('change', function() {
+      let startDate = document.getElementById('start-date');
+      let endDate = document.getElementById('end-date');
+
+      if (this.value === "") { // Jika memilih "Semua Kontrak"
+        startDate.style.display = "inline-block";
+        endDate.style.display = "inline-block";
+      } else {
+        startDate.value = ""; // Reset Start Date
+        endDate.value = ""; // Reset End Date
+        startDate.style.display = "none";
+        endDate.style.display = "none";
+      }
+    });
   </script>
 
 

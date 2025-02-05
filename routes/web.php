@@ -13,6 +13,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Route;
 use App\Exports\DivisionEmployeeExport;
 use App\Exports\EmployeeCategoryExport;
+use App\Exports\EmployeeRetirementExport;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\Position\LevelController;
@@ -97,6 +98,7 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
 
 
     Route::get('/employee-in-out', [DashboardController::class, 'employeeInOut'])->name('employeeInOut');
+    Route::get('/employee-retirement', [DashboardController::class, 'employeeRetirement'])->name('employeeRetirement');
     Route::get('/employee-in-per-month', [DashboardController::class, 'employeeDataPerMonth'])->name('employeeDataPerMonth');
 
     // Route::get('/employees-by-level', [DashboardController::class, 'getEmployeesByLevel']);
@@ -265,6 +267,13 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
 
         return Excel::download(new ApprovalLogExport($type, $year), 'ApprovalLogExport.xlsx');
     })->name('export.approvalLog');
+
+    Route::get('/export-retirement', function () {
+        $status = request('status');
+        $additionalYears = $status === 'Karyawan Yang Akan Pensiun' ? 3 : 0;
+
+        return Excel::download(new EmployeeRetirementExport($additionalYears), 'masa_pensiun.xlsx');
+    })->name('exportRetirement');
 
     // Route::get('/export-positions', function () {
     //     $directorates = App\Models\WorkUnit\Directorate::with(['divisions.positions.employee'])->get();

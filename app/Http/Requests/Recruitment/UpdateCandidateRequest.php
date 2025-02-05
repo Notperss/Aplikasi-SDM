@@ -25,7 +25,7 @@ class UpdateCandidateRequest extends FormRequest
         return [
             'name' => ['required', 'string'],
             // 'email' => ['required', 'string', 'email', Rule::unique('candidates')->ignore($this->candidate)],
-            'email' => ['nullable', 'string', 'email', Rule::unique('candidates')->ignore($this->candidate)],
+            'email' => ['nullable', 'string', 'email', Rule::unique('candidates')->ignore($this->candidate)->whereNull('deleted_at')],
             'phone_number' => ['nullable',],
             'ktp_address' => ['nullable', 'string'],
             'current_address' => ['nullable', 'string'],
@@ -80,6 +80,7 @@ class UpdateCandidateRequest extends FormRequest
             'email.required' => 'Email wajib diisi.',
             'email.string' => 'Email harus berupa teks.',
             'email.email' => 'Format email tidak valid.',
+            'email.unique' => 'Email ini sudah terdaftar.',
 
             'phone_number.required' => 'Nomor telepon wajib diisi.',
             'phone_number.integer' => 'Nomor telepon harus berupa angka.',

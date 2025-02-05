@@ -3,7 +3,8 @@
 @section('content')
 
 @section('breadcrumb')
-  <x-breadcrumb title="Karyawan" page="Karyawan" active="Karyawan " route="{{ route('dashboard.index') }}" />
+  <x-breadcrumb title="Daftar {{ request('status') }}" page="Dashboard" active="Karyawan "
+    route="{{ route('dashboard.index') }}" />
 @endsection
 
 <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
@@ -16,10 +17,17 @@
       <div class="d-flex justify-content-between align-items-center ">
         <h5 class="fw-normal mb-0 text-body">Daftar Karyawan
         </h5>
-        <a href="{{ url('/export-employee-in-out') }}?status={{ request('status') }}&isMonth={{ request('isMonth') }}"
-          class="btn btn-sm btn-success">
-          Export
-        </a>
+        @if (request('status') === 'Karyawan Pensiun Tahun Ini' || request('status') === 'Karyawan Yang Akan Pensiun')
+          <a href="{{ route('exportRetirement', ['status' => request('status')]) }}" class="btn btn-success btn-sm">
+            Export.
+          </a>
+        @else
+          <a href="{{ url('/export-employee-in-out') }}?status={{ request('status') }}&isMonth={{ request('isMonth') }}"
+            class="btn btn-sm btn-success">
+            Export
+          </a>
+        @endif
+
       </div>
     </div>
     <div class="card-body">
@@ -31,8 +39,13 @@
             <th></th>
             <th>NIK</th>
             <th>Nama</th>
+            <th>Usia</th>
             <th>Jabatan</th>
             <th>Kategori Karyawan</th>
+            @if (request('status') === 'Karyawan Pensiun Tahun Ini' || request('status') === 'Karyawan Yang Akan Pensiun')
+              <th>Masa Pensiun</th>
+              <th>Sisa Tahun Menuju Pensiun</th>
+            @endif
             {{-- <th>Email</th>
             <th>Phone</th> --}}
             <th>Status</th>
@@ -42,12 +55,20 @@
         <tbody>
           @foreach ($employees as $employee)
             <tr>
-              <td>
-                {{ $loop->iteration }}
+              <td> {{ $loop->iteration }}
               </td>
               <td>
                 @php
                   $mainPhoto = $employee->employeePhotos->where('main_photo', true)->first();
+                  $currentDate = \Carbon\Carbon::now();
+
+                  if ($employee->dob) {
+                      $dob = \Carbon\Carbon::parse($employee->dob);
+
+                      // Calculate the difference
+                      $ageYears = $dob->age;
+                      $ageMonths = $dob->diffInMonths($currentDate) % 12;
+                  }
                 @endphp
                 @if ($mainPhoto)
                   <div class="fixed-frame">
@@ -58,15 +79,10 @@
                   No Image
                 @endif
               </td>
-              <td>
-                {{ $employee->nik ?? '' }}
-              </td>
-              <td>
-                {{ $employee->name ?? '' }}
-              </td>
-              <td>
-                {{ $employee->position->name ?? '' }}
-              </td>
+              <td> {{ $employee->nik ?? '' }} </td>
+              <td> {{ $employee->name ?? '' }} </td>
+              <td> {{ $ageYears . ' Tahun ' . $ageMonths . ' Bulan' }} </td>
+              <td> {{ $employee->position->name ?? '' }} </td>
               <td>
                 @php
                   $categoryName = $employee->employeeCategory->name ?? '-';
@@ -88,10 +104,26 @@
                   <span class="badge {{ $badgeClass }}">{{ $employee->position->level->name }}</span>
                 @endif
 
-
                 {{-- <span class="badge bg-light-primary">asoidjhoa</span> --}}
                 {{-- {{ $employee->employeeCategory->name ?? '' }} --}}
               </td>
+              @if (request('status') === 'Karyawan Pensiun Tahun Ini' || request('status') === 'Karyawan Yang Akan Pensiun')
+                <td>
+                  @php
+                    $retirementDate = \Carbon\Carbon::parse($employee->dob)->addYears(55);
+
+                    $currentDate = \Carbon\Carbon::now();
+                    $diff = $currentDate->diff($retirementDate);
+
+                    $remainingYears = $diff->invert ? 0 : $diff->y; // Whole years (set to 0 if the date has passed)
+                    $remainingMonths = $diff->invert ? 0 : $diff->m; // Remaining months after whole years (set to 0 if the date has passed)
+                  @endphp
+                  {{ $retirementDate->translatedFormat('l, d F Y') }}
+                </td>
+                <td>
+                  {{ $remainingYears . ' tahun ' . $remainingMonths . ' bulan' }}
+                </td>
+              @endif
               <td>
                 @if ($employee->is_verified == 0)
                   <span class="badge bg-danger">Unverified</span>
