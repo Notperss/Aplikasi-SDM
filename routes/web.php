@@ -126,10 +126,7 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::get('get-candidate', [SelectionController::class, 'getCandidate'])->name('selection.getCandidate');
     Route::get('candidate-history-selection/{id}', [SelectionController::class, 'getCandidateHistory'])->name('selection.getCandidateHistory');
 
-
     Route::patch('/selection/{id}/update-approval', [SelectionController::class, 'updateApprovalStatus'])->name('selection.updateApprovalStatus');
-
-
 
     Route::resource('selectedCandidate', SelectedCandidateController::class)->only('store', 'show', 'edit', 'update', 'destroy');
     Route::post('/selection/store/{selection}', [SelectedCandidateController::class, 'addCandidate'])->name('selectedCandidate.addCandidate');
@@ -147,12 +144,8 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::resource('historySelection', HistorySelectionController::class)->only('edit', 'update', 'destroy');
     Route::post('store-history/{selection}', [HistorySelectionController::class, 'store'])->name('historySelection.store');
 
-
-
     // Route::post('/selection/store-candidate/{selection}', [SelectionController::class, 'storeCandidate'])->name('selection.storeCandidate');
     // Route::delete('/selection/destroy-candidate/{selectedCandidate}', [SelectionController::class, 'destroyCandidate'])->name('selection.destroyCandidate');
-
-
 
     Route::resource('employeeFamilyDetail', EmployeeFamilyDetailController::class)->only('store', 'update', 'destroy');
     Route::resource('employeeJobHistory', EmployeeJobHistoryController::class)->only('store', 'update', 'destroy');
@@ -219,12 +212,10 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
 
     Route::get('/contracts/expired', [ContractController::class, 'getExpiredContracts'])->name('contracts.expired');
 
-
     Route::resource('approval', ApprovalController::class)->only('index', 'store', 'update', 'destroy', );
     Route::get('/form-update-status/{id}', [ApprovalController::class, 'formUpdateStatus'])->name('approval.formUpdateStatus');
     Route::put('/update-status/{id}', [ApprovalController::class, 'updateStatus'])->name('approval.updateStatus');
-
-
+    Route::get('/new-employee-index', [ApprovalController::class, 'newEmployeeIndex'])->name('approval.newEmployeeIndex');
 
 
     Route::get('/export-directorates', function () {

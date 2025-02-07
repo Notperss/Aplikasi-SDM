@@ -37,13 +37,13 @@ class ApprovalController extends Controller
                     $buttons = '';
 
                     // Role-based button (equivalent to @role)
-                    if (auth()->user()->hasAnyRole(['staff', 'senior-officer', 'assistant-manager', 'super-admin']) && $item->selected_candidate_id && $item->is_approve === 1 && $item->selectedCandidate->is_hire === null) {
-                        $url = route('employee.newEmployee', encrypt($item->selected_candidate_id)); // Adjust if necessary
-                        $buttons .= '<a class="btn btn-sm btn-info mx-1" title="Tambahkan ke karyawan" href="'.$url.'">
-                        <i class="bi bi-person-plus-fill"></i>
-                    </a>';
-                    }
-
+                    // if (auth()->user()->hasAnyRole(['staff', 'senior-officer', 'assistant-manager', 'super-admin']) && $item->selected_candidate_id && $item->is_approve === 1 && $item->selectedCandidate->is_hire === null) {
+                    //     $url = route('employee.newEmployee', encrypt($item->selected_candidate_id)); // Adjust if necessary
+                    //     $buttons .= '<a class="btn btn-sm btn-info mx-1" title="Tambahkan ke karyawan" href="'.$url.'">
+                    //     <i class="bi bi-person-plus-fill"></i>
+                    // </a>';
+                    // }
+    
                     if ($item->is_approve !== null) {
                         // $url = route('employee.newEmployee', encrypt($item->selected_candidate_id)); // Adjust if necessary
                         $url = route('approval.formUpdateStatus', encrypt($item->id)); // Adjust if necessary
@@ -349,5 +349,166 @@ class ApprovalController extends Controller
         return redirect()->back()->with('success', 'data has been updated successfully!.');
     }
 
+    public function newEmployeeIndex()
+    {
+        $approvals = Approval::with('selectedCandidate', 'employeeCareer', 'position')
+            ->when(! Auth::user()->hasRole('super-admin'), function ($query) {
+                $query->where('company_id', Auth::user()->company_id);
+            })->when(Auth::user()->hasAnyRole(['senior-officer', 'super-admin']), function ($query) {
+                $query->whereNotNull('selected_candidate_id')->where('is_approve', 1);
+            })
+            // ->orderByRaw('CASE WHEN is_approve IS NULL THEN 1 ELSE 0 END DESC') // Prioritize NULL
+            // ->orderBy('is_approve', 'desc') // Secondary order for is_approve
+            ->orderBy('created_at', 'desc');
+
+
+        if (request()->ajax()) {
+            return DataTables::of($approvals)
+                ->addIndexColumn()
+                ->addColumn('action', function ($item) {
+                    $buttons = '';
+
+                    // Role-based button (equivalent to @role)
+                    if (Auth::user()->hasAnyRole(['senior-officer', 'super-admin']) &&
+                        $item->selected_candidate_id &&
+                        $item->is_approve === 1 &&
+                        Auth::user()->name === 'SURYADI' &&
+                        $item->selectedCandidate->is_hire === null) {
+                        $url = route('employee.newEmployee', encrypt($item->selected_candidate_id)); // Adjust if necessary
+                        $buttons .= '<a class="btn btn-md btn-info mx-1" title="Tambahkan ke karyawan" href="'.$url.'">
+                        <i class="bi bi-person-plus-fill"></i>
+                    </a>';
+                    }
+
+                    // if ($item->is_approve !== null && auth()->user()->hasAnyRole(['assistant-manager', 'super-admin'])) {
+                    //     // $url = route('employee.newEmployee', encrypt($item->selected_candidate_id)); // Adjust if necessary
+                    //     $url = route('approval.formUpdateStatus', encrypt($item->id)); // Adjust if necessary
+                    //     $buttons .= '<a class="btn btn-sm btn-secondary mx-1" title="Tambah Catatan" href="'.$url.'">
+                    //     <i class="bi bi-pencil"></i>
+                    // </a>';
+                    // }
+    
+                    //             if (auth()->user()->hasAnyRole(['assistant-manager', 'super-admin'])) {
+                    //                 // Dropdown menu
+                    //                 $dropdownHidden = $item->is_approve === null ? '' : 'hidden';
+                    //                 $buttons .= '
+                    // <div class="btn-group mb-1" '.$dropdownHidden.'>
+                    //     <div class="dropdown">
+                    //         <button class="btn btn-primary dropdown-toggle me-1" type="button" id="dropdownMenuButton'.$item->id.'"
+                    //                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    //             <i class="bi bi-three-dots-vertical"></i>
+                    //         </button>
+                    //         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton'.$item->id.'">
+                    //             <button class="dropdown-item"
+                    //                     onclick="confirmAction(\'approve\', \'Apakah Anda yakin ingin menyetujui?\', '.$item->id.')">
+                    //                 Approve
+                    //             </button>
+                    //             <button class="dropdown-item"
+                    //                     onclick="confirmAction(\'reject\', \'Apakah Anda yakin ingin menolak?\', '.$item->id.')">
+                    //                 Reject
+                    //             </button>
+                    //             <!-- Approve Form -->
+                    //             <form id="approveForm_'.$item->id.'"
+                    //                 action="'.route('approval.update', $item->id).'"
+                    //                 method="POST" style="display: none;">
+                    //                 '.csrf_field().'
+                    //                 '.method_field('patch').'
+                    //                 <input type="hidden" name="employee_career_id" value="'.$item->employee_career_id.'">
+                    //                 <input type="hidden" name="employee_id" value="'.$item->employee_id.'">
+                    //                 <input type="hidden" name="selected_candidate_id" value="'.$item->selected_candidate_id.'">
+                    //                 <input type="hidden" name="is_approve" value="1"> <!-- Approve value -->
+                    //             </form>
+                    //             <!-- Reject Form -->
+                    //             <form id="rejectForm_'.$item->id.'"
+                    //                 action="'.route('approval.update', $item->id).'"
+                    //                 method="POST" style="display: none;">
+                    //                 '.csrf_field().'
+                    //                 '.method_field('patch').'
+                    //                 <input type="hidden" name="employee_career_id" value="'.$item->employee_career_id.'">
+                    //                 <input type="hidden" name="employee_id" value="'.$item->employee_id.'">
+                    //                 <input type="hidden" name="selected_candidate_id" value="'.$item->selected_candidate_id.'">
+                    //                 <input type="hidden" name="is_approve" value="0"> <!-- Reject value -->
+                    //             </form>
+                    //         </div>
+                    //     </div>
+                    // </div>';
+                    //             }
+                    return $buttons;
+                })
+                ->editColumn('photo', function ($item) {
+                    // Determine the photo based on the available relationships
+                    $mainPhoto = null;
+                    $path_photo = null;
+
+                    if ($item->selected_candidate_id) {
+                        $mainPhoto = $item->selectedCandidate->candidate;
+                        $path_photo = $mainPhoto->photo ?? null;
+                    } elseif ($item->employee_career_id) {
+                        $mainPhoto = $item->employeeCareer->employee->employeePhotos->where('main_photo', true)->first();
+                        $path_photo = $mainPhoto->file_path ?? null;
+                    } elseif ($item->employee_id) {
+                        $mainPhoto = $item->employee->employeePhotos->where('main_photo', true)->first();
+                        $path_photo = $mainPhoto->file_path ?? null;
+                    }
+
+                    // Return image HTML or fallback message
+                    if ($path_photo) {
+                        return '
+                    <div class="fixed-frame">
+                        <img src="'.asset('storage/'.$path_photo).'" data-fancybox alt="User Photo"
+                        class="framed-image" style="cursor: pointer">
+                    </div>';
+                    }
+
+                    return 'No Image';
+                })->editColumn('employee_nik', function ($item) {
+                    $nik = $item->employeeCareer->employee->nik ?? $item->employee->nik ?? '<span class="badge bg-secondary">-</span>';
+                    $id = $item->employeeCareer->employee->id ?? $item->employee->id ?? '';
+
+                    if ($nik && $id) {
+                        return '<a class="badge bg-primary" href="'.route('employee.show', $id).'">'.$nik.'</a>';
+                    }
+
+                    return '<span class="badge bg-secondary">-</span>';
+                })->editColumn('employee_position', function ($item) {
+                    if ($item->position_id) {
+                        return $item->position->name ?? '-';
+                    } else {
+                        return '<span class="badge bg-secondary">-</span>';
+                    }
+                })->editColumn('employee_division', function ($item) {
+                    if ($item->position_id) {
+                        return $item->position->division->name ?? '-';
+                    } else {
+                        return '<span class="badge bg-secondary">-</span>';
+                    }
+                })->editColumn('employee_name', function ($item) {
+                    return $item->selectedCandidate->candidate->name
+                        ?? $item->employeeCareer->employee->name
+                        ?? $item->employee->name
+                        ?? '<span class="badge bg-secondary">-</span>';
+                })
+                ->editColumn('is_approve', function ($item) {
+                    $status = '<span class="badge bg-primary mb-1">'.$item->description.'</span> <br>';
+
+                    if ($item->is_approve === 1) {
+                        $appr = '<span class="badge bg-success">Disetujui</span>';
+                    } elseif ($item->is_approve === 0) {
+                        $appr = '<span class="badge bg-danger">Ditolak</span>';
+                    } else {
+                        $appr = '<span class="badge bg-secondary">Pending</span>';
+                    }
+
+                    return $status.$appr;
+
+                })->editColumn('created_at', function ($item) {
+                    return $item->created_at ? Carbon::parse($item->created_at)->translatedFormat('d-m-Y') : '-';
+
+                })->rawColumns(['action', 'employee_name', 'is_approve', 'employee_nik', 'employee_position', 'employee_division', 'photo'])
+                ->toJson();
+        }
+
+        return view('pages.approval.new-employee-index', compact('approvals'));
+    }
 
 }
