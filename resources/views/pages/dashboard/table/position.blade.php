@@ -420,7 +420,7 @@
                 @endforeach
 
                 <!-- Total Row -->
-                <tr>
+                <tr class="table-primary">
                   <td class="font-weight-bold text-center">Total :</td>
                   @foreach ($uniqueLevels as $level)
                     <td class="font-weight-bold text-center">{{ $totalCounts[$level->name] }}</td>
@@ -438,7 +438,100 @@
           </table>
         </div>
 
-        <div class="col-md-12">
+        @php
+          $uniqueLevels = collect();
+          $uniqueCategories = collect();
+
+          foreach ($directorates as $directorate) {
+              foreach ($directorate->divisions as $division) {
+                  foreach ($division->positions as $position) {
+                      if ($position->employee && $position->employee->employee_status === 'AKTIF') {
+                          $category = optional($position->employee->employeeCategory)->name;
+                          $level = optional($position)->level;
+
+                          if ($category) {
+                              $uniqueCategories->push($category);
+                          }
+                          if ($level) {
+                              $uniqueLevels->push($level);
+                          }
+                      }
+                  }
+              }
+          }
+
+          $uniqueLevels = $uniqueLevels->unique('id')->sortBy('id');
+          $uniqueCategories = $uniqueCategories->unique()->sort();
+        @endphp
+
+        @foreach ($uniqueCategories as $category)
+          <div class="col-md-12">
+
+            <h3>{{ $category }}</h3>
+
+            <table class="table table-sm table-bordered" style="font-size: 80%">
+              <thead>
+                <tr>
+                  <th class="text-center">Unit Kerja</th>
+
+                  @foreach ($uniqueLevels as $level)
+                    <th>{{ $level->name }}</th>
+                  @endforeach
+                </tr>
+              </thead>
+              <tbody>
+                @php
+                  $totalCounts = array_fill_keys($uniqueLevels->pluck('name')->toArray(), 0);
+                @endphp
+
+                {{-- @foreach ($uniqueCategories as $category)
+                <tr>
+                  <td class="font-weight-bold text-center bg-secondary text-white">{{ strtoupper($category) }}</td>
+                </tr> --}}
+
+                @foreach ($directorates as $directorate)
+                  @php
+                    $levelCounts = array_fill_keys($uniqueLevels->pluck('name')->toArray(), 0);
+
+                    foreach ($directorate->divisions as $division) {
+                        foreach ($division->positions as $position) {
+                            if (
+                                $position->employee &&
+                                $position->employee->employee_status === 'AKTIF' &&
+                                optional($position->employee->employeeCategory)->name === $category
+                            ) {
+                                $level = optional($position)->level;
+                                if ($level && isset($levelCounts[$level->name])) {
+                                    $levelCounts[$level->name]++;
+                                    $totalCounts[$level->name]++;
+                                }
+                            }
+                        }
+                    }
+                  @endphp
+
+                  <tr>
+                    <td class="font-weight-bold">{{ $directorate->name }}</td>
+                    @foreach ($uniqueLevels as $level)
+                      <td class="text-center">{{ $levelCounts[$level->name] }}</td>
+                    @endforeach
+                  </tr>
+                  {{-- @endforeach --}}
+                @endforeach
+
+                <tr class="table-primary">
+                  <td class="font-weight-bold text-center">Total :</td>
+                  @foreach ($uniqueLevels as $level)
+                    <td class="font-weight-bold text-center">{{ $totalCounts[$level->name] }}</td>
+                  @endforeach
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        @endforeach
+
+
+        {{-- <div class="col-md-12">
           <h3>OFFICE</h3>
           <table class="table table-sm table-bordered" style="font-size: 80%">
             <thead>
@@ -642,7 +735,7 @@
               @endforelse
             </tbody>
           </table>
-        </div>
+        </div> --}}
 
       </div>
     </div>

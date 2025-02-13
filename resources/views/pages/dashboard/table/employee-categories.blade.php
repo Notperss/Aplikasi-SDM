@@ -95,7 +95,7 @@
                 @endforeach
 
                 <!-- Total Row -->
-                <tr>
+                <tr class="table-primary">
                   <td class="text-bold-500 text-center">Total :</td>
                   <td class="text-bold-500 text-center">{{ array_sum($totalCounts) }}</td>
                   @foreach ($uniqueCategories as $category)

@@ -36,6 +36,7 @@
           <a href="#">
             <img src="{{ asset('img/cmnplogo.png') }}" class="mb-2" alt="Logo" width="40%">
           </a>
+          <h2>SISTEM INFORMASI <br> MANAJEMEN KARYAWAN</h2>
           <p class="auth-subtitle mb-2">Please sign-in to your account.</p>
         </div>
         @if ($errors->has('email'))

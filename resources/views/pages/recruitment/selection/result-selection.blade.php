@@ -187,14 +187,14 @@
       <div class="d-flex justify-content-between align-items-center ">
         <h5 class="fw-normal my-3 text-body">Tahapan Seleksi</h5>
         @if (!$selection->is_approve)
-          @role(['staff', 'senior-officer', 'super-admin'])
+          @can('selection.result-selection')
             <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
               data-bs-target="#modal-form-history-selection">
               <i class="bi bi-plus-lg"></i>
               Tahapan Seleksi
             </button>
             @include('pages.recruitment.selection.modal-history')
-          @endrole
+          @endcan
         @endif
       </div>
 
@@ -452,7 +452,7 @@
 
           <div class="col-12 d-flex justify-content-end mt-4">
             @if (!$selection->is_approve)
-              @role(['staff', 'senior-officer', 'super-admin'])
+              @can('selection.result-selection')
                 <button class="btn btn-primary me-1 mb-1" onclick="closeSelection({{ $selection->id }})">Tutup
                   Seleksi</button>
 
@@ -467,7 +467,7 @@
                   <input type="hidden" name="selected_option" id="selectedOptionInput_{{ $selection->id }}"
                     value="">
                 </form>
-              @endrole
+              @endcan
             @endif
             <a class="btn btn-light-secondary me-1 mb-1" href="{{ route('selection.index') }}">Cancel</a>
           </div>

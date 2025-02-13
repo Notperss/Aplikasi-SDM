@@ -4,7 +4,7 @@
           <div class="row">
             <div class="d-flex justify-content-between align-items-center ">
               <h4 class="card-title">Jenis Kelamin</h4>
-              <a href="{{ url('/export-directorates') }}" class="btn btn-sm btn-success">Export</a>
+              <a href="{{ url('/export-gender') }}" class="btn btn-sm btn-success">Export</a>
             </div>
 
             <div class="col-md-12">
@@ -83,7 +83,7 @@
                         <td class="text-bold-500 text-center">{{ $femaleCount }}</td>
                       </tr>
                     @endforeach
-                    <tr>
+                    <tr class="table-primary">
                       <td class="text-bold-500 text-center">Total :</td>
                       <td class="text-bold-500 text-center">{{ $total }}</td>
                       <td class="text-bold-500 text-center">{{ $totalMale }}</td>
@@ -102,7 +102,112 @@
               </table>
             </div>
 
-            <div class="col-md-12">
+            @php
+              // Ambil kategori karyawan unik
+              $uniqueCategories = collect();
+              foreach ($directorates as $directorate) {
+                  foreach ($directorate->divisions as $division) {
+                      foreach ($division->positions as $position) {
+                          $categoryName = optional($position->employee)->employeeCategory->name ?? null;
+                          if ($categoryName) {
+                              $uniqueCategories->push($categoryName);
+                          }
+                      }
+                  }
+              }
+              $uniqueCategories = $uniqueCategories->unique()->values();
+            @endphp
+
+            @foreach ($uniqueCategories as $category)
+              <h4 class="text-center mt-4">{{ $category }}</h4>
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table table-sm table-bordered" style="font-size: 80%">
+                    <thead>
+                      <tr>
+                        <th style="width: 30%" class="text-center">Unit Kerja</th>
+                        <th style="width: 10%" class="text-center">Total Karyawan</th>
+                        <th>LAKI-LAKI</th>
+                        <th>PEREMPUAN</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @php
+                        // Group and order the directorates
+                        $groupedDirectorates = $directorates->groupBy('is_non')->sortKeysUsing(function ($key1, $key2) {
+                            $order = [1, 2];
+                            return array_search($key1, $order) <=> array_search($key2, $order);
+                        });
+
+                        // Total counts for this category
+                        $totalCategoryCounts = ['total' => 0, 'laki' => 0, 'perempuan' => 0];
+                      @endphp
+
+                      @forelse ($groupedDirectorates as $isNon => $directoratesGroup)
+                        <tr>
+                          <td colspan="5" class="text-bold-500 text-center">
+                            {{ $isNon == 1 ? 'DIREKTORAT' : ($isNon == 2 ? 'NON-DIREKTORAT' : 'LAIN-LAIN') }}
+                          </td>
+                        </tr>
+
+                        @foreach ($directoratesGroup as $directorate)
+                          @php
+                            // Initialize counts for this directorate
+                            $categoryCounts = ['total' => 0, 'laki' => 0, 'perempuan' => 0];
+
+                            // Count employees per gender for this category
+                            foreach ($directorate->divisions as $division) {
+                                foreach ($division->positions as $position) {
+                                    $employee = $position->employee;
+                                    if (
+                                        $employee &&
+                                        $employee->employee_status === 'AKTIF' &&
+                                        optional($employee->employeeCategory)->name == $category
+                                    ) {
+                                        $categoryCounts['total']++;
+                                        if ($employee->gender == 'LAKI-LAKI') {
+                                            $categoryCounts['laki']++;
+                                        } elseif ($employee->gender == 'PEREMPUAN') {
+                                            $categoryCounts['perempuan']++;
+                                        }
+
+                                        // Update grand total
+                                        $totalCategoryCounts['total']++;
+                                        $totalCategoryCounts['laki'] += $employee->gender == 'LAKI-LAKI' ? 1 : 0;
+                                        $totalCategoryCounts['perempuan'] += $employee->gender == 'PEREMPUAN' ? 1 : 0;
+                                    }
+                                }
+                            }
+                          @endphp
+                          <tr>
+                            <td class="text-bold-500">{{ $directorate->name }}</td>
+                            <td class="text-center">{{ $categoryCounts['total'] }}</td>
+                            <td class="text-center">{{ $categoryCounts['laki'] }}</td>
+                            <td class="text-center">{{ $categoryCounts['perempuan'] }}</td>
+                          </tr>
+                        @endforeach
+                      @empty
+                        <tr>
+                          <td class="text-bold-500 text-center" colspan="5">No data available in table</td>
+                        </tr>
+                      @endforelse
+
+                      <!-- Total Row for this category -->
+                      <tr class="table-primary">
+                        <td class="text-bold-500 text-center">Total :</td>
+                        <td class="text-bold-500 text-center">{{ $totalCategoryCounts['total'] }}</td>
+                        <td class="text-bold-500 text-center">{{ $totalCategoryCounts['laki'] }}</td>
+                        <td class="text-bold-500 text-center">{{ $totalCategoryCounts['perempuan'] }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                </div>
+              </div>
+            @endforeach
+
+
+            {{-- <div class="col-md-12">
               <div class="table-responsive">
                 <table class="table table-sm table-bordered" style="font-size: 80%">
                   <thead>
@@ -222,7 +327,7 @@
                   </tbody>
                 </table>
               </div>
-            </div>
+            </div> --}}
 
 
           </div>

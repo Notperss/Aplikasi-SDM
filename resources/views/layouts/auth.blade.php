@@ -24,7 +24,7 @@
 <body>
   <script src="{{ asset('dist/assets/static/js/initTheme.js') }}"></script>
   <div id="auth">
-    {{-- <x-validation-errors /> --}}
+    <x-validation-errors />
     @yield('content')
 
   </div>

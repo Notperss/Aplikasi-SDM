@@ -13,8 +13,6 @@
         <div class="d-flex justify-content-between align-items-center ">
           <h5 class="fw-normal mb-0 text-body">Daftar Seleksi</h5>
 
-          @role('staff|super-admin')
-          @endrole
           <button type="button" class="btn btn-primary btn-md" data-bs-toggle="modal"
             data-bs-target="#modal-form-add-selection">
             <i class="bi bi-plus-lg"></i>
@@ -116,7 +114,7 @@
                     <div class="btn-group">
 
                       @if ($selection->is_finished == 0 || auth()->user()->hasRole('super-admin'))
-                        @role('staff|senior-officer|super-admin')
+                        @can('selection.edit-destroy')
                           <div class="dropdown">
                             <button class="btn btn-sm btn-primary dropdown-toggle me-1" type="button"
                               id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"
@@ -151,58 +149,56 @@
 
                             </div>
                           </div>
-                        @endif
-                      @endrole
+                        @endcan
+                      @endif
 
 
                       <!--APPROVE FOR MANAGER/KADEP-->
                       {{-- @if ($selection->is_approve == 1 || auth()->user()->hasRole('super-admin')) --}}
                       @if (
-                          ($selection->is_approve == 1 && auth()->user()->hasRole('assistant-manager')) ||
-                              (($selection->is_approve == 2 && auth()->user()->hasRole('manager')) || Auth::user()->hasRole('super-admin')))
-                        @role('assistant-manager|manager|super-admin')
-                          <div class="dropdown">
-                            <button class="btn btn-sm btn-secondary dropdown-toggle me-1" type="button"
-                              id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"
-                              aria-expanded="false">
-                              <i class="bi bi-three-dots-vertical"></i>
+                          ($selection->is_approve == 1 && auth()->user()->can('approval.assistant-manager')) ||
+                              ($selection->is_approve == 2 && auth()->user()->can('approval.manager')))
+                        <div class="dropdown">
+                          <button class="btn btn-sm btn-secondary dropdown-toggle me-1" type="button"
+                            id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            <i class="bi bi-three-dots-vertical"></i>
+                          </button>
+
+                          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                            <button class="dropdown-item"
+                              onclick="confirmAction('approve', 'Apakah Anda yakin ingin menyetujui?', {{ $selection->id }})">
+                              Approve
                             </button>
 
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <button class="dropdown-item"
+                              onclick="confirmAction('reject', 'Apakah Anda yakin ingin menolak?', {{ $selection->id }})">
+                              Reject
+                            </button>
 
-                              <button class="dropdown-item"
-                                onclick="confirmAction('approve', 'Apakah Anda yakin ingin menyetujui?', {{ $selection->id }})">
-                                Approve
-                              </button>
+                            <!-- Forms for Approve and Reject actions -->
+                            <form id="approveForm_{{ $selection->id }}"
+                              action="{{ route('selection.updateApprovalStatus', $selection->id) }}" method="POST"
+                              style="display: none;">
+                              @csrf
+                              @method('patch')
 
-                              <button class="dropdown-item"
-                                onclick="confirmAction('reject', 'Apakah Anda yakin ingin menolak?', {{ $selection->id }})">
-                                Reject
-                              </button>
+                              <input type="hidden" name="is_approve"
+                                value="{{ $selection->is_approve == 1 ? 2 : 3 }}">
 
-                              <!-- Forms for Approve and Reject actions -->
-                              <form id="approveForm_{{ $selection->id }}"
-                                action="{{ route('selection.updateApprovalStatus', $selection->id) }}" method="POST"
-                                style="display: none;">
-                                @csrf
-                                @method('patch')
+                            </form>
 
-                                <input type="hidden" name="is_approve"
-                                  value="{{ $selection->is_approve == 1 ? 2 : 3 }}">
-
-                              </form>
-
-                              <form id="rejectForm_{{ $selection->id }}"
-                                action="{{ route('selection.updateApprovalStatus', $selection->id) }}" method="POST"
-                                style="display: none;">
-                                @csrf
-                                @method('patch')
-                                <input type="hidden" name="is_approve" value="0"> <!-- Reject value -->
-                              </form>
-                            </div>
-
+                            <form id="rejectForm_{{ $selection->id }}"
+                              action="{{ route('selection.updateApprovalStatus', $selection->id) }}" method="POST"
+                              style="display: none;">
+                              @csrf
+                              @method('patch')
+                              <input type="hidden" name="is_approve" value="0"> <!-- Reject value -->
+                            </form>
                           </div>
-                        @endrole
+
+                        </div>
                       @endif
                     </div>
 

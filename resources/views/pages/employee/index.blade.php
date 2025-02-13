@@ -14,8 +14,6 @@
   <div class="card">
 
     <div class="card-header">
-      @role('manager|assistant-manager|super-admin')
-      @endrole
       <div class="d-flex justify-content-between align-items-center ">
         <h5 class="fw-normal mb-0 text-body">Daftar Karyawan</h5>
         <a href="{{ route('employee.create') }}" class="btn btn-primary btn-md">

@@ -284,359 +284,181 @@
           </table>
         </div>
 
-        <div class="col-md-12">
-          <h3>OFFICE</h3>
-          <table class="table table-sm table-bordered" style="font-size: 80%">
-            <thead>
-              <tr>
-                <th class="text-center">Unit Kerja</th>
-                <th class="text-center">Total Karyawan</th>
-                <th class="text-center">
-                  < 25</th>
-                <th class="text-center">25-30</th>
-                <th class="text-center">30-35</th>
-                <th class="text-center">35-40</th>
-                <th class="text-center">40-45</th>
-                <th class="text-center">> 45</th>
-                {{-- <th class="text-center"> >= 55</th> --}}
-              </tr>
-            </thead>
-            <tbody>
-              @php
-                $totalEmployees = 0;
-                $totalBelow25 = 0;
-                $total2530 = 0;
-                $total3035 = 0;
-                $total3540 = 0;
-                $total4045 = 0;
-                $totalAbove45 = 0;
-                // $totalAbove55 = 0;
+        @php
+          // use Carbon\Carbon;
 
-                // Group and order the directorates
-                $groupedDirectorates = $directorates->groupBy('is_non')->sortKeysUsing(function ($key1, $key2) {
-                    $order = [1, 2]; // Define the desired order for is_non
-                    $index1 = array_search($key1, $order) !== false ? array_search($key1, $order) : count($order);
-                    $index2 = array_search($key2, $order) !== false ? array_search($key2, $order) : count($order);
-                    return $index1 <=> $index2;
-                });
-              @endphp
+          // Get unique employee categories
+          $categories = collect();
+          foreach ($directorates as $directorate) {
+              foreach ($directorate->divisions as $division) {
+                  foreach ($division->positions as $position) {
+                      if ($position->employee && $position->employee->employee_status === 'AKTIF') {
+                          $category = optional($position->employee->employeeCategory)->name;
+                          if ($category) {
+                              $categories->push($category);
+                          }
+                      }
+                  }
+              }
+          }
+          $categories = $categories->unique()->sort();
+        @endphp
 
-              @forelse ($groupedDirectorates as $isNon => $directoratesGroup)
+        @foreach ($categories as $category)
+          <div class="col-md-12">
+            <h3>{{ $category }}</h3>
+            <table class="table table-sm table-bordered" style="font-size: 80%">
+              <thead>
                 <tr>
-                  <td colspan="9" class="text-bold-500 text-center">
-                    {{ $isNon == 1 ? 'DIREKTORAT' : ($isNon == 2 ? 'NON-DIREKTORAT' : 'LAIN-LAIN') }}
-                  </td>
+                  <th class="text-center">Unit Kerja</th>
+                  <th class="text-center">Total Karyawan</th>
+                  <th class="text-center">
+                    < 25</th>
+                  <th class="text-center">25-30</th>
+                  <th class="text-center">30-35</th>
+                  <th class="text-center">35-40</th>
+                  <th class="text-center">40-45</th>
+                  <th class="text-center">> 45</th>
                 </tr>
+              </thead>
+              <tbody>
+                @php
+                  $totalEmployees = 0;
+                  $totalBelow25 = 0;
+                  $total2530 = 0;
+                  $total3035 = 0;
+                  $total3540 = 0;
+                  $total4045 = 0;
+                  $totalAbove45 = 0;
 
-                @foreach ($directoratesGroup as $directorate)
-                  @php
+                  $groupedDirectorates = $directorates->groupBy('is_non')->sortKeys();
+                @endphp
 
-                    // $office = $position->employee->employeeCategory->name === 'OFFICE';
-
-                    $totalCount = $directorate->divisions->sum(
-                        fn($division) => $division->positions->sum(
-                            fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
-                            $position->employee->employeeCategory->name === 'OFFICE'
-                                ? 1
-                                : 0,
-                        ),
-                    );
-
-                    $below25 = $directorate->divisions->sum(
-                        fn($division) => $division->positions->sum(
-                            fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
-                            Carbon::parse(optional($position->employee)->dob)->age < 25 &&
-                            $position->employee->employeeCategory->name === 'OFFICE'
-                                ? 1
-                                : 0,
-                        ),
-                    );
-
-                    $age2530 = $directorate->divisions->sum(
-                        fn($division) => $division->positions->sum(
-                            fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
-                            $position->employee->employeeCategory->name === 'OFFICE' &&
-                            Carbon::parse(optional($position->employee)->dob)->age >= 25 &&
-                            Carbon::parse(optional($position->employee)->dob)->age < 30
-                                ? 1
-                                : 0,
-                        ),
-                    );
-
-                    $age3035 = $directorate->divisions->sum(
-                        fn($division) => $division->positions->sum(
-                            fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
-                            $position->employee->employeeCategory->name === 'OFFICE' &&
-                            Carbon::parse(optional($position->employee)->dob)->age >= 30 &&
-                            Carbon::parse(optional($position->employee)->dob)->age < 35
-                                ? 1
-                                : 0,
-                        ),
-                    );
-
-                    $age3540 = $directorate->divisions->sum(
-                        fn($division) => $division->positions->sum(
-                            fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
-                            $position->employee->employeeCategory->name === 'OFFICE' &&
-                            Carbon::parse(optional($position->employee)->dob)->age >= 35 &&
-                            Carbon::parse(optional($position->employee)->dob)->age < 40
-                                ? 1
-                                : 0,
-                        ),
-                    );
-
-                    $age4045 = $directorate->divisions->sum(
-                        fn($division) => $division->positions->sum(
-                            fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
-                            $position->employee->employeeCategory->name === 'OFFICE' &&
-                            Carbon::parse(optional($position->employee)->dob)->age >= 40 &&
-                            Carbon::parse(optional($position->employee)->dob)->age < 45
-                                ? 1
-                                : 0,
-                        ),
-                    );
-
-                    $up45 = $directorate->divisions->sum(
-                        fn($division) => $division->positions->sum(
-                            fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
-                            $position->employee->employeeCategory->name === 'OFFICE' &&
-                            Carbon::parse(optional($position->employee)->dob)->age >= 45
-                                ? 1
-                                : 0,
-                        ),
-                    );
-
-                    // $up55 = $directorate->divisions->sum(
-                    //     fn($division) => $division->positions->sum(
-                    //         fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
-                    //         $position->employee->employeeCategory->name === 'OFFICE' &&
-                    //         Carbon::parse(optional($position->employee)->dob)->age >= 55
-                    //             ? 1
-                    //             : 0,
-                    //     ),
-                    // );
-
-                    // Add to totals
-                    $totalEmployees += $totalCount;
-                    $totalBelow25 += $below25;
-                    $total2530 += $age2530;
-                    $total3035 += $age3035;
-                    $total3540 += $age3540;
-                    $total4045 += $age4045;
-                    $totalAbove45 += $up45;
-                    // $totalAbove55 += $up55;
-                  @endphp
-
+                @forelse ($groupedDirectorates as $isNon => $directoratesGroup)
                   <tr>
-                    <td class="text-bold-500">{{ $directorate->name }}</td>
-                    <td class="text-center">{{ $totalCount }}</td>
-                    <td class="text-center">{{ $below25 }}</td>
-                    <td class="text-center">{{ $age2530 }}</td>
-                    <td class="text-center">{{ $age3035 }}</td>
-                    <td class="text-center">{{ $age3540 }}</td>
-                    <td class="text-center">{{ $age4045 }}</td>
-                    <td class="text-center">{{ $up45 }}</td>
-                    {{-- <td class="text-center">{{ $up55 }}</td> --}}
+                    <td colspan="8" class="text-bold-500 text-center">
+                      {{ $isNon == 1 ? 'DIREKTORAT' : ($isNon == 2 ? 'NON-DIREKTORAT' : 'LAIN-LAIN') }}
+                    </td>
                   </tr>
-                @endforeach
-              @empty
-                <tr>
-                  <td class="text-bold-500 text-center" colspan="9">No data available in table</td>
-                </tr>
-              @endforelse
 
-              <!-- Totals Row -->
-              <tr class="table-primary">
-                <td class="text-bold-500 text-center">TOTAL</td>
-                <td class="text-center">{{ $totalEmployees }}</td>
-                <td class="text-center">{{ $totalBelow25 }}</td>
-                <td class="text-center">{{ $total2530 }}</td>
-                <td class="text-center">{{ $total3035 }}</td>
-                <td class="text-center">{{ $total3540 }}</td>
-                <td class="text-center">{{ $total4045 }}</td>
-                <td class="text-center">{{ $totalAbove45 }}</td>
-                {{-- <td class="text-center">{{ $totalAbove55 }}</td> --}}
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                  @foreach ($directoratesGroup as $directorate)
+                    @php
+                      $totalCount = $directorate->divisions->sum(
+                          fn($division) => $division->positions->sum(
+                              fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
+                              optional($position->employee->employeeCategory)->name === $category
+                                  ? 1
+                                  : 0,
+                          ),
+                      );
 
-        <div class="col-md-12">
-          <h3>NON-OFFICE</h3>
-          <table class="table table-sm table-bordered" style="font-size: 80%">
-            <thead>
-              <tr>
-                <th class="text-center">Unit Kerja</th>
-                <th class="text-center">Total Karyawan</th>
-                <th class="text-center">
-                  < 25</th>
-                <th class="text-center">25-30</th>
-                <th class="text-center">30-35</th>
-                <th class="text-center">35-40</th>
-                <th class="text-center">40-45</th>
-                <th class="text-center">> 45</th>
-                {{-- <th class="text-center"> >= 55</th> --}}
-              </tr>
-            </thead>
-            <tbody>
-              @php
-                $totalEmployees = 0;
-                $totalBelow25 = 0;
-                $total2530 = 0;
-                $total3035 = 0;
-                $total3540 = 0;
-                $total4045 = 0;
-                $totalAbove45 = 0;
-                // $totalAbove55 = 0;
+                      $below25 = $directorate->divisions->sum(
+                          fn($division) => $division->positions->sum(
+                              fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
+                              optional($position->employee->employeeCategory)->name === $category &&
+                              Carbon::parse(optional($position->employee)->dob)->age < 25
+                                  ? 1
+                                  : 0,
+                          ),
+                      );
 
-                // Group and order the directorates
-                $groupedDirectorates = $directorates->groupBy('is_non')->sortKeysUsing(function ($key1, $key2) {
-                    $order = [1, 2]; // Define the desired order for is_non
-                    $index1 = array_search($key1, $order) !== false ? array_search($key1, $order) : count($order);
-                    $index2 = array_search($key2, $order) !== false ? array_search($key2, $order) : count($order);
-                    return $index1 <=> $index2;
-                });
-              @endphp
+                      $age2530 = $directorate->divisions->sum(
+                          fn($division) => $division->positions->sum(
+                              fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
+                              optional($position->employee->employeeCategory)->name === $category &&
+                              Carbon::parse(optional($position->employee)->dob)->age >= 25 &&
+                              Carbon::parse(optional($position->employee)->dob)->age < 30
+                                  ? 1
+                                  : 0,
+                          ),
+                      );
 
-              @forelse ($groupedDirectorates as $isNon => $directoratesGroup)
-                <tr>
-                  <td colspan="9" class="text-bold-500 text-center">
-                    {{ $isNon == 1 ? 'DIREKTORAT' : ($isNon == 2 ? 'NON-DIREKTORAT' : 'LAIN-LAIN') }}
-                  </td>
-                </tr>
+                      $age3035 = $directorate->divisions->sum(
+                          fn($division) => $division->positions->sum(
+                              fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
+                              optional($position->employee->employeeCategory)->name === $category &&
+                              Carbon::parse(optional($position->employee)->dob)->age >= 30 &&
+                              Carbon::parse(optional($position->employee)->dob)->age < 35
+                                  ? 1
+                                  : 0,
+                          ),
+                      );
 
-                @foreach ($directoratesGroup as $directorate)
-                  @php
+                      $age3540 = $directorate->divisions->sum(
+                          fn($division) => $division->positions->sum(
+                              fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
+                              optional($position->employee->employeeCategory)->name === $category &&
+                              Carbon::parse(optional($position->employee)->dob)->age >= 35 &&
+                              Carbon::parse(optional($position->employee)->dob)->age < 40
+                                  ? 1
+                                  : 0,
+                          ),
+                      );
 
-                    // $office = $position->employee->employeeCategory->name === 'OFFICE';
+                      $age4045 = $directorate->divisions->sum(
+                          fn($division) => $division->positions->sum(
+                              fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
+                              optional($position->employee->employeeCategory)->name === $category &&
+                              Carbon::parse(optional($position->employee)->dob)->age >= 40 &&
+                              Carbon::parse(optional($position->employee)->dob)->age < 45
+                                  ? 1
+                                  : 0,
+                          ),
+                      );
 
-                    $totalCount = $directorate->divisions->sum(
-                        fn($division) => $division->positions->sum(
-                            fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
-                            $position->employee->employeeCategory->name === 'NON-OFFICE'
-                                ? 1
-                                : 0,
-                        ),
-                    );
+                      $up45 = $directorate->divisions->sum(
+                          fn($division) => $division->positions->sum(
+                              fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
+                              optional($position->employee->employeeCategory)->name === $category &&
+                              Carbon::parse(optional($position->employee)->dob)->age >= 45
+                                  ? 1
+                                  : 0,
+                          ),
+                      );
 
-                    $below25 = $directorate->divisions->sum(
-                        fn($division) => $division->positions->sum(
-                            fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
-                            Carbon::parse(optional($position->employee)->dob)->age < 25 &&
-                            $position->employee->employeeCategory->name === 'NON-OFFICE'
-                                ? 1
-                                : 0,
-                        ),
-                    );
+                      // Add to totals
+                      $totalEmployees += $totalCount;
+                      $totalBelow25 += $below25;
+                      $total2530 += $age2530;
+                      $total3035 += $age3035;
+                      $total3540 += $age3540;
+                      $total4045 += $age4045;
+                      $totalAbove45 += $up45;
+                    @endphp
 
-                    $age2530 = $directorate->divisions->sum(
-                        fn($division) => $division->positions->sum(
-                            fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
-                            $position->employee->employeeCategory->name === 'NON-OFFICE' &&
-                            Carbon::parse(optional($position->employee)->dob)->age >= 25 &&
-                            Carbon::parse(optional($position->employee)->dob)->age < 30
-                                ? 1
-                                : 0,
-                        ),
-                    );
-
-                    $age3035 = $directorate->divisions->sum(
-                        fn($division) => $division->positions->sum(
-                            fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
-                            $position->employee->employeeCategory->name === 'NON-OFFICE' &&
-                            Carbon::parse(optional($position->employee)->dob)->age >= 30 &&
-                            Carbon::parse(optional($position->employee)->dob)->age < 35
-                                ? 1
-                                : 0,
-                        ),
-                    );
-
-                    $age3540 = $directorate->divisions->sum(
-                        fn($division) => $division->positions->sum(
-                            fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
-                            $position->employee->employeeCategory->name === 'NON-OFFICE' &&
-                            Carbon::parse(optional($position->employee)->dob)->age >= 35 &&
-                            Carbon::parse(optional($position->employee)->dob)->age < 40
-                                ? 1
-                                : 0,
-                        ),
-                    );
-
-                    $age4045 = $directorate->divisions->sum(
-                        fn($division) => $division->positions->sum(
-                            fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
-                            $position->employee->employeeCategory->name === 'NON-OFFICE' &&
-                            Carbon::parse(optional($position->employee)->dob)->age >= 40 &&
-                            Carbon::parse(optional($position->employee)->dob)->age < 45
-                                ? 1
-                                : 0,
-                        ),
-                    );
-
-                    $up45 = $directorate->divisions->sum(
-                        fn($division) => $division->positions->sum(
-                            fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
-                            $position->employee->employeeCategory->name === 'NON-OFFICE' &&
-                            Carbon::parse(optional($position->employee)->dob)->age >= 45
-                                ? 1
-                                : 0,
-                        ),
-                    );
-
-                    // $up55 = $directorate->divisions->sum(
-                    //     fn($division) => $division->positions->sum(
-                    //         fn($position) => optional($position->employee)->employee_status === 'AKTIF' &&
-                    //         $position->employee->employeeCategory->name === 'NON-OFFICE' &&
-                    //         Carbon::parse(optional($position->employee)->dob)->age >= 55
-                    //             ? 1
-                    //             : 0,
-                    //     ),
-                    // );
-
-                    // Add to totals
-                    $totalEmployees += $totalCount;
-                    $totalBelow25 += $below25;
-                    $total2530 += $age2530;
-                    $total3035 += $age3035;
-                    $total3540 += $age3540;
-                    $total4045 += $age4045;
-                    $totalAbove45 += $up45;
-                    // $totalAbove55 += $up55;
-                  @endphp
-
+                    <tr>
+                      <td class="text-bold-500">{{ $directorate->name }}</td>
+                      <td class="text-center">{{ $totalCount }}</td>
+                      <td class="text-center">{{ $below25 }}</td>
+                      <td class="text-center">{{ $age2530 }}</td>
+                      <td class="text-center">{{ $age3035 }}</td>
+                      <td class="text-center">{{ $age3540 }}</td>
+                      <td class="text-center">{{ $age4045 }}</td>
+                      <td class="text-center">{{ $up45 }}</td>
+                    </tr>
+                  @endforeach
+                @empty
                   <tr>
-                    <td class="text-bold-500">{{ $directorate->name }}</td>
-                    <td class="text-center">{{ $totalCount }}</td>
-                    <td class="text-center">{{ $below25 }}</td>
-                    <td class="text-center">{{ $age2530 }}</td>
-                    <td class="text-center">{{ $age3035 }}</td>
-                    <td class="text-center">{{ $age3540 }}</td>
-                    <td class="text-center">{{ $age4045 }}</td>
-                    <td class="text-center">{{ $up45 }}</td>
-                    {{-- <td class="text-center">{{ $up55 }}</td> --}}
+                    <td class="text-bold-500 text-center" colspan="8">No data available</td>
                   </tr>
-                @endforeach
-              @empty
-                <tr>
-                  <td class="text-bold-500 text-center" colspan="9">No data available in table</td>
-                </tr>
-              @endforelse
+                @endforelse
 
-              <!-- Totals Row -->
-              <tr class="table-primary">
-                <td class="text-bold-500 text-center">TOTAL</td>
-                <td class="text-center">{{ $totalEmployees }}</td>
-                <td class="text-center">{{ $totalBelow25 }}</td>
-                <td class="text-center">{{ $total2530 }}</td>
-                <td class="text-center">{{ $total3035 }}</td>
-                <td class="text-center">{{ $total3540 }}</td>
-                <td class="text-center">{{ $total4045 }}</td>
-                <td class="text-center">{{ $totalAbove45 }}</td>
-                {{-- <td class="text-center">{{ $totalAbove55 }}</td> --}}
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                <!-- Totals Row -->
+                <tr class="table-primary">
+                  <td class="text-bold-500 text-center">TOTAL</td>
+                  <td class="text-center">{{ $totalEmployees }}</td>
+                  <td class="text-center">{{ $totalBelow25 }}</td>
+                  <td class="text-center">{{ $total2530 }}</td>
+                  <td class="text-center">{{ $total3035 }}</td>
+                  <td class="text-center">{{ $total3540 }}</td>
+                  <td class="text-center">{{ $total4045 }}</td>
+                  <td class="text-center">{{ $totalAbove45 }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        @endforeach
+
 
         {{-- <div class="col-md-12">
           <h3>NON-OFFICE</h3>

@@ -238,7 +238,7 @@
             <a href="{{ route('employeeRetirement', ['status' => 'Karyawan Pensiun Tahun Ini']) }}">
 
               <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-                <h6 class="text-muted font-semibold"><small>KARYAWAN PENSIUN TAHUN INI, <br>(USIA >= 55 TAHUN)</small>
+                <h6 class="text-muted font-semibold"><small>KARYAWAN PENSIUN TAHUN INI, <br>(USIA = 55 TAHUN)</small>
                 </h6>
                 <h4 class="font-extrabold mb-0">
                   {{ $upcomingRetiredCount }}
@@ -296,7 +296,7 @@
 
               <div class="col-md-12 col-lg-12 col-xl-12 col-xxl-12">
                 <h6 class="text-muted font-semibold">
-                  <small>KARYAWAN YANG AKAN DAN SUDAH PENSIUN</small>
+                  <small>KARYAWAN 3 TAHUN KEDEPAN YANG AKAN PENSIUN, DAN YANG SUDAH PENSIUN</small>
                 </h6>
                 <h4 class="font-extrabold mb-0">
                   {{ $retirementCount }}

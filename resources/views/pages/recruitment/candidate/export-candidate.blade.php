@@ -144,10 +144,10 @@
                       <option value="D-3"> D-3 </option>
                       <option value="D-2"> D-2 </option>
                       <option value="D-1"> D-1 </option>
-                      <option value="MA"> MA </option>
+                      {{-- <option value="MA"> MA </option>
                       <option value="SMK"> SMK </option>
+                      <option value="MTS"> MTS </option> --}}
                       <option value="SMA"> SMA </option>
-                      <option value="MTS"> MTS </option>
                       <option value="SMP"> SMP </option>
                       <option value="SD"> SD </option>
                     </select>
@@ -172,19 +172,19 @@
                     </select>
                   </th>
                   <th scope="col">
-                    <select type="text" id="seleksiFilter" class="form-control form-control-sm"
+                    {{-- <select type="text" id="seleksiFilter" class="form-control form-control-sm"
                       style="width: 100%">
                       <option value="" selected>Semua</option>
                       @for ($i = 1; $i <= 5; $i++)
                         <option value="{{ $i }}">{{ $i }}</option>
                       @endfor
-                    </select>
+                    </select> --}}
                   </th>
-                  <th scope="col">
+                  <th scope="col" colspan="2">
                     <textarea type="text" class="form-control form-control-sm" id="tagSearch" placeholder="search Tag ..."></textarea>
                   </th>
-                  <th scope="col">
-                  </th>
+                  {{-- <th scope="col">
+                  </th> --}}
 
 
                 </tr>

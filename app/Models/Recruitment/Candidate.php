@@ -92,6 +92,7 @@ class Candidate extends Model
         return "{$this->name} has been {$eventName}";
     }
     protected $fillable = [
+        'company_id',
         'name',
         'photo',
         'email',

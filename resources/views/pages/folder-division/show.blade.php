@@ -34,13 +34,11 @@
           class="bi bi-plus-lg"></i>
         Add Folder</a>
     @endcan --}}
-    @role('assistant-manager|manager|super-admin')
-      <button type="button" class="btn btn-primary btn-md my-2" data-bs-toggle="modal"
-        data-bs-target="#modal-form-add-folder">
-        <i class="bi bi-plus-lg"></i>
-        Add Folder
-      </button>
-    @endrole
+    <button type="button" class="btn btn-primary btn-md my-2" data-bs-toggle="modal"
+      data-bs-target="#modal-form-add-folder">
+      <i class="bi bi-plus-lg"></i>
+      Add Folder
+    </button>
     @include('pages.folder-division.add-folder')
 
     <div class="row">
@@ -51,7 +49,7 @@
             <div class="container d-flex justify-content-between">
 
               @if (!$descendant->is_lock)
-                @role('assistant-manager|manager|super-admin')
+                @can('folder-division.edit-destroy-lock')
                   <a href="#" onclick="deleteFolder({{ $descendant->id }})">
                     <i class="bi bi-x"></i>
                   </a>
@@ -71,7 +69,7 @@
                     onclick="return confirm('Apakah anda yakin mengunci folder?')">
                     <i class="bi bi-unlock"></i>
                   </a>
-                @endrole
+                @endcan
               @else
                 @role('super-admin')
                   <a href="{{ route('lockFolder', $descendant->id) }}" class="position-absolute"
@@ -201,8 +199,8 @@
                           </button>
                         @endrole
                       @else
-                        @role('senior-officer|assistant-manager|manager|super-admin')
-                          <a onclick="return confirm('Apakah kamu yakin akan membuka kunci arsip?')"
+                        @can('folder-division.lock-file')
+                          <a onclick="return confirm('Apakah kamu yakin akan mengunci File?')"
                             href="{{ route('lockFolderFile', $file->id) }}" class="btn btn-danger btn-sm"
                             title="Kunci File">
                             <i class="bi bi-unlock"></i>
@@ -211,7 +209,7 @@
                           <a class="btn btn-danger btn-sm" title="Kunci File">
                             <i class="bi bi-unlock"></i>
                           </a>
-                        @endrole
+                        @endcan
                       @endif
                     </td>
                     <td class="text-center">

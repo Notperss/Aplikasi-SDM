@@ -52,7 +52,7 @@ class ApprovalController extends Controller
                     </a>';
                     }
 
-                    if (auth()->user()->hasAnyRole(['assistant-manager', 'super-admin'])) {
+                    if (auth()->user()->can('approval.assistant-manager')) {
                         // Dropdown menu
                         $dropdownHidden = $item->is_approve === null ? '' : 'hidden';
                         $buttons .= '
@@ -354,7 +354,7 @@ class ApprovalController extends Controller
         $approvals = Approval::with('selectedCandidate', 'employeeCareer', 'position')
             ->when(! Auth::user()->hasRole('super-admin'), function ($query) {
                 $query->where('company_id', Auth::user()->company_id);
-            })->when(Auth::user()->hasAnyRole(['senior-officer', 'super-admin']), function ($query) {
+            })->when(Auth::user()->can('approval.new-employee'), function ($query) {
                 $query->whereNotNull('selected_candidate_id')->where('is_approve', 1);
             })
             // ->orderByRaw('CASE WHEN is_approve IS NULL THEN 1 ELSE 0 END DESC') // Prioritize NULL
@@ -369,10 +369,9 @@ class ApprovalController extends Controller
                     $buttons = '';
 
                     // Role-based button (equivalent to @role)
-                    if (Auth::user()->hasAnyRole(['senior-officer', 'super-admin']) &&
-                        $item->selected_candidate_id &&
+                    if ($item->selected_candidate_id &&
                         $item->is_approve === 1 &&
-                        Auth::user()->name === 'SURYADI' &&
+                        Auth::user()->can('approval.new-employee') &&
                         $item->selectedCandidate->is_hire === null) {
                         $url = route('employee.newEmployee', encrypt($item->selected_candidate_id)); // Adjust if necessary
                         $buttons .= '<a class="btn btn-md btn-info mx-1" title="Tambahkan ke karyawan" href="'.$url.'">

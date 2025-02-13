@@ -98,7 +98,7 @@ class EmployeeController extends Controller
 
                     $isVerified = $item->is_verified;
                     $deleteFormId = "deleteForm_{$item->id}";
-                    $canVerify = auth()->user()->hasAnyRole(['super-admin', 'manager', 'assistant-manager']); // Check user roles
+                    $canVerify = auth()->user()->can('employee.verified'); // Check user roles
     
                     return '
         <div class="btn-group mb-1">

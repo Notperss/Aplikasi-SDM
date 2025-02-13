@@ -1210,8 +1210,8 @@
                 <div class="row">
                   <div class="form-group">
                     <label for="note">Catatan</label>
-                    <textarea type="text" id="note" class="form-control  @error('note') is-invalid @enderror"
-                      name="note" rows="5">{{ old('note') }}</textarea>
+                    <textarea type="text" id="note" class="form-control  @error('note') is-invalid @enderror" name="note"
+                      rows="5">{{ old('note') }}</textarea>
                     @error('note')
                       <a style="color: red">
                         <small>
@@ -1245,6 +1245,10 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
+            <div class="input-group mb-2">
+              <input type="text" id="searchKTP" placeholder="Cari alamat KTP..." class="form-control">
+              <a id="btnSearchKTP" class="btn btn-primary">Cari</a>
+            </div>
             <div id="mapKTP" style="height: 400px;"></div>
           </div>
         </div>
@@ -1261,6 +1265,10 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
+            <div class="input-group mb-2">
+              <input type="text" id="searchDomisili" placeholder="Cari alamat Domisili..." class="form-control">
+              <a id="btnSearchDomisili" class="btn btn-primary">Cari</a>
+            </div>
             <div id="mapDomisili" style="height: 400px;"></div>
           </div>
         </div>
@@ -1288,7 +1296,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
-<script>
+{{-- <script>
   document.addEventListener('DOMContentLoaded', function() {
     var mapKTP, mapDomisili;
     var markerKTP, markerDomisili;
@@ -1354,6 +1362,73 @@
     });
 
     // Optionally add logic to reset markers or clear fields if needed.
+  });
+</script> --}}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var mapKTP, mapDomisili;
+    var markerKTP, markerDomisili;
+
+    function initMap(mapId, latInputId, lngInputId, searchInputId, btnSearchId, modalId) {
+      var map, marker;
+      $(modalId).on('shown.bs.modal', function() {
+        if (!map) {
+          map = L.map(mapId).setView([-6.158011, 106.883202], 13); // Default Jakarta
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+          }).addTo(map);
+
+          map.on('click', function(e) {
+            var lat = e.latlng.lat;
+            var lng = e.latlng.lng;
+            document.getElementById(latInputId).value = lat;
+            document.getElementById(lngInputId).value = lng;
+
+            if (marker) {
+              map.removeLayer(marker);
+            }
+            marker = L.marker([lat, lng]).addTo(map);
+          });
+
+          // Event Listener untuk tombol pencarian
+          document.getElementById(btnSearchId).addEventListener('click', function() {
+            var query = document.getElementById(searchInputId).value;
+            if (!query) {
+              alert('Masukkan alamat terlebih dahulu!');
+              return;
+            }
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`)
+              .then(response => response.json())
+              .then(data => {
+                if (data.length > 0) {
+                  var lat = data[0].lat;
+                  var lng = data[0].lon;
+                  map.setView([lat, lng], 15);
+
+                  document.getElementById(latInputId).value = lat;
+                  document.getElementById(lngInputId).value = lng;
+
+                  if (marker) {
+                    map.removeLayer(marker);
+                  }
+                  marker = L.marker([lat, lng]).addTo(map);
+                } else {
+                  alert('Alamat tidak ditemukan!');
+                }
+              })
+              .catch(error => console.error('Error fetching data:', error));
+          });
+        }
+        setTimeout(() => map.invalidateSize(), 100);
+      });
+      return map;
+    }
+
+    // Inisialisasi peta untuk KTP dan Domisili
+    mapKTP = initMap('mapKTP', 'latitude_ktp', 'longitude_ktp', 'searchKTP', 'btnSearchKTP', '#mapModalKTP');
+    mapDomisili = initMap('mapDomisili', 'latitude_domisili', 'longitude_domisili', 'searchDomisili',
+      'btnSearchDomisili', '#mapModalDomisili');
   });
 </script>
 @endsection

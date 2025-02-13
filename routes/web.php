@@ -218,7 +218,7 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
     Route::get('/new-employee-index', [ApprovalController::class, 'newEmployeeIndex'])->name('approval.newEmployeeIndex');
 
 
-    Route::get('/export-directorates', function () {
+    Route::get('/export-gender', function () {
         $directorates = App\Models\WorkUnit\Directorate::with('divisions.positions.employee')->get();
         return Excel::download(new GenderExport($directorates), 'JenisKelaminExport.xlsx');
     });

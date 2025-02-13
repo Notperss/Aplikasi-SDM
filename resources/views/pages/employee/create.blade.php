@@ -512,7 +512,7 @@
                 </div>
 
                 <div class="form-group">
-                  <label for="religion">Agama</label>
+                  <label for="religion">Agama <code>*</code></label>
                   <select id="religion" name="religion"
                     class="form-control @error('religion') is-invalid @enderror">
                     <option value="" disabled selected>Select Religion</option>
@@ -572,10 +572,10 @@
                     <option value="D-3" {{ old('last_educational') == 'D-3' ? 'selected' : '' }}> D-3 </option>
                     <option value="D-2" {{ old('last_educational') == 'D-2' ? 'selected' : '' }}> D-2 </option>
                     <option value="D-1" {{ old('last_educational') == 'D-1' ? 'selected' : '' }}> D-1 </option>
-                    <option value="MA" {{ old('last_educational') == 'MA' ? 'selected' : '' }}> MA </option>
+                    {{-- <option value="MA" {{ old('last_educational') == 'MA' ? 'selected' : '' }}> MA </option>
                     <option value="SMK" {{ old('last_educational') == 'SMK' ? 'selected' : '' }}> SMK </option>
+                    <option value="MTS" {{ old('last_educational') == 'MTS' ? 'selected' : '' }}> MTS </option> --}}
                     <option value="SMA" {{ old('last_educational') == 'SMA' ? 'selected' : '' }}> SMA </option>
-                    <option value="MTS" {{ old('last_educational') == 'MTS' ? 'selected' : '' }}> MTS </option>
                     <option value="SMP" {{ old('last_educational') == 'SMP' ? 'selected' : '' }}> SMP </option>
                     <option value="SD" {{ old('last_educational') == 'SD' ? 'selected' : '' }}> SD </option>
                   </select>

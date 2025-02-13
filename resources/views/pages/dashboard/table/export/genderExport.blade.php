@@ -4,8 +4,8 @@
       <th style="width: 30; background-color: #b5b5b5b5">Directorate</th>
       <th style="width: 30; background-color: #b5b5b5b5">Division</th>
       <th style="width: 30; background-color: #b5b5b5b5">Total Karyawan</th>
-      <th style="width: 20; background-color: #b5b5b5b5">Male Employees</th>
-      <th style="width: 20; background-color: #b5b5b5b5">Female Employees</th>
+      <th style="width: 20; background-color: #b5b5b5b5">Laki-Laki</th>
+      <th style="width: 20; background-color: #b5b5b5b5">Perempuan</th>
     </tr>
   </thead>
   <tbody>
@@ -53,17 +53,16 @@
         </tr>
       @endforeach
       <tr>
-        <td>Total {{ $directorate->name }}</td>
-        <td></td>
-        <td>{{ $total }}</td>
-        <td>{{ $totalMale }}</td>
-        <td>{{ $totalFemale }}</td>
+        <td style="background-color: #cec9c0b5" colspan="2">Total {{ $directorate->name }}</td>
+        <td style="background-color: #cec9c0b5">{{ $total }}</td>
+        <td style="background-color: #cec9c0b5">{{ $totalMale }}</td>
+        <td style="background-color: #cec9c0b5">{{ $totalFemale }}</td>
       </tr>
     @endforeach
   </tbody>
 </table>
 
-<table>
+{{-- <table>
   <thead>
     <tr>
       <th style="width: 30; background-color: #b5b5b5b5">Unit Kerja</th>
@@ -178,7 +177,136 @@
       </tr>
     @endforelse
   </tbody>
-</table>
+</table> --}}
+
+@php
+  // Ambil kategori karyawan unik
+  $uniqueCategories = collect();
+  foreach ($directorates as $directorate) {
+      foreach ($directorate->divisions as $division) {
+          foreach ($division->positions as $position) {
+              $categoryName = optional($position->employee)->employeeCategory->name ?? null;
+              if ($categoryName) {
+                  $uniqueCategories->push($categoryName);
+              }
+          }
+      }
+  }
+  $uniqueCategories = $uniqueCategories->unique()->values();
+@endphp
+
+{{-- @foreach ($uniqueCategories as $category)
+  <h4 class="text-center mt-4">{{ $category }}</h4> --}}
+<div class="col-md-12">
+  <div class="table-responsive">
+    @foreach ($uniqueCategories as $category)
+      <table class="table table-sm table-bordered" style="font-size: 80%">
+        <thead>
+          <tr>
+            <th colspan="4" class="text-center text-bold-500" style="background-color: #d1d1d1">
+              Kategori: {{ $category }}
+            </th>
+          </tr>
+          <tr>
+            <th style="width: 30%" class="text-center">Unit Kerja</th>
+            <th style="width: 10%" class="text-center">Total Karyawan</th>
+            <th class="text-center">LAKI-LAKI</th>
+            <th class="text-center">PEREMPUAN</th>
+          </tr>
+        </thead>
+        <tbody>
+          @php
+            // Inisialisasi total keseluruhan untuk kategori ini
+            $totalCategoryCounts = ['total' => 0, 'laki' => 0, 'perempuan' => 0];
+          @endphp
+
+          @foreach ($directorates as $directorate)
+            @php
+              // Inisialisasi total untuk direktorat ini
+              $totalDirectorateCounts = ['total' => 0, 'laki' => 0, 'perempuan' => 0];
+            @endphp
+            <tr>
+              <td class="text-bold-500" style="font-weight: bold; text-align: center;" colspan="4">
+                {{ $directorate->name }}</td>
+            </tr>
+
+            @foreach ($directorate->divisions as $division)
+              @php
+                // Inisialisasi total untuk divisi ini
+                $categoryCounts = ['total' => 0, 'laki' => 0, 'perempuan' => 0];
+
+                // Hitung jumlah karyawan dalam kategori ini untuk divisi saat ini
+                foreach ($division->positions as $position) {
+                    $employee = $position->employee;
+                    if ($employee && $employee->employee_status === 'AKTIF') {
+                        $categoryName = optional($employee->employeeCategory)->name;
+                        if ($categoryName === $category) {
+                            $categoryCounts['total']++;
+                            if ($employee->gender == 'LAKI-LAKI') {
+                                $categoryCounts['laki']++;
+                            } elseif ($employee->gender == 'PEREMPUAN') {
+                                $categoryCounts['perempuan']++;
+                            }
+                        }
+                    }
+                }
+
+                // Update total direktorat dan kategori
+                $totalDirectorateCounts['total'] += $categoryCounts['total'];
+                $totalDirectorateCounts['laki'] += $categoryCounts['laki'];
+                $totalDirectorateCounts['perempuan'] += $categoryCounts['perempuan'];
+
+                // Update total keseluruhan kategori
+                $totalCategoryCounts['total'] += $categoryCounts['total'];
+                $totalCategoryCounts['laki'] += $categoryCounts['laki'];
+                $totalCategoryCounts['perempuan'] += $categoryCounts['perempuan'];
+              @endphp
+
+              <!-- Tampilkan hanya jika ada karyawan dalam kategori ini -->
+              @if ($categoryCounts['total'] > 0)
+                <tr>
+                  <td class="text-bold-500">{{ $division->name }}</td>
+                  <td class="text-center">{{ $categoryCounts['total'] }}</td>
+                  <td class="text-center">{{ $categoryCounts['laki'] }}</td>
+                  <td class="text-center">{{ $categoryCounts['perempuan'] }}</td>
+                </tr>
+              @endif
+            @endforeach
+
+            <!-- Total untuk Direktorat -->
+            @if ($totalDirectorateCounts['total'] > 0)
+              <tr style="background-color: #cfc5c5">
+                <td style="background-color: #cfc5c5">Total {{ $directorate->name }}</td>
+                <td style="background-color: #cfc5c5">{{ $totalDirectorateCounts['total'] }}</td>
+                <td style="background-color: #cfc5c5">{{ $totalDirectorateCounts['laki'] }}</td>
+                <td style="background-color: #cfc5c5">{{ $totalDirectorateCounts['perempuan'] }}</td>
+              </tr>
+            @else
+              <tr>
+                <td style="text-align: center;" colspan="4">Tidak Ada Data</td>
+              </tr>
+            @endif
+          @endforeach
+
+          <!-- Total untuk Kategori Karyawan -->
+          @if ($totalCategoryCounts['total'] > 0)
+            <tr>
+              <td style="background-color: #b5b5b5b5">Total {{ $category }}</td>
+              <td style="background-color: #b5b5b5b5"> {{ $totalCategoryCounts['total'] }}</td>
+              <td style="background-color: #b5b5b5b5"> {{ $totalCategoryCounts['laki'] }}</td>
+              <td style="background-color: #b5b5b5b5"> {{ $totalCategoryCounts['perempuan'] }}</td>
+            </tr>
+          @else
+            <tr>
+              <td class="text-center" colspan="4">Tidak ada data untuk kategori ini</td>
+            </tr>
+          @endif
+        </tbody>
+      </table>
+    @endforeach
+  </div>
+</div>
+{{-- @endforeach --}}
 
 <table>
   <thead>

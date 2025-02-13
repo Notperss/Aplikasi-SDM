@@ -5,12 +5,11 @@
 
   <section class="section">
 
-    @role('assistant-manager|manager|super-admin')
-      <button type="button" class="btn btn-primary btn-md my-2" data-bs-toggle="modal" data-bs-target="#modal-form-add-folder">
-        <i class="bi bi-plus-lg"></i>
-        Add Folder
-      </button>
-    @endrole
+    <button type="button" class="btn btn-primary btn-md my-2" data-bs-toggle="modal" data-bs-target="#modal-form-add-folder">
+      <i class="bi bi-plus-lg"></i>
+      Add Folder
+    </button>
+
 
     <div class="row">
       @forelse ($folders as $folder)
@@ -19,7 +18,7 @@
 
             <div class="container d-flex justify-content-between">
               @if ($folder->is_lock == false)
-                @role('assistant-manager|manager|super-admin')
+                @can('folder-division.edit-destroy-lock')
                   <a href="#" onclick="showSweetAlert({{ $folder->id }})" title="Delete folder">
                     <i class="bi bi-x"></i>
                   </a>
@@ -39,7 +38,7 @@
                     onclick="return confirm('Apakah anda yakin mengunci folder?')">
                     <i class="bi bi-unlock"></i>
                   </a>
-                @endrole
+                @endcan
               @else
                 @role('super-admin')
                   <a href="{{ route('lockFolder', $folder->id) }}" class="position-absolute"
