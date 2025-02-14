@@ -100,71 +100,75 @@ class EmployeeTrainingAttendedController extends Controller
      */
     public function store(StoreTrainingAttendedRequest $request)
     {
-
-        // Start a database transaction
         DB::beginTransaction();
 
         try {
-            // Handle file upload for certificate (if present)
-            $file_path = null;  // Initialize file path variable
-
-            if ($request->hasFile('file_sertifikat')) {
-                $file = $request->file('file_sertifikat');
-                $extension = $file->getClientOriginalExtension();
-                $file_name = 'file_sertifikat_pelatihan_'.time().'.'.$extension; // Generate a unique file name
-                $file_path = $file->storeAs('files/employee/file_sertifikat_pelatihan', $file_name, 'public_local');
-            }
-
+            // **1. Jika ada banyak employees**
             if ($request->employees) {
-                // Loop through employees to create training records
                 foreach ($request->employees as $employeeData) {
-                    // Ensure employeeData is the employee ID
                     $employeeId = $employeeData['id'];
 
-                    // Create the training record for each employee
+                    $employee = Employee::findOrFail($employeeId);
+
+                    $file_path = null;
+                    // **2. Cek apakah ada file upload untuk karyawan tertentu**
+                    if ($request->hasFile("employee_files.$employeeId")) {
+                        $file = $request->file("employee_files.$employeeId");
+                        $extension = $file->getClientOriginalExtension();
+                        $file_name = 'file_sertifikat_pelatihan_'.$employee->name.'_'.time().'.'.$extension;
+                        $file_path = $file->storeAs('files/employee/file_sertifikat_pelatihan', $file_name, 'public_local');
+                    }
+
+                    // **3. Simpan data training untuk setiap karyawan**
                     EmployeeTrainingAttended::create([
-                        'employee_id' => $employeeId, // Use employee ID
+                        'employee_id' => $employeeId,
                         'training_name' => $request->training_name,
                         'organizer_name' => $request->organizer_name,
                         'city' => $request->city,
                         'expired_certificate_date' => $request->expired_certificate_date,
                         'start_date' => $request->start_date,
                         'end_date' => $request->end_date,
-                        'file_sertifikat' => $file_path, // Attach file path if the certificate is uploaded
-                        'is_certificated' => $request->is_certificated ?? 0, // Attach file path if the certificate is uploaded
-                        'is_printable' => $request->is_printable ?? 0, // Attach file path if the certificate is uploaded
+                        'file_sertifikat' => $file_path, // Simpan file spesifik untuk karyawan ini
+                        'is_certificated' => $request->is_certificated ?? 0,
+                        'is_printable' => $request->is_printable ?? 0,
                     ]);
                 }
             } else {
-                // Create the training record for each employee
+
+                $employee = Employee::findOrFail($request->employee_id);
+                // **4. Jika hanya satu karyawan, upload file seperti biasa**
+                $file_path = null;
+                if ($request->hasFile("file_sertifikat")) {
+                    $file = $request->file("file_sertifikat");
+                    $extension = $file->getClientOriginalExtension();
+                    $file_name = 'file_sertifikat_pelatihan_'.$employee->name.'_'.time().'.'.$extension;
+                    $file_path = $file->storeAs('files/employee/file_sertifikat_pelatihan', $file_name, 'public_local');
+                }
+
                 EmployeeTrainingAttended::create([
-                    'employee_id' => $request->employee_id, // Use employee ID
+                    'employee_id' => $request->employee_id,
                     'training_name' => $request->training_name,
                     'organizer_name' => $request->organizer_name,
                     'city' => $request->city,
                     'expired_certificate_date' => $request->expired_certificate_date,
                     'start_date' => $request->start_date,
                     'end_date' => $request->end_date,
-                    'file_sertifikat' => $file_path, // Attach file path if the certificate is uploaded
-                    'is_certificated' => $request->is_certificated ?? 0, // Attach file path if the certificate is uploaded
-                    'is_printable' => $request->is_printable ?? 0, // Attach file path if the certificate is uploaded
+                    'file_sertifikat' => $file_path, // File hanya untuk karyawan ini
+                    'is_certificated' => $request->is_certificated ?? 0,
+                    'is_printable' => $request->is_printable ?? 0,
                 ]);
             }
 
-            // Commit the transaction
             DB::commit();
 
-            // Redirect with a success message
-            return redirect()->back()
-                ->with('success', 'Data seminar/pelatihan berhasil ditambahkan.');
+            return redirect()->back()->with('success', 'Data seminar/pelatihan berhasil ditambahkan.');
         } catch (\Exception $e) {
-            // Rollback the transaction if something goes wrong
             DB::rollback();
 
-            // Log the error for debugging
-            Log::error('Error storing training: '.$e->getMessage());
+            Log::error('Error storing training: '.$e->getMessage(), [
+                'request' => $request->all(),
+            ]);
 
-            // Redirect back with an error message
             return redirect()->back()
                 ->withInput($request->all())
                 ->withErrors(['error' => 'Terjadi kesalahan saat menyimpan data.']);

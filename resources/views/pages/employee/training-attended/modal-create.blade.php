@@ -1,7 +1,7 @@
 <!-- Modals add menu -->
 <div id="modal-form-add-training-attended" class="modal fade" tabindex="-1"
   aria-labelledby="modal-form-add-training-attended-label" aria-hidden="true" style="display: none;">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
     <div class="modal-content">
       <form id="selectedEmployeesForm" action="{{ route('employeeTrainingAttended.store') }}" method="post"
         enctype="multipart/form-data">
@@ -44,6 +44,7 @@
                   @enderror
                 </div>
               </div>
+
               <div class="row">
                 <div class="col-md-6">
                   <label class="form-label" for="start_date">Tanggal Mulai</label>
@@ -80,6 +81,7 @@
                       <th>Nama</th>
                       <th>Jabatan</th>
                       <th>Divisi</th>
+                      <th>Upload</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -292,9 +294,12 @@
         const employeeNik = $(this).data('nik');
         const employeePosition = $(this).data('position');
         const employeeDivision = $(this).data('division');
+        const button = $(this);
 
         if (isEmployeeAlreadyAdded(employeeId)) {
-          debounceAlert(employeeId);
+          // Jika karyawan sudah dipilih, hapus dari tabel & ubah tombol kembali ke "Pilih"
+          removeEmployee(employeeId);
+          button.text('Pilih').removeClass('btn-danger remove-employee').addClass('btn-primary select-employee');
           return;
         }
 
@@ -302,27 +307,46 @@
 
         // Append the employee to the table
         const row = `
-                <tr data-id="${employeeId}">
-                    <td>${employeeNik}</td>
-                    <td>${employeeName}</td>
-                    <td>${employeePosition}</td>
-                    <td>${employeeDivision}</td>
-                    <td>
-                        <a class="btn btn-sm btn-danger remove-employee">Hapus</a>
-                    </td>
-                </tr>
-            `;
+      <tr data-id="${employeeId}">
+        <td>${employeeNik}</td>
+        <td>${employeeName}</td>
+        <td>${employeePosition}</td>
+        <td>${employeeDivision}</td>
+        <td>
+          <input type="file"  accept=".pdf, .jpg, .jpeg, .png" name="employee_files[${employeeId}]" class="form-control">
+        </td>
+        <td>
+          <a class="btn btn-sm btn-danger remove-employee" data-id="${employeeId}">Hapus</a>
+        </td>
+      </tr>
+    `;
         employeeTableBody.append(row);
         updateEmptyState();
 
-        $('#employeeAddModal').modal('hide');
+        // Ubah tombol menjadi "Hapus"
+        button.text('Hapus').removeClass('btn-primary select-employee').addClass('btn-danger remove-employee');
       });
 
-      // Remove employee from the table
+      // Remove employee from the table & reset button
       $('#employee-table-body').on('click', '.remove-employee', function() {
-        $(this).closest('tr').remove();
+        const row = $(this).closest('tr');
+        const employeeId = row.data('id');
+
+        row.remove();
         updateEmptyState();
+
+        // Ubah tombol kembali ke "Pilih"
+        $(`#table-employee .btn[data-id="${employeeId}"]`)
+          .text('Pilih')
+          .removeClass('btn-danger remove-employee')
+          .addClass('btn-primary select-employee');
       });
+
+      // Hapus employee jika tombol "Pilih" diklik kembali
+      function removeEmployee(employeeId) {
+        $(`#employee-table-body tr[data-id="${employeeId}"]`).remove();
+        updateEmptyState();
+      }
 
       // Check if an employee has already been added
       function isEmployeeAlreadyAdded(employeeId) {
@@ -338,6 +362,7 @@
         }
       }
 
+      // Form submission
       $('#selectedEmployeesForm').on('submit', function(event) {
         event.preventDefault();
 
@@ -352,7 +377,7 @@
         // Set the hidden input to the JSON string of employees
         $('#employeesInput').val(JSON.stringify(employees));
 
-        // Now submit the form
+        // Submit the form
         this.submit();
       });
 

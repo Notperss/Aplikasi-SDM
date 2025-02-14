@@ -9,7 +9,7 @@ class StoreTrainingAttendedRequest extends FormRequest
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize() : bool
+    public function authorize(): bool
     {
         return true;
     }
@@ -19,7 +19,7 @@ class StoreTrainingAttendedRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules() : array
+    public function rules(): array
     {
         if ($this->has('employees')) {
             // Decode the JSON string into an array
@@ -39,10 +39,11 @@ class StoreTrainingAttendedRequest extends FormRequest
             'file_sertifikat' => 'nullable|mimes:pdf,jpeg,jpg,png|max:2048',
             'employees' => $this->has('employees') ? 'required|array' : 'nullable',
             'employees.*' => 'exists:employees,id', // Validate employee IDs exist in the database
+            'employee_files.*' => 'file|mimes:pdf,jpg,png|max:2048', // File validation
         ];
     }
 
-    public function messages() : array
+    public function messages(): array
     {
         return [
             'employee_id.required' => 'ID karyawan wajib diisi.',
