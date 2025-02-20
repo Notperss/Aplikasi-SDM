@@ -27,10 +27,24 @@ class FolderItemFile extends Model
     {
         return LogOptions::defaults()
             ->logOnly([
+                'folder_division_id',
+                'company_id',
+                'division_id',
                 'number',
                 'date',
                 'description',
                 'file',
+                'is_lock',
+
+                'notification',
+                'date_notification',
+                'email',
+                'email_cc',
+                'attach_file',
+
+                'tag',
+                'box_number_id',
+                'file_number_id',
             ]) // Specify the attributes you want to log
             ->logOnlyDirty() // Log only changed attributes
             ->useLogName('folder-file'); // Specify the log name
@@ -64,6 +78,10 @@ class FolderItemFile extends Model
         'email',
         'email_cc',
         'attach_file',
+
+        'tag',
+        'box_number_id',
+        'file_number',
     ];
 
     public function company()
@@ -82,5 +100,10 @@ class FolderItemFile extends Model
     {
         // 2 parameter (path model, field foreign key)
         return $this->belongsTo(FolderDivision::class, 'folder_division_id');
+    }
+
+    public function boxNumber()
+    {
+        return $this->belongsTo(BoxNumber::class);
     }
 }

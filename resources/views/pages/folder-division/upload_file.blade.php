@@ -22,7 +22,7 @@
 </script>
 
 <div class="modal fade" id="modalupload" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Upload File</h5>
@@ -35,6 +35,34 @@
         <div class="modal-body">
           <input type="hidden" name="id" id="id" value="{{ $id }}">
           <div class="row">
+
+            <div class="form-group row">
+              <label class="col-md-4 form-label" for="file_number">Nomor File </label>
+              <div class="col-md-8">
+                <input type="text" class="form-control" id="file_number" name="file_number"
+                  value="{{ $fileNumber }}" readonly>
+                @if ($errors->has('file_number'))
+                  <p style="font-style: bold; color: red;">
+                    {{ $errors->first('file_number') }}</p>
+                @endif
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="col-md-4 form-label" for="box_number_id">Nomor Box <code>*</code></label>
+              <div class="col-md-8">
+                <select id="box_number_id" name="box_number_id"
+                  class="form-control js-choice @error('box_number_id') is-invalid @enderror" required>
+                  <option value="" disabled selected>Choose</option>
+                  @foreach ($boxNumbers as $boxNumber)
+                    <option value="{{ $boxNumber->id }}">{{ $boxNumber->box_number }}</option>
+                  @endforeach
+                </select>
+                @error('box_number_id')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div>
+            </div>
 
             <div class="form-group row">
               <label class="col-md-4 form-label" for="number">Nomor </label>
@@ -58,9 +86,22 @@
               </div>
             </div>
 
+            {{-- <div class="form-group row">
+              <label class="col-md-4 form-label" for="file_number">Nomor File <code>*</code></label>
+              <div class="col-md-8">
+                <select id="store_file_number_id" name="file_number"
+                  class="form-control @error('file_number') is-invalid @enderror choices" required>
+                  <option value="" disabled selected>Choose</option>
+               
+                </select>
+                @error('file_number')
+                  <a style="color: red"><small>{{ $message }}</small></a>
+                @enderror
+              </div>
+            </div> --}}
+
             <div class="form-group row">
-              <label class="col-md-4 form-label" for="description">Keterangan
-              </label>
+              <label class="col-md-4 form-label" for="description">Keterangan </label>
               <div class="col-md-8">
                 <textarea type="text" class="form-control" id="description" name="description" rows="5"></textarea>
                 @if ($errors->has('description'))
@@ -71,8 +112,18 @@
             </div>
 
             <div class="form-group row">
-              <label class="col-md-4 label-control" for="file">File
-                <code style="color:red;">*</code></label>
+              <label class="col-md-4 form-label" for="tag">Tag</label>
+              <div class="col-md-8">
+                <textarea type="text" class="form-control" id="tag" name="tag" rows="5"></textarea>
+                @if ($errors->has('tag'))
+                  <p style="font-style: bold; color: red;">
+                    {{ $errors->first('tag') }}</p>
+                @endif
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label class="col-md-4 label-control" for="file">File <code>*</code></label>
               <div class="col-md-8">
                 <input type="file" class="form-control" id="file" name="file[]" onchange="updateList()"
                   multiple>
@@ -91,7 +142,8 @@
                 <label class="col-md-6 form-label" for="name">Sertakan File di Notifikasi</label>
                 <div class="col-md-6">
                   <div class="form-check form-check-inline">
-                    <input class="form-check-input" value="1" type="radio" name="attach_file" id="enable">
+                    <input class="form-check-input" value="1" type="radio" name="attach_file"
+                      id="enable">
                     <label class="form-check-label" for="enable">
                       Ya
                     </label>
@@ -201,9 +253,10 @@
               <!-- Hidden input to store CC emails -->
               <input type="hidden" name="email_cc" id="email_cc_hidden">
             </div>
-          </div>
 
+          </div>
         </div>
+
         <div class="modal-footer d-flex justify-content-between">
           <a href="{{ url()->previous() }}" style="width:120px;" class="btn btn-warning">
             Cancel
@@ -219,6 +272,79 @@
     </div>
   </div>
 </div>
+
+<link rel="stylesheet" href="{{ asset('dist/assets/extensions/choices.js/public/assets/styles/choices.css') }}">
+<script src="{{ asset('dist/assets/extensions/choices.js/public/assets/scripts/choices.js') }}"></script>
+
+<script>
+  $(function() {
+    // Pass single element
+    const element = document.querySelector('.js-choice');
+    const choices = new Choices(element);
+  });
+</script>
+
+
+{{-- <script>
+  $(function() {
+    // Pass single element
+    const element = document.querySelector('.js-choice');
+    const choices = new Choices(element);
+
+    const fileNumberSelect = new Choices('#store_file_number_id', {
+      searchEnabled: true,
+      shouldSort: false
+    });
+
+    $('#store_box_number_id').change(function() {
+      var boxNumberId = $(this).val();
+      if (boxNumberId) {
+        $.ajax({
+          url: "{{ route('getFileNumbers') }}",
+          type: 'GET',
+          dataType: 'json',
+          data: {
+            box_number_id: boxNumberId
+          },
+          success: function(data) {
+            // Clear the existing options
+            fileNumberSelect.clearStore();
+            fileNumberSelect.clearChoices();
+
+            // Prepare new options
+            let choices = [{
+              value: '',
+              label: 'Choose',
+              disabled: true,
+              selected: true
+            }];
+
+            $.each(data, function(key, value) {
+              choices.push({
+                value: value.id,
+                label: value.file_number
+              });
+            });
+
+            // Set all choices at once
+            fileNumberSelect.setChoices(choices, 'value', 'label', true);
+          }
+        });
+      } else {
+        // Clear the dropdown if no boxNumber is selected
+        fileNumberSelect.clearStore();
+        fileNumberSelect.clearChoices();
+        fileNumberSelect.setChoices([{
+          value: '',
+          label: 'Choose',
+          disabled: true,
+          selected: true
+        }]);
+      }
+    });
+  });
+</script> --}}
+
 <script>
   $(document).ready(function() {
     // let choicesInstance = null;

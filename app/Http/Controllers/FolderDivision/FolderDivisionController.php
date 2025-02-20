@@ -6,17 +6,17 @@ use App\Models\User;
 use App\Mail\SendEmail;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 // use Mail;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use App\Models\FolderDivision\BoxNumber;
 use Illuminate\Support\Facades\Validator;
 use App\Models\FolderDivision\FolderDivision;
 use App\Models\FolderDivision\FolderItemFile;
-use App\Models\TransactionArchive\FolderDivision\FolderItem;
-use App\Http\Requests\TransactionArchive\FolderDivision\ItemFileStoreRequest;
 
 class FolderDivisionController extends Controller
 {
@@ -200,9 +200,30 @@ class FolderDivisionController extends Controller
                 })
                 ->where('email', '!=', auth()->user()->email)
                 ->orderBy('name', 'asc')->get();
+
+            $boxNumbers = BoxNumber::where('company_id', Auth::user()->company_id)->latest()->get();
+
+
+            // Dapatkan tanggal hari ini
+            $date = now()->format('Ymd');
+
+            // Ambil nomor terakhir yang dibuat hari ini
+            $latestFile = DB::table('folder_item_files')
+                ->whereDate('created_at', now()->toDateString())
+                ->latest('id')
+                ->first();
+
+            // Tentukan nomor urut berikutnya
+            $number = $latestFile ? ((int) substr($latestFile->file_number, -4)) + 1 : 1;
+
+            // Formatkan nomor file
+            $fileNumber = 'FILE-'.$date.'-'.str_pad($number, 4, '0', STR_PAD_LEFT);
+
             $data = [
                 'id' => $row['id'],
                 'users' => $users,
+                'boxNumbers' => $boxNumbers,
+                'fileNumber' => $fileNumber,
             ];
 
             $msg = [
@@ -231,7 +252,8 @@ class FolderDivisionController extends Controller
         ];
         // Validation rules
         $validator = Validator::make($request->all(), [
-            'number' => 'required', // Ensure the parent exists if provided
+            'number_box_id' => 'required', // Ensure the parent exists if provided
+            'number' => 'nullable', // Ensure the parent exists if provided
             'email' => 'email', // Ensure the parent exists if provided
             'date' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
@@ -297,10 +319,13 @@ class FolderDivisionController extends Controller
                 'folder_division_id' => $request->id,
                 'division_id' => $auth->division_id,
                 'company_id' => $auth->company_id,
+                'box_number_id' => $request->box_number_id,
                 // 'folder_item_id' => $folderItem->id,
                 'number' => $request->number,
+                'file_number' => $request->file_number,
                 'date' => $request->date,
                 'description' => $request->description,
+                'tag' => $request->tag,
                 'file' => $file,
                 'notification' => $request->notification,
                 'date_notification' => $request->date_notification,

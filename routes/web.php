@@ -54,6 +54,7 @@ use App\Http\Controllers\Recruitment\PersonalData\CandidateJobHistoryController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeTrainingAttendedController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeEducationalHistoryController;
 use App\Http\Controllers\Employee\PersonalData\EmployeeLanguageProficiencyController;
+use App\Http\Controllers\FolderDivision\BoxNumberController;
 
 // Route::permanentRedirect('/', '/login');
 
@@ -282,7 +283,8 @@ Route::group(['middleware' => ['web', 'auth', 'verified',]], function () {
         // Route::get('/send-mail', 'sendMails')->name('sendMails');
     });
 
-
+    Route::resource('boxNumber', BoxNumberController::class)->except('index');
+    Route::get('/box-number', [BoxNumberController::class, 'index'])->name('boxNumber.index');
 });
 
 

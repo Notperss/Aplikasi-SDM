@@ -23,7 +23,7 @@ class SendDailyNotification extends Command
      *
      * @var string
      */
-    protected $description = 'Send daily notifications at 09:00 AM';
+    protected $description = 'Send daily notifications at 08:00 AM';
 
     /**
      * Execute the console command.

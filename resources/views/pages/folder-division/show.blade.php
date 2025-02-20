@@ -146,15 +146,16 @@
         <div class="card-body">
           <h3>File</h3>
           <div class="table-responsive">
-            <table class="table table-striped" id="table1">
+            <table class="table table-striped" id="table1" style="font-size: 80%">
               <thead>
                 <tr>
                   <th class="text-center">#</th>
+                  <th class="text-center">Nomor Box</th>
                   <th class="text-center">Nomor</th>
                   <th class="text-center">Tanggal</th>
                   <th class="text-center">Keterangan</th>
                   <th class="text-center">File</th>
-                  <th class="text-center">Lock</th>
+                  <th class="text-center">Tag</th>
                   <th class="text-center">Action</th>
                 </tr>
               </thead>
@@ -165,6 +166,7 @@
                 @foreach ($files as $file)
                   <tr>
                     <td class="text-center">{{ $loop->iteration }}</td>
+                    <td class="text-center">{{ $file->boxNumber->box_number ?? 'N/A' }}</td>
                     <td class="text-center">{{ $file->number ?? 'N/A' }}</td>
                     <td class="text-center">{{ $file->date ?? 'N/A' }}</td>
                     <td class="text-center">{{ $file->description ?? 'N/A' }}</td>
@@ -184,6 +186,7 @@
                           downloaded</p> --}}
                       </div>
                     </td>
+                    <td class="text-center">{{ $file->tag ?? 'N/A' }}</td>
                     <td class="text-center">
                       @if ($file->is_lock)
                         @role('super-admin')
@@ -211,8 +214,6 @@
                           </a>
                         @endcan
                       @endif
-                    </td>
-                    <td class="text-center">
                       @if (!$file->is_lock)
                         <button onclick="deleteFile({{ $file->id }})" class="btn btn-sm btn-danger">
                           </i>Delete</button>
